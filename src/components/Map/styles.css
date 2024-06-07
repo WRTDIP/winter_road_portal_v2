@@ -41,3 +41,12 @@
   width: 20px;
   height: 20px;
 }
+
+#legend-container .esri-legend__service {
+  display: flex;
+  flex-direction: row; 
+}
+
+#legend-container .esri-legend__service > *{
+  overflow: hidden;
+}

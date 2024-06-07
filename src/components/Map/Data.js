@@ -24,102 +24,169 @@ export const citiesOfNunavut = {
   7: "Pangnirtung",
   25: "Pond Inlet",
   5: "Qikiqtarjuaq",
-  28:"Rankin Inlet",
+  28: "Rankin Inlet",
   27: "Resolute",
   29: "Sanikiluaq",
   4: "Sanirajak",
   8: "Taloyoak",
-  6: "Whale Cove"
-};
+  6: "Whale Cove",
+}
 
 //Array which stores the index associated with the town in the Northwest Territories when calling the GeoMet API
-export const citiesOfNorthwestTerritories  = {
-    26:"Colville Lake",
-    22:"Deline",
-    //1:"Detah",
-    14:"Ekati",
-    2:"Enterprise",
-    5:"Fort Good Hope",
-    29:"Fort Liard",
-    10:"Fort McPherson",
-    27:"Fort Providence",
-    3:"Fort Resolution",
-    4:"Fort Simpson",
-    17:"Fort Smith",
-    18:"Gameti",
-    8:"Hay River",
-    28:"Indin River",
-    30:"Inuvik",
-    31:"Lutselke",
-    12:"Nahanni Butte",
-    21:"Norman Wells",
-    16:"Paulatuk",
-    19:"Sachs Harbour",
-    15:"Sambaa K'e",
-    20:"Tuktoyaktuk",
-    11:"Tulita",
-    7:"Ulukhaktok",
-    9:"Wekweeti",
-    6:"Whati",
-    23:"Wrigley",
-    24:"Yellowknife",
+export const citiesOfNorthwestTerritories = {
+  26: "Colville Lake",
+  22: "Deline",
+  //1:"Detah",
+  14: "Ekati",
+  2: "Enterprise",
+  5: "Fort Good Hope",
+  29: "Fort Liard",
+  10: "Fort McPherson",
+  27: "Fort Providence",
+  3: "Fort Resolution",
+  4: "Fort Simpson",
+  17: "Fort Smith",
+  18: "Gameti",
+  8: "Hay River",
+  28: "Indin River",
+  30: "Inuvik",
+  31: "Lutselke",
+  12: "Nahanni Butte",
+  21: "Norman Wells",
+  16: "Paulatuk",
+  19: "Sachs Harbour",
+  15: "Sambaa K'e",
+  20: "Tuktoyaktuk",
+  11: "Tulita",
+  7: "Ulukhaktok",
+  9: "Wekweeti",
+  6: "Whati",
+  23: "Wrigley",
+  24: "Yellowknife",
 }
 
 //Array which stores the index associated with the town in Yukon when calling the GeoMet API
 export const citiesOfYukon = {
-    15:"Beaver Creek",
-    7:"Burwash Landing",
-    2:"Carcross",
-    17:"Carmacks",
-    6:"Dawson",
-    4:"Dempster (Highway)",
-    12:"Faro",
-    5:"Haines Junction",
-    1:"Kluane Lake",
-    10:"Mayo",
-    11:"Old Crow",
-    3:"Rancheria",
-    9:"Rock River",
-    8:"Ross River",
-    14:"Teslin",
-    13:"Watson Lake",
-    16:"Whitehorse",
+  15: "Beaver Creek",
+  7: "Burwash Landing",
+  2: "Carcross",
+  17: "Carmacks",
+  6: "Dawson",
+  4: "Dempster (Highway)",
+  12: "Faro",
+  5: "Haines Junction",
+  1: "Kluane Lake",
+  10: "Mayo",
+  11: "Old Crow",
+  3: "Rancheria",
+  9: "Rock River",
+  8: "Ross River",
+  14: "Teslin",
+  13: "Watson Lake",
+  16: "Whitehorse",
 }
 
 //ArcGIS map layers
-export const mapLinks = [
-  "https://services1.arcgis.com/9NvE8jKNWWlDGsUJ/arcgis/rest/services/VLi_Web_Map_WFL1/FeatureServer/0",
-  "https://services1.arcgis.com/9NvE8jKNWWlDGsUJ/arcgis/rest/services/VLi_Web_Map_WFL1/FeatureServer/1",
+export const layerData = [
+  {
+    title: "Winter Roards NU",
+    link: "https://services1.arcgis.com/9NvE8jKNWWlDGsUJ/arcgis/rest/services/Winter_Roads_NU/FeatureServer/0",
+    popupTemplate: {
+      title: "{STREET}",
+    },
+  },
+  {
+    title: "Winter Roards NWT",
+    link: "https://services1.arcgis.com/9NvE8jKNWWlDGsUJ/arcgis/rest/services/Winter_Roads_NWT/FeatureServer/4",
+    popupTemplate: {
+      title: "{STREET}",
+    },
+  },
+  // {
+  //   title: "Airports YU",
+  //   link: "https://services1.arcgis.com/9NvE8jKNWWlDGsUJ/arcgis/rest/services/VLi_Web_Map_WFL1/FeatureServer/0",
+  // },
+  {
+    title: "Minor Roads",
+    link: "https://www.apps.geomatics.gov.nt.ca/arcgis/rest/services/GNWT/Transportation_LCC/MapServer/15",
+    popupTemplate: {
+      title: "{R_STNAME_C}",
+      content: "",
+    },
+    renderer: {
+      type: "simple", // autocasts as new SimpleRenderer()
+      symbol: {
+        type: "simple-line", // autocasts as new SimpleMarkerSymbol()
+        size: 5,
+        color: [0, 255, 255],
+        outline: null,
+      },
+    },
+  },
+  {
+    title: "Major Roads",
+    link: "https://www.apps.geomatics.gov.nt.ca/arcgis/rest/services/GNWT/Transportation_LCC/MapServer/14",
+    popupTemplate: {
+      title: "{R_STNAME_C}",
+    },
+  },
+  // {
+  //   title: "Airports NU",
+  //   link: "https://services1.arcgis.com/9NvE8jKNWWlDGsUJ/arcgis/rest/services/VLi_Web_Map_WFL1/FeatureServer/1",
+  // },
+  // {
+  //   title: "Communities YU",
+  //   link: "https://services1.arcgis.com/9NvE8jKNWWlDGsUJ/arcgis/rest/services/VLi_Web_Map_WFL1/FeatureServer/7",
+  // },
+  // {
+  //   title: "Health Care NU",
+  //   link: "https://services1.arcgis.com/9NvE8jKNWWlDGsUJ/arcgis/rest/services/VLi_Web_Map_WFL1/FeatureServer/13",
+  // },
+  // {
+  //   title: "Airports NU",
+  //   link: "https://services1.arcgis.com/9NvE8jKNWWlDGsUJ/arcgis/rest/services/VLi_Web_Map_WFL1/FeatureServer/14",
+  // },
+  // {
+  //   title: "Communities NU",
+  //   link: "https://services1.arcgis.com/9NvE8jKNWWlDGsUJ/arcgis/rest/services/VLi_Web_Map_WFL1/FeatureServer/15",
+  // },
+  // {
+  //   title: "Communities NWT",
+  //   link: "https://services1.arcgis.com/9NvE8jKNWWlDGsUJ/arcgis/rest/services/VLi_Web_Map_WFL1/FeatureServer/19",
+  // },
+  // {
+  //   title: "Airports NWT",
+  //   link: "https://services1.arcgis.com/9NvE8jKNWWlDGsUJ/arcgis/rest/services/VLi_Web_Map_WFL1/FeatureServer/20",
+  // },
+  // {
+  //   title: "Ice Roads NWT",
+  //   link: "https://services1.arcgis.com/9NvE8jKNWWlDGsUJ/arcgis/rest/services/VLi_Web_Map_WFL1/FeatureServer/22",
+  // },
+  // {
+  //   title: "Ports Communitites NWT",
+  //   link: "https://services1.arcgis.com/9NvE8jKNWWlDGsUJ/arcgis/rest/services/VLi_Web_Map_WFL1/FeatureServer/28",
+  // },
   //"https://services1.arcgis.com/9NvE8jKNWWlDGsUJ/arcgis/rest/services/VLi_Web_Map_WFL1/FeatureServer/2",
   // "https://services1.arcgis.com/9NvE8jKNWWlDGsUJ/arcgis/rest/services/VLi_Web_Map_WFL1/FeatureServer/3",
   // "https://services1.arcgis.com/9NvE8jKNWWlDGsUJ/arcgis/rest/services/VLi_Web_Map_WFL1/FeatureServer/4",
   //"https://services1.arcgis.com/9NvE8jKNWWlDGsUJ/arcgis/rest/services/VLi_Web_Map_WFL1/FeatureServer/5",
   //"https://services1.arcgis.com/9NvE8jKNWWlDGsUJ/arcgis/rest/services/VLi_Web_Map_WFL1/FeatureServer/6",
-  "https://services1.arcgis.com/9NvE8jKNWWlDGsUJ/arcgis/rest/services/VLi_Web_Map_WFL1/FeatureServer/7",
   // "https://services1.arcgis.com/9NvE8jKNWWlDGsUJ/arcgis/rest/services/VLi_Web_Map_WFL1/FeatureServer/8",
   // "https://services1.arcgis.com/9NvE8jKNWWlDGsUJ/arcgis/rest/services/VLi_Web_Map_WFL1/FeatureServer/9",
   // "https://services1.arcgis.com/9NvE8jKNWWlDGsUJ/arcgis/rest/services/VLi_Web_Map_WFL1/FeatureServer/10",
   // "https://services1.arcgis.com/9NvE8jKNWWlDGsUJ/arcgis/rest/services/VLi_Web_Map_WFL1/FeatureServer/11",
   // "https://services1.arcgis.com/9NvE8jKNWWlDGsUJ/arcgis/rest/services/VLi_Web_Map_WFL1/FeatureServer/12",
-  "https://services1.arcgis.com/9NvE8jKNWWlDGsUJ/arcgis/rest/services/VLi_Web_Map_WFL1/FeatureServer/13",
-  "https://services1.arcgis.com/9NvE8jKNWWlDGsUJ/arcgis/rest/services/VLi_Web_Map_WFL1/FeatureServer/14",
-  "https://services1.arcgis.com/9NvE8jKNWWlDGsUJ/arcgis/rest/services/VLi_Web_Map_WFL1/FeatureServer/15",
   //"https://services1.arcgis.com/9NvE8jKNWWlDGsUJ/arcgis/rest/services/VLi_Web_Map_WFL1/FeatureServer/16",
   // "https://services1.arcgis.com/9NvE8jKNWWlDGsUJ/arcgis/rest/services/VLi_Web_Map_WFL1/FeatureServer/17",
   // "https://services1.arcgis.com/9NvE8jKNWWlDGsUJ/arcgis/rest/services/VLi_Web_Map_WFL1/FeatureServer/18",
-  "https://services1.arcgis.com/9NvE8jKNWWlDGsUJ/arcgis/rest/services/VLi_Web_Map_WFL1/FeatureServer/19",
-  "https://services1.arcgis.com/9NvE8jKNWWlDGsUJ/arcgis/rest/services/VLi_Web_Map_WFL1/FeatureServer/20",
-  "https://services1.arcgis.com/9NvE8jKNWWlDGsUJ/arcgis/rest/services/VLi_Web_Map_WFL1/FeatureServer/22",
   //"https://services1.arcgis.com/9NvE8jKNWWlDGsUJ/arcgis/rest/services/VLi_Web_Map_WFL1/FeatureServer/23",
   // "https://services1.arcgis.com/9NvE8jKNWWlDGsUJ/arcgis/rest/services/VLi_Web_Map_WFL1/FeatureServer/24",
   // "https://services1.arcgis.com/9NvE8jKNWWlDGsUJ/arcgis/rest/services/VLi_Web_Map_WFL1/FeatureServer/25",
   // "https://services1.arcgis.com/9NvE8jKNWWlDGsUJ/arcgis/rest/services/VLi_Web_Map_WFL1/FeatureServer/26",
   // "https://services1.arcgis.com/9NvE8jKNWWlDGsUJ/arcgis/rest/services/VLi_Web_Map_WFL1/FeatureServer/27",
-  "https://services1.arcgis.com/9NvE8jKNWWlDGsUJ/arcgis/rest/services/VLi_Web_Map_WFL1/FeatureServer/28",
-];
+]
 
-
-//Coordinates of all the towns in NW. The indices are refer to the indices in the above NW array. 
+//Coordinates of all the towns in NW. The indices are refer to the indices in the above NW array.
 export const northWestCoordinates = {
   //1: [62.4112, -114.3084],
   2: [60.5547, -116.1472],
@@ -147,9 +214,9 @@ export const northWestCoordinates = {
   28: [64.2835797, -115.0680437],
   29: [60.2392, -123.4752],
   30: [68.3609, -133.7297],
-};
+}
 
-//Coordinates of all the towns in Nunavut. The indices are refer to the indices in the above Nunavut array. 
+//Coordinates of all the towns in Nunavut. The indices are refer to the indices in the above Nunavut array.
 export const nunavutCoordinates = {
   1: [73.033333, -84.55],
   2: [64.2333, -76.5417],
@@ -179,9 +246,9 @@ export const nunavutCoordinates = {
   27: [74.695833, -94.829167],
   28: [62.816667, -92.083333],
   29: [56.533333, -79.233333],
-};
+}
 
-//Coordinates of all the towns in Yukon. The indices are refer to the indices in the above Yukon array. 
+//Coordinates of all the towns in Yukon. The indices are refer to the indices in the above Yukon array.
 export const yukonCoordinates = {
   1: [61.2639299, -138.7444599],
   2: [60.1658333, -134.7058333],
@@ -198,8 +265,8 @@ export const yukonCoordinates = {
   14: [60.1672222, -132.7216666],
   15: [62.3827778, -140.8797222],
   16: [60.7242144, -135.0560981],
-  17: [62.0911111, -136.2969444]
-};
+  17: [62.0911111, -136.2969444],
+}
 
 export const layerNames = [
   "Ports in Northwest Territories",
@@ -216,8 +283,4 @@ export const layerNames = [
   "Water 2M",
   "Ice Crossing YT",
   "Airports YT",
-
-];
-
-
-
+]
