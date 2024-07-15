@@ -1,0 +1,13 @@
+@baseUrl = http://localhost:4000
+
+################################################### Weather ###################################################
+
+### Create Country
+GET {{baseUrl}}/weather/city?cityCode=nt
+
+
+### Read countries
+GET {{baseUrl}}/countries
+
+### Read country by id
+GET {{baseUrl}}/countries/1

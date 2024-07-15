@@ -1,0 +1,20 @@
+@import url("https://fonts.googleapis.com/css2?family=Abel&display=swap");
+
+.teamRow{
+  width: 80%;
+  margin: auto;
+  padding: 2vh;
+  margin-bottom: 3vh;
+}
+
+
+.teamMemberTitle{
+  font-family: 'Roboto', sans-serif;
+  color: rgb(56, 80, 126);
+  font-size: 3.5vh;
+}
+
+.teamMemberText{
+  font-family: 'Roboto', sans-serif;
+  font-size: 2vh;
+}

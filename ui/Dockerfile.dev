@@ -1,0 +1,4 @@
+# Fetching the latest node image on alpine linux
+FROM node:alpine AS development
+# Set the working directory
+WORKDIR /app

@@ -1,0 +1,19 @@
+/* Navbar */
+@import url("https://fonts.googleapis.com/css2?family=Cairo:wght@400&display=swap");
+
+#navbar-item-elcano-container {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  justify-content: flex-start;
+  margin-left: -20px;
+}
+
+#navbar-item-elcano-text {
+  font-size: 20px;
+  font-weight: 400;
+}
+.menuLink{
+  font-size: 1.8vh;
+}
+/* Navbar End */

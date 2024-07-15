@@ -1,0 +1,27 @@
+@import url("https://fonts.googleapis.com/css2?family=Abel&display=swap");
+
+.partnerOverallContainer {
+  display: flex;
+
+  flex-wrap: wrap;
+  justify-content: space-around;
+  align-items: center;
+  height: 100vh;
+}
+
+.partnerPage {
+  display: flex;
+  background-color: #efefef;
+  flex-direction: column;
+  align-content: space-around;
+}
+
+
+.partnerPageTitleText {
+  font-family: 'Roboto', sans-serif;
+  color: rgb(56, 80, 126);
+  font-size: 6.5vh;
+  text-align: center;
+
+  padding: 5%;
+}

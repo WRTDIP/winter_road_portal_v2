@@ -1,0 +1,124 @@
+//Get coordinates of cities
+Object.keys(citiesOfNorthwestTerritories).forEach(async (key) => {
+  let coordinatesURL = `https://geogratis.gc.ca/services/geoname/en/geonames.json?q=${citiesOfNorthwestTerritories[key]}`;
+  await fetch(coordinatesURL)
+    .then((response) => response.json())
+    .then((data) => {
+      if (data.items[0]) {
+        let latitude = data.items[0].latitude;
+        let longitude = data.items[0].longitude;
+        northWestCoordinatesLookup[key] = [latitude, longitude];
+        createCityGraphic([longitude, latitude], "blue", liveWeatherDataLayer);
+      }
+    })
+    .then(console.log("Northwest", northWestCoordinatesLookup));
+});
+
+Object.keys(citiesOfNunavut).forEach(async (key) => {
+  let coordinatesURL = `https://geogratis.gc.ca/services/geoname/en/geonames.json?q=${citiesOfNunavut[key]}`;
+  await fetch(coordinatesURL)
+    .then((response) => response.json())
+    .then((data) => {
+      if (data.items[0]) {
+        let latitude = data.items[0].latitude;
+        let longitude = data.items[0].longitude;
+        nunavutCoordinatesLookup[key] = [latitude, longitude];
+        createCityGraphic([longitude, latitude], "blue", liveWeatherDataLayer);
+      }
+    })
+    .then(console.log("Nunavut", nunavutCoordinatesLookup));
+});
+
+Object.keys(citiesOfYukon).forEach(async (key) => {
+  let coordinatesURL = `https://geogratis.gc.ca/services/geoname/en/geonames.json?q=${citiesOfYukon[key]}`;
+  await fetch(coordinatesURL)
+    .then((response) => response.json())
+    .then((data) => {
+      if (data.items[0]) {
+        let latitude = data.items[0].latitude;
+        let longitude = data.items[0].longitude;
+        yukonCoordinatesLookup[key] = [latitude, longitude];
+        createCityGraphic([longitude, latitude], "blue", liveWeatherDataLayer);
+      }
+    })
+    .then(console.log("Yukon", yukonCoordinatesLookup));
+});
+
+//////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////
+////////////////////SWOB Realtime data////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    const graphicsLayer = new GraphicsLayer();
+    map.add(graphicsLayer);
+    let url = `https://api.weather.gc.ca/collections/swob-realtime/items?&f=json`;
+     fetch(url)
+      .then((response) => response.json())
+      .then((data) => {
+        let snowDepth, airTemp, relativeHumidity, avgWindSpeed, retrievedTime, lastUpdatedTime;
+        let newPointGraphic;
+        weatherData.current = data.features;
+         const popupTemplate = new PopupTemplate({
+           title: "Station X",
+           content: "<b>Air Temperature:</b> {airTemperature}",
+         });
+        weatherData.current.forEach((item) => {
+          let coordinates = {
+            type: "point",
+            longitude: item.geometry.coordinates[0],
+            latitude: item.geometry.coordinates[1],
+          };
+        if(coordinates.latitude > 60){
+            newPointGraphic = new Graphic({
+              symbol: {
+                type: "simple-marker",
+                color: "red",
+                size: "5px",
+              },
+              geometry: coordinates,
+              attributes: {
+                name: "New Point",
+                type: "Sample",
+              },
+              popupTemplate: popupTemplate,
+            });
+
+            graphicsLayer.add(newPointGraphic);
+        }
+        
+    });
+    // view.popup = new Popup({ view: view });
+    // view.on("click", (event) => {
+    //     const clickedPoint = event.mapPoint;
+    //     const latitude = clickedPoint.latitude,
+    //     longitude = clickedPoint.longitude;
+    //     weatherData.current.forEach((item) => {
+    //     if (
+    //         isWithinRange(
+    //         item.geometry.coordinates[0],
+    //         longitude - 2,
+    //         longitude + 2
+    //         ) &&
+    //         isWithinRange(
+    //         item.geometry.coordinates[1],
+    //         latitude - 2,
+    //         latitude + 2
+    //         )
+    //     ) {
+    //         snowDepth = item.properties.snw_dpth;
+    //         airTemp = item.properties.air_temp;
+    //         relativeHumidity = item.properties.rel_hum;
+    //         avgWindSpeed = item.properties.avg_wnd_spd_10m_pst1hr;
+    //         retrievedTime = new Date(item.properties["date_tm-value"]);
+    //         lastUpdatedTime = retrievedTime.toLocaleString();
+    //         newPointGraphic.popupTemplate.title = `Weather Details at ${
+    //         item.properties["stn_nam-value"]}`;
+    //         newPointGraphic.popupTemplate.content = `<b>Snow Depth:</b> ${snowDepth}cm <br> <br>
+    //                                                 <b>Air Temperature:</b> ${airTemp} °C <br><br>
+    //                                                 <b>Relative Humidity:</b> ${relativeHumidity}% <br><br>
+    //                                                 <b>Average Wind Speed:</b> ${avgWindSpeed} km/h <br><br>
+    //                                                 <b>Last Updated:</b> ${lastUpdatedTime}<br><br> `;
+    //     }
+    //     });
+    // });
+    });

@@ -1,0 +1,65 @@
+@import url('https://fonts.googleapis.com/css2?family=Abel&display=swap');
+
+.footerContainer
+{
+    display: flex;
+    background-color: #001529;
+    height: 10vh;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+}
+
+
+.footerTitle{
+    font-family: 'Abel', sans-serif;
+    font-size: 4vh;
+    color: #F7FAEF;
+    text-align: left;
+    padding-bottom: 30px;
+    padding-top: 30px;
+}
+
+.footerText
+{
+    width: 40%;
+    text-align: left;
+}
+
+.copyRightText{
+    font-family: 'Abel', sans-serif;
+    color:white;
+}
+
+.mediaBoxText
+{
+    font-family: 'Abel', sans-serif;
+    color: white;
+    font-size: 2vh;
+}
+
+.mediaBox
+{
+    display: flex;
+    width: 20vh;
+    flex-direction: row;
+    justify-content: space-around;
+
+}
+/* Navbar */
+@import url("https://fonts.googleapis.com/css2?family=Cairo:wght@400&display=swap");
+
+#navbar-item-elcano-container {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-start;
+  margin-left: -20px;
+}
+
+#navbar-item-elcano-text {
+  font-size: 20px;
+  font-weight: 400;
+  color: white;
+}
+
+/* Navbar End */
