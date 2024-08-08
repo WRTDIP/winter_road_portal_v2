@@ -8,7 +8,12 @@ services:
       - 3000:3000
     volumes:
       - ./ui:/app
-    command: "npm start"
+    command:
+      - /bin/sh
+      - -c
+      - |
+        npm install
+        npm start
     env_file:
       - .env
 
