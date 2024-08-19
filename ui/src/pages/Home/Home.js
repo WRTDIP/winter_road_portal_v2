@@ -29,7 +29,7 @@ function Home() {
     {
       id: 1,
       image: firstBanner,
-      title: "Climate Change Impacts on Winter Roads and Trails",
+      title: "Climate Change Impacts on Winter Roads",
       content:
         "Winter road networks are critical land transportation for remote Northern communities who rely on these networks for receiving essential goods and services during winter season. The public and private transportation sectors also rely on winter road networks for their operations. A warming climate has created a shorter winter road season, unreliable road conditions, and safety concerns. ",
       bgColor: "white",
