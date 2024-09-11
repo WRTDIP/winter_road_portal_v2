@@ -1,0 +1,7 @@
+FROM node:alpine AS development
+
+WORKDIR /app
+
+CMD [ "npm install" ]
+
+CMD ["nodemon server.js"]

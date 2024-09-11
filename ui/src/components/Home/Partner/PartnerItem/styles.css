@@ -1,0 +1,29 @@
+.partnerItemContainer {
+  display: flex;
+  flex-direction: column;
+  background-color: "purple";
+  align-items: center;
+  justify-content: center;
+
+}
+
+
+.partnerImage {
+  width: 150px;
+  height: 150px;
+}
+
+
+.partnerImageContainer
+{
+    width: 260px;
+    height: 200px;
+    background-color: #F5F5F5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.partnerTitle{
+    padding-top: 10px;
+}

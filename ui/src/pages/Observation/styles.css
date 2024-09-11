@@ -1,0 +1,10 @@
+.observationIframe {
+    width: 80%;
+    height: 120vh;
+}
+
+.observationIframeContainer{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}

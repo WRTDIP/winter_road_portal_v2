@@ -1,0 +1,22 @@
+@import url('https://fonts.googleapis.com/css2?family=Abel&display=swap');
+
+.welcomeContainer{
+    background-color: rgb(54, 77, 119);
+    height: 94vh;
+    padding: 6%;
+}
+
+.welcomeTitle{
+    color:  white;
+    font-family: 'Roboto', sans-serif;
+    font-size: 5.2vh;
+}
+.welcomeText{
+    font-size: 20px;
+    color: white;
+    font-family: 'Roboto', sans-serif;
+}
+
+.welcomeCarousel{
+    height: 80%;
+}
