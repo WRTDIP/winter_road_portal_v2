@@ -962,6 +962,7 @@ function WeatherMap() {
           format: "jpgpng",
         })
         imageryLayer.title = "MODIS"
+        imageryLayer.visible = false
         map.add(imageryLayer)
 
         //Create Popup Template
