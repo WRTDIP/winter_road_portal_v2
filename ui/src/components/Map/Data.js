@@ -130,42 +130,42 @@ export const layerData = [
       title: "{R_STNAME_C}",
     },
   },
-  // {
-  //   title: "Airports NU",
-  //   link: "https://services1.arcgis.com/9NvE8jKNWWlDGsUJ/arcgis/rest/services/VLi_Web_Map_WFL1/FeatureServer/1",
-  // },
-  // {
-  //   title: "Communities YU",
-  //   link: "https://services1.arcgis.com/9NvE8jKNWWlDGsUJ/arcgis/rest/services/VLi_Web_Map_WFL1/FeatureServer/7",
-  // },
-  // {
-  //   title: "Health Care NU",
-  //   link: "https://services1.arcgis.com/9NvE8jKNWWlDGsUJ/arcgis/rest/services/VLi_Web_Map_WFL1/FeatureServer/13",
-  // },
-  // {
-  //   title: "Airports NU",
-  //   link: "https://services1.arcgis.com/9NvE8jKNWWlDGsUJ/arcgis/rest/services/VLi_Web_Map_WFL1/FeatureServer/14",
-  // },
-  // {
-  //   title: "Communities NU",
-  //   link: "https://services1.arcgis.com/9NvE8jKNWWlDGsUJ/arcgis/rest/services/VLi_Web_Map_WFL1/FeatureServer/15",
-  // },
-  // {
-  //   title: "Communities NWT",
-  //   link: "https://services1.arcgis.com/9NvE8jKNWWlDGsUJ/arcgis/rest/services/VLi_Web_Map_WFL1/FeatureServer/19",
-  // },
-  // {
-  //   title: "Airports NWT",
-  //   link: "https://services1.arcgis.com/9NvE8jKNWWlDGsUJ/arcgis/rest/services/VLi_Web_Map_WFL1/FeatureServer/20",
-  // },
-  // {
-  //   title: "Ice Roads NWT",
-  //   link: "https://services1.arcgis.com/9NvE8jKNWWlDGsUJ/arcgis/rest/services/VLi_Web_Map_WFL1/FeatureServer/22",
-  // },
-  // {
-  //   title: "Ports Communitites NWT",
-  //   link: "https://services1.arcgis.com/9NvE8jKNWWlDGsUJ/arcgis/rest/services/VLi_Web_Map_WFL1/FeatureServer/28",
-  // },
+  {
+    title: "Airports NU",
+    link: "https://services1.arcgis.com/9NvE8jKNWWlDGsUJ/arcgis/rest/services/VLi_Web_Map_WFL1/FeatureServer/1",
+  },
+  {
+    title: "Communities YU",
+    link: "https://services1.arcgis.com/9NvE8jKNWWlDGsUJ/arcgis/rest/services/VLi_Web_Map_WFL1/FeatureServer/7",
+  },
+  {
+    title: "Health Care NU",
+    link: "https://services1.arcgis.com/9NvE8jKNWWlDGsUJ/arcgis/rest/services/VLi_Web_Map_WFL1/FeatureServer/13",
+  },
+  {
+    title: "Airports NU",
+    link: "https://services1.arcgis.com/9NvE8jKNWWlDGsUJ/arcgis/rest/services/VLi_Web_Map_WFL1/FeatureServer/14",
+  },
+  {
+    title: "Communities NU",
+    link: "https://services1.arcgis.com/9NvE8jKNWWlDGsUJ/arcgis/rest/services/VLi_Web_Map_WFL1/FeatureServer/15",
+  },
+  {
+    title: "Communities NWT",
+    link: "https://services1.arcgis.com/9NvE8jKNWWlDGsUJ/arcgis/rest/services/VLi_Web_Map_WFL1/FeatureServer/19",
+  },
+  {
+    title: "Airports NWT",
+    link: "https://services1.arcgis.com/9NvE8jKNWWlDGsUJ/arcgis/rest/services/VLi_Web_Map_WFL1/FeatureServer/20",
+  },
+  {
+    title: "Ice Roads NWT",
+    link: "https://services1.arcgis.com/9NvE8jKNWWlDGsUJ/arcgis/rest/services/VLi_Web_Map_WFL1/FeatureServer/22",
+  },
+  {
+    title: "Ports Communitites NWT",
+    link: "https://services1.arcgis.com/9NvE8jKNWWlDGsUJ/arcgis/rest/services/VLi_Web_Map_WFL1/FeatureServer/28",
+  },
   //"https://services1.arcgis.com/9NvE8jKNWWlDGsUJ/arcgis/rest/services/VLi_Web_Map_WFL1/FeatureServer/2",
   // "https://services1.arcgis.com/9NvE8jKNWWlDGsUJ/arcgis/rest/services/VLi_Web_Map_WFL1/FeatureServer/3",
   // "https://services1.arcgis.com/9NvE8jKNWWlDGsUJ/arcgis/rest/services/VLi_Web_Map_WFL1/FeatureServer/4",
