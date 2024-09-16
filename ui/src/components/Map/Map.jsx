@@ -14,6 +14,10 @@ import {
 import { width } from "@fortawesome/free-regular-svg-icons/faAddressBook"
 import { getClimateCity } from "../../services/meteo.service.js"
 import { cities } from "../../utils/constants.js"
+import { LineChart } from "@mui/x-charts/LineChart"
+import { Icon, Typography } from "@mui/material"
+import OpenInFullIcon from "@mui/icons-material/OpenInFull"
+import IconButton from "@mui/material/IconButton"
 
 function WeatherMap() {
   // References for DOM elements and data
@@ -53,9 +57,9 @@ function WeatherMap() {
         onHide={closeModal}
         dialogClassName="right-half-modal"
         style={{
-          width: "400px",
-          height: "350px",
-          overflow: "hidden",
+          width: "800px",
+          height: "700px",
+          overflow: "scroll",
           position: "absolute",
           top: mouse.y,
           left: mouse.x,
@@ -64,15 +68,45 @@ function WeatherMap() {
         <Modal.Header
           closeButton
           style={{
-            width: "300px",
+            width: "500px",
             overflow: "hidden",
           }}
         >
           <Modal.Title> Weather</Modal.Title>
+          <IconButton>
+            <OpenInFullIcon />
+          </IconButton>
         </Modal.Header>
         {/* <Modal.Body
           sx={{ width: "300px", height: "200px", overflow: "hidden" }}
         > */}
+        <Typography variant="h5" component="h5">
+          Freezing Degree Days
+        </Typography>
+        <LineChart
+          xAxis={[
+            {
+              data: [
+                1980, 1981, 1982, 1983, 1984, 1985, 1986, 1987, 1988, 1989,
+                1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999,
+                2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009,
+                2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019,
+              ],
+            },
+          ]}
+          series={[
+            {
+              data: [
+                3020.1, 3698.9, 3813.2, 3020.9, 3876.9, 3519.6, 2878.3, 2986.0,
+                3634.2, 3676.8, 3800.3, 3595.2, 2818.7, 3604.5, 3073.3, 3634.5,
+                3467.6, 2745.5, 2553.0, 2823.2, 3101.2, 3513.6, 3164.4, 3299.7,
+                3354.8, 2274.1, 3081.9, 3547.2, 3391.7, 2582.8, 3356.4, 2839.3,
+                3671.3, 3738.0, 3274.7, 2830.6, 2937.2, 3249.5, 2970.5, 3474.1,
+              ],
+            },
+          ]}
+          height={300}
+        />
         <iframe
           title="Environment Canada Weather"
           width="300px"

@@ -1,28 +1,31 @@
 // import CarouselHome from "../../components/CarouselHome";
 
-import WelcomeBanner from "../../components/Home/WelcomeBanner/WelcomeBanner";
-import Feature from "../../components/Home/Feature/Features";
-import TemplateBanner from "../../components/Home/TemlateBanner";
-import bgImage from "../../assets/homebg_3.png";
-import firstBanner from "../../assets/firstBanner.png";
-import secondBanner from "../../assets/transportation.png";
-import thirdBanner from "../../assets/northern_lights.png";
+import WelcomeBanner from "../../components/Home/WelcomeBanner/WelcomeBanner"
+import Feature from "../../components/Home/Feature/Features"
+import TemplateBanner from "../../components/Home/TemlateBanner"
+import bgImage from "../../assets/homebg_3.png"
+import firstBanner from "../../assets/firstBanner.png"
+import secondBanner from "../../assets/transportation.png"
+import thirdBanner from "../../assets/northern_lights.png"
 
-import firstfeatures from "../../assets/map_icon.png";
-import secondFeatures from "../../assets/presentation_icon.png";
-import thirdFeatures from "../../assets/smartphone_icon.png";
-import fourthFeatures from "../../assets/ice_road_icon.png";
+import firstfeatures from "../../assets/map_icon.png"
+import secondFeatures from "../../assets/presentation_icon.png"
+import thirdFeatures from "../../assets/smartphone_icon.png"
+import fourthFeatures from "../../assets/ice_road_icon.png"
 
-import firstpartners from "../../assets/Transport_Canada.png";
-import secondPartners from "../../assets/UTSC.png";
-import thirdPartners from "../../assets/UBC.png";
-import fourthPartners from "../../assets/UofA.png";
-import fifthPartners from "../../assets/GNWT.gif";
-import sixthPartners from "../../assets/NRC.png";
-import seventhPartners from "../../assets/CIRNAC.png";
+import firstpartners from "../../assets/Transport_Canada.png"
+import secondPartners from "../../assets/UTSC.png"
+import thirdPartners from "../../assets/UBC.png"
+import fourthPartners from "../../assets/UofA.png"
+import fifthPartners from "../../assets/GNWT.gif"
+import sixthPartners from "../../assets/NRC.png"
+import seventhPartners from "../../assets/CIRNAC.png"
 
-import Partner from "../../components/Home/Partner";
-import Footer from "../../components/Global/Footer";
+import Partner from "../../components/Home/Partner"
+import Footer from "../../components/Global/Footer"
+import FDDChart from "../../components/Chart/FDDChart"
+import * as React from "react"
+import { LineChart } from "@mui/x-charts/LineChart"
 
 function Home() {
   const BannerContents = [
@@ -51,7 +54,7 @@ function Home() {
         "A shorter winter road season with less reliable winter road conditions has a substantial socio-economic impact on Northern communities, particularly for remote Indigenous communities. The lack of winter road access for these remote communities has important consequences from a socio-economic perspective, for example, an increase in price of goods and services, which are already expensive in the North. ",
       bgColor: "white",
     },
-  ];
+  ]
 
   const FeatureContents = [
     {
@@ -86,7 +89,7 @@ function Home() {
         "All winter roads have a unique feature. Learn more about each winter road network and how climate change has been impacting them.",
       bgColor: "white",
     },
-  ];
+  ]
 
   const PartnerContents = [
     {
@@ -132,8 +135,8 @@ function Home() {
       title: "Crown-Indigenous Relations and Northern Affairs Canada",
       url: "https://www.canada.ca/en/crown-indigenous-relations-northern-affairs.html",
     },
-  ];
-  
+  ]
+
   return (
     <div>
       <WelcomeBanner />
@@ -144,7 +147,7 @@ function Home() {
       <Feature props={FeatureContents} />
       <Partner props={PartnerContents} />
     </div>
-  );
+  )
 }
 
-export default Home;
+export default Home
