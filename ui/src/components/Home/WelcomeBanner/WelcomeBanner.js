@@ -1,6 +1,6 @@
 import React from "react";
-import {Typography } from "antd";
-import CanadaMap from "../../../assets/canada_map.png";
+//import {Typography } from "antd";
+//import CanadaMap from "../../../assets/canada_map.png";
 import { Container, Row, Col } from "react-bootstrap";
 import CarouselHome from "../../../components/Carousel/Carousel";
 
