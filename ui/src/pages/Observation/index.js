@@ -8,7 +8,7 @@ function Observation() {
     {
       id: 1,
       image: ObservationFirst,
-      title: "Winter Road and Trail Watch",
+      title: "Winter Road Watch",
       content: "Feel free to export the data to Excel format ",
       bgColor: "white",
     },
@@ -20,7 +20,7 @@ function Observation() {
       <div className="observationIframeContainer">
         <iframe
           className="observationIframe"
-          src="https://arcg.is/0rOGWD"
+          src="https://utoronto.maps.arcgis.com/apps/webappviewer/index.html?id=af09da1db14c49a79bd8bad1eb6abde5"
         ></iframe>
       </div>
     </div>
