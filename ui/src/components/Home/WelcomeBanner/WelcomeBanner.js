@@ -12,7 +12,8 @@ const WelcomeBanner = () =>{
         <Row>
           <Col xs lg="4" className="text-center my-auto">
             <h2 className="welcomeTitle">
-              Welcome to the Winter Road and Mobility Portal
+              Welcome to WRaMP 
+              Winter Road and Mobility Portal
             </h2>
             <p className="welcomeText">
               The Winter Road and Mobility Portal (WRaMP)
