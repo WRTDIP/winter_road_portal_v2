@@ -22,6 +22,7 @@ function Observation() {
           className="observationIframe"
           src="https://utoronto.maps.arcgis.com/apps/webappviewer/index.html?id=af09da1db14c49a79bd8bad1eb6abde5"
           title="Winter Road Watch Map"
+          style={{ width: "100%", height: "600px", border: "none"}}
         ></iframe>
       </div>
     </div>
