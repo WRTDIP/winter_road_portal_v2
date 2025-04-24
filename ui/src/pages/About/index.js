@@ -8,6 +8,7 @@ import Larissa from "../../assets/Larissa.png";
 import Amy from "../../assets/Amy.png";
 import Moein from "../../assets/Moein.png";
 import Vivienne from "../../assets/Vivienne.png";
+import Person from "../../assets/Person.png";
 
 import CoverBanner from "../../components/Global/CoverBanner/CoverBanner";
 import Team from "../../components/Team";
@@ -69,7 +70,7 @@ function About() {
         },
         {
             id: 2,
-            image: bgImage,
+            image: Person,
             name: "Dr. Thomas Stringer",
             title: "Postdoctoral Fellow, Transportation Engineering",
             email: "thomas.stringer@ubc.ca"
