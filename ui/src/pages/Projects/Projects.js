@@ -21,7 +21,7 @@ function Projects() {
       image: ProjectSecond,
       title: "Winter Road User Community Online Survey",
       content:
-        "We will invite the Winter Road and Trail Watch observers to participate in an online survey focused on the impacts of climate change on the winter road networks in the Northwest Territories.",
+        "We will invite the Winter Road Watch observers to participate in an online survey focused on the impacts of climate change on the winter road networks in the Northwest Territories.",
       bgColor: "#F7FAEF",
     },
     {

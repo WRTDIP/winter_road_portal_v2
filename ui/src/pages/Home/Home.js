@@ -3,7 +3,7 @@
 import WelcomeBanner from "../../components/Home/WelcomeBanner/WelcomeBanner"
 import Feature from "../../components/Home/Feature/Features"
 import TemplateBanner from "../../components/Home/TemlateBanner"
-import bgImage from "../../assets/homebg_3.png"
+// import bgImage from "../../assets/homebg_3.png"
 import firstBanner from "../../assets/firstBanner.png"
 import secondBanner from "../../assets/transportation.png"
 import thirdBanner from "../../assets/northern_lights.png"
@@ -62,23 +62,23 @@ function Home() {
       image: firstfeatures,
       title: "Interactive Map",
       content:
-        "Where are winter roads and trails? How are winter roads affected by climate change? Our interactive map will allow you to explore Northern transportation networks, climate change impact assessment data, and socio-economic information. ",
+        "Where can you find the winter roads? How is climate change affecting these winter roads? Our interactive map provides an opportunity to explore Northern transportation networks, climate change impacts, and socio-economic information. ",
       bgColor: "white",
     },
     {
       id: 2,
       image: secondFeatures,
-      title: "Northern Transportation Network",
+      title: "Northern Transportation Network Study",
       content:
-        "We host Northern transportation related data as mush as possible. TBA",
+        "We present studies and data related to Northern transportation.",
       bgColor: "white",
     },
     {
       id: 3,
       image: thirdFeatures,
-      title: "Winter Road and Trail Watch",
+      title: "Winter Road Watch App",
       content:
-        "Our portal is also linked to the Winter Road and Trail Watch app that is a monitoring tool for tracking changes on the winter road and trail conditions.",
+        "Our portal is also linked to the Winter Road Watch app which is a monitoring tool for tracking changes on the winter road conditions.",
       bgColor: "white",
     },
     {
@@ -86,7 +86,7 @@ function Home() {
       image: fourthFeatures,
       title: "Winter Road Profile",
       content:
-        "All winter roads have a unique feature. Learn more about each winter road network and how climate change has been impacting them.",
+        "All winter roads have a unique physical feature. Learn more about each winter road network and how climate change has been impacting them.",
       bgColor: "white",
     },
   ]
