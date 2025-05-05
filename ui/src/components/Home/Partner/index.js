@@ -8,8 +8,10 @@ const Partner = ({ props }) => {
       <div className="partnerPageTitleText">Partners</div>
       <Row className="justify-content-md-center">
         {props.map((content) => (
-          <Col xs lg="3" align="center" className="p-3">
-            <img src={content.image} className="img-fluid" width="150" />
+          <Col xs lg="3" align="center" className="p-3" key={content.id}>
+            <a href={content.url} target="_blank" rel="noopener noreferrer">
+            <img src={content.image} className="img-fluid" width="150" alt={content.title} />
+            </a>
           </Col>
         ))}
       </Row>
