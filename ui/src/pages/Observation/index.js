@@ -1,4 +1,4 @@
-import ObservationFirst from "../../assets/group_icon.png";
+import ObservationFirst from "../../assets/Winter_Road_Watch_page.png";
 
 import CoverBanner from "../../components/Global/CoverBanner/CoverBanner";
 import SubSectionBanner from "../../components/SubSectionBanner/SubSectionBanner";
@@ -19,12 +19,15 @@ function Observation() {
       <SubSectionBanner props={BannerContents[0]} />
       <div className="observationIframeContainer">
         <p>
-          <a href="https://utoronto.maps.arcgis.com/apps/webappviewer/index.html?id=af09da1db14c49a79bd8bad1eb6abde5" 
+          <a href="https://experience.arcgis.com/experience/53a7d50029164034802c870e8c7e72ae" 
               target="_blank" 
               rel="noopener noreferrer"
-              className="mapLink"
           >
-            Winter Road Watch Map
+            <img
+              src={ObservationFirst}
+              alt="Winter Road Watch Map"
+              className="mapImage"
+            />
           </a>
         </p>
       </div>

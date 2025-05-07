@@ -8,13 +8,11 @@
     align-items: center;
     justify-content: center;
 }
-.mapLink {
-    font-size: 20px; /* Adjust the size as needed */
-    font-weight: bold; /* Optional: Make the text bold */
-    color: #38507E; /* Optional: Change the text color */
-    text-decoration: none; /* Optional: Remove underline */
-  }
   
-  .mapLink:hover {
-    text-decoration: underline; /* Optional: Add underline on hover */
+.mapImage {
+    width: 100%; /* Make the image twice as wide */
+    max-width: none; /* Remove the maximum width limit */
+    height: auto; /* Maintain aspect ratio */
+    margin-top: 10px; /* Add spacing above the image */
+    cursor: pointer; /* Show a pointer cursor on hover */
   }
