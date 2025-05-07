@@ -9,7 +9,7 @@ function Observation() {
       id: 1,
       image: ObservationFirst,
       title: "Winter Road Watch",
-      content: "Feel free to export the data to Excel format ",
+      content: "Click the link below to view the interactive map.",
       bgColor: "white",
     },
   ];
@@ -18,15 +18,30 @@ function Observation() {
       <CoverBanner title="Observation" />
       <SubSectionBanner props={BannerContents[0]} />
       <div className="observationIframeContainer">
-        <iframe
-          className="observationIframe"
-          src="https://utoronto.maps.arcgis.com/apps/webappviewer/index.html?id=af09da1db14c49a79bd8bad1eb6abde5"
-          title="Winter Road Watch Map"
-          style={{ width: "100%", height: "600px", border: "none"}}
-        ></iframe>
+        <p>
+          <a href="https://utoronto.maps.arcgis.com/apps/webappviewer/index.html?id=af09da1db14c49a79bd8bad1eb6abde5" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="mapLink"
+          >
+            Winter Road Watch Map
+          </a>
+        </p>
       </div>
     </div>
   );
 }
 
 export default Observation;
+
+// iframe won't work, so I use above code instead. Below is the code for iframe
+
+// <div className="observationIframeContainer">
+       // <iframe
+          // className="observationIframe"
+          // src="https://utoronto.maps.arcgis.com/apps/webappviewer/index.html?id=af09da1db14c49a79bd8bad1eb6abde5"
+          // title="Winter Road Watch Map"
+          // style={{ width: "100%", height: "600px", border: "none"}}
+        // ></iframe>
+      // </div>
+    // <div>

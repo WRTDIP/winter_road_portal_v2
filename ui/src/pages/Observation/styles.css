@@ -8,3 +8,13 @@
     align-items: center;
     justify-content: center;
 }
+.mapLink {
+    font-size: 20px; /* Adjust the size as needed */
+    font-weight: bold; /* Optional: Make the text bold */
+    color: #38507E; /* Optional: Change the text color */
+    text-decoration: none; /* Optional: Remove underline */
+  }
+  
+  .mapLink:hover {
+    text-decoration: underline; /* Optional: Add underline on hover */
+  }
