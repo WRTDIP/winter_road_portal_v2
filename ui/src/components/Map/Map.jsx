@@ -936,7 +936,7 @@ function WeatherMap() {
         const view = new MapView({
           container: MapElement.current,
           map: map,
-          center: [-110, 68.027],
+          center: [-110, 65.5], // Adjust longitude and latitude as needed
           zoom: 4.5,
           popupEnabled: true,
         })
@@ -991,6 +991,7 @@ function WeatherMap() {
         // Add custom zoom button
         const customZoomButton = document.createElement("div")
         customZoomButton.innerHTML = "🏠"
+        customZoomButton.title = "Default"
         customZoomButton.classList.add(
           "esri-widget",
           "esri-widget--button",
@@ -999,7 +1000,7 @@ function WeatherMap() {
         )
 
         customZoomButton.addEventListener("click", () => {
-          view.goTo({ center: [-110, 68.027], zoom: 4.5 })
+          view.goTo({ center: [-110, 65.5], zoom: 4.5 })
         })
 
         view.ui.add(customZoomButton, "top-left")
@@ -1134,11 +1135,12 @@ function WeatherMap() {
           })
         }
 
-        //adds the feature layers from the ArcGIS web map. Certain layers are hidden via the featureLayer.visible parameter
+        //Adds the feature layers from the ArcGIS web map. Certain layers are hidden via the featureLayer.visible parameter
         layerData.forEach((layer, index) => {
           const featureLayer = new FeatureLayer({
             url: layer.link,
             popupTemplate: layer.popupTemplate,
+            visible: layer.visible, // Apply the visible property from layerData
           })
 
           //Set renderer

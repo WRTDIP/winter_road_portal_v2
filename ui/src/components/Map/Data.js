@@ -130,7 +130,54 @@ export const layerData = [
       title: "{R_STNAME_C}",
     },
   },
-  
+  {
+    title: "Airports NWT",
+    link: "https://services1.arcgis.com/9NvE8jKNWWlDGsUJ/arcgis/rest/services/Airports/FeatureServer/0",
+    popupTemplate: {
+      title: "{Airport_Name}", // Replace with the field name from the layer's attributes
+      content: `
+      <b>Airport Code:</b> {Airport_Code}<br>
+      <b>Elevation (m):</b> {Elevation}<br>
+      <b>Runway 1 Type:</b> {Runway_1_Type}<br>
+      <b>Runway 1 Length (m):</b> {Length_1}<br>
+      <b>Runway 2 Type:</b> {Runway_2_Type}<br>
+      <b>Runway 2 Length (m):</b> {Length_2}
+    `
+    },
+    visible: false // Set to false if you want the layer to be hidden initially
+  },
+  {
+    title: "Airports YU",
+    link: "https://services1.arcgis.com/9NvE8jKNWWlDGsUJ/arcgis/rest/services/Airports/FeatureServer/1",
+    popupTemplate: {
+      title: "{Airport_Name}",
+      content: `
+        <b>Airport Code:</b> {Airport_Code}<br>
+        <b>Elevation (m):</b> {Elevation}<br>
+        <b>Runway 1 Type:</b> {Runway_1_Type}<br>
+        <b>Runway 1 Length (m):</b> {Length_1}<br>
+        <b>Runway 2 Type:</b> {Runway_2_Type}<br>
+        <b>Runway 2 Length (m):</b> {Length_2}
+      `
+    },
+    visible: false
+  },
+  {
+    title: "Airports NU",
+    link: "https://services1.arcgis.com/9NvE8jKNWWlDGsUJ/arcgis/rest/services/Airports/FeatureServer/2",
+    popupTemplate: {
+      title: "{Airport_Name}",
+      content: `
+        <b>Airport Code:</b> {Airport_Code}<br>
+        <b>Elevation (m):</b> {Elevation}<br>
+        <b>Runway 1 Type:</b> {Runway_1_Type}<br>
+        <b>Runway 1 Length (m):</b> {Length_1}<br>
+        <b>Runway 2 Type:</b> {Runway_2_Type}<br>
+        <b>Runway 2 Length (m):</b> {Length_2}
+      `
+    },
+    visible: false
+  },
   {
     title: "Communities YU",
     link: "https://services1.arcgis.com/9NvE8jKNWWlDGsUJ/arcgis/rest/services/VLi_Web_Map_WFL1/FeatureServer/7",
@@ -148,10 +195,10 @@ export const layerData = [
     title: "Communities NWT",
     link: "https://services1.arcgis.com/9NvE8jKNWWlDGsUJ/arcgis/rest/services/VLi_Web_Map_WFL1/FeatureServer/19",
   },
-  {
-    title: "Airports",
-    link: "https://services1.arcgis.com/9NvE8jKNWWlDGsUJ/arcgis/rest/services/Airports/FeatureServer",
-  },
+  // {
+    // title: "Airports",
+    // link: "https://services1.arcgis.com/9NvE8jKNWWlDGsUJ/arcgis/rest/services/Airports/FeatureServer",
+  // },
   {
     title: "Ice Roads NWT",
     link: "https://services1.arcgis.com/9NvE8jKNWWlDGsUJ/arcgis/rest/services/VLi_Web_Map_WFL1/FeatureServer/22",
