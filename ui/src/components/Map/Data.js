@@ -179,22 +179,61 @@ export const layerData = [
     visible: false
   },
   {
-    title: "Communities YU",
-    link: "https://services1.arcgis.com/9NvE8jKNWWlDGsUJ/arcgis/rest/services/VLi_Web_Map_WFL1/FeatureServer/7",
+    title: "Ferries NWT",
+    link: "https://services1.arcgis.com/9NvE8jKNWWlDGsUJ/arcgis/rest/services/Ferries_and_Ice_Crossings_v1/FeatureServer/0",
+    popupTemplate: {
+      title: "{Name}",
+    },
+    visible: false
   },
   {
-    title: "Health Care NU",
-    link: "https://services1.arcgis.com/9NvE8jKNWWlDGsUJ/arcgis/rest/services/VLi_Web_Map_WFL1/FeatureServer/13",
+    title: "Ferries YU",
+    link: "https://services1.arcgis.com/9NvE8jKNWWlDGsUJ/arcgis/rest/services/Ferries_and_Ice_Crossings_v1/FeatureServer/7",
+    popupTemplate: {
+      title: "{Name}",
+    },
+    visible: false
   },
-  
   {
-    title: "Communities NU",
-    link: "https://services1.arcgis.com/9NvE8jKNWWlDGsUJ/arcgis/rest/services/VLi_Web_Map_WFL1/FeatureServer/15",
+    title: "Ice Crossings NWT",
+    link: "https://services1.arcgis.com/9NvE8jKNWWlDGsUJ/arcgis/rest/services/Ferries_and_Ice_Crossings_v1/FeatureServer/5",
+    popupTemplate: {
+      title: "{Street}",
+      content: `
+        <b>Community:</b> {Community}<br>
+        <b>Length (m):</b> {Length}<br>
+      `
+    },
+    visible: false
   },
   {
-    title: "Communities NWT",
-    link: "https://services1.arcgis.com/9NvE8jKNWWlDGsUJ/arcgis/rest/services/VLi_Web_Map_WFL1/FeatureServer/19",
+    title: "Ice Crossings YU",
+    link: "https://services1.arcgis.com/9NvE8jKNWWlDGsUJ/arcgis/rest/services/Ferries_and_Ice_Crossings_v1/FeatureServer/1",
+    popupTemplate: {
+      title: "{Street_Name}",
+      content: `
+        <b>Community:</b> {Community}<br>
+        <b>Length (m):</b> {Length}<br>
+      `
+    },
+    visible: false
   },
+  // {
+    // title: "Communities YU",
+    // link: "https://services1.arcgis.com/9NvE8jKNWWlDGsUJ/arcgis/rest/services/VLi_Web_Map_WFL1/FeatureServer/7",
+  // },
+  // {
+    // title: "Health Care NU",
+    // link: "https://services1.arcgis.com/9NvE8jKNWWlDGsUJ/arcgis/rest/services/VLi_Web_Map_WFL1/FeatureServer/13",
+  // },  
+  // {
+    // title: "Communities NU",
+    // link: "https://services1.arcgis.com/9NvE8jKNWWlDGsUJ/arcgis/rest/services/VLi_Web_Map_WFL1/FeatureServer/15",
+  // },
+  // {
+    // title: "Communities NWT",
+    // link: "https://services1.arcgis.com/9NvE8jKNWWlDGsUJ/arcgis/rest/services/VLi_Web_Map_WFL1/FeatureServer/19",
+  // },
   // {
     // title: "Airports",
     // link: "https://services1.arcgis.com/9NvE8jKNWWlDGsUJ/arcgis/rest/services/Airports/FeatureServer",
@@ -203,10 +242,11 @@ export const layerData = [
     title: "Ice Roads NWT",
     link: "https://services1.arcgis.com/9NvE8jKNWWlDGsUJ/arcgis/rest/services/VLi_Web_Map_WFL1/FeatureServer/22",
   },
-  {
-    title: "Ports Communitites NWT",
-    link: "https://services1.arcgis.com/9NvE8jKNWWlDGsUJ/arcgis/rest/services/VLi_Web_Map_WFL1/FeatureServer/28",
-  },
+  // {
+    // title: "Ports Communitites NWT",
+    // link: "https://services1.arcgis.com/9NvE8jKNWWlDGsUJ/arcgis/rest/services/VLi_Web_Map_WFL1/FeatureServer/28",
+  // },
+  
   //"https://services1.arcgis.com/9NvE8jKNWWlDGsUJ/arcgis/rest/services/VLi_Web_Map_WFL1/FeatureServer/2",
   // "https://services1.arcgis.com/9NvE8jKNWWlDGsUJ/arcgis/rest/services/VLi_Web_Map_WFL1/FeatureServer/3",
   // "https://services1.arcgis.com/9NvE8jKNWWlDGsUJ/arcgis/rest/services/VLi_Web_Map_WFL1/FeatureServer/4",

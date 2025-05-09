@@ -972,7 +972,9 @@ function WeatherMap() {
           view,
           container: "layer-list-container",
         })
-        const legend = new Legend({ view, container: "legend-container" })
+        const legend = new Legend({ 
+          view, 
+          container: "legend-container" })
 
         // Add expand widgets for layer list and legend
         const layerListExpand = new Expand({
