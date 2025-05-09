@@ -218,6 +218,41 @@ export const layerData = [
     },
     visible: false
   },
+  {
+    title: "Winter Roads NWT",
+    link: "https://services1.arcgis.com/9NvE8jKNWWlDGsUJ/arcgis/rest/services/Winter_Roads_v1/FeatureServer/4",
+    popupTemplate: {
+      title: "{STREET}",
+      content: `
+        <b>Category:</b> {Category}<br>
+        <b>Length (km):</b> {Length}<br>
+      `
+    },
+    visible: true
+  },
+  {
+    title: "Winter Roads NU",
+    link: "https://services1.arcgis.com/9NvE8jKNWWlDGsUJ/arcgis/rest/services/Winter_Roads_v1/FeatureServer/1",
+    popupTemplate: {
+      title: "{STREET}",
+      content: `
+        <b>Category:</b> {Category}<br>
+        <b>Length (km):</b> {Length}<br>
+      `
+    },
+    visible: true
+  },
+  {
+    title: "Proposed Roads NWT",
+    link: "https://services1.arcgis.com/9NvE8jKNWWlDGsUJ/arcgis/rest/services/Proposed_Roads_v1/FeatureServer/5",
+    popupTemplate: {
+      title: "{Street_Name}",
+      content: `
+        <b>Category:</b> {Category}<br>
+      `
+    },
+    visible: false
+  },
   // {
     // title: "Communities YU",
     // link: "https://services1.arcgis.com/9NvE8jKNWWlDGsUJ/arcgis/rest/services/VLi_Web_Map_WFL1/FeatureServer/7",
@@ -238,10 +273,10 @@ export const layerData = [
     // title: "Airports",
     // link: "https://services1.arcgis.com/9NvE8jKNWWlDGsUJ/arcgis/rest/services/Airports/FeatureServer",
   // },
-  {
-    title: "Ice Roads NWT",
-    link: "https://services1.arcgis.com/9NvE8jKNWWlDGsUJ/arcgis/rest/services/VLi_Web_Map_WFL1/FeatureServer/22",
-  },
+  // {
+    // title: "Ice Roads NWT",
+    // link: "https://services1.arcgis.com/9NvE8jKNWWlDGsUJ/arcgis/rest/services/VLi_Web_Map_WFL1/FeatureServer/22",
+  // },
   // {
     // title: "Ports Communitites NWT",
     // link: "https://services1.arcgis.com/9NvE8jKNWWlDGsUJ/arcgis/rest/services/VLi_Web_Map_WFL1/FeatureServer/28",
