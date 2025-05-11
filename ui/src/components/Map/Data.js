@@ -131,7 +131,7 @@ export const layerData = [
     },
   },
   {
-    title: "Airports NWT",
+    title: "Airports - Northwest Territories",
     link: "https://services1.arcgis.com/9NvE8jKNWWlDGsUJ/arcgis/rest/services/Airports/FeatureServer/0",
     popupTemplate: {
       title: "{Airport_Name}", // Replace with the field name from the layer's attributes
@@ -147,7 +147,7 @@ export const layerData = [
     visible: false // Set to false if you want the layer to be hidden initially
   },
   {
-    title: "Airports YU",
+    title: "Airports - Yukon",
     link: "https://services1.arcgis.com/9NvE8jKNWWlDGsUJ/arcgis/rest/services/Airports/FeatureServer/1",
     popupTemplate: {
       title: "{Airport_Name}",
@@ -163,7 +163,7 @@ export const layerData = [
     visible: false
   },
   {
-    title: "Airports NU",
+    title: "Airports - Nunavut",
     link: "https://services1.arcgis.com/9NvE8jKNWWlDGsUJ/arcgis/rest/services/Airports/FeatureServer/2",
     popupTemplate: {
       title: "{Airport_Name}",
@@ -179,7 +179,7 @@ export const layerData = [
     visible: false
   },
   {
-    title: "Ferries NWT",
+    title: "Ferries - Northwest Territories",
     link: "https://services1.arcgis.com/9NvE8jKNWWlDGsUJ/arcgis/rest/services/Ferries_and_Ice_Crossings_v1/FeatureServer/0",
     popupTemplate: {
       title: "{Name}",
@@ -187,7 +187,7 @@ export const layerData = [
     visible: false
   },
   {
-    title: "Ferries YU",
+    title: "Ferries - Yukon",
     link: "https://services1.arcgis.com/9NvE8jKNWWlDGsUJ/arcgis/rest/services/Ferries_and_Ice_Crossings_v1/FeatureServer/7",
     popupTemplate: {
       title: "{Name}",
@@ -195,7 +195,7 @@ export const layerData = [
     visible: false
   },
   {
-    title: "Ice Crossings NWT",
+    title: "Ice Crossings - Northwest Territories",
     link: "https://services1.arcgis.com/9NvE8jKNWWlDGsUJ/arcgis/rest/services/Ferries_and_Ice_Crossings_v1/FeatureServer/5",
     popupTemplate: {
       title: "{Street}",
@@ -207,7 +207,7 @@ export const layerData = [
     visible: false
   },
   {
-    title: "Ice Crossings YU",
+    title: "Ice Crossings - Yukon",
     link: "https://services1.arcgis.com/9NvE8jKNWWlDGsUJ/arcgis/rest/services/Ferries_and_Ice_Crossings_v1/FeatureServer/1",
     popupTemplate: {
       title: "{Street_Name}",
@@ -219,7 +219,7 @@ export const layerData = [
     visible: false
   },
   {
-    title: "Winter Roads NWT",
+    title: "Winter Roads - Northwest Territories",
     link: "https://services1.arcgis.com/9NvE8jKNWWlDGsUJ/arcgis/rest/services/Winter_Roads_v1/FeatureServer/4",
     popupTemplate: {
       title: "{STREET}",
@@ -231,7 +231,7 @@ export const layerData = [
     visible: true
   },
   {
-    title: "Winter Roads NU",
+    title: "Winter Roads - Nunavut",
     link: "https://services1.arcgis.com/9NvE8jKNWWlDGsUJ/arcgis/rest/services/Winter_Roads_v1/FeatureServer/1",
     popupTemplate: {
       title: "{STREET}",
@@ -243,7 +243,7 @@ export const layerData = [
     visible: true
   },
   {
-    title: "Proposed Roads NWT",
+    title: "Proposed Roads - Northwest Territories",
     link: "https://services1.arcgis.com/9NvE8jKNWWlDGsUJ/arcgis/rest/services/Proposed_Roads_v1/FeatureServer/5",
     popupTemplate: {
       title: "{Street_Name}",
@@ -253,7 +253,7 @@ export const layerData = [
     },
     visible: false
   },
-  // {
+    // {
     // title: "Communities YU",
     // link: "https://services1.arcgis.com/9NvE8jKNWWlDGsUJ/arcgis/rest/services/VLi_Web_Map_WFL1/FeatureServer/7",
   // },

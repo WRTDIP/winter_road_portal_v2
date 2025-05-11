@@ -967,11 +967,73 @@ function WeatherMap() {
 
         //Create Popup Template
 
-        // Create layer list and legend widgets
-        const layerList = new LayerList({
-          view,
-          container: "layer-list-container",
-        })
+// Create layer list and legend widgets
+// Reorder layers in the desired order
+const orderedLayerTitles = [
+  "Major Roads",
+  "Minor Roads",
+  "Airports - Northwest Territories",
+  "Airports - Yukon",
+  "Airports - Nunavut",
+  "Winter Roads - Northwest Territories",
+  "Winter Roads - Nunavut",
+  "Ice Crossings - Northwest Territories",
+  "Ice Crossings - Yukon",
+  "Ferries - Northwest Territories",
+  "Ferries - Yukon",
+  "Proposed Roads - Northwest Territories",
+];
+
+// Sort layerData based on the desired order
+// Use slice() to create a shallow copy of layerData
+const orderedLayerData = layerData.slice().sort((a, b) => {
+  return (
+    orderedLayerTitles.indexOf(a.title) - orderedLayerTitles.indexOf(b.title)
+  );
+});
+
+// Debugging: Log the sorted layer data
+console.log("Ordered Layer Data:", orderedLayerData.map((layer) => layer.title));
+
+// Add feature layers in reverse order so the first is on top in the Layer List
+[...orderedLayerData].reverse().forEach((layer) => {
+  console.log(`Adding layer: ${layer.title}`); // Debugging
+  const featureLayer = new FeatureLayer({
+    url: layer.link,
+    popupTemplate: layer.popupTemplate,
+    visible: layer.visible, // Apply the visible property from layerData
+  });
+
+  // Set renderer if it exists
+  if (layer.renderer) {
+    featureLayer.renderer = layer.renderer;
+  }
+
+  featureLayer.title = layer.title;
+  map.add(featureLayer);
+});
+
+// Create Layer List widget
+const layerList = new LayerList({
+  view,
+  container: "layer-list-container",
+  listItemCreatedFunction: (event) => {
+    const item = event.item;
+    console.log(`Layer in Layer List: ${item.layer.title}`); // Debugging
+
+    // Customize layer titles if needed
+    if (item.layer.title.includes("Airports")) {
+      item.title = item.layer.title; // Keep the original title or customize it
+    } else if (item.layer.title.includes("Winter Roads")) {
+      item.title = item.layer.title; // Keep the original title or customize it
+    } else if (item.layer.title.includes("Ferries") || item.layer.title.includes("Ice Crossings")) {
+      item.title = item.layer.title; // Keep the original title or customize it
+    }
+  },
+});
+
+
+ 
         const legend = new Legend({ 
           view, 
           container: "legend-container" })
@@ -1138,31 +1200,31 @@ function WeatherMap() {
         }
 
         //Adds the feature layers from the ArcGIS web map. Certain layers are hidden via the featureLayer.visible parameter
-        layerData.forEach((layer, index) => {
-          const featureLayer = new FeatureLayer({
-            url: layer.link,
-            popupTemplate: layer.popupTemplate,
-            visible: layer.visible, // Apply the visible property from layerData
-          })
+      //  layerData.forEach((layer, index) => {
+      //    const featureLayer = new FeatureLayer({
+      //      url: layer.link,
+      //      popupTemplate: layer.popupTemplate,
+      //      visible: layer.visible, // Apply the visible property from layerData
+      //    })
 
           //Set renderer
-          if (layer.renderer) {
-            featureLayer.renderer = layer.renderer
-          }
+      //    if (layer.renderer) {
+     //       featureLayer.renderer = layer.renderer
+      //    }
 
           // Set visibility for specific indices
-          if (index === 0 || index === 4 || index === 7) {
-            featureLayer.visible = false
-          }
+      //    if (index === 0 || index === 4 || index === 7) {
+      //      featureLayer.visible = false
+      //    }
 
-          featureLayer.title = layer.title
+      //    featureLayer.title = layer.title
 
           // featureLayer.featureReduction = {
           //   type: "cluster",
           // };
 
-          map.add(featureLayer)
-        })
+      //    map.add(featureLayer)
+      //  })
 
         view.ui.add(layerListExpand, "top-left")
         view.ui.add(legendExpand, "top-right")
