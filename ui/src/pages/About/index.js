@@ -1,4 +1,3 @@
-import bgImage from "../../assets/homebg_3.png";
 import Bill from "../../assets/Bill.png";
 import Yukari from "../../assets/Yukari.png";
 import Len from "../../assets/Len.png";
@@ -8,6 +7,7 @@ import Larissa from "../../assets/Larissa.png";
 import Amy from "../../assets/Amy.png";
 import Moein from "../../assets/Moein.png";
 import Vivienne from "../../assets/Vivienne.png";
+import Person from "../../assets/Person.png";
 
 import CoverBanner from "../../components/Global/CoverBanner/CoverBanner";
 import Team from "../../components/Team";
@@ -37,46 +37,67 @@ function About() {
         email: "leonard.tsuji@utoronto.ca"
 
       },
-       {
+      {
         id: 4,
+        image: Person,
+        name: "Mohammad Rahman",
+        title: "Computer Science Co-op Student, Web programmar",
+        email: "mohammadk.rahman@mail.utoronto.ca"
+       },
+      {
+        id: 5,
+        image: Person,
+        name: "Brett Yang",
+        title: "Computer Engineering Co-op Student, Web programmar",
+        email: "bretteng.yang@mail.utoronto.ca"
+       },
+       {
+        id: 6,
         image: Leo,
         name: "Leo HC Li",
         title: "Computer Engineering Co-op Student, Web programmar",
         email: "leeoo.li@mail.utoronto.ca"
        },
         {
-        id: 5,
+        id: 7,
         image: Haowen,
         name: "Haowen Rui",
         title: "Computer Science Co-op Student, Web programmar",
         email: "anson.rui@mail.utoronto.ca"
         },
          {
-        id: 6,
+        id: 8,
         image: Larissa,
         name: "Larissa Pizzolato",
         title: "PhD Student, Physical & Environmental Sciences, Research Assistant",
         email: "larissa.pizzolato@mail.utoronto.ca"
-         }
+         },
+                
        ], [
         {
           id: 1,
           image: Amy,
           name: "Dr. Amy M. Kim",
           title: "Associate Professor, Transportation Engineering",
-          email: "amykim@civil.ubc.ca"
-    
+          email: "amykim@civil.ubc.ca"    
         },
         {
-            id: 2,
-            image: bgImage,
+          id: 2,
+          image: Person,
+          name: "Dr. Ramesh Pokharel",
+          title: "Postdoctoral Fellow, Transportation Engineering",
+          email: "ramesh.pokharel@ubc.ca"
+        },
+        {
+            id: 3,
+            image: Person,
             name: "Dr. Thomas Stringer",
             title: "Postdoctoral Fellow, Transportation Engineering",
             email: "thomas.stringer@ubc.ca"
     
           },
           {
-            id: 3,
+            id: 4,
             image: Moein,
             name: "Moein Sadeghi",
             title: "PhD Student, Transportation Engineering",
@@ -84,7 +105,7 @@ function About() {
     
           },
             {
-            id: 4,
+            id: 5,
             image: Vivienne,
             name: "Vivienne Li",
             title: "MSc, Transportation Engineering",

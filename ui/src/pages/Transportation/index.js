@@ -9,8 +9,8 @@ function Transportation() {
     {
       id: 1,
       image: TransportationFirst,
-      title: "Northern Transportation Network Database",
-      content: "Feel free to export the data to Excel format ",
+      title: "Northern Transportation Network Study",
+      content: "Learn more about studies and projects related to Northern transportation.",
       bgColor: "white",
     },
   ];

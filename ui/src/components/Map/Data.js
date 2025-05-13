@@ -130,42 +130,158 @@ export const layerData = [
       title: "{R_STNAME_C}",
     },
   },
-  // {
-  //   title: "Airports NU",
-  //   link: "https://services1.arcgis.com/9NvE8jKNWWlDGsUJ/arcgis/rest/services/VLi_Web_Map_WFL1/FeatureServer/1",
+  {
+    title: "Airports - Northwest Territories",
+    link: "https://services1.arcgis.com/9NvE8jKNWWlDGsUJ/arcgis/rest/services/Airports/FeatureServer/0",
+    popupTemplate: {
+      title: "{Airport_Name}", // Replace with the field name from the layer's attributes
+      content: `
+      <b>Airport Code:</b> {Airport_Code}<br>
+      <b>Elevation (m):</b> {Elevation}<br>
+      <b>Runway 1 Type:</b> {Runway_1_Type}<br>
+      <b>Runway 1 Length (m):</b> {Length_1}<br>
+      <b>Runway 2 Type:</b> {Runway_2_Type}<br>
+      <b>Runway 2 Length (m):</b> {Length_2}
+    `
+    },
+    visible: false // Set to false if you want the layer to be hidden initially
+  },
+  {
+    title: "Airports - Yukon",
+    link: "https://services1.arcgis.com/9NvE8jKNWWlDGsUJ/arcgis/rest/services/Airports/FeatureServer/1",
+    popupTemplate: {
+      title: "{Airport_Name}",
+      content: `
+        <b>Airport Code:</b> {Airport_Code}<br>
+        <b>Elevation (m):</b> {Elevation}<br>
+        <b>Runway 1 Type:</b> {Runway_1_Type}<br>
+        <b>Runway 1 Length (m):</b> {Length_1}<br>
+        <b>Runway 2 Type:</b> {Runway_2_Type}<br>
+        <b>Runway 2 Length (m):</b> {Length_2}
+      `
+    },
+    visible: false
+  },
+  {
+    title: "Airports - Nunavut",
+    link: "https://services1.arcgis.com/9NvE8jKNWWlDGsUJ/arcgis/rest/services/Airports/FeatureServer/2",
+    popupTemplate: {
+      title: "{Airport_Name}",
+      content: `
+        <b>Airport Code:</b> {Airport_Code}<br>
+        <b>Elevation (m):</b> {Elevation}<br>
+        <b>Runway 1 Type:</b> {Runway_1_Type}<br>
+        <b>Runway 1 Length (m):</b> {Length_1}<br>
+        <b>Runway 2 Type:</b> {Runway_2_Type}<br>
+        <b>Runway 2 Length (m):</b> {Length_2}
+      `
+    },
+    visible: false
+  },
+  {
+    title: "Ferries - Northwest Territories",
+    link: "https://services1.arcgis.com/9NvE8jKNWWlDGsUJ/arcgis/rest/services/Ferries_and_Ice_Crossings_v1/FeatureServer/0",
+    popupTemplate: {
+      title: "{Name}",
+    },
+    visible: false
+  },
+  {
+    title: "Ferries - Yukon",
+    link: "https://services1.arcgis.com/9NvE8jKNWWlDGsUJ/arcgis/rest/services/Ferries_and_Ice_Crossings_v1/FeatureServer/7",
+    popupTemplate: {
+      title: "{Name}",
+    },
+    visible: false
+  },
+  {
+    title: "Ice Crossings - Northwest Territories",
+    link: "https://services1.arcgis.com/9NvE8jKNWWlDGsUJ/arcgis/rest/services/Ferries_and_Ice_Crossings_v1/FeatureServer/5",
+    popupTemplate: {
+      title: "{Street}",
+      content: `
+        <b>Community:</b> {Community}<br>
+        <b>Length (m):</b> {Length}<br>
+      `
+    },
+    visible: false
+  },
+  {
+    title: "Ice Crossings - Yukon",
+    link: "https://services1.arcgis.com/9NvE8jKNWWlDGsUJ/arcgis/rest/services/Ferries_and_Ice_Crossings_v1/FeatureServer/1",
+    popupTemplate: {
+      title: "{Street_Name}",
+      content: `
+        <b>Community:</b> {Community}<br>
+        <b>Length (m):</b> {Length}<br>
+      `
+    },
+    visible: false
+  },
+  {
+    title: "Winter Roads - Northwest Territories",
+    link: "https://services1.arcgis.com/9NvE8jKNWWlDGsUJ/arcgis/rest/services/Winter_Roads_v1/FeatureServer/4",
+    popupTemplate: {
+      title: "{STREET}",
+      content: `
+        <b>Category:</b> {Category}<br>
+        <b>Length (km):</b> {Length}<br>
+      `
+    },
+    visible: true
+  },
+  {
+    title: "Winter Roads - Nunavut",
+    link: "https://services1.arcgis.com/9NvE8jKNWWlDGsUJ/arcgis/rest/services/Winter_Roads_v1/FeatureServer/1",
+    popupTemplate: {
+      title: "{STREET}",
+      content: `
+        <b>Category:</b> {Category}<br>
+        <b>Length (km):</b> {Length}<br>
+      `
+    },
+    visible: true
+  },
+  {
+    title: "Proposed Roads - Northwest Territories",
+    link: "https://services1.arcgis.com/9NvE8jKNWWlDGsUJ/arcgis/rest/services/Proposed_Roads_v1/FeatureServer/5",
+    popupTemplate: {
+      title: "{Street_Name}",
+      content: `
+        <b>Category:</b> {Category}<br>
+      `
+    },
+    visible: false
+  },
+    // {
+    // title: "Communities YU",
+    // link: "https://services1.arcgis.com/9NvE8jKNWWlDGsUJ/arcgis/rest/services/VLi_Web_Map_WFL1/FeatureServer/7",
   // },
   // {
-  //   title: "Communities YU",
-  //   link: "https://services1.arcgis.com/9NvE8jKNWWlDGsUJ/arcgis/rest/services/VLi_Web_Map_WFL1/FeatureServer/7",
+    // title: "Health Care NU",
+    // link: "https://services1.arcgis.com/9NvE8jKNWWlDGsUJ/arcgis/rest/services/VLi_Web_Map_WFL1/FeatureServer/13",
+  // },  
+  // {
+    // title: "Communities NU",
+    // link: "https://services1.arcgis.com/9NvE8jKNWWlDGsUJ/arcgis/rest/services/VLi_Web_Map_WFL1/FeatureServer/15",
   // },
   // {
-  //   title: "Health Care NU",
-  //   link: "https://services1.arcgis.com/9NvE8jKNWWlDGsUJ/arcgis/rest/services/VLi_Web_Map_WFL1/FeatureServer/13",
+    // title: "Communities NWT",
+    // link: "https://services1.arcgis.com/9NvE8jKNWWlDGsUJ/arcgis/rest/services/VLi_Web_Map_WFL1/FeatureServer/19",
   // },
   // {
-  //   title: "Airports NU",
-  //   link: "https://services1.arcgis.com/9NvE8jKNWWlDGsUJ/arcgis/rest/services/VLi_Web_Map_WFL1/FeatureServer/14",
+    // title: "Airports",
+    // link: "https://services1.arcgis.com/9NvE8jKNWWlDGsUJ/arcgis/rest/services/Airports/FeatureServer",
   // },
   // {
-  //   title: "Communities NU",
-  //   link: "https://services1.arcgis.com/9NvE8jKNWWlDGsUJ/arcgis/rest/services/VLi_Web_Map_WFL1/FeatureServer/15",
+    // title: "Ice Roads NWT",
+    // link: "https://services1.arcgis.com/9NvE8jKNWWlDGsUJ/arcgis/rest/services/VLi_Web_Map_WFL1/FeatureServer/22",
   // },
   // {
-  //   title: "Communities NWT",
-  //   link: "https://services1.arcgis.com/9NvE8jKNWWlDGsUJ/arcgis/rest/services/VLi_Web_Map_WFL1/FeatureServer/19",
+    // title: "Ports Communitites NWT",
+    // link: "https://services1.arcgis.com/9NvE8jKNWWlDGsUJ/arcgis/rest/services/VLi_Web_Map_WFL1/FeatureServer/28",
   // },
-  // {
-  //   title: "Airports NWT",
-  //   link: "https://services1.arcgis.com/9NvE8jKNWWlDGsUJ/arcgis/rest/services/VLi_Web_Map_WFL1/FeatureServer/20",
-  // },
-  // {
-  //   title: "Ice Roads NWT",
-  //   link: "https://services1.arcgis.com/9NvE8jKNWWlDGsUJ/arcgis/rest/services/VLi_Web_Map_WFL1/FeatureServer/22",
-  // },
-  // {
-  //   title: "Ports Communitites NWT",
-  //   link: "https://services1.arcgis.com/9NvE8jKNWWlDGsUJ/arcgis/rest/services/VLi_Web_Map_WFL1/FeatureServer/28",
-  // },
+  
   //"https://services1.arcgis.com/9NvE8jKNWWlDGsUJ/arcgis/rest/services/VLi_Web_Map_WFL1/FeatureServer/2",
   // "https://services1.arcgis.com/9NvE8jKNWWlDGsUJ/arcgis/rest/services/VLi_Web_Map_WFL1/FeatureServer/3",
   // "https://services1.arcgis.com/9NvE8jKNWWlDGsUJ/arcgis/rest/services/VLi_Web_Map_WFL1/FeatureServer/4",

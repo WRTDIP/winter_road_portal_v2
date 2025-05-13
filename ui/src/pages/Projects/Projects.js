@@ -10,18 +10,18 @@ function Projects() {
     {
       id: 1,
       image: ProjectFirst,
-      title: "Winter Road and Trail Watch",
+      title: "Winter Road Watch",
       content:
-        "We invite all the citizen scientists in the North to contribute to our real-time science research toward climate change adaptation. More details coming soon!",
+        "The Winter Road Watch project is a citizen science research initiative for monitoring the impacts of climate change on winter roads in the Northwest Territories. We invite all the citizen scientists in the North to contribute to our real-time science research toward climate change adaptation.",
       bgColor: "white",
     },
 
     {
       id: 2,
       image: ProjectSecond,
-      title: "Winter Road and Trail Community Online Survey",
+      title: "Winter Road User Community Online Survey",
       content:
-        "We will invite the Winter Road and Trail Watch observers to complete an online survey about climate change impacts on the winter road and trail networks in the Northwest Territories, Yukon, and Nunavut. More details coming soon!",
+        "We will invite the Winter Road Watch observers to participate in an online survey focused on the impacts of climate change on the winter road networks in the Northwest Territories.",
       bgColor: "#F7FAEF",
     },
     {
@@ -29,7 +29,7 @@ function Projects() {
       image: ProjectThird,
       title: "Winter Road Profile",
       content:
-        "We will work with a community researcher and/or liaison to create a winter road profile for each winter roads.",
+        "All winter roads have a unique physical feature. Lean more about each winter road network and how climate change has been impacting them.",
       bgColor: "white",
     },
   ];

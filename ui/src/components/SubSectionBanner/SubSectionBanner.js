@@ -14,9 +14,8 @@ const SubSectionBanner = ({ props }) => {
       style={{ backgroundColor: bgColor }}
     >
       <div className="subSectionBannerTextContainer">
-      <div className="subSectionBannerTitle">
-        {title}
-      </div>
+      <div className="subSectionBannerTitle">{title}</div>
+      <div className="subSectionBannerContent">{content}</div>
       </div>
     </div>
   );
