@@ -781,12 +781,32 @@ function WeatherMap() {
     console.log("fddData", fddData, cityName)
     if (fddData) {
       return (
+        <div style={{ display: "flex", alignItems: "center" }}>
+        <div
+          style={{
+            writingMode: "vertical-rl",
+            transform: "rotate(180deg)",
+            marginRight: 5,
+            fontWeight: "normal",
+            fontSize: 12,
+            whiteSpace: "nowrap",
+          }}
+        >
+          Freezing Degree Days (FDDs)
+        </div>
         <LineChart
           xAxis={[
             {
               data: fddData.x,
+              valueFormatter: (year) => year.toString(), // remove thousand separator
+              label: "Year", // <-- X axis label
               // data: [1],
             },
+          ]}
+           yAxis={[
+          {
+            
+          },
           ]}
           series={[
             {
@@ -795,7 +815,9 @@ function WeatherMap() {
             },
           ]}
           height={300}
+          margin={{ left: 40, right: 20, top: 20, bottom: 40 }} //
         />
+        </div>
       )
     } else {
       return <Typography>Generating Graphs</Typography>
@@ -842,7 +864,7 @@ function WeatherMap() {
           </IconButton>
         </Modal.Header>
         <Modal.Body
-          sx={{ width: "300px", height: "200px", overflow: "hidden" }}
+          sx={{ width: "500px", height: "350px", overflow: "hidden" }}
         >
           <Typography variant="h4" component="h5">
             {territory == "yt" ? citiesOfYukon[key] : null}
@@ -852,7 +874,9 @@ function WeatherMap() {
           <Typography variant="h5" component="h5">
             Freezing Degree Days
           </Typography>
+          <div style={{ paddingLeft: 40, paddingRight: 10 }}>
           {generateChart()}
+          </div>
           <iframe
             title="Environment Canada Weather"
             width="400x"
