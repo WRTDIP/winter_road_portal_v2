@@ -730,6 +730,10 @@ function WeatherMap() {
   const [territory, setTerritory] = useState(null)
   const [key, setKey] = useState(null)
   const [mouse, setMouse] = useState({})
+  
+  // These two states are created for province and stationCode
+  const [climateData, setClimateData] = useState(null)
+  const [climateLoading, setClimateLoading] = useState(false)
 
   // State to control modal visibility
   const [modalIsOpen, setModalIsOpen] = useState(false)
@@ -752,6 +756,7 @@ function WeatherMap() {
   function closeModal() {
     setModalEnlarge(false)
     setModalIsOpen(false)
+    setClimateData(null) // Clear climate forecast data when closing
   }
 
   /**
@@ -820,8 +825,21 @@ function WeatherMap() {
         </div>
       )
     } else {
-      return <Typography>Generating Graphs</Typography>
+      return <Typography>No FDDs data available for this location.</Typography>
     }
+  }
+
+  // Get coordinates for the selected city by lat and lon
+  let lat = null, lon = null;
+  if (territory === "yt" && yukonCoordinates[key]) {
+    lat = yukonCoordinates[key][0];
+    lon = yukonCoordinates[key][1];
+  } else if (territory === "nt" && northWestCoordinates[key]) {
+    lat = northWestCoordinates[key][0];
+    lon = northWestCoordinates[key][1];
+  } else if (territory === "nu" && nunavutCoordinates[key]) {
+    lat = nunavutCoordinates[key][0];
+    lon = nunavutCoordinates[key][1];
   }
 
   return (
@@ -858,7 +876,7 @@ function WeatherMap() {
             overflow: "hidden",
           }}
         >
-          <Modal.Title> Weather</Modal.Title>
+          <Modal.Title> Climate</Modal.Title>
           <IconButton onClick={() => setModalEnlarge(!modalEnlarge)}>
             {modalEnlarge ? <CloseFullscreenIcon /> : <OpenInFullIcon />}
           </IconButton>
@@ -872,18 +890,52 @@ function WeatherMap() {
             {territory == "nu" ? citiesOfNunavut[key] : null}
           </Typography>
           <Typography variant="h5" component="h5">
-            Freezing Degree Days
+            Freezing Degree Days (FDDs)
           </Typography>
           <div style={{ paddingLeft: 40, paddingRight: 10 }}>
           {generateChart()}
           </div>
+          <Typography variant="h5" style={{ marginTop: 16 }}>
+          Weather Forecast 
+          </Typography>
           <iframe
             title="Environment Canada Weather"
             width="400x"
             height="400px"
-            src={`https://weather.gc.ca/wxlink/wxlink.html?cityCode=${territory}-${key}&amp;lang=e`}
+            // src={`https://weather.gc.ca/wxlink/wxlink.html?cityCode=${territory}-${key}&amp;lang=e`}
+            src={`https://weather.gc.ca/wxlink/wxlink.html?coords=${lat},${lon}&lang=e`} // new link
             allowtransparency="true"
+            style={{ border: 0 }}
           ></iframe>
+
+        {/* REMOVE THIS BLOCK:
+        <Typography variant="h5" style={{ marginTop: 16 }}>
+          Weather Forecast 2
+        </Typography>
+        
+        <iframe // try to use iframe to appear the weather forecast wedgit
+        title="Environment Canada Weather"
+        width="400"
+        height="400"
+        src={`https://weather.gc.ca/wxlink/wxlink.html?cityCode=${territory}-${key}&lang=e`}
+        allowtransparency="true"
+        />
+        */}
+
+        {/* REMOVE THIS BLOCK:
+        {climateLoading ? (
+          <Typography>Loading weather forecast data...</Typography>
+        ) : climateData && climateData.error ? (
+            <Typography color="error">{climateData.error}</Typography>
+        ) : climateData ? (
+          <pre style={{ maxHeight: 200, overflow: "auto", background: "#f5f5f5", padding: 8 }}>
+            {JSON.stringify(climateData, null, 2)}
+          </pre>
+        ) : (
+          <Typography>No weather forecast data loaded.</Typography>
+        )}
+        */}
+
         </Modal.Body>
       </Modal>
     </div>
@@ -950,7 +1002,7 @@ function WeatherMap() {
         // esriConfig.apiKey =
         //   "AAPKd7da5e4a967540cfb66765bf918280a4t9Et4goGp4RqyeGZkQfG9yVBkkmOC1j35X1YLmsZ1nqucmvVp0j2nXbwF5wP3XRw"
 
-        console.log("Get Climate City", getClimateCity("ON-1"))
+         console.log("Get Climate City", getClimateCity("ON-1"))
 
         if ("serviceWorker" in navigator) {
           navigator.serviceWorker.register("service-worker.js")
@@ -991,42 +1043,42 @@ function WeatherMap() {
 
         //Create Popup Template
 
-// Create layer list and legend widgets
-// Reorder layers in the desired order
-const orderedLayerTitles = [
-  "Major Roads",
-  "Minor Roads",
-  "Airports - Northwest Territories",
-  "Airports - Yukon",
-  "Airports - Nunavut",
-  "Winter Roads - Northwest Territories",
-  "Winter Roads - Nunavut",
-  "Ice Crossings - Northwest Territories",
-  "Ice Crossings - Yukon",
-  "Ferries - Northwest Territories",
-  "Ferries - Yukon",
-  "Proposed Roads - Northwest Territories",
-];
+  // Create layer list and legend widgets
+  // Reorder layers in the desired order
+  const orderedLayerTitles = [
+    "Major Roads",
+    "Minor Roads",
+    "Airports - Northwest Territories",
+    "Airports - Yukon",
+    "Airports - Nunavut",
+    "Winter Roads - Northwest Territories",
+    "Winter Roads - Nunavut",
+    "Ice Crossings - Northwest Territories",
+    "Ice Crossings - Yukon",
+    "Ferries - Northwest Territories",
+    "Ferries - Yukon",
+    "Proposed Roads - Northwest Territories",
+    ];
 
-// Sort layerData based on the desired order
-// Use slice() to create a shallow copy of layerData
-const orderedLayerData = layerData.slice().sort((a, b) => {
-  return (
-    orderedLayerTitles.indexOf(a.title) - orderedLayerTitles.indexOf(b.title)
-  );
-});
-
-// Debugging: Log the sorted layer data
-console.log("Ordered Layer Data:", orderedLayerData.map((layer) => layer.title));
-
-// Add feature layers in reverse order so the first is on top in the Layer List
-[...orderedLayerData].reverse().forEach((layer) => {
-  console.log(`Adding layer: ${layer.title}`); // Debugging
-  const featureLayer = new FeatureLayer({
-    url: layer.link,
-    popupTemplate: layer.popupTemplate,
-    visible: layer.visible, // Apply the visible property from layerData
+  // Sort layerData based on the desired order
+  // Use slice() to create a shallow copy of layerData
+  const orderedLayerData = layerData.slice().sort((a, b) => {
+    return (
+      orderedLayerTitles.indexOf(a.title) - orderedLayerTitles.indexOf(b.title)
+    );
   });
+
+  // Debugging: Log the sorted layer data
+  console.log("Ordered Layer Data:", orderedLayerData.map((layer) => layer.title));
+
+  // Add feature layers in reverse order so the first is on top in the Layer List
+  [...orderedLayerData].reverse().forEach((layer) => {
+   console.log(`Adding layer: ${layer.title}`); // Debugging
+    const featureLayer = new FeatureLayer({
+      url: layer.link,
+      popupTemplate: layer.popupTemplate,
+      visible: layer.visible, // Apply the visible property from layerData
+    });
 
   // Set renderer if it exists
   if (layer.renderer) {
@@ -1035,26 +1087,26 @@ console.log("Ordered Layer Data:", orderedLayerData.map((layer) => layer.title))
 
   featureLayer.title = layer.title;
   map.add(featureLayer);
-});
+  });
 
-// Create Layer List widget
-const layerList = new LayerList({
-  view,
-  container: "layer-list-container",
-  listItemCreatedFunction: (event) => {
+  // Create Layer List widget
+  const layerList = new LayerList({
+    view,
+    container: "layer-list-container",
+    listItemCreatedFunction: (event) => {
     const item = event.item;
     console.log(`Layer in Layer List: ${item.layer.title}`); // Debugging
 
     // Customize layer titles if needed
-    if (item.layer.title.includes("Airports")) {
-      item.title = item.layer.title; // Keep the original title or customize it
-    } else if (item.layer.title.includes("Winter Roads")) {
-      item.title = item.layer.title; // Keep the original title or customize it
-    } else if (item.layer.title.includes("Ferries") || item.layer.title.includes("Ice Crossings")) {
-      item.title = item.layer.title; // Keep the original title or customize it
-    }
-  },
-});
+      if (item.layer.title.includes("Airports")) {
+        item.title = item.layer.title; // Keep the original title or customize it
+      } else if (item.layer.title.includes("Winter Roads")) {
+        item.title = item.layer.title; // Keep the original title or customize it
+      } else if (item.layer.title.includes("Ferries") || item.layer.title.includes("Ice Crossings")) {
+        item.title = item.layer.title; // Keep the original title or customize it
+      }
+    },
+  });
 
 
  
@@ -1106,20 +1158,51 @@ const layerList = new LayerList({
             latitude: coordinates[0],
           }
 
-          let newPointGraphic = new Graphic({
-            symbol: {
+          // Set marker style based on the layer (default marker style by ArcGIS API)
+          let markerStyle = {
+            type: "simple-marker",
+            color: color,
+            size: "5px",
+          };
+
+          // For the Climate Data, use the style below
+          if (layer.title === "Weather and Climate Data") {
+            markerStyle = {
               type: "simple-marker",
-              color: color,
-              size: "5px",
-            },
+              color: "blue", // Change to your desired color
+              size: "10px", // Change to your desired size
+              outline: {
+                color: "white",
+                width: 1,
+              },
+            };
+          }
+
+          // For the Weather Forecast, use the style below
+          if (layer.title === "Weather Forecast") {
+            markerStyle = {
+              type: "simple-marker",
+              color: "orange", // Change to your desired color
+              size: "10px",    // Change to your desired size
+              outline: {
+                color: "white",
+                width: 1,
+              },
+            };
+          }
+
+
+
+          let newPointGraphic = new Graphic({
+            symbol: markerStyle,
             geometry: pinCoordinates,
             attributes: {
               cityName: "City Name",
               weatherDetails: "Weather Details",
             },
-          })
-          liveWeatherDataLayer.add(newPointGraphic)
-
+          });
+          layer.add(newPointGraphic);             
+           
           //click event that triggers when a point on the map is clicked and checks to see if the point clicked contains any point located in the three territories
           view.on("click", (event) => {
             let uniqueKey = -1,
@@ -1148,9 +1231,22 @@ const layerList = new LayerList({
                 let city = cities.find(
                   (c) => c.name_e == citiesOfYukon[uniqueKey]
                 )
+                console.log("Selected city:", city); //added for the province and stationCode
                 if (city) {
-                  console.log(getClimateCity(city.key))
+                  // console.log(getClimateCity(city.key))
+                  console.log(getClimateCity(city.province, city.stationCode))
                 }
+                //added for the province and stationCode
+                if (city && city.province && city.stationCode) {
+                  setClimateLoading(true)
+                  setClimateData(null)
+                  getClimateCity(city.province, city.stationCode) //added the province and station code to constants.js (only for Yukon as a test)
+                    .then((data) => setClimateData(data))
+                    .finally(() => setClimateLoading(false))
+                } else if (city) {
+                  setClimateData({ error: "No weather data available for this location." })
+                  setClimateLoading(false)
+                }               
                 return false
               }
               return true
@@ -1255,7 +1351,7 @@ const layerList = new LayerList({
 
         //adds the live weather data from the GeoMet API for towns in the three territories
         const liveWeatherDataLayer = new GraphicsLayer({
-          title: "Live Weather Data",
+          title: "Weather and Climate Data",
           featureReduction: {
             type: "cluster",
           },
@@ -1264,22 +1360,36 @@ const layerList = new LayerList({
         Object.keys(yukonCoordinates).forEach((key) => {
           createCityGraphic(yukonCoordinates[key], "blue", liveWeatherDataLayer)
         })
-
         Object.keys(northWestCoordinates).forEach((key) => {
-          createCityGraphic(
-            northWestCoordinates[key],
-            "blue",
-            liveWeatherDataLayer
-          )
+          createCityGraphic(northWestCoordinates[key], "blue", liveWeatherDataLayer)
         })
         Object.keys(nunavutCoordinates).forEach((key) => {
-          createCityGraphic(
-            nunavutCoordinates[key],
-            "blue",
-            liveWeatherDataLayer
-          )
+          createCityGraphic(nunavutCoordinates[key], "blue", liveWeatherDataLayer)
         })
         map.add(liveWeatherDataLayer)
+
+        // Create a new GraphicsLayer for the weather forecast
+        const weatherForecastLayer = new GraphicsLayer({
+          title: "Weather Forecast",
+          featureReduction: {
+            type: "cluster",
+          },
+          visible: false,
+        })
+                
+        // Add Weather Forecast markers to the Weather Forecast layer
+        Object.keys(yukonCoordinates).forEach((key) => {
+          createCityGraphic(yukonCoordinates[key], "green", weatherForecastLayer)
+        })
+        Object.keys(northWestCoordinates).forEach((key) => {
+          createCityGraphic(northWestCoordinates[key], "green", weatherForecastLayer)
+        })
+        Object.keys(nunavutCoordinates).forEach((key) => {
+          createCityGraphic(nunavutCoordinates[key], "green", weatherForecastLayer)
+        })
+        
+        map.add(weatherForecastLayer);      
+        
       }
     )
   }

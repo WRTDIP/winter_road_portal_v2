@@ -36,7 +36,7 @@ export const citiesOfNunavut = {
 export const citiesOfNorthwestTerritories = {
   26: "Colville Lake",
   22: "Deline",
-  //1:"Detah",
+  // 1: "Dettah",
   14: "Ekati",
   2: "Enterprise",
   5: "Fort Good Hope",
@@ -304,7 +304,7 @@ export const layerData = [
 
 //Coordinates of all the towns in NW. The indices are refer to the indices in the above NW array.
 export const northWestCoordinates = {
-  //1: [62.4112, -114.3084],
+  // 1: [62.4112, -114.3084],
   2: [60.5547, -116.1472],
   3: [61.170988, -113.672053],
   4: [61.8609, -121.3527],
