@@ -64,6 +64,7 @@ function Home() {
       content:
         "Where can you find the winter roads? How is climate change affecting these winter roads? Our interactive map provides an opportunity to explore Northern transportation networks, climate change impacts, and socio-economic information. ",
       bgColor: "white",
+      color: "#0E2959",
     },
     {
       id: 2,
@@ -72,6 +73,7 @@ function Home() {
       content:
         "We present studies and data related to Northern transportation.",
       bgColor: "white",
+      color: "#0E2959",
     },
     {
       id: 3,
@@ -80,6 +82,7 @@ function Home() {
       content:
         "Our portal is also linked to the Winter Road Watch app which is a monitoring tool for tracking changes on the winter road conditions.",
       bgColor: "white",
+      color: "#0E2959",
     },
     {
       id: 4,
@@ -88,6 +91,7 @@ function Home() {
       content:
         "All winter roads have a unique physical feature. Learn more about each winter road network and how climate change has been impacting them.",
       bgColor: "white",
+      color: "#0E2959",
     },
   ]
 
