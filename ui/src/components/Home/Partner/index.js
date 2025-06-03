@@ -6,6 +6,10 @@ const Partner = ({ props }) => {
   return (
     <Container class="row justify-content-center">
       <div className="partnerPageTitleText">Partners</div>
+      <div className="partnerDescription text-center" 
+      style={{ marginBottom: "2rem", color: "#0E2959", fontSize: "1rem" }}>
+      We gratefully acknowledge the support and collaboration of our partner organizations to develop the WRaMP - Winter Road and Mobility Portal.
+      </div>
       <Row className="justify-content-md-center">
         {props.map((content) => (
           <Col xs lg="3" align="center" className="p-3" key={content.id}>
