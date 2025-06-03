@@ -118,8 +118,40 @@ function About() {
   return (
     <div>
       <CoverBanner title="About" />
-    <Team teamName={"University of Toronto Scarborough (UTSC)"} teamMemberInfo={TeamMemberInfo[0]} />
-    <Team teamName={"University of British Columbia (UBC)"} teamMemberInfo={TeamMemberInfo[1]}/>
+      <Team teamName={
+        <>
+          Climate Lab at UTSC (CL@UT)
+          <br />
+          University of Toronto Scarborough (UTSC)
+        </>
+       } 
+         description={
+          <div style={{ textAlign: "left", margin: "1rem 0", color: "#0E2959", fontSize: "1rem" }}>
+            The Climate Lab at the University of Toronto (CL@UT), led by Professor William A. Gough at the University of Toronto Scarborough (UTSC), 
+            focuses on research related to climate change impacts, vulnerability, and adaptation. The lab investigates a wide range of topics, including
+            climate change in the eastern Arctic, northern Canada, and Canadian cities; climate impact assessments; numerical ocean and climate modeling; 
+            air quality in southwestern Ontario; hurricanes and their relationship to climate change; day-to-day temperature variability; climate change policy; 
+            and broader issues in climatology, meteorology, and physical geography. Dr. Bill Gough and Dr. Yukari Hori have led several research projects at CL@UT 
+            examining the effects of climate change on winter road networks in Northern Canada.
+          </div>
+       }
+       teamMemberInfo={TeamMemberInfo[0]} />      
+
+      <Team teamName={
+        <>
+          Multimodal Mobility Systems Lab
+          <br />
+          University of British Columbia (UBC)
+        </>
+        } 
+        description={
+          <div style={{ textAlign: "left", margin: "1rem 0", color: "#0E2959", fontSize: "1rem" }}>
+            The Multimodal Mobility Systems Lab at UBC, led by Dr. Amy M. Kim, focuses on research in transportation engineering, mobility systems, and sustainable infrastructure. 
+            The lab seeks to understand how long-distance transportation systems and their components operate, particularly under disruptions, and how to plan responsive, resilient systems for acute natural hazards and climate change adaptation. 
+            They also want to learn how these impacts and disruptions affect peoples' connectivity across long-distances, and how impacts may be unequal across the system.
+          </div>
+        }
+        teamMemberInfo={TeamMemberInfo[1]}/>
     </div>
   );
 }
