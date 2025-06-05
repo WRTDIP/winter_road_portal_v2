@@ -118,6 +118,9 @@ function About() {
   return (
     <div>
       <CoverBanner title="About" />
+      <div style={{ textAlign: "center", margin: "2rem 0 1rem 0", color: "#38507E", fontSize: "4rem", fontWeight: "normal" }}>
+      Our Team
+      </div>
       <Team teamName={
         <>
           Climate Lab at UTSC (CL@UT)
@@ -152,7 +155,29 @@ function About() {
           </div>
         }
         teamMemberInfo={TeamMemberInfo[1]}/>
-    </div>
+             
+        <div style={{ margin: "3rem 0 2rem 0", color: "#38507E", textAlign: "center" }}>
+        <div style={{ fontSize: "4rem", fontWeight: "normal", marginBottom: "1rem" }}>
+          Contact Us</div>
+        <div style={{ color: "#0E2959", fontSize: "1.1rem", marginBottom: "1.5rem" }}>
+           We're here to help. Whether you have a question about our services, need support, or just want to connect, our team is ready to assist you.
+       </div>
+       <div style={{ color: "#0E2959", fontWeight: "bold", fontSize: "1.1rem" }}>
+        Climate Lab @ UTSC (CL@UT)</div>
+       <div style={{ color: "black" }}>
+       <div>Department of Physical and Environmental Sciences</div>
+       <div>University of Toronto Scarborough</div>
+       <div>1265 Military Trail</div>
+       <div>Toronto, ON M1C 1A4</div>
+       </div>
+       <div>
+         <a href="mailto:climlabutsc@gmail.com" style={{ textDecoration: "underline" }}>
+           climlabutsc@gmail.com
+         </a>
+        </div>
+      </div>
+      </div>
+    
   );
 }
 
