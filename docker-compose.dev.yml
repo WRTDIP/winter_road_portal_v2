@@ -1,39 +1,45 @@
 services:
-  ui:
-    container_name: ui_dev
-    build:
-      context: ./
-      dockerfile: ui/Dockerfile.dev
-    ports:
-      - 3000:3000
-    volumes:
-      - ./ui:/app
-    command:
-      - /bin/sh
-      - -c
-      - |
-        npm install
-        npm start
-    env_file:
-      - .env
+  # ui:
+  #   container_name: ui_dev
+  #   build:
+  #     context: ./
+  #     dockerfile: ui/Dockerfile.dev
+  #   ports:
+  #     - 3000:3000
+  #   volumes:
+  #     - ./ui:/app
+  #   command:
+  #     - /bin/sh
+  #     - -c
+  #     - |
+  #       npm install
+  #       npm start
+  #   env_file:
+  #     - .env
 
-  api:
-    container_name: api_dev
-    build:
-      context: ./
-      dockerfile: api/Dockerfile.dev
-    ports:
-      - 4000:4000
-    volumes:
-      - ./api:/app
-    command: >
-      sh -c "npm install && npx nodemon server.js"
-    env_file:
-      - .env
+  # api:
+  #   container_name: api_dev
+  #   build:
+  #     context: ./
+  #     dockerfile: api/Dockerfile.dev
+  #   ports:
+  #     - 4000:4000
+  #   volumes:
+  #     - ./api:/app/api
+  #     - ./prisma:/app/prisma
+  #   command: >
+  #     sh -c "cd api && npm install && npx nodemon server.js"
+  #   env_file:
+  #     - .env
 
   postgres:
     container_name: postgres
     image: postgres
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      PGDATA: /data/postgres
+      POSTGRES_DB: bank
     restart: always
     ports:
       - 5432:5432

@@ -1,6 +1,7 @@
 const express = require("express")
 const cors = require("cors")
 const weather = require("./routes/weather.route")
+const user = require("./routes/user.route")
 const port = 4000
 const app = express()
 app.use(cors())
@@ -15,6 +16,7 @@ app.use(logging)
 
 //Routes
 app.use("/weather", weather)
+app.use("/user", user)
 
 //Start
 app.listen(port, () => {

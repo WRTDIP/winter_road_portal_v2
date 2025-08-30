@@ -1,3 +1,5 @@
 FROM node:alpine AS development
 
+COPY ./prisma /app/prisma
+
 WORKDIR /app

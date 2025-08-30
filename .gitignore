@@ -2,8 +2,12 @@
 
 # dependencies
 ui/node_modules
+api/node_modules
 /.pnp
 .pnp.js
+
+#database
+db/data/pg
 
 # testing
 /coverage

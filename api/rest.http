@@ -11,3 +11,31 @@ GET {{baseUrl}}/countries
 
 ### Read country by id
 GET {{baseUrl}}/countries/1
+
+
+################################################### User ###################################################
+
+### Get All Users
+GET {{baseUrl}}/user/list
+
+### Register A New User
+
+POST {{baseUrl}}/user/register
+Content-Type: application/json
+
+{
+    "name": "Test User",
+    "email": "test@gmail.com",
+    "password": "Password1234!@",
+    "utorid": "test238"
+}
+
+### Login A New User
+
+POST {{baseUrl}}/user/login
+Content-Type: application/json
+
+{
+    "email":"test@gmail.com",
+    "password": "Password1234!@"
+}

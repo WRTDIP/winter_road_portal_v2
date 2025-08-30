@@ -1,11 +1,11 @@
-import React from "react";
-import { Grid, Layout, Menu } from "antd";
-import { MenuOutlined, UserOutlined } from "@ant-design/icons";
-import { Link } from "react-router-dom";
-import NavbarLogo from "../../../assets/navbarLogo.png";
-import "./styles.css";
+import React from "react"
+import { Grid, Layout, Menu } from "antd"
+import { MenuOutlined, UserOutlined } from "@ant-design/icons"
+import { Link } from "react-router-dom"
+import NavbarLogo from "../../../assets/navbarLogo.png"
+import "./styles.css"
 
-const leftItems = [];
+const leftItems = []
 const rightItems = [
   { name: "Home", link: "/" },
   //{ name: "Map", link: "https://climatechange.utsc.utoronto.ca/esri_leaflet/map.html", newTab: true },
@@ -16,7 +16,7 @@ const rightItems = [
   { name: "About", link: "/about" },
 
   { name: "", link: "/login", icon: <UserOutlined style={{ fontSize: 20 }} /> },
-];
+]
 
 const menuItem = (i) => (
   <Menu.Item key={i.name}>
@@ -35,56 +35,58 @@ const menuItem = (i) => (
       </Link>
     )}
   </Menu.Item>
-);
+)
 
 const NavigationBar = () => {
-  const mobile = !Grid.useBreakpoint()["lg"];
+  const mobile = !Grid.useBreakpoint()["lg"]
   const menuItems = (
     <>
       {leftItems.map(menuItem)}
       <Menu.SubMenu
         key={"navbar-divider"}
-        style={{ flexGrow: 1, visibility: "hidden"}}
+        style={{ flexGrow: 1, visibility: "hidden" }}
       />
       {rightItems.map(menuItem)}
     </>
-  );
+  )
 
   return (
-    <Layout style={{ background: "rgb(54, 76, 119)" }}>
-      <Layout.Header style={{ background: "rgb(54, 76, 119)" }}>
-        <Menu
-          mode={"horizontal"}
-          theme={"dark"}
-          disabledOverflow={true}
-          style={{ display: "flex", background: "rgb(54, 76, 119)" }}
-        >
-          <Menu.Item
-            style={{ flexGrow: mobile && 1, background: "rgb(54, 76, 119)" }}
-            key={"Home"}
+    <div sx={{ flex: 1 }}>
+      <Layout style={{ background: "rgb(54, 76, 119)" }}>
+        <Layout.Header style={{ background: "rgb(54, 76, 119)" }}>
+          <Menu
+            mode={"horizontal"}
+            theme={"dark"}
+            disabledOverflow={true}
+            style={{ display: "flex", background: "rgb(54, 76, 119)" }}
           >
-            <Link to={"/"}>
-              <div id={"navbar-item-elcano-container"}>
-                <img width={110} src={NavbarLogo} alt="logo" />
-                <div id="navbar-item-elcano-text">Climate Lab @ UTSC</div>
-              </div>
-            </Link>
-          </Menu.Item>
-          {mobile ? (
-            <Menu.SubMenu
-              key={"MobileMenu"}
-              title={""}
-              icon={<MenuOutlined />}
-              children={menuItems}
-            />
-          ) : (
-            menuItems
-          )}
-        </Menu>
-      </Layout.Header>
-      <Layout.Content></Layout.Content>
-    </Layout>
-  );
-};
+            <Menu.Item
+              style={{ flexGrow: mobile && 1, background: "rgb(54, 76, 119)" }}
+              key={"Home"}
+            >
+              <Link to={"/"}>
+                <div id={"navbar-item-elcano-container"}>
+                  <img width={110} src={NavbarLogo} alt="logo" />
+                  <div id="navbar-item-elcano-text">Climate Lab @ UTSC</div>
+                </div>
+              </Link>
+            </Menu.Item>
+            {mobile ? (
+              <Menu.SubMenu
+                key={"MobileMenu"}
+                title={""}
+                icon={<MenuOutlined />}
+                children={menuItems}
+              />
+            ) : (
+              menuItems
+            )}
+          </Menu>
+        </Layout.Header>
+        <Layout.Content></Layout.Content>
+      </Layout>
+    </div>
+  )
+}
 
-export default NavigationBar;
+export default NavigationBar
