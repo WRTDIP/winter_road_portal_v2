@@ -118,9 +118,66 @@ function About() {
   return (
     <div>
       <CoverBanner title="About" />
-    <Team teamName={"University of Toronto Scarborough (UTSC)"} teamMemberInfo={TeamMemberInfo[0]} />
-    <Team teamName={"University of British Columbia (UBC)"} teamMemberInfo={TeamMemberInfo[1]}/>
-    </div>
+      <div style={{ textAlign: "center", margin: "2rem 0 1rem 0", color: "#38507E", fontSize: "4rem", fontWeight: "normal" }}>
+      Our Team
+      </div>
+      <Team teamName={
+        <>
+          Climate Lab at UTSC (CL@UT)
+          <br />
+          University of Toronto Scarborough (UTSC)
+        </>
+       } 
+         description={
+          <div style={{ textAlign: "left", margin: "1rem 0", color: "#0E2959", fontSize: "1rem" }}>
+            The Climate Lab at the University of Toronto (CL@UT), led by Professor William A. Gough at the University of Toronto Scarborough (UTSC), 
+            focuses on research related to climate change impacts, vulnerability, and adaptation. The lab investigates a wide range of topics, including
+            climate change in the eastern Arctic, northern Canada, and Canadian cities; climate impact assessments; numerical ocean and climate modeling; 
+            air quality in southwestern Ontario; hurricanes and their relationship to climate change; day-to-day temperature variability; climate change policy; 
+            and broader issues in climatology, meteorology, and physical geography. Dr. Bill Gough and Dr. Yukari Hori have led several research projects at CL@UT 
+            examining the effects of climate change on winter road networks in Northern Canada.
+          </div>
+       }
+       teamMemberInfo={TeamMemberInfo[0]} />      
+
+      <Team teamName={
+        <>
+          Multimodal Mobility Systems Lab
+          <br />
+          University of British Columbia (UBC)
+        </>
+        } 
+        description={
+          <div style={{ textAlign: "left", margin: "1rem 0", color: "#0E2959", fontSize: "1rem" }}>
+            The Multimodal Mobility Systems Lab at UBC, led by Dr. Amy M. Kim, focuses on research in transportation engineering, mobility systems, and sustainable infrastructure. 
+            The lab seeks to understand how long-distance transportation systems and their components operate, particularly under disruptions, and how to plan responsive, resilient systems for acute natural hazards and climate change adaptation. 
+            They also want to learn how these impacts and disruptions affect peoples' connectivity across long-distances, and how impacts may be unequal across the system.
+          </div>
+        }
+        teamMemberInfo={TeamMemberInfo[1]}/>
+             
+        <div style={{ margin: "3rem 0 2rem 0", color: "#38507E", textAlign: "center" }}>
+        <div style={{ fontSize: "4rem", fontWeight: "normal", marginBottom: "1rem" }}>
+          Contact Us</div>
+        <div style={{ color: "#0E2959", fontSize: "1.1rem", marginBottom: "1.5rem" }}>
+           We're here to help. Whether you have a question about our services, need support, or just want to connect, our team is ready to assist you.
+       </div>
+       <div style={{ color: "#0E2959", fontWeight: "bold", fontSize: "1.1rem" }}>
+        Climate Lab @ UTSC (CL@UT)</div>
+       <div style={{ color: "black" }}>
+       <div>Department of Physical and Environmental Sciences</div>
+       <div>University of Toronto Scarborough</div>
+       <div>1265 Military Trail</div>
+       <div>Toronto, ON M1C 1A4</div>
+       </div>
+       <div>
+         <a href="mailto:climlabutsc@gmail.com" style={{ textDecoration: "underline" }}>
+           climlabutsc@gmail.com
+         </a>
+        </div>
+      </div>
+      </div>
+    
   );
 }
 

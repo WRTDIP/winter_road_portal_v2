@@ -5,7 +5,7 @@ import {Button,Card,Col} from "react-bootstrap";
 import "./styles.css";
 
 const FeatureItem = ({ props }) => {
-  const { image, title, content } = props;
+  const { image, title, content, color } = props;
   return (
     <Card
       className="text-center border-0"
@@ -13,8 +13,10 @@ const FeatureItem = ({ props }) => {
     >
       <Card.Img className="cardImage" variant="top" src={image} />
       <Card.Body>
-        <Card.Title className="featureBannerTitle">{title}</Card.Title>
-        <Card.Text className="featureBannerText">{content}</Card.Text>
+        <Card.Title className="featureBannerTitle" style={{ color: color }}>
+          {title}</Card.Title>
+        <Card.Text className="featureBannerText" style={{ color: color }}
+        >{content}</Card.Text>
       </Card.Body>
     </Card>
   );

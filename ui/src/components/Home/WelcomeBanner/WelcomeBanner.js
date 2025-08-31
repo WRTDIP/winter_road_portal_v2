@@ -17,12 +17,11 @@ const WelcomeBanner = () => {
           </h2>
           <p className="welcomeText">
             The Winter Road and Mobility Portal (WRaMP)
-            provides an interactive map with northern climate data,
-            transportation networks, and social aspects of the winter road
-            networks in Canada's Territorial North. The aim of this
-            portal is to support decision-making and policy prioritization on
-            the management of winter roads that are impacted by
-            climate change.
+            offers an interactive map that showcases northern climate data,
+            transportation systems, and social factors associated with winter road
+            networks in Canada's Territorial North. The portal is designed to
+            aid in decision-making and prioritize policies for managing
+            winter roads impacted by climate change.
           </p>
         </Col>
         <Col xs lg="8" className="vertical-center welcomeCarousel">

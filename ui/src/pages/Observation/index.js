@@ -9,7 +9,7 @@ function Observation() {
       id: 1,
       image: ObservationFirst,
       title: "Winter Road Watch",
-      content: "Click the link below to view the interactive map.",
+      content: "Click the link below to view the interactive web map.",
       bgColor: "white",
     },
   ];
