@@ -1,0 +1,4 @@
+#Docker Ignore
+!src
+!public
+!package.json

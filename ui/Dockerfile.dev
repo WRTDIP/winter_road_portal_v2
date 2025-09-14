@@ -1,6 +1,32 @@
 # Fetching the latest node image on alpine linux
-FROM node:alpine AS development
+FROM ubuntu:24.04
+ARG NODE_VERSION=20
+
 # Set the working directory
-WORKDIR /app
+WORKDIR /var/www/
+
 # Install node packages
-CMD ["npm", "install"]
+RUN apt-get update
+RUN apt-get install -y apache2
+
+#General stuff
+RUN apt install -y tmux
+RUN apt install -y nano
+RUN apt install -y htop
+RUN apt install -y curl
+RUN apt install -y net-tools
+RUN apt install -y supervisor
+
+#Node
+RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash
+ENV NVM_DIR=/root/.nvm
+RUN bash -c "source $NVM_DIR/nvm.sh && nvm install $NODE_VERSION"
+RUN nvm install-latest-npm
+
+#apache2 mods
+RUN a2enmod ssl
+
+#Copy files
+COPY dockerfiles/ /
+COPY ui/ /app
+COPY scripts/ /scripts
