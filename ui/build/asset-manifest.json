@@ -1,10 +1,16 @@
 {
   "files": {
-    "main.css": "/static/css/main.55926d4a.css",
-    "main.js": "/static/js/main.01467cb8.js",
+    "main.css": "/static/css/main.32069310.css",
+    "main.js": "/static/js/main.9eb3a9cf.js",
+    "static/media/2025-06_Winter_Road_Watch_Instruction.pdf": "/static/media/2025-06_Winter_Road_Watch_Instruction.770c282e044047143a42.pdf",
+    "static/media/2025-06_Winter_Road_Watch_Data_Collection_Workflows.pdf": "/static/media/2025-06_Winter_Road_Watch_Data_Collection_Workflows.5a8ea14c597741ed59a1.pdf",
+    "static/media/2025-06_Winter_Road_Watch_QR_Code.pdf": "/static/media/2025-06_Winter_Road_Watch_QR_Code.44957d0fd890cf2a6b26.pdf",
+    "static/media/Winter_Road_Watch_page.png": "/static/media/Winter_Road_Watch_page.715eb017d1bfee39be33.png",
+    "static/media/homebg_4.png": "/static/media/homebg_4.0a8698fdee7923a4e837.png",
     "static/media/homebg_3.png": "/static/media/homebg_3.4728b72d6a501230e134.png",
     "static/media/homebg_2.png": "/static/media/homebg_2.a09bdb33ef60d55d57bb.png",
     "static/media/homebg_1.png": "/static/media/homebg_1.a2b616232b910b2a01e0.png",
+    "static/media/homebg_3.1.png": "/static/media/homebg_3.1.00d0a68d6a8b464a9782.png",
     "static/media/winterBanner.jpg": "/static/media/winterBanner.da8a95c07bc6d22645c8.jpg",
     "static/media/northern_lights.png": "/static/media/northern_lights.736838e0b2f13751d335.png",
     "static/media/UTSC.png": "/static/media/UTSC.9b5c0c292bf11c1b0b71.png",
@@ -26,18 +32,17 @@
     "static/media/UBC.png": "/static/media/UBC.07995711d8ea0fca10b9.png",
     "static/media/Transport_Canada.png": "/static/media/Transport_Canada.f439f999471c3cb86b83.png",
     "static/media/CIRNAC.png": "/static/media/CIRNAC.5f8496dc8be030c3c7c5.png",
-    "static/media/group_icon.png": "/static/media/group_icon.5e35fda4701aaec31178.png",
     "static/media/map_icon.png": "/static/media/map_icon.a9795ae0c89f184b5e46.png",
     "static/media/ice_road_icon.png": "/static/media/ice_road_icon.32cae8becdc8a6d0d132.png",
     "static/media/online_survey_icon.png": "/static/media/online_survey_icon.6ae04ac3c90735bb7e64.png",
     "static/media/big_data_icon.png": "/static/media/big_data_icon.55f8ee9995bab83e0bf0.png",
     "static/media/presentation_icon.png": "/static/media/presentation_icon.c6b49fd4488888e2e8ac.png",
     "index.html": "/index.html",
-    "main.55926d4a.css.map": "/static/css/main.55926d4a.css.map",
-    "main.01467cb8.js.map": "/static/js/main.01467cb8.js.map"
+    "main.32069310.css.map": "/static/css/main.32069310.css.map",
+    "main.9eb3a9cf.js.map": "/static/js/main.9eb3a9cf.js.map"
   },
   "entrypoints": [
-    "static/css/main.55926d4a.css",
-    "static/js/main.01467cb8.js"
+    "static/css/main.32069310.css",
+    "static/js/main.9eb3a9cf.js"
   ]
 }
