@@ -2,7 +2,7 @@
   "name": "winter_road_portal",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://wrtdip.github.io/winter_road_portal_v2",
+  "homepage": "https://WRTDIP.github.io/winter_road_portal_v2",
   "dependencies": {
     "@ant-design/icons": "^4.7.0",
     "@arcgis/core": "^4.27.1",
