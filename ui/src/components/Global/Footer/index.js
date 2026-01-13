@@ -37,11 +37,11 @@ const MediaBox = () => {
     <>
       <div className="mediaBox" style={{ marginRight: "1%" }}>
         <Typography className="mediaBoxText">Follow us</Typography>
-        <a href="http://twitter.com" target="_blank">
-          <img style={{ width: "30px" }} src={twitter}></img>
+        <a href="http://twitter.com" target="_blank" rel="noopener noreferrer">
+          <img style={{ width: "30px" }} src={twitter} alt="Twitter" />
         </a>
-        <a href="http://facebook.com" target="_blank">
-          <img style={{ width: "30px" }} src={facebook}></img>
+        <a href="http://facebook.com" target="_blank" rel="noopener noreferrer">
+          <img style={{ width: "30px" }} src={facebook} alt="Facebook" />
         </a>
       </div>
     </>

@@ -2,7 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom";
 import "../node_modules/bootstrap/dist/css/bootstrap.min.css";
 import "./index.css";
-import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
+import { Route, HashRouter as Router, Routes } from "react-router-dom";
 import "antd/dist/antd.min.css";
 import "antd/dist/antd.variable.min.css";
 import NavigationBar from "./components/Global/NavigationBar";
@@ -21,7 +21,7 @@ import Map from "./components/Map/Map.jsx";
  */
 ReactDOM.render(
   <div>
-    {/* Set up router for client-side routing */}
+    {/* Set up router for client-side routing using HashRouter for GitHub Pages */}
     <Router>
       {/* Render global navigation bar */}
       <NavigationBar />
