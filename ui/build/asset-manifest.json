@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.css": "/winter_road_portal_v2/static/css/main.32069310.css",
-    "main.js": "/winter_road_portal_v2/static/js/main.42b43f3f.js",
+    "main.css": "/winter_road_portal_v2/static/css/main.bbd489d1.css",
+    "main.js": "/winter_road_portal_v2/static/js/main.0f9b0d2b.js",
     "static/media/2025-06_Winter_Road_Watch_Instruction.pdf": "/winter_road_portal_v2/static/media/2025-06_Winter_Road_Watch_Instruction.770c282e044047143a42.pdf",
     "static/media/2025-06_Winter_Road_Watch_Data_Collection_Workflows.pdf": "/winter_road_portal_v2/static/media/2025-06_Winter_Road_Watch_Data_Collection_Workflows.5a8ea14c597741ed59a1.pdf",
     "static/media/2025-06_Winter_Road_Watch_QR_Code.pdf": "/winter_road_portal_v2/static/media/2025-06_Winter_Road_Watch_QR_Code.44957d0fd890cf2a6b26.pdf",
@@ -38,11 +38,11 @@
     "static/media/big_data_icon.png": "/winter_road_portal_v2/static/media/big_data_icon.55f8ee9995bab83e0bf0.png",
     "static/media/presentation_icon.png": "/winter_road_portal_v2/static/media/presentation_icon.c6b49fd4488888e2e8ac.png",
     "index.html": "/winter_road_portal_v2/index.html",
-    "main.32069310.css.map": "/winter_road_portal_v2/static/css/main.32069310.css.map",
-    "main.42b43f3f.js.map": "/winter_road_portal_v2/static/js/main.42b43f3f.js.map"
+    "main.bbd489d1.css.map": "/winter_road_portal_v2/static/css/main.bbd489d1.css.map",
+    "main.0f9b0d2b.js.map": "/winter_road_portal_v2/static/js/main.0f9b0d2b.js.map"
   },
   "entrypoints": [
-    "static/css/main.32069310.css",
-    "static/js/main.42b43f3f.js"
+    "static/css/main.bbd489d1.css",
+    "static/js/main.0f9b0d2b.js"
   ]
 }
