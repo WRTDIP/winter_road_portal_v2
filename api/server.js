@@ -3,7 +3,9 @@ const cors = require("cors")
 const weather = require("./routes/weather.route")
 const port = 4000
 const app = express()
-app.use(cors())
+app.use(cors({
+  origin: process.env.DEPLOYMENT === 'prod' ? 'https://wramp.ca' : '*'
+}))
 app.use(express.json())
 
 // Logging
