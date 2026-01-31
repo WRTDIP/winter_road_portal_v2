@@ -1,4 +1,18 @@
 services:
+  api:
+    container_name: api_wrdip_prod
+    build:
+      context: api
+      dockerfile: Dockerfile.prod
+    ports:
+      - 4000:4000
+    depends_on:
+      - postgres
+    env_file:
+      - .env
+    environment:
+      - DEPLOYMENT=prod
+
   ui:
     container_name: ui_wrdip_prod
     build:
@@ -6,7 +20,8 @@ services:
       dockerfile: Dockerfile.prod
     ports:
       - 80:3000
-    command: "npm start"
+    depends_on:
+      - api
   
   postgres:
     container_name: postgres
