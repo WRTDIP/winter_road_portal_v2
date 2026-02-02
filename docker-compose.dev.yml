@@ -26,8 +26,7 @@ services:
       - 4000:4000
     volumes:
       - ./api:/app
-    command: >
-      sh -c "npm install && npx nodemon server.js"
+    command: node server.js
     env_file:
       - .env
 

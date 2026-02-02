@@ -1,7 +1,13 @@
-FROM node:alpine AS development
+FROM node:alpine
 
 WORKDIR /app
 
-CMD [ "npm install" ]
+COPY package*.json ./
 
-CMD ["nodemon server.js"]
+RUN npm ci --only=production
+
+COPY . .
+
+EXPOSE 4000
+
+CMD ["node", "server.js"]
