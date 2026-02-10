@@ -1,4 +1,4 @@
-import { Container, Row, Col } from "react-bootstrap";
+import { Container } from "react-bootstrap";
 import ProjectFirst from "../../assets/smartphone_icon_colour.png";
 import ProjectSecond from "../../assets/online_survey_icon.png";
 import ProjectThird from "../../assets/ice_road_icon.png";
