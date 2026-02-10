@@ -1,6 +1,6 @@
 import React from "react";
-import { Grid, Typography } from "antd";
-import coverBannerBg from "../../../assets/winterBanner.jpg";
+//import { Grid, Typography } from "antd";
+//import coverBannerBg from "../../../assets/winterBanner.jpg";
 import Card from "react-bootstrap/Card";
 import "./styles.css";
 
