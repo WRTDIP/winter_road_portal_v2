@@ -4,9 +4,9 @@ import ProjectSecond from "../../assets/online_survey_icon.png";
 import ProjectThird from "../../assets/ice_road_icon.png";
 import CoverBanner from "../../components/Global/CoverBanner/CoverBanner";
 import ProjectItem from "../../components/Projects/ProjectBanner/ProjectItem";
-import WRWatchInstruction from "../../assets/2025-06_Winter_Road_Watch_Instruction.pdf";
-import WRWatchQR from "../../assets/2025-06_Winter_Road_Watch_QR_Code.pdf";
-import WRWatchWorkflows from "../../assets/2025-06_Winter_Road_Watch_Data_Collection_Workflows.pdf";
+import WRWatchInstruction from "../../assets/2026-01_Winter_Road_Watch_Instruction.pdf";
+import WRWatchQR from "../../assets/2026-01_Winter_Road_Watch_QR_Code.pdf";
+import WRWatchWorkflows from "../../assets/2026-01_Winter_Road_Watch_Data_Collection_Workflows.pdf";
 
 function Projects() {
   const BannerContents = [
