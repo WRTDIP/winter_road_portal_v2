@@ -8,8 +8,8 @@ function Transportation() {
     {
       id: 1,
       image: TransportationFirst,
-      title: "Northern Transportation Network Study",
-      content: "Learn more about studies and projects related to Northern transportation.",
+      title: "Winter Road Transportation Network Study",
+      content: "Explore comprehensive research and insights into Northern winter transportation systems and infrastructure.",
       bgColor: "white",
     },
   ];
