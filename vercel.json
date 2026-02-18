@@ -1,6 +1,5 @@
 {
   "version": 2,
-  "buildCommand": "cd ui && npm install && npm run build",
-  "outputDirectory": "ui/build",
-  "installCommand": "npm install --prefix ui"
+  "buildCommand": "npm run build",
+  "outputDirectory": "build"
 }
