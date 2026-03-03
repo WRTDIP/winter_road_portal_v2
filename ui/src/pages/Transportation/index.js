@@ -8,7 +8,7 @@ function Transportation() {
     {
       id: 1,
       image: TransportationFirst,
-      title: "Winter Road Transportation Network Study",
+      title: "Northern Transportation Network Study",
       content: "Explore comprehensive research and insights into Northern winter transportation systems and infrastructure.",
       bgColor: "white",
     },
@@ -24,7 +24,7 @@ function Transportation() {
           target="_blank"
           rel="noopener noreferrer"
         >
-          this ArcGIS StoryMap Collection
+          our ArcGIS StoryMap Collection
         </a>
         .
       </p>
