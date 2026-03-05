@@ -24,9 +24,9 @@ const CopyRight = () => {
       <Typography className="copyRightText">
         Copyright © {year} CL@UT
       </Typography>
-      <a href="#top"> Go to top</a>
+      {/*<a href="#top"> Go to top</a>*/} 
     </div>
-  );
+  ); // The "Go to top" link is commented out because it may not work as expected in a single-page application. It would require additional JavaScript to scroll to the top of the page, and it may not be necessary if the footer is already at the bottom of the page.
 };
 
 const MediaBox = () => {
