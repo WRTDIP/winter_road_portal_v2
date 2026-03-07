@@ -11,4 +11,4 @@ fi
 # Now you can use variables from .env
 echo "Variables loaded from .env"
 
-docker compose --env-file .env -f docker-compose.${DEPLOY_MODE}.yml down -d
+docker compose --env-file .env -f docker-compose.${DEPLOY_MODE}.yml down
