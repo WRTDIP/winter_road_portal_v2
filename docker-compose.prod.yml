@@ -8,12 +8,13 @@ services:
       - 80:3000
     command: "npm start"
   
-  postgres:
-    container_name: postgres
-    image: postgres:14-alpine
+  mysql:
+    container_name: mysql
+    image: mysql
+    restart: always
     ports:
       - 5432:5432
     volumes:
-      - /db/data/pg:/var/lib/postgresql/data
+      - ./db/data/mysql:/var/lib/mysql
     env_file:
       - .env

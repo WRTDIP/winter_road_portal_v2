@@ -16,7 +16,7 @@ services:
         npm start
     env_file:
       - .env
-
+      
   api:
     container_name: api_dev
     build:
@@ -26,18 +26,18 @@ services:
       - 4000:4000
     volumes:
       - ./api:/app
-    command: >
+    command: 
       sh -c "npm install && npx nodemon server.js"
     env_file:
       - .env
 
-  postgres:
-    container_name: postgres
-    image: postgres
+  mysql:
+    container_name: mysql
+    image: mysql
     restart: always
     ports:
       - 5432:5432
     volumes:
-      - ./db/data/pg:/var/lib/postgresql/data
+      - ./db/data/mysql:/var/lib/mysql
     env_file:
       - .env

@@ -11,6 +11,7 @@ const logging = (req, res, next) => {
   console.log(Date().toLocaleString("en-US"), " URL", req.path)
   next()
 }
+
 app.use(logging)
 
 //Routes
