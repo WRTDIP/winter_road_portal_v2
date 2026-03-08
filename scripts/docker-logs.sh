@@ -13,7 +13,6 @@ echo "Variables loaded from .env"
 
 if [ -n $1 ]; then
     docker logs -f $1_${DEPLOY_MODE}
-
     exit
 fi
 

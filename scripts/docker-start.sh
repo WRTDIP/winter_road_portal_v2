@@ -12,4 +12,9 @@ fi
 echo "Variables loaded from .env"
 
 # Start the Docker container
-docker compose --env-file .env -f docker-compose.${DEPLOY_MODE}.yml up -d
+if [ -n $1 ]; then
+    docker compose -f docker-compose.${DEPLOY_MODE}.yml up $1 -d 
+    exit
+fi
+
+docker compose -f docker-compose.${DEPLOY_MODE}.yml up -d

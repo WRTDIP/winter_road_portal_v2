@@ -15,7 +15,8 @@ services:
         npm install
         npm start
     env_file:
-      - .env
+      - path: ./.env
+        required: true
       
   api:
     container_name: api_dev
@@ -29,15 +30,37 @@ services:
     command: 
       sh -c "npm install && npx nodemon server.js"
     env_file:
-      - .env
+      - path: ./.env
+        required: true
 
-  mysql:
-    container_name: mysql
-    image: mysql
+  # mysql:
+  #   container_name: db_dev
+  #   image: mysql:latest
+  #   restart: always
+  #   ports:
+  #     - 3306:3306
+  #   volumes:
+  #     - db-data:/var/lib/mysql
+  #   # environment:
+  #     # - MYSQL_DATABASE=${DATABASE_NAME}_${DEPLOY_MODE} not needed
+  #   env_file:
+  #     - path: ./.env
+  #       required: true
+
+  db:
+    container_name: db_dev
+    image: postgres
     restart: always
+    volumes:
+      #- db-data:/var/lib/postgresql/data
+      - ./db/data:/var/lib/postgresql/18/main
+    shm_size: 128mb
     ports:
       - 5432:5432
-    volumes:
-      - ./db/data/mysql:/var/lib/mysql
     env_file:
-      - .env
+      - path: ./.env
+        required: true
+
+# volumes:
+#   db-data:
+#     name: wramp-db-volume
