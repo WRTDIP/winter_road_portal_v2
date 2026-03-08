@@ -10,4 +10,7 @@ GET {{baseUrl}}/weather/city?cityCode=nt
 GET {{baseUrl}}/countries
 
 ### Read country by id
-GET {{baseUrl}}/countries/1
+GET {{baseUrl}}/countries
+
+### List Users by id
+GET {{baseUrl}}/users

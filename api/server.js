@@ -16,6 +16,7 @@ app.use(logging)
 
 //Routes
 app.use("/weather", weather)
+app.use("/login", require("./routes/login.js"))
 
 //Start
 app.listen(port, () => {
