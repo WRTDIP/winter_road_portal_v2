@@ -3,6 +3,7 @@ const cors = require("cors")
 const weather = require("./routes/weather.route")
 const login = require("./routes/login.route")
 const user = require("./routes/user.route")
+const dev = require("./routes/dev.route")
 const port = 4000
 const app = express()
 app.use(cors())
@@ -18,7 +19,8 @@ app.use(logging)
 
 //Routes
 app.use("/weather", weather)
-app.use("/users", login)
+app.use("/login", login)
+app.use("/dev", dev)
 
 //Start
 app.listen(port, () => {

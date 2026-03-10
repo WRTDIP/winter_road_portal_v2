@@ -12,14 +12,26 @@ GET {{baseUrl}}/countries
 GET {{baseUrl}}/countries
 
 ### List Users by id
-POST {{baseUrl}}/users/users
+POST {{baseUrl}}/login/users
+
+### Create User
+POST {{baseUrl}}/login/createUser
+Content-Type: application/json
+
+{"username":"test","password":"test","email":"test@example.com","name":"Test User"}
 
 ### test
-GET {{baseUrl}}/users/test
+POST {{baseUrl}}/login/test
+Content-Type: application/json
+
+{"test":"hello"}
 
 ### test
-GET {{baseUrl}}/users/
+POST {{baseUrl}}/login/
 
 ### Weather
 
 GET {{baseUrl}}/weather/
+
+### dev route
+GET {{baseUrl}}/dev/

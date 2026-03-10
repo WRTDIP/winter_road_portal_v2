@@ -20,6 +20,7 @@ services:
       
   api:
     container_name: api_dev
+    restart: always
     build:
       context: ./
       dockerfile: api/Dockerfile.dev
@@ -28,7 +29,7 @@ services:
     volumes:
       - ./api:/app
     command: 
-      sh -c "npm install && npx nodemon server.js"
+      sh -c "DEBUG=nodemon:* && npm install && npx nodemon -L"
     env_file:
       - path: ./.env
         required: true
