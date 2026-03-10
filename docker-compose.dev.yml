@@ -17,6 +17,8 @@ services:
     env_file:
       - path: ./.env
         required: true
+    networks:
+      - wramp-network
       
   api:
     container_name: api_dev
@@ -33,6 +35,8 @@ services:
     env_file:
       - path: ./.env
         required: true
+    networks:
+      - wramp-network
 
   # mysql:
   #   container_name: db_dev
@@ -61,6 +65,28 @@ services:
     env_file:
       - path: ./.env
         required: true
+    networks:
+      - wramp-network
+
+  apache:
+    container_name: apache_dev
+    build:
+      context: ./
+      dockerfile: apache/Dockerfile.dev
+    privileged: true   
+    restart: always
+    ports:
+      - 80:80
+      - 443:443
+    networks:
+      - wramp-network
+    volumes:
+      - ./apache:/usr/local/apache2/htdocs/
+      - ./apache/apache-loadbalancer.conf:/usr/local/apache2/conf/httpd.conf
+
+networks:
+  wramp-network:
+    driver: bridge
 
 # volumes:
 #   db-data:

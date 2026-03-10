@@ -26,6 +26,10 @@ Content-Type: application/json
 
 {"test":"hello"}
 
+### devtestemail
+
+GET {{baseUrl}}/dev/sendtestemail
+
 ### test
 POST {{baseUrl}}/login/
 

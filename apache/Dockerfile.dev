@@ -1,0 +1,36 @@
+FROM ubuntu:latest
+
+RUN apt-get update && apt-get install -y \
+    apache2 \
+    nano \
+    curl \
+    tmux \
+    htop \
+    supervisor \
+    php \
+    php-mysql \
+    php-curl \
+    php-json \
+    php-mbstring \
+    php-xml \
+    fail2ban \
+    libapache2-mod-security2 \
+    && apt-get clean && rm -rf /var/lib/apt/lists/*
+
+# Enable Apache modules
+RUN a2enmod ssl \
+    && a2enmod rewrite \
+    && a2enmod proxy \
+    && a2enmod proxy_http \
+    && a2enmod headers \
+    && a2enmod security2
+
+# Move custom configurations over
+COPY ./apache/dockerfiles /
+
+RUN a2ensite default-ssl.conf
+RUN a2ensite localhost-ssl.conf
+
+WORKDIR /var/www/
+
+CMD ["apachectl", "-D", "FOREGROUND"]
