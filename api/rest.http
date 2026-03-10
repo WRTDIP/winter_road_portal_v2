@@ -5,7 +5,6 @@
 ### Create Country
 GET {{baseUrl}}/weather/city?cityCode=nt
 
-
 ### Read countries
 GET {{baseUrl}}/countries
 
@@ -13,4 +12,14 @@ GET {{baseUrl}}/countries
 GET {{baseUrl}}/countries
 
 ### List Users by id
-GET {{baseUrl}}/users
+POST {{baseUrl}}/users/users
+
+### test
+GET {{baseUrl}}/users/test
+
+### test
+GET {{baseUrl}}/users/
+
+### Weather
+
+GET {{baseUrl}}/weather/

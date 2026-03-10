@@ -26,6 +26,12 @@ stop-db:
 
 restart: stop start
 
+restart-ui: stop-ui start-ui
+
+restart-api: stop-api start-api
+
+restart-db: stop-db start-db
+
 exec:
 	./scripts/docker-exec.sh
 
@@ -55,3 +61,6 @@ clean-all:
 
 clean:
 	./scripts/docker-clean.sh
+
+status:
+	./scripts/docker-status.sh
