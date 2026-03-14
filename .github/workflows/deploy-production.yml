@@ -8,5 +8,5 @@ jobs:
     runs-on: production
     steps:
     - name: Deploy to Production
-      run: sudo /scripts/deploy-production.sh
+      run: sudo -s /scripts/deploy-production.sh
 
