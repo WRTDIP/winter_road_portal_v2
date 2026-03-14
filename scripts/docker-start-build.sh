@@ -9,7 +9,7 @@ else
 fi
 
 # Now you can use variables from .env
-echo "Variables loaded from .env"
+echo "Variables loaded frvom .env"
 
 # Start the Docker container
 if [ -n "$1" ]; then
