@@ -34,6 +34,7 @@ COPY ./apache/dockerfiles /
 
 RUN a2ensite default-ssl.conf
 RUN a2ensite localhost-ssl.conf
+RUN a2ensite default-wramp-ssl.conf
 
 WORKDIR /var/www/
 
