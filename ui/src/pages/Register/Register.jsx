@@ -1,22 +1,22 @@
 import {Container} from 'react-bootstrap';
 import CoverBanner from "../../components/Global/CoverBanner/CoverBanner";
-import LoginForm from "../../components/Login/Login";
+import RegisterForm from "../../components/Login/RegisterForm";
 import { Typography } from '@mui/material';
 
-function Login() {
+function Register() {
     return (
       <Container className="p-0" fluid>
-      <CoverBanner title="Login" />
-      <LoginForm />
+      <CoverBanner title="Register" />
+      <RegisterForm />
       <Typography 
         variant="body1" 
         sx={{ mt: 2, textAlign: 'center', cursor: 'pointer' }}
-        onClick={() => window.location.href = '/register'}
+        onClick={() => window.location.href = '/login'}
       >
-        Register
+        Login
       </Typography>
       </Container>
     );
 }
 
-export default Login;
+export default Register;

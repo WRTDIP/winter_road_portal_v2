@@ -18,9 +18,9 @@ const logging = (req, res, next) => {
 app.use(logging)
 
 //Routes
-app.use("/weather", weather)
-app.use("/login", login)
-app.use("/dev", dev)
+app.use("/api/weather", weather)
+app.use("/api/login", login)
+app.use("/api/dev", dev)
 
 //Start
 app.listen(port, () => {

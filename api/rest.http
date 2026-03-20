@@ -31,7 +31,10 @@ Content-Type: application/json
 GET {{baseUrl}}/dev/sendtestemail
 
 ### test
-POST {{baseUrl}}/login/
+POST {{baseUrl}}/api/login/
+
+### test2
+POST https://localhost/api/login/
 
 ### Weather
 

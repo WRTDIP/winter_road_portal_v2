@@ -14,6 +14,7 @@ import Transportation from "./pages/Transportation/index.jsx";
 import Observation from "./pages/Observation/index.jsx";
 import Login from "./pages/Login/Login.jsx";
 import Map from "./components/Map/Map.jsx";
+import Register from "./pages/Register/Register.jsx";
 
 /**
  * Entry point of the React application.
@@ -35,6 +36,7 @@ ReactDOM.render(
         <Route path="/transportation" element={<Transportation />} exact />
         <Route path="/observation" element={<Observation />} exact />
         <Route path="/login" element={<Login />} exact />
+        <Route path="/register" element={<Register />} exact />
       </Routes>
 
       {/* Render global footer */}

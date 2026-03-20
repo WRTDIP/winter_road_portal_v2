@@ -37,7 +37,7 @@ function LoginForm() {
         </Form.Group>
 
         <Form.Group className="mb-3">
-          <Form.Label className="h3 pb-3">Password6</Form.Label>
+          <Form.Label className="h3 pb-3">Password</Form.Label>
           <Form.Control
             type="password"
             placeholder="Password"
