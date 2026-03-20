@@ -1,6 +1,8 @@
 import { Button, Form, Alert } from 'react-bootstrap';
 import { useState } from "react";
 import "./styles.css"
+import DOMPurify from 'dompurify';
+
 
 
 function AlertDismissibleExample(props) {
@@ -9,7 +11,7 @@ function AlertDismissibleExample(props) {
             <Alert className="mt-3" variant="danger" onClose={() => props.setShow(false)} dismissible>
                 <Alert.Heading>{props.errorHeading}</Alert.Heading>
                 <p>
-                    {props.errorMessage}
+                    <div dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(props.errorMessage) }} />
                 </p>
             </Alert>
         );
@@ -18,6 +20,7 @@ function AlertDismissibleExample(props) {
 }
 
 function RegisterForm() {
+  const [fullName, setFullName] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -26,8 +29,55 @@ function RegisterForm() {
   const [errorMessage, setErrorMessage] = useState("");
 
 
+  const validateFullName = (name) => {
+    const nameParts = name.trim().split(" ");
+    if (!/^[a-zA-Z]+\s[a-zA-Z]+$/.test(name.trim())) {
+        setErrorHeading("Invalid Full Name");
+        setErrorMessage("Please enter your full name (first and last name).");
+        setShowAlert(true);
+        return false;
+    } else {
+        setShowAlert(false);
+        return true;
+    }
+  }
+
+  const validateEmail = (email) => {
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) {
+      setErrorHeading("Invalid Email");
+      setErrorMessage("Please enter a valid email address.");
+      setShowAlert(true);
+      return false;
+    } else {
+      setShowAlert(false);
+      return true;
+    }
+  }
+
+  const validatePassword = (pwd, confirmPwd) => {
+    if (!pwd || pwd.length < 8 || !/[A-Za-z]/.test(pwd) || !/[0-9]/.test(pwd)) {
+      setErrorHeading("Invalid Password");
+      setErrorMessage("Password must be at least 8 characters and include letters and numbers.");
+      setShowAlert(true);
+      return false;
+    }
+    if (typeof confirmPwd !== "undefined" && pwd !== confirmPwd) {
+      setErrorHeading("Password Mismatch");
+      setErrorMessage("Password and confirmation do not match.");
+      setShowAlert(true);
+      return false;
+    }
+    setShowAlert(false);
+    return true;
+  }
+
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    if(!validateFullName(fullName) || !validateEmail(username) || !validatePassword(password, confirmPassword)) {
+        return;
+    }
+
     setShowAlert(true);
     fetch("/api/register", {
       method: "POST",
@@ -35,12 +85,26 @@ function RegisterForm() {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
+        fullName: fullName,
         email: username,
         password: password,
       }),
     })
     .then((res) => res.json())
-    .then((data) => console.log(data))
+    .then((data) => {
+        if (data.status === "error") {
+            setErrorHeading("Registration Failed");
+            setErrorMessage(data.message);
+            setShowAlert(true);
+        } 
+
+        if (data.status === "success") {
+            
+            // setErrorHeading("Registration Successful");
+            // setErrorMessage(data.message);
+            // setShowAlert(true);
+        } 
+    })
     .catch((err) => {console.error(err); 
         setErrorHeading("Registration Failed");
         setErrorMessage(`An error occurred during registration. Please try again. ${err}`);
@@ -49,9 +113,20 @@ function RegisterForm() {
   };
   
     return (
-        <Form className="loginForm" onSubmit={handleSubmit}>
+        <Form className="registerForm" onSubmit={handleSubmit}>
+           <Form.Group className="mb-3">
+                <Form.Label className="h5 pb-3">Full Name</Form.Label>
+                <Form.Control
+                    type="text"
+                    placeholder="Enter full name"
+                    onChange={(e) => {
+                        setFullName(e.target.value);
+                    }}
+                />
+            </Form.Group>
+
             <Form.Group className="mb-3">
-                <Form.Label className="h3 pb-3">Email address</Form.Label>
+                <Form.Label className="h5 pb-3">Email address</Form.Label>
                 <Form.Control
                     type="email"
                     placeholder="Enter email"
@@ -62,10 +137,10 @@ function RegisterForm() {
             </Form.Group>
 
             <Form.Group className="mb-3">
-                <Form.Label className="h3 pb-3">Password</Form.Label>
+                <Form.Label className="h5 pb-3">Password</Form.Label>
                 <Form.Control
                     type="password"
-                    placeholder="Password"
+                    placeholder="Enter password"
                     onChange={(e) => {
                         setPassword(e.target.value);
                     }}
@@ -73,17 +148,17 @@ function RegisterForm() {
             </Form.Group>
 
             <Form.Group className="mb-3">
-                <Form.Label className="h3 pb-3">Confirm Password</Form.Label>
+                <Form.Label className="h5 pb-3">Confirm Password</Form.Label>
                 <Form.Control
                     type="password"
-                    placeholder="Password"
+                    placeholder="Confirm password"
                     onChange={(e) => {
                         setConfirmPassword(e.target.value);
                     }}
                 />
             </Form.Group>
 
-            <Button className="mt-3" variant="primary" type="submit">
+            <Button className="mt-3" variant="primary" type="submit" onClick={handleSubmit}>
                 Submit
             </Button>
 

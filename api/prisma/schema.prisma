@@ -14,10 +14,55 @@ datasource db {
 }
 
 model User {
-  id    Int     @id @default(autoincrement())
-  email String  @unique
-  name  String?
-  posts Post[]
+  id            String     @id @default(uuid())
+  email         String     @unique
+  name          String?
+  password      String
+  emailverified Boolean    @default(false)
+  datecreated   DateTime   @default(now()) @db.Timestamptz
+  dateupdated   DateTime   @updatedAt @db.Timestamptz
+  dateloggedin  DateTime?  @db.Timestamptz
+  userlevel     Int        @default(30)
+  posts         Post[]
+  authCodes     AuthCode[]
+  sessions      Session[]
+}
+
+model AuthCode {
+  id          Int      @id @default(autoincrement())
+  code        String   @unique
+  user        User     @relation(fields: [userId], references: [id])
+  userId      String
+  flow        String
+  dateCreated DateTime @default(now()) @db.Timestamptz
+  expiresAt   DateTime @default(dbgenerated("now() + interval '48 hour'")) @db.Timestamptz
+}
+
+model OutBoundEmail {
+  id                  Int                  @id @default(autoincrement())
+  to                  String
+  subject             String
+  body                String
+  dateCreated         DateTime             @default(now()) @db.Timestamptz
+  sentAt              DateTime?            @db.Timestamptz
+  outBoundEmailQueues OutBoundEmailQueue[]
+}
+
+model OutBoundEmailQueue {
+  id         Int           @id @default(autoincrement())
+  email      OutBoundEmail @relation(fields: [emailId], references: [id])
+  emailId    Int
+  dateQueued DateTime      @default(now()) @db.Timestamptz
+  sentAt     DateTime?     @db.Timestamptz
+}
+
+model Session {
+  id          Int      @id @default(autoincrement())
+  token       String   @unique
+  user        User     @relation(fields: [userId], references: [id])
+  userId      String
+  dateCreated DateTime @default(now()) @db.Timestamptz
+  expiresAt   DateTime @default(dbgenerated("now() + interval '7 day'")) @db.Timestamptz
 }
 
 model Post {
@@ -26,5 +71,5 @@ model Post {
   content   String?
   published Boolean @default(false)
   author    User    @relation(fields: [authorId], references: [id])
-  authorId  Int
+  authorId  String
 }

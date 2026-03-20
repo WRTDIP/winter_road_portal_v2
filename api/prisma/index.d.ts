@@ -19,6 +19,26 @@ export type PrismaPromise<T> = $Public.PrismaPromise<T>
  */
 export type User = $Result.DefaultSelection<Prisma.$UserPayload>
 /**
+ * Model AuthCode
+ * 
+ */
+export type AuthCode = $Result.DefaultSelection<Prisma.$AuthCodePayload>
+/**
+ * Model OutBoundEmail
+ * 
+ */
+export type OutBoundEmail = $Result.DefaultSelection<Prisma.$OutBoundEmailPayload>
+/**
+ * Model OutBoundEmailQueue
+ * 
+ */
+export type OutBoundEmailQueue = $Result.DefaultSelection<Prisma.$OutBoundEmailQueuePayload>
+/**
+ * Model Session
+ * 
+ */
+export type Session = $Result.DefaultSelection<Prisma.$SessionPayload>
+/**
  * Model Post
  * 
  */
@@ -154,6 +174,46 @@ export class PrismaClient<
     * ```
     */
   get user(): Prisma.UserDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.authCode`: Exposes CRUD operations for the **AuthCode** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more AuthCodes
+    * const authCodes = await prisma.authCode.findMany()
+    * ```
+    */
+  get authCode(): Prisma.AuthCodeDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.outBoundEmail`: Exposes CRUD operations for the **OutBoundEmail** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more OutBoundEmails
+    * const outBoundEmails = await prisma.outBoundEmail.findMany()
+    * ```
+    */
+  get outBoundEmail(): Prisma.OutBoundEmailDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.outBoundEmailQueue`: Exposes CRUD operations for the **OutBoundEmailQueue** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more OutBoundEmailQueues
+    * const outBoundEmailQueues = await prisma.outBoundEmailQueue.findMany()
+    * ```
+    */
+  get outBoundEmailQueue(): Prisma.OutBoundEmailQueueDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.session`: Exposes CRUD operations for the **Session** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Sessions
+    * const sessions = await prisma.session.findMany()
+    * ```
+    */
+  get session(): Prisma.SessionDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.post`: Exposes CRUD operations for the **Post** model.
@@ -599,6 +659,10 @@ export namespace Prisma {
 
   export const ModelName: {
     User: 'User',
+    AuthCode: 'AuthCode',
+    OutBoundEmail: 'OutBoundEmail',
+    OutBoundEmailQueue: 'OutBoundEmailQueue',
+    Session: 'Session',
     Post: 'Post'
   };
 
@@ -615,7 +679,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "post"
+      modelProps: "user" | "authCode" | "outBoundEmail" | "outBoundEmailQueue" | "session" | "post"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -690,6 +754,302 @@ export namespace Prisma {
           count: {
             args: Prisma.UserCountArgs<ExtArgs>
             result: $Utils.Optional<UserCountAggregateOutputType> | number
+          }
+        }
+      }
+      AuthCode: {
+        payload: Prisma.$AuthCodePayload<ExtArgs>
+        fields: Prisma.AuthCodeFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.AuthCodeFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AuthCodePayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.AuthCodeFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AuthCodePayload>
+          }
+          findFirst: {
+            args: Prisma.AuthCodeFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AuthCodePayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.AuthCodeFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AuthCodePayload>
+          }
+          findMany: {
+            args: Prisma.AuthCodeFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AuthCodePayload>[]
+          }
+          create: {
+            args: Prisma.AuthCodeCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AuthCodePayload>
+          }
+          createMany: {
+            args: Prisma.AuthCodeCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.AuthCodeCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AuthCodePayload>[]
+          }
+          delete: {
+            args: Prisma.AuthCodeDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AuthCodePayload>
+          }
+          update: {
+            args: Prisma.AuthCodeUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AuthCodePayload>
+          }
+          deleteMany: {
+            args: Prisma.AuthCodeDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.AuthCodeUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.AuthCodeUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AuthCodePayload>[]
+          }
+          upsert: {
+            args: Prisma.AuthCodeUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AuthCodePayload>
+          }
+          aggregate: {
+            args: Prisma.AuthCodeAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateAuthCode>
+          }
+          groupBy: {
+            args: Prisma.AuthCodeGroupByArgs<ExtArgs>
+            result: $Utils.Optional<AuthCodeGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.AuthCodeCountArgs<ExtArgs>
+            result: $Utils.Optional<AuthCodeCountAggregateOutputType> | number
+          }
+        }
+      }
+      OutBoundEmail: {
+        payload: Prisma.$OutBoundEmailPayload<ExtArgs>
+        fields: Prisma.OutBoundEmailFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.OutBoundEmailFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OutBoundEmailPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.OutBoundEmailFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OutBoundEmailPayload>
+          }
+          findFirst: {
+            args: Prisma.OutBoundEmailFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OutBoundEmailPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.OutBoundEmailFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OutBoundEmailPayload>
+          }
+          findMany: {
+            args: Prisma.OutBoundEmailFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OutBoundEmailPayload>[]
+          }
+          create: {
+            args: Prisma.OutBoundEmailCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OutBoundEmailPayload>
+          }
+          createMany: {
+            args: Prisma.OutBoundEmailCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.OutBoundEmailCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OutBoundEmailPayload>[]
+          }
+          delete: {
+            args: Prisma.OutBoundEmailDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OutBoundEmailPayload>
+          }
+          update: {
+            args: Prisma.OutBoundEmailUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OutBoundEmailPayload>
+          }
+          deleteMany: {
+            args: Prisma.OutBoundEmailDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.OutBoundEmailUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.OutBoundEmailUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OutBoundEmailPayload>[]
+          }
+          upsert: {
+            args: Prisma.OutBoundEmailUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OutBoundEmailPayload>
+          }
+          aggregate: {
+            args: Prisma.OutBoundEmailAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateOutBoundEmail>
+          }
+          groupBy: {
+            args: Prisma.OutBoundEmailGroupByArgs<ExtArgs>
+            result: $Utils.Optional<OutBoundEmailGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.OutBoundEmailCountArgs<ExtArgs>
+            result: $Utils.Optional<OutBoundEmailCountAggregateOutputType> | number
+          }
+        }
+      }
+      OutBoundEmailQueue: {
+        payload: Prisma.$OutBoundEmailQueuePayload<ExtArgs>
+        fields: Prisma.OutBoundEmailQueueFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.OutBoundEmailQueueFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OutBoundEmailQueuePayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.OutBoundEmailQueueFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OutBoundEmailQueuePayload>
+          }
+          findFirst: {
+            args: Prisma.OutBoundEmailQueueFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OutBoundEmailQueuePayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.OutBoundEmailQueueFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OutBoundEmailQueuePayload>
+          }
+          findMany: {
+            args: Prisma.OutBoundEmailQueueFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OutBoundEmailQueuePayload>[]
+          }
+          create: {
+            args: Prisma.OutBoundEmailQueueCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OutBoundEmailQueuePayload>
+          }
+          createMany: {
+            args: Prisma.OutBoundEmailQueueCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.OutBoundEmailQueueCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OutBoundEmailQueuePayload>[]
+          }
+          delete: {
+            args: Prisma.OutBoundEmailQueueDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OutBoundEmailQueuePayload>
+          }
+          update: {
+            args: Prisma.OutBoundEmailQueueUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OutBoundEmailQueuePayload>
+          }
+          deleteMany: {
+            args: Prisma.OutBoundEmailQueueDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.OutBoundEmailQueueUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.OutBoundEmailQueueUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OutBoundEmailQueuePayload>[]
+          }
+          upsert: {
+            args: Prisma.OutBoundEmailQueueUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OutBoundEmailQueuePayload>
+          }
+          aggregate: {
+            args: Prisma.OutBoundEmailQueueAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateOutBoundEmailQueue>
+          }
+          groupBy: {
+            args: Prisma.OutBoundEmailQueueGroupByArgs<ExtArgs>
+            result: $Utils.Optional<OutBoundEmailQueueGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.OutBoundEmailQueueCountArgs<ExtArgs>
+            result: $Utils.Optional<OutBoundEmailQueueCountAggregateOutputType> | number
+          }
+        }
+      }
+      Session: {
+        payload: Prisma.$SessionPayload<ExtArgs>
+        fields: Prisma.SessionFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.SessionFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SessionPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.SessionFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SessionPayload>
+          }
+          findFirst: {
+            args: Prisma.SessionFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SessionPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.SessionFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SessionPayload>
+          }
+          findMany: {
+            args: Prisma.SessionFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SessionPayload>[]
+          }
+          create: {
+            args: Prisma.SessionCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SessionPayload>
+          }
+          createMany: {
+            args: Prisma.SessionCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.SessionCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SessionPayload>[]
+          }
+          delete: {
+            args: Prisma.SessionDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SessionPayload>
+          }
+          update: {
+            args: Prisma.SessionUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SessionPayload>
+          }
+          deleteMany: {
+            args: Prisma.SessionDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.SessionUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.SessionUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SessionPayload>[]
+          }
+          upsert: {
+            args: Prisma.SessionUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SessionPayload>
+          }
+          aggregate: {
+            args: Prisma.SessionAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateSession>
+          }
+          groupBy: {
+            args: Prisma.SessionGroupByArgs<ExtArgs>
+            result: $Utils.Optional<SessionGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.SessionCountArgs<ExtArgs>
+            result: $Utils.Optional<SessionCountAggregateOutputType> | number
           }
         }
       }
@@ -876,6 +1236,10 @@ export namespace Prisma {
   }
   export type GlobalOmitConfig = {
     user?: UserOmit
+    authCode?: AuthCodeOmit
+    outBoundEmail?: OutBoundEmailOmit
+    outBoundEmailQueue?: OutBoundEmailQueueOmit
+    session?: SessionOmit
     post?: PostOmit
   }
 
@@ -958,10 +1322,14 @@ export namespace Prisma {
 
   export type UserCountOutputType = {
     posts: number
+    authCodes: number
+    sessions: number
   }
 
   export type UserCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     posts?: boolean | UserCountOutputTypeCountPostsArgs
+    authCodes?: boolean | UserCountOutputTypeCountAuthCodesArgs
+    sessions?: boolean | UserCountOutputTypeCountSessionsArgs
   }
 
   // Custom InputTypes
@@ -982,6 +1350,51 @@ export namespace Prisma {
     where?: PostWhereInput
   }
 
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountAuthCodesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: AuthCodeWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountSessionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: SessionWhereInput
+  }
+
+
+  /**
+   * Count Type OutBoundEmailCountOutputType
+   */
+
+  export type OutBoundEmailCountOutputType = {
+    outBoundEmailQueues: number
+  }
+
+  export type OutBoundEmailCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    outBoundEmailQueues?: boolean | OutBoundEmailCountOutputTypeCountOutBoundEmailQueuesArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * OutBoundEmailCountOutputType without action
+   */
+  export type OutBoundEmailCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OutBoundEmailCountOutputType
+     */
+    select?: OutBoundEmailCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * OutBoundEmailCountOutputType without action
+   */
+  export type OutBoundEmailCountOutputTypeCountOutBoundEmailQueuesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: OutBoundEmailQueueWhereInput
+  }
+
 
   /**
    * Models
@@ -1000,57 +1413,93 @@ export namespace Prisma {
   }
 
   export type UserAvgAggregateOutputType = {
-    id: number | null
+    userlevel: number | null
   }
 
   export type UserSumAggregateOutputType = {
-    id: number | null
+    userlevel: number | null
   }
 
   export type UserMinAggregateOutputType = {
-    id: number | null
+    id: string | null
     email: string | null
     name: string | null
+    password: string | null
+    emailverified: boolean | null
+    datecreated: Date | null
+    dateupdated: Date | null
+    dateloggedin: Date | null
+    userlevel: number | null
   }
 
   export type UserMaxAggregateOutputType = {
-    id: number | null
+    id: string | null
     email: string | null
     name: string | null
+    password: string | null
+    emailverified: boolean | null
+    datecreated: Date | null
+    dateupdated: Date | null
+    dateloggedin: Date | null
+    userlevel: number | null
   }
 
   export type UserCountAggregateOutputType = {
     id: number
     email: number
     name: number
+    password: number
+    emailverified: number
+    datecreated: number
+    dateupdated: number
+    dateloggedin: number
+    userlevel: number
     _all: number
   }
 
 
   export type UserAvgAggregateInputType = {
-    id?: true
+    userlevel?: true
   }
 
   export type UserSumAggregateInputType = {
-    id?: true
+    userlevel?: true
   }
 
   export type UserMinAggregateInputType = {
     id?: true
     email?: true
     name?: true
+    password?: true
+    emailverified?: true
+    datecreated?: true
+    dateupdated?: true
+    dateloggedin?: true
+    userlevel?: true
   }
 
   export type UserMaxAggregateInputType = {
     id?: true
     email?: true
     name?: true
+    password?: true
+    emailverified?: true
+    datecreated?: true
+    dateupdated?: true
+    dateloggedin?: true
+    userlevel?: true
   }
 
   export type UserCountAggregateInputType = {
     id?: true
     email?: true
     name?: true
+    password?: true
+    emailverified?: true
+    datecreated?: true
+    dateupdated?: true
+    dateloggedin?: true
+    userlevel?: true
     _all?: true
   }
 
@@ -1141,9 +1590,15 @@ export namespace Prisma {
   }
 
   export type UserGroupByOutputType = {
-    id: number
+    id: string
     email: string
     name: string | null
+    password: string
+    emailverified: boolean
+    datecreated: Date
+    dateupdated: Date
+    dateloggedin: Date | null
+    userlevel: number
     _count: UserCountAggregateOutputType | null
     _avg: UserAvgAggregateOutputType | null
     _sum: UserSumAggregateOutputType | null
@@ -1169,7 +1624,15 @@ export namespace Prisma {
     id?: boolean
     email?: boolean
     name?: boolean
+    password?: boolean
+    emailverified?: boolean
+    datecreated?: boolean
+    dateupdated?: boolean
+    dateloggedin?: boolean
+    userlevel?: boolean
     posts?: boolean | User$postsArgs<ExtArgs>
+    authCodes?: boolean | User$authCodesArgs<ExtArgs>
+    sessions?: boolean | User$sessionsArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
@@ -1177,23 +1640,43 @@ export namespace Prisma {
     id?: boolean
     email?: boolean
     name?: boolean
+    password?: boolean
+    emailverified?: boolean
+    datecreated?: boolean
+    dateupdated?: boolean
+    dateloggedin?: boolean
+    userlevel?: boolean
   }, ExtArgs["result"]["user"]>
 
   export type UserSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     email?: boolean
     name?: boolean
+    password?: boolean
+    emailverified?: boolean
+    datecreated?: boolean
+    dateupdated?: boolean
+    dateloggedin?: boolean
+    userlevel?: boolean
   }, ExtArgs["result"]["user"]>
 
   export type UserSelectScalar = {
     id?: boolean
     email?: boolean
     name?: boolean
+    password?: boolean
+    emailverified?: boolean
+    datecreated?: boolean
+    dateupdated?: boolean
+    dateloggedin?: boolean
+    userlevel?: boolean
   }
 
-  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "email" | "name", ExtArgs["result"]["user"]>
+  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "email" | "name" | "password" | "emailverified" | "datecreated" | "dateupdated" | "dateloggedin" | "userlevel", ExtArgs["result"]["user"]>
   export type UserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     posts?: boolean | User$postsArgs<ExtArgs>
+    authCodes?: boolean | User$authCodesArgs<ExtArgs>
+    sessions?: boolean | User$sessionsArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type UserIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -1203,11 +1686,19 @@ export namespace Prisma {
     name: "User"
     objects: {
       posts: Prisma.$PostPayload<ExtArgs>[]
+      authCodes: Prisma.$AuthCodePayload<ExtArgs>[]
+      sessions: Prisma.$SessionPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
-      id: number
+      id: string
       email: string
       name: string | null
+      password: string
+      emailverified: boolean
+      datecreated: Date
+      dateupdated: Date
+      dateloggedin: Date | null
+      userlevel: number
     }, ExtArgs["result"]["user"]>
     composites: {}
   }
@@ -1603,6 +2094,8 @@ export namespace Prisma {
   export interface Prisma__UserClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     posts<T extends User$postsArgs<ExtArgs> = {}>(args?: Subset<T, User$postsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PostPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    authCodes<T extends User$authCodesArgs<ExtArgs> = {}>(args?: Subset<T, User$authCodesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AuthCodePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    sessions<T extends User$sessionsArgs<ExtArgs> = {}>(args?: Subset<T, User$sessionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SessionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1632,9 +2125,15 @@ export namespace Prisma {
    * Fields of the User model
    */
   interface UserFieldRefs {
-    readonly id: FieldRef<"User", 'Int'>
+    readonly id: FieldRef<"User", 'String'>
     readonly email: FieldRef<"User", 'String'>
     readonly name: FieldRef<"User", 'String'>
+    readonly password: FieldRef<"User", 'String'>
+    readonly emailverified: FieldRef<"User", 'Boolean'>
+    readonly datecreated: FieldRef<"User", 'DateTime'>
+    readonly dateupdated: FieldRef<"User", 'DateTime'>
+    readonly dateloggedin: FieldRef<"User", 'DateTime'>
+    readonly userlevel: FieldRef<"User", 'Int'>
   }
     
 
@@ -2047,6 +2546,54 @@ export namespace Prisma {
   }
 
   /**
+   * User.authCodes
+   */
+  export type User$authCodesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AuthCode
+     */
+    select?: AuthCodeSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AuthCode
+     */
+    omit?: AuthCodeOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AuthCodeInclude<ExtArgs> | null
+    where?: AuthCodeWhereInput
+    orderBy?: AuthCodeOrderByWithRelationInput | AuthCodeOrderByWithRelationInput[]
+    cursor?: AuthCodeWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: AuthCodeScalarFieldEnum | AuthCodeScalarFieldEnum[]
+  }
+
+  /**
+   * User.sessions
+   */
+  export type User$sessionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Session
+     */
+    select?: SessionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Session
+     */
+    omit?: SessionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SessionInclude<ExtArgs> | null
+    where?: SessionWhereInput
+    orderBy?: SessionOrderByWithRelationInput | SessionOrderByWithRelationInput[]
+    cursor?: SessionWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: SessionScalarFieldEnum | SessionScalarFieldEnum[]
+  }
+
+  /**
    * User without action
    */
   export type UserDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -2066,6 +2613,4403 @@ export namespace Prisma {
 
 
   /**
+   * Model AuthCode
+   */
+
+  export type AggregateAuthCode = {
+    _count: AuthCodeCountAggregateOutputType | null
+    _avg: AuthCodeAvgAggregateOutputType | null
+    _sum: AuthCodeSumAggregateOutputType | null
+    _min: AuthCodeMinAggregateOutputType | null
+    _max: AuthCodeMaxAggregateOutputType | null
+  }
+
+  export type AuthCodeAvgAggregateOutputType = {
+    id: number | null
+  }
+
+  export type AuthCodeSumAggregateOutputType = {
+    id: number | null
+  }
+
+  export type AuthCodeMinAggregateOutputType = {
+    id: number | null
+    code: string | null
+    userId: string | null
+    flow: string | null
+    dateCreated: Date | null
+    expiresAt: Date | null
+  }
+
+  export type AuthCodeMaxAggregateOutputType = {
+    id: number | null
+    code: string | null
+    userId: string | null
+    flow: string | null
+    dateCreated: Date | null
+    expiresAt: Date | null
+  }
+
+  export type AuthCodeCountAggregateOutputType = {
+    id: number
+    code: number
+    userId: number
+    flow: number
+    dateCreated: number
+    expiresAt: number
+    _all: number
+  }
+
+
+  export type AuthCodeAvgAggregateInputType = {
+    id?: true
+  }
+
+  export type AuthCodeSumAggregateInputType = {
+    id?: true
+  }
+
+  export type AuthCodeMinAggregateInputType = {
+    id?: true
+    code?: true
+    userId?: true
+    flow?: true
+    dateCreated?: true
+    expiresAt?: true
+  }
+
+  export type AuthCodeMaxAggregateInputType = {
+    id?: true
+    code?: true
+    userId?: true
+    flow?: true
+    dateCreated?: true
+    expiresAt?: true
+  }
+
+  export type AuthCodeCountAggregateInputType = {
+    id?: true
+    code?: true
+    userId?: true
+    flow?: true
+    dateCreated?: true
+    expiresAt?: true
+    _all?: true
+  }
+
+  export type AuthCodeAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which AuthCode to aggregate.
+     */
+    where?: AuthCodeWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of AuthCodes to fetch.
+     */
+    orderBy?: AuthCodeOrderByWithRelationInput | AuthCodeOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: AuthCodeWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` AuthCodes from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` AuthCodes.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned AuthCodes
+    **/
+    _count?: true | AuthCodeCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: AuthCodeAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: AuthCodeSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: AuthCodeMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: AuthCodeMaxAggregateInputType
+  }
+
+  export type GetAuthCodeAggregateType<T extends AuthCodeAggregateArgs> = {
+        [P in keyof T & keyof AggregateAuthCode]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateAuthCode[P]>
+      : GetScalarType<T[P], AggregateAuthCode[P]>
+  }
+
+
+
+
+  export type AuthCodeGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: AuthCodeWhereInput
+    orderBy?: AuthCodeOrderByWithAggregationInput | AuthCodeOrderByWithAggregationInput[]
+    by: AuthCodeScalarFieldEnum[] | AuthCodeScalarFieldEnum
+    having?: AuthCodeScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: AuthCodeCountAggregateInputType | true
+    _avg?: AuthCodeAvgAggregateInputType
+    _sum?: AuthCodeSumAggregateInputType
+    _min?: AuthCodeMinAggregateInputType
+    _max?: AuthCodeMaxAggregateInputType
+  }
+
+  export type AuthCodeGroupByOutputType = {
+    id: number
+    code: string
+    userId: string
+    flow: string
+    dateCreated: Date
+    expiresAt: Date
+    _count: AuthCodeCountAggregateOutputType | null
+    _avg: AuthCodeAvgAggregateOutputType | null
+    _sum: AuthCodeSumAggregateOutputType | null
+    _min: AuthCodeMinAggregateOutputType | null
+    _max: AuthCodeMaxAggregateOutputType | null
+  }
+
+  type GetAuthCodeGroupByPayload<T extends AuthCodeGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<AuthCodeGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof AuthCodeGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], AuthCodeGroupByOutputType[P]>
+            : GetScalarType<T[P], AuthCodeGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type AuthCodeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    code?: boolean
+    userId?: boolean
+    flow?: boolean
+    dateCreated?: boolean
+    expiresAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["authCode"]>
+
+  export type AuthCodeSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    code?: boolean
+    userId?: boolean
+    flow?: boolean
+    dateCreated?: boolean
+    expiresAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["authCode"]>
+
+  export type AuthCodeSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    code?: boolean
+    userId?: boolean
+    flow?: boolean
+    dateCreated?: boolean
+    expiresAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["authCode"]>
+
+  export type AuthCodeSelectScalar = {
+    id?: boolean
+    code?: boolean
+    userId?: boolean
+    flow?: boolean
+    dateCreated?: boolean
+    expiresAt?: boolean
+  }
+
+  export type AuthCodeOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "code" | "userId" | "flow" | "dateCreated" | "expiresAt", ExtArgs["result"]["authCode"]>
+  export type AuthCodeInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type AuthCodeIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type AuthCodeIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+
+  export type $AuthCodePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "AuthCode"
+    objects: {
+      user: Prisma.$UserPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: number
+      code: string
+      userId: string
+      flow: string
+      dateCreated: Date
+      expiresAt: Date
+    }, ExtArgs["result"]["authCode"]>
+    composites: {}
+  }
+
+  type AuthCodeGetPayload<S extends boolean | null | undefined | AuthCodeDefaultArgs> = $Result.GetResult<Prisma.$AuthCodePayload, S>
+
+  type AuthCodeCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<AuthCodeFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: AuthCodeCountAggregateInputType | true
+    }
+
+  export interface AuthCodeDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['AuthCode'], meta: { name: 'AuthCode' } }
+    /**
+     * Find zero or one AuthCode that matches the filter.
+     * @param {AuthCodeFindUniqueArgs} args - Arguments to find a AuthCode
+     * @example
+     * // Get one AuthCode
+     * const authCode = await prisma.authCode.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends AuthCodeFindUniqueArgs>(args: SelectSubset<T, AuthCodeFindUniqueArgs<ExtArgs>>): Prisma__AuthCodeClient<$Result.GetResult<Prisma.$AuthCodePayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one AuthCode that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {AuthCodeFindUniqueOrThrowArgs} args - Arguments to find a AuthCode
+     * @example
+     * // Get one AuthCode
+     * const authCode = await prisma.authCode.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends AuthCodeFindUniqueOrThrowArgs>(args: SelectSubset<T, AuthCodeFindUniqueOrThrowArgs<ExtArgs>>): Prisma__AuthCodeClient<$Result.GetResult<Prisma.$AuthCodePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first AuthCode that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AuthCodeFindFirstArgs} args - Arguments to find a AuthCode
+     * @example
+     * // Get one AuthCode
+     * const authCode = await prisma.authCode.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends AuthCodeFindFirstArgs>(args?: SelectSubset<T, AuthCodeFindFirstArgs<ExtArgs>>): Prisma__AuthCodeClient<$Result.GetResult<Prisma.$AuthCodePayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first AuthCode that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AuthCodeFindFirstOrThrowArgs} args - Arguments to find a AuthCode
+     * @example
+     * // Get one AuthCode
+     * const authCode = await prisma.authCode.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends AuthCodeFindFirstOrThrowArgs>(args?: SelectSubset<T, AuthCodeFindFirstOrThrowArgs<ExtArgs>>): Prisma__AuthCodeClient<$Result.GetResult<Prisma.$AuthCodePayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more AuthCodes that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AuthCodeFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all AuthCodes
+     * const authCodes = await prisma.authCode.findMany()
+     * 
+     * // Get first 10 AuthCodes
+     * const authCodes = await prisma.authCode.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const authCodeWithIdOnly = await prisma.authCode.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends AuthCodeFindManyArgs>(args?: SelectSubset<T, AuthCodeFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AuthCodePayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a AuthCode.
+     * @param {AuthCodeCreateArgs} args - Arguments to create a AuthCode.
+     * @example
+     * // Create one AuthCode
+     * const AuthCode = await prisma.authCode.create({
+     *   data: {
+     *     // ... data to create a AuthCode
+     *   }
+     * })
+     * 
+     */
+    create<T extends AuthCodeCreateArgs>(args: SelectSubset<T, AuthCodeCreateArgs<ExtArgs>>): Prisma__AuthCodeClient<$Result.GetResult<Prisma.$AuthCodePayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many AuthCodes.
+     * @param {AuthCodeCreateManyArgs} args - Arguments to create many AuthCodes.
+     * @example
+     * // Create many AuthCodes
+     * const authCode = await prisma.authCode.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends AuthCodeCreateManyArgs>(args?: SelectSubset<T, AuthCodeCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many AuthCodes and returns the data saved in the database.
+     * @param {AuthCodeCreateManyAndReturnArgs} args - Arguments to create many AuthCodes.
+     * @example
+     * // Create many AuthCodes
+     * const authCode = await prisma.authCode.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many AuthCodes and only return the `id`
+     * const authCodeWithIdOnly = await prisma.authCode.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends AuthCodeCreateManyAndReturnArgs>(args?: SelectSubset<T, AuthCodeCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AuthCodePayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a AuthCode.
+     * @param {AuthCodeDeleteArgs} args - Arguments to delete one AuthCode.
+     * @example
+     * // Delete one AuthCode
+     * const AuthCode = await prisma.authCode.delete({
+     *   where: {
+     *     // ... filter to delete one AuthCode
+     *   }
+     * })
+     * 
+     */
+    delete<T extends AuthCodeDeleteArgs>(args: SelectSubset<T, AuthCodeDeleteArgs<ExtArgs>>): Prisma__AuthCodeClient<$Result.GetResult<Prisma.$AuthCodePayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one AuthCode.
+     * @param {AuthCodeUpdateArgs} args - Arguments to update one AuthCode.
+     * @example
+     * // Update one AuthCode
+     * const authCode = await prisma.authCode.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends AuthCodeUpdateArgs>(args: SelectSubset<T, AuthCodeUpdateArgs<ExtArgs>>): Prisma__AuthCodeClient<$Result.GetResult<Prisma.$AuthCodePayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more AuthCodes.
+     * @param {AuthCodeDeleteManyArgs} args - Arguments to filter AuthCodes to delete.
+     * @example
+     * // Delete a few AuthCodes
+     * const { count } = await prisma.authCode.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends AuthCodeDeleteManyArgs>(args?: SelectSubset<T, AuthCodeDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more AuthCodes.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AuthCodeUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many AuthCodes
+     * const authCode = await prisma.authCode.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends AuthCodeUpdateManyArgs>(args: SelectSubset<T, AuthCodeUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more AuthCodes and returns the data updated in the database.
+     * @param {AuthCodeUpdateManyAndReturnArgs} args - Arguments to update many AuthCodes.
+     * @example
+     * // Update many AuthCodes
+     * const authCode = await prisma.authCode.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more AuthCodes and only return the `id`
+     * const authCodeWithIdOnly = await prisma.authCode.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends AuthCodeUpdateManyAndReturnArgs>(args: SelectSubset<T, AuthCodeUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AuthCodePayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one AuthCode.
+     * @param {AuthCodeUpsertArgs} args - Arguments to update or create a AuthCode.
+     * @example
+     * // Update or create a AuthCode
+     * const authCode = await prisma.authCode.upsert({
+     *   create: {
+     *     // ... data to create a AuthCode
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the AuthCode we want to update
+     *   }
+     * })
+     */
+    upsert<T extends AuthCodeUpsertArgs>(args: SelectSubset<T, AuthCodeUpsertArgs<ExtArgs>>): Prisma__AuthCodeClient<$Result.GetResult<Prisma.$AuthCodePayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of AuthCodes.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AuthCodeCountArgs} args - Arguments to filter AuthCodes to count.
+     * @example
+     * // Count the number of AuthCodes
+     * const count = await prisma.authCode.count({
+     *   where: {
+     *     // ... the filter for the AuthCodes we want to count
+     *   }
+     * })
+    **/
+    count<T extends AuthCodeCountArgs>(
+      args?: Subset<T, AuthCodeCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], AuthCodeCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a AuthCode.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AuthCodeAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends AuthCodeAggregateArgs>(args: Subset<T, AuthCodeAggregateArgs>): Prisma.PrismaPromise<GetAuthCodeAggregateType<T>>
+
+    /**
+     * Group by AuthCode.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AuthCodeGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends AuthCodeGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: AuthCodeGroupByArgs['orderBy'] }
+        : { orderBy?: AuthCodeGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, AuthCodeGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetAuthCodeGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the AuthCode model
+   */
+  readonly fields: AuthCodeFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for AuthCode.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__AuthCodeClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the AuthCode model
+   */
+  interface AuthCodeFieldRefs {
+    readonly id: FieldRef<"AuthCode", 'Int'>
+    readonly code: FieldRef<"AuthCode", 'String'>
+    readonly userId: FieldRef<"AuthCode", 'String'>
+    readonly flow: FieldRef<"AuthCode", 'String'>
+    readonly dateCreated: FieldRef<"AuthCode", 'DateTime'>
+    readonly expiresAt: FieldRef<"AuthCode", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * AuthCode findUnique
+   */
+  export type AuthCodeFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AuthCode
+     */
+    select?: AuthCodeSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AuthCode
+     */
+    omit?: AuthCodeOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AuthCodeInclude<ExtArgs> | null
+    /**
+     * Filter, which AuthCode to fetch.
+     */
+    where: AuthCodeWhereUniqueInput
+  }
+
+  /**
+   * AuthCode findUniqueOrThrow
+   */
+  export type AuthCodeFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AuthCode
+     */
+    select?: AuthCodeSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AuthCode
+     */
+    omit?: AuthCodeOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AuthCodeInclude<ExtArgs> | null
+    /**
+     * Filter, which AuthCode to fetch.
+     */
+    where: AuthCodeWhereUniqueInput
+  }
+
+  /**
+   * AuthCode findFirst
+   */
+  export type AuthCodeFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AuthCode
+     */
+    select?: AuthCodeSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AuthCode
+     */
+    omit?: AuthCodeOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AuthCodeInclude<ExtArgs> | null
+    /**
+     * Filter, which AuthCode to fetch.
+     */
+    where?: AuthCodeWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of AuthCodes to fetch.
+     */
+    orderBy?: AuthCodeOrderByWithRelationInput | AuthCodeOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for AuthCodes.
+     */
+    cursor?: AuthCodeWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` AuthCodes from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` AuthCodes.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of AuthCodes.
+     */
+    distinct?: AuthCodeScalarFieldEnum | AuthCodeScalarFieldEnum[]
+  }
+
+  /**
+   * AuthCode findFirstOrThrow
+   */
+  export type AuthCodeFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AuthCode
+     */
+    select?: AuthCodeSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AuthCode
+     */
+    omit?: AuthCodeOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AuthCodeInclude<ExtArgs> | null
+    /**
+     * Filter, which AuthCode to fetch.
+     */
+    where?: AuthCodeWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of AuthCodes to fetch.
+     */
+    orderBy?: AuthCodeOrderByWithRelationInput | AuthCodeOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for AuthCodes.
+     */
+    cursor?: AuthCodeWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` AuthCodes from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` AuthCodes.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of AuthCodes.
+     */
+    distinct?: AuthCodeScalarFieldEnum | AuthCodeScalarFieldEnum[]
+  }
+
+  /**
+   * AuthCode findMany
+   */
+  export type AuthCodeFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AuthCode
+     */
+    select?: AuthCodeSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AuthCode
+     */
+    omit?: AuthCodeOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AuthCodeInclude<ExtArgs> | null
+    /**
+     * Filter, which AuthCodes to fetch.
+     */
+    where?: AuthCodeWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of AuthCodes to fetch.
+     */
+    orderBy?: AuthCodeOrderByWithRelationInput | AuthCodeOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing AuthCodes.
+     */
+    cursor?: AuthCodeWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` AuthCodes from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` AuthCodes.
+     */
+    skip?: number
+    distinct?: AuthCodeScalarFieldEnum | AuthCodeScalarFieldEnum[]
+  }
+
+  /**
+   * AuthCode create
+   */
+  export type AuthCodeCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AuthCode
+     */
+    select?: AuthCodeSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AuthCode
+     */
+    omit?: AuthCodeOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AuthCodeInclude<ExtArgs> | null
+    /**
+     * The data needed to create a AuthCode.
+     */
+    data: XOR<AuthCodeCreateInput, AuthCodeUncheckedCreateInput>
+  }
+
+  /**
+   * AuthCode createMany
+   */
+  export type AuthCodeCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many AuthCodes.
+     */
+    data: AuthCodeCreateManyInput | AuthCodeCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * AuthCode createManyAndReturn
+   */
+  export type AuthCodeCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AuthCode
+     */
+    select?: AuthCodeSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the AuthCode
+     */
+    omit?: AuthCodeOmit<ExtArgs> | null
+    /**
+     * The data used to create many AuthCodes.
+     */
+    data: AuthCodeCreateManyInput | AuthCodeCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AuthCodeIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * AuthCode update
+   */
+  export type AuthCodeUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AuthCode
+     */
+    select?: AuthCodeSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AuthCode
+     */
+    omit?: AuthCodeOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AuthCodeInclude<ExtArgs> | null
+    /**
+     * The data needed to update a AuthCode.
+     */
+    data: XOR<AuthCodeUpdateInput, AuthCodeUncheckedUpdateInput>
+    /**
+     * Choose, which AuthCode to update.
+     */
+    where: AuthCodeWhereUniqueInput
+  }
+
+  /**
+   * AuthCode updateMany
+   */
+  export type AuthCodeUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update AuthCodes.
+     */
+    data: XOR<AuthCodeUpdateManyMutationInput, AuthCodeUncheckedUpdateManyInput>
+    /**
+     * Filter which AuthCodes to update
+     */
+    where?: AuthCodeWhereInput
+    /**
+     * Limit how many AuthCodes to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * AuthCode updateManyAndReturn
+   */
+  export type AuthCodeUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AuthCode
+     */
+    select?: AuthCodeSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the AuthCode
+     */
+    omit?: AuthCodeOmit<ExtArgs> | null
+    /**
+     * The data used to update AuthCodes.
+     */
+    data: XOR<AuthCodeUpdateManyMutationInput, AuthCodeUncheckedUpdateManyInput>
+    /**
+     * Filter which AuthCodes to update
+     */
+    where?: AuthCodeWhereInput
+    /**
+     * Limit how many AuthCodes to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AuthCodeIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * AuthCode upsert
+   */
+  export type AuthCodeUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AuthCode
+     */
+    select?: AuthCodeSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AuthCode
+     */
+    omit?: AuthCodeOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AuthCodeInclude<ExtArgs> | null
+    /**
+     * The filter to search for the AuthCode to update in case it exists.
+     */
+    where: AuthCodeWhereUniqueInput
+    /**
+     * In case the AuthCode found by the `where` argument doesn't exist, create a new AuthCode with this data.
+     */
+    create: XOR<AuthCodeCreateInput, AuthCodeUncheckedCreateInput>
+    /**
+     * In case the AuthCode was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<AuthCodeUpdateInput, AuthCodeUncheckedUpdateInput>
+  }
+
+  /**
+   * AuthCode delete
+   */
+  export type AuthCodeDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AuthCode
+     */
+    select?: AuthCodeSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AuthCode
+     */
+    omit?: AuthCodeOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AuthCodeInclude<ExtArgs> | null
+    /**
+     * Filter which AuthCode to delete.
+     */
+    where: AuthCodeWhereUniqueInput
+  }
+
+  /**
+   * AuthCode deleteMany
+   */
+  export type AuthCodeDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which AuthCodes to delete
+     */
+    where?: AuthCodeWhereInput
+    /**
+     * Limit how many AuthCodes to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * AuthCode without action
+   */
+  export type AuthCodeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AuthCode
+     */
+    select?: AuthCodeSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AuthCode
+     */
+    omit?: AuthCodeOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AuthCodeInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model OutBoundEmail
+   */
+
+  export type AggregateOutBoundEmail = {
+    _count: OutBoundEmailCountAggregateOutputType | null
+    _avg: OutBoundEmailAvgAggregateOutputType | null
+    _sum: OutBoundEmailSumAggregateOutputType | null
+    _min: OutBoundEmailMinAggregateOutputType | null
+    _max: OutBoundEmailMaxAggregateOutputType | null
+  }
+
+  export type OutBoundEmailAvgAggregateOutputType = {
+    id: number | null
+  }
+
+  export type OutBoundEmailSumAggregateOutputType = {
+    id: number | null
+  }
+
+  export type OutBoundEmailMinAggregateOutputType = {
+    id: number | null
+    to: string | null
+    subject: string | null
+    body: string | null
+    dateCreated: Date | null
+    sentAt: Date | null
+  }
+
+  export type OutBoundEmailMaxAggregateOutputType = {
+    id: number | null
+    to: string | null
+    subject: string | null
+    body: string | null
+    dateCreated: Date | null
+    sentAt: Date | null
+  }
+
+  export type OutBoundEmailCountAggregateOutputType = {
+    id: number
+    to: number
+    subject: number
+    body: number
+    dateCreated: number
+    sentAt: number
+    _all: number
+  }
+
+
+  export type OutBoundEmailAvgAggregateInputType = {
+    id?: true
+  }
+
+  export type OutBoundEmailSumAggregateInputType = {
+    id?: true
+  }
+
+  export type OutBoundEmailMinAggregateInputType = {
+    id?: true
+    to?: true
+    subject?: true
+    body?: true
+    dateCreated?: true
+    sentAt?: true
+  }
+
+  export type OutBoundEmailMaxAggregateInputType = {
+    id?: true
+    to?: true
+    subject?: true
+    body?: true
+    dateCreated?: true
+    sentAt?: true
+  }
+
+  export type OutBoundEmailCountAggregateInputType = {
+    id?: true
+    to?: true
+    subject?: true
+    body?: true
+    dateCreated?: true
+    sentAt?: true
+    _all?: true
+  }
+
+  export type OutBoundEmailAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which OutBoundEmail to aggregate.
+     */
+    where?: OutBoundEmailWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of OutBoundEmails to fetch.
+     */
+    orderBy?: OutBoundEmailOrderByWithRelationInput | OutBoundEmailOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: OutBoundEmailWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` OutBoundEmails from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` OutBoundEmails.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned OutBoundEmails
+    **/
+    _count?: true | OutBoundEmailCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: OutBoundEmailAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: OutBoundEmailSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: OutBoundEmailMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: OutBoundEmailMaxAggregateInputType
+  }
+
+  export type GetOutBoundEmailAggregateType<T extends OutBoundEmailAggregateArgs> = {
+        [P in keyof T & keyof AggregateOutBoundEmail]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateOutBoundEmail[P]>
+      : GetScalarType<T[P], AggregateOutBoundEmail[P]>
+  }
+
+
+
+
+  export type OutBoundEmailGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: OutBoundEmailWhereInput
+    orderBy?: OutBoundEmailOrderByWithAggregationInput | OutBoundEmailOrderByWithAggregationInput[]
+    by: OutBoundEmailScalarFieldEnum[] | OutBoundEmailScalarFieldEnum
+    having?: OutBoundEmailScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: OutBoundEmailCountAggregateInputType | true
+    _avg?: OutBoundEmailAvgAggregateInputType
+    _sum?: OutBoundEmailSumAggregateInputType
+    _min?: OutBoundEmailMinAggregateInputType
+    _max?: OutBoundEmailMaxAggregateInputType
+  }
+
+  export type OutBoundEmailGroupByOutputType = {
+    id: number
+    to: string
+    subject: string
+    body: string
+    dateCreated: Date
+    sentAt: Date | null
+    _count: OutBoundEmailCountAggregateOutputType | null
+    _avg: OutBoundEmailAvgAggregateOutputType | null
+    _sum: OutBoundEmailSumAggregateOutputType | null
+    _min: OutBoundEmailMinAggregateOutputType | null
+    _max: OutBoundEmailMaxAggregateOutputType | null
+  }
+
+  type GetOutBoundEmailGroupByPayload<T extends OutBoundEmailGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<OutBoundEmailGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof OutBoundEmailGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], OutBoundEmailGroupByOutputType[P]>
+            : GetScalarType<T[P], OutBoundEmailGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type OutBoundEmailSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    to?: boolean
+    subject?: boolean
+    body?: boolean
+    dateCreated?: boolean
+    sentAt?: boolean
+    outBoundEmailQueues?: boolean | OutBoundEmail$outBoundEmailQueuesArgs<ExtArgs>
+    _count?: boolean | OutBoundEmailCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["outBoundEmail"]>
+
+  export type OutBoundEmailSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    to?: boolean
+    subject?: boolean
+    body?: boolean
+    dateCreated?: boolean
+    sentAt?: boolean
+  }, ExtArgs["result"]["outBoundEmail"]>
+
+  export type OutBoundEmailSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    to?: boolean
+    subject?: boolean
+    body?: boolean
+    dateCreated?: boolean
+    sentAt?: boolean
+  }, ExtArgs["result"]["outBoundEmail"]>
+
+  export type OutBoundEmailSelectScalar = {
+    id?: boolean
+    to?: boolean
+    subject?: boolean
+    body?: boolean
+    dateCreated?: boolean
+    sentAt?: boolean
+  }
+
+  export type OutBoundEmailOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "to" | "subject" | "body" | "dateCreated" | "sentAt", ExtArgs["result"]["outBoundEmail"]>
+  export type OutBoundEmailInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    outBoundEmailQueues?: boolean | OutBoundEmail$outBoundEmailQueuesArgs<ExtArgs>
+    _count?: boolean | OutBoundEmailCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type OutBoundEmailIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
+  export type OutBoundEmailIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
+
+  export type $OutBoundEmailPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "OutBoundEmail"
+    objects: {
+      outBoundEmailQueues: Prisma.$OutBoundEmailQueuePayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: number
+      to: string
+      subject: string
+      body: string
+      dateCreated: Date
+      sentAt: Date | null
+    }, ExtArgs["result"]["outBoundEmail"]>
+    composites: {}
+  }
+
+  type OutBoundEmailGetPayload<S extends boolean | null | undefined | OutBoundEmailDefaultArgs> = $Result.GetResult<Prisma.$OutBoundEmailPayload, S>
+
+  type OutBoundEmailCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<OutBoundEmailFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: OutBoundEmailCountAggregateInputType | true
+    }
+
+  export interface OutBoundEmailDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['OutBoundEmail'], meta: { name: 'OutBoundEmail' } }
+    /**
+     * Find zero or one OutBoundEmail that matches the filter.
+     * @param {OutBoundEmailFindUniqueArgs} args - Arguments to find a OutBoundEmail
+     * @example
+     * // Get one OutBoundEmail
+     * const outBoundEmail = await prisma.outBoundEmail.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends OutBoundEmailFindUniqueArgs>(args: SelectSubset<T, OutBoundEmailFindUniqueArgs<ExtArgs>>): Prisma__OutBoundEmailClient<$Result.GetResult<Prisma.$OutBoundEmailPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one OutBoundEmail that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {OutBoundEmailFindUniqueOrThrowArgs} args - Arguments to find a OutBoundEmail
+     * @example
+     * // Get one OutBoundEmail
+     * const outBoundEmail = await prisma.outBoundEmail.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends OutBoundEmailFindUniqueOrThrowArgs>(args: SelectSubset<T, OutBoundEmailFindUniqueOrThrowArgs<ExtArgs>>): Prisma__OutBoundEmailClient<$Result.GetResult<Prisma.$OutBoundEmailPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first OutBoundEmail that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {OutBoundEmailFindFirstArgs} args - Arguments to find a OutBoundEmail
+     * @example
+     * // Get one OutBoundEmail
+     * const outBoundEmail = await prisma.outBoundEmail.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends OutBoundEmailFindFirstArgs>(args?: SelectSubset<T, OutBoundEmailFindFirstArgs<ExtArgs>>): Prisma__OutBoundEmailClient<$Result.GetResult<Prisma.$OutBoundEmailPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first OutBoundEmail that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {OutBoundEmailFindFirstOrThrowArgs} args - Arguments to find a OutBoundEmail
+     * @example
+     * // Get one OutBoundEmail
+     * const outBoundEmail = await prisma.outBoundEmail.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends OutBoundEmailFindFirstOrThrowArgs>(args?: SelectSubset<T, OutBoundEmailFindFirstOrThrowArgs<ExtArgs>>): Prisma__OutBoundEmailClient<$Result.GetResult<Prisma.$OutBoundEmailPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more OutBoundEmails that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {OutBoundEmailFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all OutBoundEmails
+     * const outBoundEmails = await prisma.outBoundEmail.findMany()
+     * 
+     * // Get first 10 OutBoundEmails
+     * const outBoundEmails = await prisma.outBoundEmail.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const outBoundEmailWithIdOnly = await prisma.outBoundEmail.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends OutBoundEmailFindManyArgs>(args?: SelectSubset<T, OutBoundEmailFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OutBoundEmailPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a OutBoundEmail.
+     * @param {OutBoundEmailCreateArgs} args - Arguments to create a OutBoundEmail.
+     * @example
+     * // Create one OutBoundEmail
+     * const OutBoundEmail = await prisma.outBoundEmail.create({
+     *   data: {
+     *     // ... data to create a OutBoundEmail
+     *   }
+     * })
+     * 
+     */
+    create<T extends OutBoundEmailCreateArgs>(args: SelectSubset<T, OutBoundEmailCreateArgs<ExtArgs>>): Prisma__OutBoundEmailClient<$Result.GetResult<Prisma.$OutBoundEmailPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many OutBoundEmails.
+     * @param {OutBoundEmailCreateManyArgs} args - Arguments to create many OutBoundEmails.
+     * @example
+     * // Create many OutBoundEmails
+     * const outBoundEmail = await prisma.outBoundEmail.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends OutBoundEmailCreateManyArgs>(args?: SelectSubset<T, OutBoundEmailCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many OutBoundEmails and returns the data saved in the database.
+     * @param {OutBoundEmailCreateManyAndReturnArgs} args - Arguments to create many OutBoundEmails.
+     * @example
+     * // Create many OutBoundEmails
+     * const outBoundEmail = await prisma.outBoundEmail.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many OutBoundEmails and only return the `id`
+     * const outBoundEmailWithIdOnly = await prisma.outBoundEmail.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends OutBoundEmailCreateManyAndReturnArgs>(args?: SelectSubset<T, OutBoundEmailCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OutBoundEmailPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a OutBoundEmail.
+     * @param {OutBoundEmailDeleteArgs} args - Arguments to delete one OutBoundEmail.
+     * @example
+     * // Delete one OutBoundEmail
+     * const OutBoundEmail = await prisma.outBoundEmail.delete({
+     *   where: {
+     *     // ... filter to delete one OutBoundEmail
+     *   }
+     * })
+     * 
+     */
+    delete<T extends OutBoundEmailDeleteArgs>(args: SelectSubset<T, OutBoundEmailDeleteArgs<ExtArgs>>): Prisma__OutBoundEmailClient<$Result.GetResult<Prisma.$OutBoundEmailPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one OutBoundEmail.
+     * @param {OutBoundEmailUpdateArgs} args - Arguments to update one OutBoundEmail.
+     * @example
+     * // Update one OutBoundEmail
+     * const outBoundEmail = await prisma.outBoundEmail.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends OutBoundEmailUpdateArgs>(args: SelectSubset<T, OutBoundEmailUpdateArgs<ExtArgs>>): Prisma__OutBoundEmailClient<$Result.GetResult<Prisma.$OutBoundEmailPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more OutBoundEmails.
+     * @param {OutBoundEmailDeleteManyArgs} args - Arguments to filter OutBoundEmails to delete.
+     * @example
+     * // Delete a few OutBoundEmails
+     * const { count } = await prisma.outBoundEmail.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends OutBoundEmailDeleteManyArgs>(args?: SelectSubset<T, OutBoundEmailDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more OutBoundEmails.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {OutBoundEmailUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many OutBoundEmails
+     * const outBoundEmail = await prisma.outBoundEmail.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends OutBoundEmailUpdateManyArgs>(args: SelectSubset<T, OutBoundEmailUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more OutBoundEmails and returns the data updated in the database.
+     * @param {OutBoundEmailUpdateManyAndReturnArgs} args - Arguments to update many OutBoundEmails.
+     * @example
+     * // Update many OutBoundEmails
+     * const outBoundEmail = await prisma.outBoundEmail.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more OutBoundEmails and only return the `id`
+     * const outBoundEmailWithIdOnly = await prisma.outBoundEmail.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends OutBoundEmailUpdateManyAndReturnArgs>(args: SelectSubset<T, OutBoundEmailUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OutBoundEmailPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one OutBoundEmail.
+     * @param {OutBoundEmailUpsertArgs} args - Arguments to update or create a OutBoundEmail.
+     * @example
+     * // Update or create a OutBoundEmail
+     * const outBoundEmail = await prisma.outBoundEmail.upsert({
+     *   create: {
+     *     // ... data to create a OutBoundEmail
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the OutBoundEmail we want to update
+     *   }
+     * })
+     */
+    upsert<T extends OutBoundEmailUpsertArgs>(args: SelectSubset<T, OutBoundEmailUpsertArgs<ExtArgs>>): Prisma__OutBoundEmailClient<$Result.GetResult<Prisma.$OutBoundEmailPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of OutBoundEmails.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {OutBoundEmailCountArgs} args - Arguments to filter OutBoundEmails to count.
+     * @example
+     * // Count the number of OutBoundEmails
+     * const count = await prisma.outBoundEmail.count({
+     *   where: {
+     *     // ... the filter for the OutBoundEmails we want to count
+     *   }
+     * })
+    **/
+    count<T extends OutBoundEmailCountArgs>(
+      args?: Subset<T, OutBoundEmailCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], OutBoundEmailCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a OutBoundEmail.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {OutBoundEmailAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends OutBoundEmailAggregateArgs>(args: Subset<T, OutBoundEmailAggregateArgs>): Prisma.PrismaPromise<GetOutBoundEmailAggregateType<T>>
+
+    /**
+     * Group by OutBoundEmail.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {OutBoundEmailGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends OutBoundEmailGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: OutBoundEmailGroupByArgs['orderBy'] }
+        : { orderBy?: OutBoundEmailGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, OutBoundEmailGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetOutBoundEmailGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the OutBoundEmail model
+   */
+  readonly fields: OutBoundEmailFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for OutBoundEmail.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__OutBoundEmailClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    outBoundEmailQueues<T extends OutBoundEmail$outBoundEmailQueuesArgs<ExtArgs> = {}>(args?: Subset<T, OutBoundEmail$outBoundEmailQueuesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OutBoundEmailQueuePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the OutBoundEmail model
+   */
+  interface OutBoundEmailFieldRefs {
+    readonly id: FieldRef<"OutBoundEmail", 'Int'>
+    readonly to: FieldRef<"OutBoundEmail", 'String'>
+    readonly subject: FieldRef<"OutBoundEmail", 'String'>
+    readonly body: FieldRef<"OutBoundEmail", 'String'>
+    readonly dateCreated: FieldRef<"OutBoundEmail", 'DateTime'>
+    readonly sentAt: FieldRef<"OutBoundEmail", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * OutBoundEmail findUnique
+   */
+  export type OutBoundEmailFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OutBoundEmail
+     */
+    select?: OutBoundEmailSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the OutBoundEmail
+     */
+    omit?: OutBoundEmailOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OutBoundEmailInclude<ExtArgs> | null
+    /**
+     * Filter, which OutBoundEmail to fetch.
+     */
+    where: OutBoundEmailWhereUniqueInput
+  }
+
+  /**
+   * OutBoundEmail findUniqueOrThrow
+   */
+  export type OutBoundEmailFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OutBoundEmail
+     */
+    select?: OutBoundEmailSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the OutBoundEmail
+     */
+    omit?: OutBoundEmailOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OutBoundEmailInclude<ExtArgs> | null
+    /**
+     * Filter, which OutBoundEmail to fetch.
+     */
+    where: OutBoundEmailWhereUniqueInput
+  }
+
+  /**
+   * OutBoundEmail findFirst
+   */
+  export type OutBoundEmailFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OutBoundEmail
+     */
+    select?: OutBoundEmailSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the OutBoundEmail
+     */
+    omit?: OutBoundEmailOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OutBoundEmailInclude<ExtArgs> | null
+    /**
+     * Filter, which OutBoundEmail to fetch.
+     */
+    where?: OutBoundEmailWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of OutBoundEmails to fetch.
+     */
+    orderBy?: OutBoundEmailOrderByWithRelationInput | OutBoundEmailOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for OutBoundEmails.
+     */
+    cursor?: OutBoundEmailWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` OutBoundEmails from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` OutBoundEmails.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of OutBoundEmails.
+     */
+    distinct?: OutBoundEmailScalarFieldEnum | OutBoundEmailScalarFieldEnum[]
+  }
+
+  /**
+   * OutBoundEmail findFirstOrThrow
+   */
+  export type OutBoundEmailFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OutBoundEmail
+     */
+    select?: OutBoundEmailSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the OutBoundEmail
+     */
+    omit?: OutBoundEmailOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OutBoundEmailInclude<ExtArgs> | null
+    /**
+     * Filter, which OutBoundEmail to fetch.
+     */
+    where?: OutBoundEmailWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of OutBoundEmails to fetch.
+     */
+    orderBy?: OutBoundEmailOrderByWithRelationInput | OutBoundEmailOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for OutBoundEmails.
+     */
+    cursor?: OutBoundEmailWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` OutBoundEmails from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` OutBoundEmails.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of OutBoundEmails.
+     */
+    distinct?: OutBoundEmailScalarFieldEnum | OutBoundEmailScalarFieldEnum[]
+  }
+
+  /**
+   * OutBoundEmail findMany
+   */
+  export type OutBoundEmailFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OutBoundEmail
+     */
+    select?: OutBoundEmailSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the OutBoundEmail
+     */
+    omit?: OutBoundEmailOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OutBoundEmailInclude<ExtArgs> | null
+    /**
+     * Filter, which OutBoundEmails to fetch.
+     */
+    where?: OutBoundEmailWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of OutBoundEmails to fetch.
+     */
+    orderBy?: OutBoundEmailOrderByWithRelationInput | OutBoundEmailOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing OutBoundEmails.
+     */
+    cursor?: OutBoundEmailWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` OutBoundEmails from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` OutBoundEmails.
+     */
+    skip?: number
+    distinct?: OutBoundEmailScalarFieldEnum | OutBoundEmailScalarFieldEnum[]
+  }
+
+  /**
+   * OutBoundEmail create
+   */
+  export type OutBoundEmailCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OutBoundEmail
+     */
+    select?: OutBoundEmailSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the OutBoundEmail
+     */
+    omit?: OutBoundEmailOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OutBoundEmailInclude<ExtArgs> | null
+    /**
+     * The data needed to create a OutBoundEmail.
+     */
+    data: XOR<OutBoundEmailCreateInput, OutBoundEmailUncheckedCreateInput>
+  }
+
+  /**
+   * OutBoundEmail createMany
+   */
+  export type OutBoundEmailCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many OutBoundEmails.
+     */
+    data: OutBoundEmailCreateManyInput | OutBoundEmailCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * OutBoundEmail createManyAndReturn
+   */
+  export type OutBoundEmailCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OutBoundEmail
+     */
+    select?: OutBoundEmailSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the OutBoundEmail
+     */
+    omit?: OutBoundEmailOmit<ExtArgs> | null
+    /**
+     * The data used to create many OutBoundEmails.
+     */
+    data: OutBoundEmailCreateManyInput | OutBoundEmailCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * OutBoundEmail update
+   */
+  export type OutBoundEmailUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OutBoundEmail
+     */
+    select?: OutBoundEmailSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the OutBoundEmail
+     */
+    omit?: OutBoundEmailOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OutBoundEmailInclude<ExtArgs> | null
+    /**
+     * The data needed to update a OutBoundEmail.
+     */
+    data: XOR<OutBoundEmailUpdateInput, OutBoundEmailUncheckedUpdateInput>
+    /**
+     * Choose, which OutBoundEmail to update.
+     */
+    where: OutBoundEmailWhereUniqueInput
+  }
+
+  /**
+   * OutBoundEmail updateMany
+   */
+  export type OutBoundEmailUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update OutBoundEmails.
+     */
+    data: XOR<OutBoundEmailUpdateManyMutationInput, OutBoundEmailUncheckedUpdateManyInput>
+    /**
+     * Filter which OutBoundEmails to update
+     */
+    where?: OutBoundEmailWhereInput
+    /**
+     * Limit how many OutBoundEmails to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * OutBoundEmail updateManyAndReturn
+   */
+  export type OutBoundEmailUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OutBoundEmail
+     */
+    select?: OutBoundEmailSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the OutBoundEmail
+     */
+    omit?: OutBoundEmailOmit<ExtArgs> | null
+    /**
+     * The data used to update OutBoundEmails.
+     */
+    data: XOR<OutBoundEmailUpdateManyMutationInput, OutBoundEmailUncheckedUpdateManyInput>
+    /**
+     * Filter which OutBoundEmails to update
+     */
+    where?: OutBoundEmailWhereInput
+    /**
+     * Limit how many OutBoundEmails to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * OutBoundEmail upsert
+   */
+  export type OutBoundEmailUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OutBoundEmail
+     */
+    select?: OutBoundEmailSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the OutBoundEmail
+     */
+    omit?: OutBoundEmailOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OutBoundEmailInclude<ExtArgs> | null
+    /**
+     * The filter to search for the OutBoundEmail to update in case it exists.
+     */
+    where: OutBoundEmailWhereUniqueInput
+    /**
+     * In case the OutBoundEmail found by the `where` argument doesn't exist, create a new OutBoundEmail with this data.
+     */
+    create: XOR<OutBoundEmailCreateInput, OutBoundEmailUncheckedCreateInput>
+    /**
+     * In case the OutBoundEmail was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<OutBoundEmailUpdateInput, OutBoundEmailUncheckedUpdateInput>
+  }
+
+  /**
+   * OutBoundEmail delete
+   */
+  export type OutBoundEmailDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OutBoundEmail
+     */
+    select?: OutBoundEmailSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the OutBoundEmail
+     */
+    omit?: OutBoundEmailOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OutBoundEmailInclude<ExtArgs> | null
+    /**
+     * Filter which OutBoundEmail to delete.
+     */
+    where: OutBoundEmailWhereUniqueInput
+  }
+
+  /**
+   * OutBoundEmail deleteMany
+   */
+  export type OutBoundEmailDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which OutBoundEmails to delete
+     */
+    where?: OutBoundEmailWhereInput
+    /**
+     * Limit how many OutBoundEmails to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * OutBoundEmail.outBoundEmailQueues
+   */
+  export type OutBoundEmail$outBoundEmailQueuesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OutBoundEmailQueue
+     */
+    select?: OutBoundEmailQueueSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the OutBoundEmailQueue
+     */
+    omit?: OutBoundEmailQueueOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OutBoundEmailQueueInclude<ExtArgs> | null
+    where?: OutBoundEmailQueueWhereInput
+    orderBy?: OutBoundEmailQueueOrderByWithRelationInput | OutBoundEmailQueueOrderByWithRelationInput[]
+    cursor?: OutBoundEmailQueueWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: OutBoundEmailQueueScalarFieldEnum | OutBoundEmailQueueScalarFieldEnum[]
+  }
+
+  /**
+   * OutBoundEmail without action
+   */
+  export type OutBoundEmailDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OutBoundEmail
+     */
+    select?: OutBoundEmailSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the OutBoundEmail
+     */
+    omit?: OutBoundEmailOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OutBoundEmailInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model OutBoundEmailQueue
+   */
+
+  export type AggregateOutBoundEmailQueue = {
+    _count: OutBoundEmailQueueCountAggregateOutputType | null
+    _avg: OutBoundEmailQueueAvgAggregateOutputType | null
+    _sum: OutBoundEmailQueueSumAggregateOutputType | null
+    _min: OutBoundEmailQueueMinAggregateOutputType | null
+    _max: OutBoundEmailQueueMaxAggregateOutputType | null
+  }
+
+  export type OutBoundEmailQueueAvgAggregateOutputType = {
+    id: number | null
+    emailId: number | null
+  }
+
+  export type OutBoundEmailQueueSumAggregateOutputType = {
+    id: number | null
+    emailId: number | null
+  }
+
+  export type OutBoundEmailQueueMinAggregateOutputType = {
+    id: number | null
+    emailId: number | null
+    dateQueued: Date | null
+    sentAt: Date | null
+  }
+
+  export type OutBoundEmailQueueMaxAggregateOutputType = {
+    id: number | null
+    emailId: number | null
+    dateQueued: Date | null
+    sentAt: Date | null
+  }
+
+  export type OutBoundEmailQueueCountAggregateOutputType = {
+    id: number
+    emailId: number
+    dateQueued: number
+    sentAt: number
+    _all: number
+  }
+
+
+  export type OutBoundEmailQueueAvgAggregateInputType = {
+    id?: true
+    emailId?: true
+  }
+
+  export type OutBoundEmailQueueSumAggregateInputType = {
+    id?: true
+    emailId?: true
+  }
+
+  export type OutBoundEmailQueueMinAggregateInputType = {
+    id?: true
+    emailId?: true
+    dateQueued?: true
+    sentAt?: true
+  }
+
+  export type OutBoundEmailQueueMaxAggregateInputType = {
+    id?: true
+    emailId?: true
+    dateQueued?: true
+    sentAt?: true
+  }
+
+  export type OutBoundEmailQueueCountAggregateInputType = {
+    id?: true
+    emailId?: true
+    dateQueued?: true
+    sentAt?: true
+    _all?: true
+  }
+
+  export type OutBoundEmailQueueAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which OutBoundEmailQueue to aggregate.
+     */
+    where?: OutBoundEmailQueueWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of OutBoundEmailQueues to fetch.
+     */
+    orderBy?: OutBoundEmailQueueOrderByWithRelationInput | OutBoundEmailQueueOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: OutBoundEmailQueueWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` OutBoundEmailQueues from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` OutBoundEmailQueues.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned OutBoundEmailQueues
+    **/
+    _count?: true | OutBoundEmailQueueCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: OutBoundEmailQueueAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: OutBoundEmailQueueSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: OutBoundEmailQueueMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: OutBoundEmailQueueMaxAggregateInputType
+  }
+
+  export type GetOutBoundEmailQueueAggregateType<T extends OutBoundEmailQueueAggregateArgs> = {
+        [P in keyof T & keyof AggregateOutBoundEmailQueue]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateOutBoundEmailQueue[P]>
+      : GetScalarType<T[P], AggregateOutBoundEmailQueue[P]>
+  }
+
+
+
+
+  export type OutBoundEmailQueueGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: OutBoundEmailQueueWhereInput
+    orderBy?: OutBoundEmailQueueOrderByWithAggregationInput | OutBoundEmailQueueOrderByWithAggregationInput[]
+    by: OutBoundEmailQueueScalarFieldEnum[] | OutBoundEmailQueueScalarFieldEnum
+    having?: OutBoundEmailQueueScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: OutBoundEmailQueueCountAggregateInputType | true
+    _avg?: OutBoundEmailQueueAvgAggregateInputType
+    _sum?: OutBoundEmailQueueSumAggregateInputType
+    _min?: OutBoundEmailQueueMinAggregateInputType
+    _max?: OutBoundEmailQueueMaxAggregateInputType
+  }
+
+  export type OutBoundEmailQueueGroupByOutputType = {
+    id: number
+    emailId: number
+    dateQueued: Date
+    sentAt: Date | null
+    _count: OutBoundEmailQueueCountAggregateOutputType | null
+    _avg: OutBoundEmailQueueAvgAggregateOutputType | null
+    _sum: OutBoundEmailQueueSumAggregateOutputType | null
+    _min: OutBoundEmailQueueMinAggregateOutputType | null
+    _max: OutBoundEmailQueueMaxAggregateOutputType | null
+  }
+
+  type GetOutBoundEmailQueueGroupByPayload<T extends OutBoundEmailQueueGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<OutBoundEmailQueueGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof OutBoundEmailQueueGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], OutBoundEmailQueueGroupByOutputType[P]>
+            : GetScalarType<T[P], OutBoundEmailQueueGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type OutBoundEmailQueueSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    emailId?: boolean
+    dateQueued?: boolean
+    sentAt?: boolean
+    email?: boolean | OutBoundEmailDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["outBoundEmailQueue"]>
+
+  export type OutBoundEmailQueueSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    emailId?: boolean
+    dateQueued?: boolean
+    sentAt?: boolean
+    email?: boolean | OutBoundEmailDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["outBoundEmailQueue"]>
+
+  export type OutBoundEmailQueueSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    emailId?: boolean
+    dateQueued?: boolean
+    sentAt?: boolean
+    email?: boolean | OutBoundEmailDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["outBoundEmailQueue"]>
+
+  export type OutBoundEmailQueueSelectScalar = {
+    id?: boolean
+    emailId?: boolean
+    dateQueued?: boolean
+    sentAt?: boolean
+  }
+
+  export type OutBoundEmailQueueOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "emailId" | "dateQueued" | "sentAt", ExtArgs["result"]["outBoundEmailQueue"]>
+  export type OutBoundEmailQueueInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    email?: boolean | OutBoundEmailDefaultArgs<ExtArgs>
+  }
+  export type OutBoundEmailQueueIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    email?: boolean | OutBoundEmailDefaultArgs<ExtArgs>
+  }
+  export type OutBoundEmailQueueIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    email?: boolean | OutBoundEmailDefaultArgs<ExtArgs>
+  }
+
+  export type $OutBoundEmailQueuePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "OutBoundEmailQueue"
+    objects: {
+      email: Prisma.$OutBoundEmailPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: number
+      emailId: number
+      dateQueued: Date
+      sentAt: Date | null
+    }, ExtArgs["result"]["outBoundEmailQueue"]>
+    composites: {}
+  }
+
+  type OutBoundEmailQueueGetPayload<S extends boolean | null | undefined | OutBoundEmailQueueDefaultArgs> = $Result.GetResult<Prisma.$OutBoundEmailQueuePayload, S>
+
+  type OutBoundEmailQueueCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<OutBoundEmailQueueFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: OutBoundEmailQueueCountAggregateInputType | true
+    }
+
+  export interface OutBoundEmailQueueDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['OutBoundEmailQueue'], meta: { name: 'OutBoundEmailQueue' } }
+    /**
+     * Find zero or one OutBoundEmailQueue that matches the filter.
+     * @param {OutBoundEmailQueueFindUniqueArgs} args - Arguments to find a OutBoundEmailQueue
+     * @example
+     * // Get one OutBoundEmailQueue
+     * const outBoundEmailQueue = await prisma.outBoundEmailQueue.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends OutBoundEmailQueueFindUniqueArgs>(args: SelectSubset<T, OutBoundEmailQueueFindUniqueArgs<ExtArgs>>): Prisma__OutBoundEmailQueueClient<$Result.GetResult<Prisma.$OutBoundEmailQueuePayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one OutBoundEmailQueue that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {OutBoundEmailQueueFindUniqueOrThrowArgs} args - Arguments to find a OutBoundEmailQueue
+     * @example
+     * // Get one OutBoundEmailQueue
+     * const outBoundEmailQueue = await prisma.outBoundEmailQueue.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends OutBoundEmailQueueFindUniqueOrThrowArgs>(args: SelectSubset<T, OutBoundEmailQueueFindUniqueOrThrowArgs<ExtArgs>>): Prisma__OutBoundEmailQueueClient<$Result.GetResult<Prisma.$OutBoundEmailQueuePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first OutBoundEmailQueue that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {OutBoundEmailQueueFindFirstArgs} args - Arguments to find a OutBoundEmailQueue
+     * @example
+     * // Get one OutBoundEmailQueue
+     * const outBoundEmailQueue = await prisma.outBoundEmailQueue.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends OutBoundEmailQueueFindFirstArgs>(args?: SelectSubset<T, OutBoundEmailQueueFindFirstArgs<ExtArgs>>): Prisma__OutBoundEmailQueueClient<$Result.GetResult<Prisma.$OutBoundEmailQueuePayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first OutBoundEmailQueue that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {OutBoundEmailQueueFindFirstOrThrowArgs} args - Arguments to find a OutBoundEmailQueue
+     * @example
+     * // Get one OutBoundEmailQueue
+     * const outBoundEmailQueue = await prisma.outBoundEmailQueue.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends OutBoundEmailQueueFindFirstOrThrowArgs>(args?: SelectSubset<T, OutBoundEmailQueueFindFirstOrThrowArgs<ExtArgs>>): Prisma__OutBoundEmailQueueClient<$Result.GetResult<Prisma.$OutBoundEmailQueuePayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more OutBoundEmailQueues that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {OutBoundEmailQueueFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all OutBoundEmailQueues
+     * const outBoundEmailQueues = await prisma.outBoundEmailQueue.findMany()
+     * 
+     * // Get first 10 OutBoundEmailQueues
+     * const outBoundEmailQueues = await prisma.outBoundEmailQueue.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const outBoundEmailQueueWithIdOnly = await prisma.outBoundEmailQueue.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends OutBoundEmailQueueFindManyArgs>(args?: SelectSubset<T, OutBoundEmailQueueFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OutBoundEmailQueuePayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a OutBoundEmailQueue.
+     * @param {OutBoundEmailQueueCreateArgs} args - Arguments to create a OutBoundEmailQueue.
+     * @example
+     * // Create one OutBoundEmailQueue
+     * const OutBoundEmailQueue = await prisma.outBoundEmailQueue.create({
+     *   data: {
+     *     // ... data to create a OutBoundEmailQueue
+     *   }
+     * })
+     * 
+     */
+    create<T extends OutBoundEmailQueueCreateArgs>(args: SelectSubset<T, OutBoundEmailQueueCreateArgs<ExtArgs>>): Prisma__OutBoundEmailQueueClient<$Result.GetResult<Prisma.$OutBoundEmailQueuePayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many OutBoundEmailQueues.
+     * @param {OutBoundEmailQueueCreateManyArgs} args - Arguments to create many OutBoundEmailQueues.
+     * @example
+     * // Create many OutBoundEmailQueues
+     * const outBoundEmailQueue = await prisma.outBoundEmailQueue.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends OutBoundEmailQueueCreateManyArgs>(args?: SelectSubset<T, OutBoundEmailQueueCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many OutBoundEmailQueues and returns the data saved in the database.
+     * @param {OutBoundEmailQueueCreateManyAndReturnArgs} args - Arguments to create many OutBoundEmailQueues.
+     * @example
+     * // Create many OutBoundEmailQueues
+     * const outBoundEmailQueue = await prisma.outBoundEmailQueue.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many OutBoundEmailQueues and only return the `id`
+     * const outBoundEmailQueueWithIdOnly = await prisma.outBoundEmailQueue.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends OutBoundEmailQueueCreateManyAndReturnArgs>(args?: SelectSubset<T, OutBoundEmailQueueCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OutBoundEmailQueuePayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a OutBoundEmailQueue.
+     * @param {OutBoundEmailQueueDeleteArgs} args - Arguments to delete one OutBoundEmailQueue.
+     * @example
+     * // Delete one OutBoundEmailQueue
+     * const OutBoundEmailQueue = await prisma.outBoundEmailQueue.delete({
+     *   where: {
+     *     // ... filter to delete one OutBoundEmailQueue
+     *   }
+     * })
+     * 
+     */
+    delete<T extends OutBoundEmailQueueDeleteArgs>(args: SelectSubset<T, OutBoundEmailQueueDeleteArgs<ExtArgs>>): Prisma__OutBoundEmailQueueClient<$Result.GetResult<Prisma.$OutBoundEmailQueuePayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one OutBoundEmailQueue.
+     * @param {OutBoundEmailQueueUpdateArgs} args - Arguments to update one OutBoundEmailQueue.
+     * @example
+     * // Update one OutBoundEmailQueue
+     * const outBoundEmailQueue = await prisma.outBoundEmailQueue.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends OutBoundEmailQueueUpdateArgs>(args: SelectSubset<T, OutBoundEmailQueueUpdateArgs<ExtArgs>>): Prisma__OutBoundEmailQueueClient<$Result.GetResult<Prisma.$OutBoundEmailQueuePayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more OutBoundEmailQueues.
+     * @param {OutBoundEmailQueueDeleteManyArgs} args - Arguments to filter OutBoundEmailQueues to delete.
+     * @example
+     * // Delete a few OutBoundEmailQueues
+     * const { count } = await prisma.outBoundEmailQueue.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends OutBoundEmailQueueDeleteManyArgs>(args?: SelectSubset<T, OutBoundEmailQueueDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more OutBoundEmailQueues.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {OutBoundEmailQueueUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many OutBoundEmailQueues
+     * const outBoundEmailQueue = await prisma.outBoundEmailQueue.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends OutBoundEmailQueueUpdateManyArgs>(args: SelectSubset<T, OutBoundEmailQueueUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more OutBoundEmailQueues and returns the data updated in the database.
+     * @param {OutBoundEmailQueueUpdateManyAndReturnArgs} args - Arguments to update many OutBoundEmailQueues.
+     * @example
+     * // Update many OutBoundEmailQueues
+     * const outBoundEmailQueue = await prisma.outBoundEmailQueue.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more OutBoundEmailQueues and only return the `id`
+     * const outBoundEmailQueueWithIdOnly = await prisma.outBoundEmailQueue.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends OutBoundEmailQueueUpdateManyAndReturnArgs>(args: SelectSubset<T, OutBoundEmailQueueUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OutBoundEmailQueuePayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one OutBoundEmailQueue.
+     * @param {OutBoundEmailQueueUpsertArgs} args - Arguments to update or create a OutBoundEmailQueue.
+     * @example
+     * // Update or create a OutBoundEmailQueue
+     * const outBoundEmailQueue = await prisma.outBoundEmailQueue.upsert({
+     *   create: {
+     *     // ... data to create a OutBoundEmailQueue
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the OutBoundEmailQueue we want to update
+     *   }
+     * })
+     */
+    upsert<T extends OutBoundEmailQueueUpsertArgs>(args: SelectSubset<T, OutBoundEmailQueueUpsertArgs<ExtArgs>>): Prisma__OutBoundEmailQueueClient<$Result.GetResult<Prisma.$OutBoundEmailQueuePayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of OutBoundEmailQueues.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {OutBoundEmailQueueCountArgs} args - Arguments to filter OutBoundEmailQueues to count.
+     * @example
+     * // Count the number of OutBoundEmailQueues
+     * const count = await prisma.outBoundEmailQueue.count({
+     *   where: {
+     *     // ... the filter for the OutBoundEmailQueues we want to count
+     *   }
+     * })
+    **/
+    count<T extends OutBoundEmailQueueCountArgs>(
+      args?: Subset<T, OutBoundEmailQueueCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], OutBoundEmailQueueCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a OutBoundEmailQueue.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {OutBoundEmailQueueAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends OutBoundEmailQueueAggregateArgs>(args: Subset<T, OutBoundEmailQueueAggregateArgs>): Prisma.PrismaPromise<GetOutBoundEmailQueueAggregateType<T>>
+
+    /**
+     * Group by OutBoundEmailQueue.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {OutBoundEmailQueueGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends OutBoundEmailQueueGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: OutBoundEmailQueueGroupByArgs['orderBy'] }
+        : { orderBy?: OutBoundEmailQueueGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, OutBoundEmailQueueGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetOutBoundEmailQueueGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the OutBoundEmailQueue model
+   */
+  readonly fields: OutBoundEmailQueueFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for OutBoundEmailQueue.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__OutBoundEmailQueueClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    email<T extends OutBoundEmailDefaultArgs<ExtArgs> = {}>(args?: Subset<T, OutBoundEmailDefaultArgs<ExtArgs>>): Prisma__OutBoundEmailClient<$Result.GetResult<Prisma.$OutBoundEmailPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the OutBoundEmailQueue model
+   */
+  interface OutBoundEmailQueueFieldRefs {
+    readonly id: FieldRef<"OutBoundEmailQueue", 'Int'>
+    readonly emailId: FieldRef<"OutBoundEmailQueue", 'Int'>
+    readonly dateQueued: FieldRef<"OutBoundEmailQueue", 'DateTime'>
+    readonly sentAt: FieldRef<"OutBoundEmailQueue", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * OutBoundEmailQueue findUnique
+   */
+  export type OutBoundEmailQueueFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OutBoundEmailQueue
+     */
+    select?: OutBoundEmailQueueSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the OutBoundEmailQueue
+     */
+    omit?: OutBoundEmailQueueOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OutBoundEmailQueueInclude<ExtArgs> | null
+    /**
+     * Filter, which OutBoundEmailQueue to fetch.
+     */
+    where: OutBoundEmailQueueWhereUniqueInput
+  }
+
+  /**
+   * OutBoundEmailQueue findUniqueOrThrow
+   */
+  export type OutBoundEmailQueueFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OutBoundEmailQueue
+     */
+    select?: OutBoundEmailQueueSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the OutBoundEmailQueue
+     */
+    omit?: OutBoundEmailQueueOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OutBoundEmailQueueInclude<ExtArgs> | null
+    /**
+     * Filter, which OutBoundEmailQueue to fetch.
+     */
+    where: OutBoundEmailQueueWhereUniqueInput
+  }
+
+  /**
+   * OutBoundEmailQueue findFirst
+   */
+  export type OutBoundEmailQueueFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OutBoundEmailQueue
+     */
+    select?: OutBoundEmailQueueSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the OutBoundEmailQueue
+     */
+    omit?: OutBoundEmailQueueOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OutBoundEmailQueueInclude<ExtArgs> | null
+    /**
+     * Filter, which OutBoundEmailQueue to fetch.
+     */
+    where?: OutBoundEmailQueueWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of OutBoundEmailQueues to fetch.
+     */
+    orderBy?: OutBoundEmailQueueOrderByWithRelationInput | OutBoundEmailQueueOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for OutBoundEmailQueues.
+     */
+    cursor?: OutBoundEmailQueueWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` OutBoundEmailQueues from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` OutBoundEmailQueues.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of OutBoundEmailQueues.
+     */
+    distinct?: OutBoundEmailQueueScalarFieldEnum | OutBoundEmailQueueScalarFieldEnum[]
+  }
+
+  /**
+   * OutBoundEmailQueue findFirstOrThrow
+   */
+  export type OutBoundEmailQueueFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OutBoundEmailQueue
+     */
+    select?: OutBoundEmailQueueSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the OutBoundEmailQueue
+     */
+    omit?: OutBoundEmailQueueOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OutBoundEmailQueueInclude<ExtArgs> | null
+    /**
+     * Filter, which OutBoundEmailQueue to fetch.
+     */
+    where?: OutBoundEmailQueueWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of OutBoundEmailQueues to fetch.
+     */
+    orderBy?: OutBoundEmailQueueOrderByWithRelationInput | OutBoundEmailQueueOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for OutBoundEmailQueues.
+     */
+    cursor?: OutBoundEmailQueueWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` OutBoundEmailQueues from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` OutBoundEmailQueues.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of OutBoundEmailQueues.
+     */
+    distinct?: OutBoundEmailQueueScalarFieldEnum | OutBoundEmailQueueScalarFieldEnum[]
+  }
+
+  /**
+   * OutBoundEmailQueue findMany
+   */
+  export type OutBoundEmailQueueFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OutBoundEmailQueue
+     */
+    select?: OutBoundEmailQueueSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the OutBoundEmailQueue
+     */
+    omit?: OutBoundEmailQueueOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OutBoundEmailQueueInclude<ExtArgs> | null
+    /**
+     * Filter, which OutBoundEmailQueues to fetch.
+     */
+    where?: OutBoundEmailQueueWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of OutBoundEmailQueues to fetch.
+     */
+    orderBy?: OutBoundEmailQueueOrderByWithRelationInput | OutBoundEmailQueueOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing OutBoundEmailQueues.
+     */
+    cursor?: OutBoundEmailQueueWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` OutBoundEmailQueues from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` OutBoundEmailQueues.
+     */
+    skip?: number
+    distinct?: OutBoundEmailQueueScalarFieldEnum | OutBoundEmailQueueScalarFieldEnum[]
+  }
+
+  /**
+   * OutBoundEmailQueue create
+   */
+  export type OutBoundEmailQueueCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OutBoundEmailQueue
+     */
+    select?: OutBoundEmailQueueSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the OutBoundEmailQueue
+     */
+    omit?: OutBoundEmailQueueOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OutBoundEmailQueueInclude<ExtArgs> | null
+    /**
+     * The data needed to create a OutBoundEmailQueue.
+     */
+    data: XOR<OutBoundEmailQueueCreateInput, OutBoundEmailQueueUncheckedCreateInput>
+  }
+
+  /**
+   * OutBoundEmailQueue createMany
+   */
+  export type OutBoundEmailQueueCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many OutBoundEmailQueues.
+     */
+    data: OutBoundEmailQueueCreateManyInput | OutBoundEmailQueueCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * OutBoundEmailQueue createManyAndReturn
+   */
+  export type OutBoundEmailQueueCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OutBoundEmailQueue
+     */
+    select?: OutBoundEmailQueueSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the OutBoundEmailQueue
+     */
+    omit?: OutBoundEmailQueueOmit<ExtArgs> | null
+    /**
+     * The data used to create many OutBoundEmailQueues.
+     */
+    data: OutBoundEmailQueueCreateManyInput | OutBoundEmailQueueCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OutBoundEmailQueueIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * OutBoundEmailQueue update
+   */
+  export type OutBoundEmailQueueUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OutBoundEmailQueue
+     */
+    select?: OutBoundEmailQueueSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the OutBoundEmailQueue
+     */
+    omit?: OutBoundEmailQueueOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OutBoundEmailQueueInclude<ExtArgs> | null
+    /**
+     * The data needed to update a OutBoundEmailQueue.
+     */
+    data: XOR<OutBoundEmailQueueUpdateInput, OutBoundEmailQueueUncheckedUpdateInput>
+    /**
+     * Choose, which OutBoundEmailQueue to update.
+     */
+    where: OutBoundEmailQueueWhereUniqueInput
+  }
+
+  /**
+   * OutBoundEmailQueue updateMany
+   */
+  export type OutBoundEmailQueueUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update OutBoundEmailQueues.
+     */
+    data: XOR<OutBoundEmailQueueUpdateManyMutationInput, OutBoundEmailQueueUncheckedUpdateManyInput>
+    /**
+     * Filter which OutBoundEmailQueues to update
+     */
+    where?: OutBoundEmailQueueWhereInput
+    /**
+     * Limit how many OutBoundEmailQueues to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * OutBoundEmailQueue updateManyAndReturn
+   */
+  export type OutBoundEmailQueueUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OutBoundEmailQueue
+     */
+    select?: OutBoundEmailQueueSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the OutBoundEmailQueue
+     */
+    omit?: OutBoundEmailQueueOmit<ExtArgs> | null
+    /**
+     * The data used to update OutBoundEmailQueues.
+     */
+    data: XOR<OutBoundEmailQueueUpdateManyMutationInput, OutBoundEmailQueueUncheckedUpdateManyInput>
+    /**
+     * Filter which OutBoundEmailQueues to update
+     */
+    where?: OutBoundEmailQueueWhereInput
+    /**
+     * Limit how many OutBoundEmailQueues to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OutBoundEmailQueueIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * OutBoundEmailQueue upsert
+   */
+  export type OutBoundEmailQueueUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OutBoundEmailQueue
+     */
+    select?: OutBoundEmailQueueSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the OutBoundEmailQueue
+     */
+    omit?: OutBoundEmailQueueOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OutBoundEmailQueueInclude<ExtArgs> | null
+    /**
+     * The filter to search for the OutBoundEmailQueue to update in case it exists.
+     */
+    where: OutBoundEmailQueueWhereUniqueInput
+    /**
+     * In case the OutBoundEmailQueue found by the `where` argument doesn't exist, create a new OutBoundEmailQueue with this data.
+     */
+    create: XOR<OutBoundEmailQueueCreateInput, OutBoundEmailQueueUncheckedCreateInput>
+    /**
+     * In case the OutBoundEmailQueue was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<OutBoundEmailQueueUpdateInput, OutBoundEmailQueueUncheckedUpdateInput>
+  }
+
+  /**
+   * OutBoundEmailQueue delete
+   */
+  export type OutBoundEmailQueueDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OutBoundEmailQueue
+     */
+    select?: OutBoundEmailQueueSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the OutBoundEmailQueue
+     */
+    omit?: OutBoundEmailQueueOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OutBoundEmailQueueInclude<ExtArgs> | null
+    /**
+     * Filter which OutBoundEmailQueue to delete.
+     */
+    where: OutBoundEmailQueueWhereUniqueInput
+  }
+
+  /**
+   * OutBoundEmailQueue deleteMany
+   */
+  export type OutBoundEmailQueueDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which OutBoundEmailQueues to delete
+     */
+    where?: OutBoundEmailQueueWhereInput
+    /**
+     * Limit how many OutBoundEmailQueues to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * OutBoundEmailQueue without action
+   */
+  export type OutBoundEmailQueueDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OutBoundEmailQueue
+     */
+    select?: OutBoundEmailQueueSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the OutBoundEmailQueue
+     */
+    omit?: OutBoundEmailQueueOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OutBoundEmailQueueInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model Session
+   */
+
+  export type AggregateSession = {
+    _count: SessionCountAggregateOutputType | null
+    _avg: SessionAvgAggregateOutputType | null
+    _sum: SessionSumAggregateOutputType | null
+    _min: SessionMinAggregateOutputType | null
+    _max: SessionMaxAggregateOutputType | null
+  }
+
+  export type SessionAvgAggregateOutputType = {
+    id: number | null
+  }
+
+  export type SessionSumAggregateOutputType = {
+    id: number | null
+  }
+
+  export type SessionMinAggregateOutputType = {
+    id: number | null
+    token: string | null
+    userId: string | null
+    dateCreated: Date | null
+    expiresAt: Date | null
+  }
+
+  export type SessionMaxAggregateOutputType = {
+    id: number | null
+    token: string | null
+    userId: string | null
+    dateCreated: Date | null
+    expiresAt: Date | null
+  }
+
+  export type SessionCountAggregateOutputType = {
+    id: number
+    token: number
+    userId: number
+    dateCreated: number
+    expiresAt: number
+    _all: number
+  }
+
+
+  export type SessionAvgAggregateInputType = {
+    id?: true
+  }
+
+  export type SessionSumAggregateInputType = {
+    id?: true
+  }
+
+  export type SessionMinAggregateInputType = {
+    id?: true
+    token?: true
+    userId?: true
+    dateCreated?: true
+    expiresAt?: true
+  }
+
+  export type SessionMaxAggregateInputType = {
+    id?: true
+    token?: true
+    userId?: true
+    dateCreated?: true
+    expiresAt?: true
+  }
+
+  export type SessionCountAggregateInputType = {
+    id?: true
+    token?: true
+    userId?: true
+    dateCreated?: true
+    expiresAt?: true
+    _all?: true
+  }
+
+  export type SessionAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Session to aggregate.
+     */
+    where?: SessionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Sessions to fetch.
+     */
+    orderBy?: SessionOrderByWithRelationInput | SessionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: SessionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Sessions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Sessions.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned Sessions
+    **/
+    _count?: true | SessionCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: SessionAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: SessionSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: SessionMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: SessionMaxAggregateInputType
+  }
+
+  export type GetSessionAggregateType<T extends SessionAggregateArgs> = {
+        [P in keyof T & keyof AggregateSession]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateSession[P]>
+      : GetScalarType<T[P], AggregateSession[P]>
+  }
+
+
+
+
+  export type SessionGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: SessionWhereInput
+    orderBy?: SessionOrderByWithAggregationInput | SessionOrderByWithAggregationInput[]
+    by: SessionScalarFieldEnum[] | SessionScalarFieldEnum
+    having?: SessionScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: SessionCountAggregateInputType | true
+    _avg?: SessionAvgAggregateInputType
+    _sum?: SessionSumAggregateInputType
+    _min?: SessionMinAggregateInputType
+    _max?: SessionMaxAggregateInputType
+  }
+
+  export type SessionGroupByOutputType = {
+    id: number
+    token: string
+    userId: string
+    dateCreated: Date
+    expiresAt: Date
+    _count: SessionCountAggregateOutputType | null
+    _avg: SessionAvgAggregateOutputType | null
+    _sum: SessionSumAggregateOutputType | null
+    _min: SessionMinAggregateOutputType | null
+    _max: SessionMaxAggregateOutputType | null
+  }
+
+  type GetSessionGroupByPayload<T extends SessionGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<SessionGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof SessionGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], SessionGroupByOutputType[P]>
+            : GetScalarType<T[P], SessionGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type SessionSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    token?: boolean
+    userId?: boolean
+    dateCreated?: boolean
+    expiresAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["session"]>
+
+  export type SessionSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    token?: boolean
+    userId?: boolean
+    dateCreated?: boolean
+    expiresAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["session"]>
+
+  export type SessionSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    token?: boolean
+    userId?: boolean
+    dateCreated?: boolean
+    expiresAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["session"]>
+
+  export type SessionSelectScalar = {
+    id?: boolean
+    token?: boolean
+    userId?: boolean
+    dateCreated?: boolean
+    expiresAt?: boolean
+  }
+
+  export type SessionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "token" | "userId" | "dateCreated" | "expiresAt", ExtArgs["result"]["session"]>
+  export type SessionInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type SessionIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type SessionIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+
+  export type $SessionPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "Session"
+    objects: {
+      user: Prisma.$UserPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: number
+      token: string
+      userId: string
+      dateCreated: Date
+      expiresAt: Date
+    }, ExtArgs["result"]["session"]>
+    composites: {}
+  }
+
+  type SessionGetPayload<S extends boolean | null | undefined | SessionDefaultArgs> = $Result.GetResult<Prisma.$SessionPayload, S>
+
+  type SessionCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<SessionFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: SessionCountAggregateInputType | true
+    }
+
+  export interface SessionDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Session'], meta: { name: 'Session' } }
+    /**
+     * Find zero or one Session that matches the filter.
+     * @param {SessionFindUniqueArgs} args - Arguments to find a Session
+     * @example
+     * // Get one Session
+     * const session = await prisma.session.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends SessionFindUniqueArgs>(args: SelectSubset<T, SessionFindUniqueArgs<ExtArgs>>): Prisma__SessionClient<$Result.GetResult<Prisma.$SessionPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Session that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {SessionFindUniqueOrThrowArgs} args - Arguments to find a Session
+     * @example
+     * // Get one Session
+     * const session = await prisma.session.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends SessionFindUniqueOrThrowArgs>(args: SelectSubset<T, SessionFindUniqueOrThrowArgs<ExtArgs>>): Prisma__SessionClient<$Result.GetResult<Prisma.$SessionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Session that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SessionFindFirstArgs} args - Arguments to find a Session
+     * @example
+     * // Get one Session
+     * const session = await prisma.session.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends SessionFindFirstArgs>(args?: SelectSubset<T, SessionFindFirstArgs<ExtArgs>>): Prisma__SessionClient<$Result.GetResult<Prisma.$SessionPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Session that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SessionFindFirstOrThrowArgs} args - Arguments to find a Session
+     * @example
+     * // Get one Session
+     * const session = await prisma.session.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends SessionFindFirstOrThrowArgs>(args?: SelectSubset<T, SessionFindFirstOrThrowArgs<ExtArgs>>): Prisma__SessionClient<$Result.GetResult<Prisma.$SessionPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Sessions that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SessionFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Sessions
+     * const sessions = await prisma.session.findMany()
+     * 
+     * // Get first 10 Sessions
+     * const sessions = await prisma.session.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const sessionWithIdOnly = await prisma.session.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends SessionFindManyArgs>(args?: SelectSubset<T, SessionFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SessionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Session.
+     * @param {SessionCreateArgs} args - Arguments to create a Session.
+     * @example
+     * // Create one Session
+     * const Session = await prisma.session.create({
+     *   data: {
+     *     // ... data to create a Session
+     *   }
+     * })
+     * 
+     */
+    create<T extends SessionCreateArgs>(args: SelectSubset<T, SessionCreateArgs<ExtArgs>>): Prisma__SessionClient<$Result.GetResult<Prisma.$SessionPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Sessions.
+     * @param {SessionCreateManyArgs} args - Arguments to create many Sessions.
+     * @example
+     * // Create many Sessions
+     * const session = await prisma.session.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends SessionCreateManyArgs>(args?: SelectSubset<T, SessionCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Sessions and returns the data saved in the database.
+     * @param {SessionCreateManyAndReturnArgs} args - Arguments to create many Sessions.
+     * @example
+     * // Create many Sessions
+     * const session = await prisma.session.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Sessions and only return the `id`
+     * const sessionWithIdOnly = await prisma.session.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends SessionCreateManyAndReturnArgs>(args?: SelectSubset<T, SessionCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SessionPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a Session.
+     * @param {SessionDeleteArgs} args - Arguments to delete one Session.
+     * @example
+     * // Delete one Session
+     * const Session = await prisma.session.delete({
+     *   where: {
+     *     // ... filter to delete one Session
+     *   }
+     * })
+     * 
+     */
+    delete<T extends SessionDeleteArgs>(args: SelectSubset<T, SessionDeleteArgs<ExtArgs>>): Prisma__SessionClient<$Result.GetResult<Prisma.$SessionPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Session.
+     * @param {SessionUpdateArgs} args - Arguments to update one Session.
+     * @example
+     * // Update one Session
+     * const session = await prisma.session.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends SessionUpdateArgs>(args: SelectSubset<T, SessionUpdateArgs<ExtArgs>>): Prisma__SessionClient<$Result.GetResult<Prisma.$SessionPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Sessions.
+     * @param {SessionDeleteManyArgs} args - Arguments to filter Sessions to delete.
+     * @example
+     * // Delete a few Sessions
+     * const { count } = await prisma.session.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends SessionDeleteManyArgs>(args?: SelectSubset<T, SessionDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Sessions.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SessionUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Sessions
+     * const session = await prisma.session.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends SessionUpdateManyArgs>(args: SelectSubset<T, SessionUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Sessions and returns the data updated in the database.
+     * @param {SessionUpdateManyAndReturnArgs} args - Arguments to update many Sessions.
+     * @example
+     * // Update many Sessions
+     * const session = await prisma.session.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more Sessions and only return the `id`
+     * const sessionWithIdOnly = await prisma.session.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends SessionUpdateManyAndReturnArgs>(args: SelectSubset<T, SessionUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SessionPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one Session.
+     * @param {SessionUpsertArgs} args - Arguments to update or create a Session.
+     * @example
+     * // Update or create a Session
+     * const session = await prisma.session.upsert({
+     *   create: {
+     *     // ... data to create a Session
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Session we want to update
+     *   }
+     * })
+     */
+    upsert<T extends SessionUpsertArgs>(args: SelectSubset<T, SessionUpsertArgs<ExtArgs>>): Prisma__SessionClient<$Result.GetResult<Prisma.$SessionPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of Sessions.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SessionCountArgs} args - Arguments to filter Sessions to count.
+     * @example
+     * // Count the number of Sessions
+     * const count = await prisma.session.count({
+     *   where: {
+     *     // ... the filter for the Sessions we want to count
+     *   }
+     * })
+    **/
+    count<T extends SessionCountArgs>(
+      args?: Subset<T, SessionCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], SessionCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Session.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SessionAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends SessionAggregateArgs>(args: Subset<T, SessionAggregateArgs>): Prisma.PrismaPromise<GetSessionAggregateType<T>>
+
+    /**
+     * Group by Session.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SessionGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends SessionGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: SessionGroupByArgs['orderBy'] }
+        : { orderBy?: SessionGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, SessionGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetSessionGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the Session model
+   */
+  readonly fields: SessionFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for Session.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__SessionClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the Session model
+   */
+  interface SessionFieldRefs {
+    readonly id: FieldRef<"Session", 'Int'>
+    readonly token: FieldRef<"Session", 'String'>
+    readonly userId: FieldRef<"Session", 'String'>
+    readonly dateCreated: FieldRef<"Session", 'DateTime'>
+    readonly expiresAt: FieldRef<"Session", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * Session findUnique
+   */
+  export type SessionFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Session
+     */
+    select?: SessionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Session
+     */
+    omit?: SessionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SessionInclude<ExtArgs> | null
+    /**
+     * Filter, which Session to fetch.
+     */
+    where: SessionWhereUniqueInput
+  }
+
+  /**
+   * Session findUniqueOrThrow
+   */
+  export type SessionFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Session
+     */
+    select?: SessionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Session
+     */
+    omit?: SessionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SessionInclude<ExtArgs> | null
+    /**
+     * Filter, which Session to fetch.
+     */
+    where: SessionWhereUniqueInput
+  }
+
+  /**
+   * Session findFirst
+   */
+  export type SessionFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Session
+     */
+    select?: SessionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Session
+     */
+    omit?: SessionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SessionInclude<ExtArgs> | null
+    /**
+     * Filter, which Session to fetch.
+     */
+    where?: SessionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Sessions to fetch.
+     */
+    orderBy?: SessionOrderByWithRelationInput | SessionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Sessions.
+     */
+    cursor?: SessionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Sessions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Sessions.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Sessions.
+     */
+    distinct?: SessionScalarFieldEnum | SessionScalarFieldEnum[]
+  }
+
+  /**
+   * Session findFirstOrThrow
+   */
+  export type SessionFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Session
+     */
+    select?: SessionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Session
+     */
+    omit?: SessionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SessionInclude<ExtArgs> | null
+    /**
+     * Filter, which Session to fetch.
+     */
+    where?: SessionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Sessions to fetch.
+     */
+    orderBy?: SessionOrderByWithRelationInput | SessionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Sessions.
+     */
+    cursor?: SessionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Sessions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Sessions.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Sessions.
+     */
+    distinct?: SessionScalarFieldEnum | SessionScalarFieldEnum[]
+  }
+
+  /**
+   * Session findMany
+   */
+  export type SessionFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Session
+     */
+    select?: SessionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Session
+     */
+    omit?: SessionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SessionInclude<ExtArgs> | null
+    /**
+     * Filter, which Sessions to fetch.
+     */
+    where?: SessionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Sessions to fetch.
+     */
+    orderBy?: SessionOrderByWithRelationInput | SessionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing Sessions.
+     */
+    cursor?: SessionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Sessions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Sessions.
+     */
+    skip?: number
+    distinct?: SessionScalarFieldEnum | SessionScalarFieldEnum[]
+  }
+
+  /**
+   * Session create
+   */
+  export type SessionCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Session
+     */
+    select?: SessionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Session
+     */
+    omit?: SessionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SessionInclude<ExtArgs> | null
+    /**
+     * The data needed to create a Session.
+     */
+    data: XOR<SessionCreateInput, SessionUncheckedCreateInput>
+  }
+
+  /**
+   * Session createMany
+   */
+  export type SessionCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many Sessions.
+     */
+    data: SessionCreateManyInput | SessionCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * Session createManyAndReturn
+   */
+  export type SessionCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Session
+     */
+    select?: SessionSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Session
+     */
+    omit?: SessionOmit<ExtArgs> | null
+    /**
+     * The data used to create many Sessions.
+     */
+    data: SessionCreateManyInput | SessionCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SessionIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * Session update
+   */
+  export type SessionUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Session
+     */
+    select?: SessionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Session
+     */
+    omit?: SessionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SessionInclude<ExtArgs> | null
+    /**
+     * The data needed to update a Session.
+     */
+    data: XOR<SessionUpdateInput, SessionUncheckedUpdateInput>
+    /**
+     * Choose, which Session to update.
+     */
+    where: SessionWhereUniqueInput
+  }
+
+  /**
+   * Session updateMany
+   */
+  export type SessionUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update Sessions.
+     */
+    data: XOR<SessionUpdateManyMutationInput, SessionUncheckedUpdateManyInput>
+    /**
+     * Filter which Sessions to update
+     */
+    where?: SessionWhereInput
+    /**
+     * Limit how many Sessions to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * Session updateManyAndReturn
+   */
+  export type SessionUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Session
+     */
+    select?: SessionSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Session
+     */
+    omit?: SessionOmit<ExtArgs> | null
+    /**
+     * The data used to update Sessions.
+     */
+    data: XOR<SessionUpdateManyMutationInput, SessionUncheckedUpdateManyInput>
+    /**
+     * Filter which Sessions to update
+     */
+    where?: SessionWhereInput
+    /**
+     * Limit how many Sessions to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SessionIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * Session upsert
+   */
+  export type SessionUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Session
+     */
+    select?: SessionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Session
+     */
+    omit?: SessionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SessionInclude<ExtArgs> | null
+    /**
+     * The filter to search for the Session to update in case it exists.
+     */
+    where: SessionWhereUniqueInput
+    /**
+     * In case the Session found by the `where` argument doesn't exist, create a new Session with this data.
+     */
+    create: XOR<SessionCreateInput, SessionUncheckedCreateInput>
+    /**
+     * In case the Session was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<SessionUpdateInput, SessionUncheckedUpdateInput>
+  }
+
+  /**
+   * Session delete
+   */
+  export type SessionDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Session
+     */
+    select?: SessionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Session
+     */
+    omit?: SessionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SessionInclude<ExtArgs> | null
+    /**
+     * Filter which Session to delete.
+     */
+    where: SessionWhereUniqueInput
+  }
+
+  /**
+   * Session deleteMany
+   */
+  export type SessionDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Sessions to delete
+     */
+    where?: SessionWhereInput
+    /**
+     * Limit how many Sessions to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * Session without action
+   */
+  export type SessionDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Session
+     */
+    select?: SessionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Session
+     */
+    omit?: SessionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SessionInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Model Post
    */
 
@@ -2079,12 +7023,10 @@ export namespace Prisma {
 
   export type PostAvgAggregateOutputType = {
     id: number | null
-    authorId: number | null
   }
 
   export type PostSumAggregateOutputType = {
     id: number | null
-    authorId: number | null
   }
 
   export type PostMinAggregateOutputType = {
@@ -2092,7 +7034,7 @@ export namespace Prisma {
     title: string | null
     content: string | null
     published: boolean | null
-    authorId: number | null
+    authorId: string | null
   }
 
   export type PostMaxAggregateOutputType = {
@@ -2100,7 +7042,7 @@ export namespace Prisma {
     title: string | null
     content: string | null
     published: boolean | null
-    authorId: number | null
+    authorId: string | null
   }
 
   export type PostCountAggregateOutputType = {
@@ -2115,12 +7057,10 @@ export namespace Prisma {
 
   export type PostAvgAggregateInputType = {
     id?: true
-    authorId?: true
   }
 
   export type PostSumAggregateInputType = {
     id?: true
-    authorId?: true
   }
 
   export type PostMinAggregateInputType = {
@@ -2239,7 +7179,7 @@ export namespace Prisma {
     title: string
     content: string | null
     published: boolean
-    authorId: number
+    authorId: string
     _count: PostCountAggregateOutputType | null
     _avg: PostAvgAggregateOutputType | null
     _sum: PostSumAggregateOutputType | null
@@ -2317,7 +7257,7 @@ export namespace Prisma {
       title: string
       content: string | null
       published: boolean
-      authorId: number
+      authorId: string
     }, ExtArgs["result"]["post"]>
     composites: {}
   }
@@ -2746,7 +7686,7 @@ export namespace Prisma {
     readonly title: FieldRef<"Post", 'String'>
     readonly content: FieldRef<"Post", 'String'>
     readonly published: FieldRef<"Post", 'Boolean'>
-    readonly authorId: FieldRef<"Post", 'Int'>
+    readonly authorId: FieldRef<"Post", 'String'>
   }
     
 
@@ -3178,10 +8118,61 @@ export namespace Prisma {
   export const UserScalarFieldEnum: {
     id: 'id',
     email: 'email',
-    name: 'name'
+    name: 'name',
+    password: 'password',
+    emailverified: 'emailverified',
+    datecreated: 'datecreated',
+    dateupdated: 'dateupdated',
+    dateloggedin: 'dateloggedin',
+    userlevel: 'userlevel'
   };
 
   export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
+
+
+  export const AuthCodeScalarFieldEnum: {
+    id: 'id',
+    code: 'code',
+    userId: 'userId',
+    flow: 'flow',
+    dateCreated: 'dateCreated',
+    expiresAt: 'expiresAt'
+  };
+
+  export type AuthCodeScalarFieldEnum = (typeof AuthCodeScalarFieldEnum)[keyof typeof AuthCodeScalarFieldEnum]
+
+
+  export const OutBoundEmailScalarFieldEnum: {
+    id: 'id',
+    to: 'to',
+    subject: 'subject',
+    body: 'body',
+    dateCreated: 'dateCreated',
+    sentAt: 'sentAt'
+  };
+
+  export type OutBoundEmailScalarFieldEnum = (typeof OutBoundEmailScalarFieldEnum)[keyof typeof OutBoundEmailScalarFieldEnum]
+
+
+  export const OutBoundEmailQueueScalarFieldEnum: {
+    id: 'id',
+    emailId: 'emailId',
+    dateQueued: 'dateQueued',
+    sentAt: 'sentAt'
+  };
+
+  export type OutBoundEmailQueueScalarFieldEnum = (typeof OutBoundEmailQueueScalarFieldEnum)[keyof typeof OutBoundEmailQueueScalarFieldEnum]
+
+
+  export const SessionScalarFieldEnum: {
+    id: 'id',
+    token: 'token',
+    userId: 'userId',
+    dateCreated: 'dateCreated',
+    expiresAt: 'expiresAt'
+  };
+
+  export type SessionScalarFieldEnum = (typeof SessionScalarFieldEnum)[keyof typeof SessionScalarFieldEnum]
 
 
   export const PostScalarFieldEnum: {
@@ -3225,20 +8216,6 @@ export namespace Prisma {
 
 
   /**
-   * Reference to a field of type 'Int'
-   */
-  export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int'>
-    
-
-
-  /**
-   * Reference to a field of type 'Int[]'
-   */
-  export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int[]'>
-    
-
-
-  /**
    * Reference to a field of type 'String'
    */
   export type StringFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'String'>
@@ -3256,6 +8233,34 @@ export namespace Prisma {
    * Reference to a field of type 'Boolean'
    */
   export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
+    
+
+
+  /**
+   * Reference to a field of type 'DateTime'
+   */
+  export type DateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DateTime'>
+    
+
+
+  /**
+   * Reference to a field of type 'DateTime[]'
+   */
+  export type ListDateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DateTime[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'Int'
+   */
+  export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int'>
+    
+
+
+  /**
+   * Reference to a field of type 'Int[]'
+   */
+  export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int[]'>
     
 
 
@@ -3280,33 +8285,63 @@ export namespace Prisma {
     AND?: UserWhereInput | UserWhereInput[]
     OR?: UserWhereInput[]
     NOT?: UserWhereInput | UserWhereInput[]
-    id?: IntFilter<"User"> | number
+    id?: StringFilter<"User"> | string
     email?: StringFilter<"User"> | string
     name?: StringNullableFilter<"User"> | string | null
+    password?: StringFilter<"User"> | string
+    emailverified?: BoolFilter<"User"> | boolean
+    datecreated?: DateTimeFilter<"User"> | Date | string
+    dateupdated?: DateTimeFilter<"User"> | Date | string
+    dateloggedin?: DateTimeNullableFilter<"User"> | Date | string | null
+    userlevel?: IntFilter<"User"> | number
     posts?: PostListRelationFilter
+    authCodes?: AuthCodeListRelationFilter
+    sessions?: SessionListRelationFilter
   }
 
   export type UserOrderByWithRelationInput = {
     id?: SortOrder
     email?: SortOrder
     name?: SortOrderInput | SortOrder
+    password?: SortOrder
+    emailverified?: SortOrder
+    datecreated?: SortOrder
+    dateupdated?: SortOrder
+    dateloggedin?: SortOrderInput | SortOrder
+    userlevel?: SortOrder
     posts?: PostOrderByRelationAggregateInput
+    authCodes?: AuthCodeOrderByRelationAggregateInput
+    sessions?: SessionOrderByRelationAggregateInput
   }
 
   export type UserWhereUniqueInput = Prisma.AtLeast<{
-    id?: number
+    id?: string
     email?: string
     AND?: UserWhereInput | UserWhereInput[]
     OR?: UserWhereInput[]
     NOT?: UserWhereInput | UserWhereInput[]
     name?: StringNullableFilter<"User"> | string | null
+    password?: StringFilter<"User"> | string
+    emailverified?: BoolFilter<"User"> | boolean
+    datecreated?: DateTimeFilter<"User"> | Date | string
+    dateupdated?: DateTimeFilter<"User"> | Date | string
+    dateloggedin?: DateTimeNullableFilter<"User"> | Date | string | null
+    userlevel?: IntFilter<"User"> | number
     posts?: PostListRelationFilter
+    authCodes?: AuthCodeListRelationFilter
+    sessions?: SessionListRelationFilter
   }, "id" | "email">
 
   export type UserOrderByWithAggregationInput = {
     id?: SortOrder
     email?: SortOrder
     name?: SortOrderInput | SortOrder
+    password?: SortOrder
+    emailverified?: SortOrder
+    datecreated?: SortOrder
+    dateupdated?: SortOrder
+    dateloggedin?: SortOrderInput | SortOrder
+    userlevel?: SortOrder
     _count?: UserCountOrderByAggregateInput
     _avg?: UserAvgOrderByAggregateInput
     _max?: UserMaxOrderByAggregateInput
@@ -3318,9 +8353,248 @@ export namespace Prisma {
     AND?: UserScalarWhereWithAggregatesInput | UserScalarWhereWithAggregatesInput[]
     OR?: UserScalarWhereWithAggregatesInput[]
     NOT?: UserScalarWhereWithAggregatesInput | UserScalarWhereWithAggregatesInput[]
-    id?: IntWithAggregatesFilter<"User"> | number
+    id?: StringWithAggregatesFilter<"User"> | string
     email?: StringWithAggregatesFilter<"User"> | string
     name?: StringNullableWithAggregatesFilter<"User"> | string | null
+    password?: StringWithAggregatesFilter<"User"> | string
+    emailverified?: BoolWithAggregatesFilter<"User"> | boolean
+    datecreated?: DateTimeWithAggregatesFilter<"User"> | Date | string
+    dateupdated?: DateTimeWithAggregatesFilter<"User"> | Date | string
+    dateloggedin?: DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
+    userlevel?: IntWithAggregatesFilter<"User"> | number
+  }
+
+  export type AuthCodeWhereInput = {
+    AND?: AuthCodeWhereInput | AuthCodeWhereInput[]
+    OR?: AuthCodeWhereInput[]
+    NOT?: AuthCodeWhereInput | AuthCodeWhereInput[]
+    id?: IntFilter<"AuthCode"> | number
+    code?: StringFilter<"AuthCode"> | string
+    userId?: StringFilter<"AuthCode"> | string
+    flow?: StringFilter<"AuthCode"> | string
+    dateCreated?: DateTimeFilter<"AuthCode"> | Date | string
+    expiresAt?: DateTimeFilter<"AuthCode"> | Date | string
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }
+
+  export type AuthCodeOrderByWithRelationInput = {
+    id?: SortOrder
+    code?: SortOrder
+    userId?: SortOrder
+    flow?: SortOrder
+    dateCreated?: SortOrder
+    expiresAt?: SortOrder
+    user?: UserOrderByWithRelationInput
+  }
+
+  export type AuthCodeWhereUniqueInput = Prisma.AtLeast<{
+    id?: number
+    code?: string
+    AND?: AuthCodeWhereInput | AuthCodeWhereInput[]
+    OR?: AuthCodeWhereInput[]
+    NOT?: AuthCodeWhereInput | AuthCodeWhereInput[]
+    userId?: StringFilter<"AuthCode"> | string
+    flow?: StringFilter<"AuthCode"> | string
+    dateCreated?: DateTimeFilter<"AuthCode"> | Date | string
+    expiresAt?: DateTimeFilter<"AuthCode"> | Date | string
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }, "id" | "code">
+
+  export type AuthCodeOrderByWithAggregationInput = {
+    id?: SortOrder
+    code?: SortOrder
+    userId?: SortOrder
+    flow?: SortOrder
+    dateCreated?: SortOrder
+    expiresAt?: SortOrder
+    _count?: AuthCodeCountOrderByAggregateInput
+    _avg?: AuthCodeAvgOrderByAggregateInput
+    _max?: AuthCodeMaxOrderByAggregateInput
+    _min?: AuthCodeMinOrderByAggregateInput
+    _sum?: AuthCodeSumOrderByAggregateInput
+  }
+
+  export type AuthCodeScalarWhereWithAggregatesInput = {
+    AND?: AuthCodeScalarWhereWithAggregatesInput | AuthCodeScalarWhereWithAggregatesInput[]
+    OR?: AuthCodeScalarWhereWithAggregatesInput[]
+    NOT?: AuthCodeScalarWhereWithAggregatesInput | AuthCodeScalarWhereWithAggregatesInput[]
+    id?: IntWithAggregatesFilter<"AuthCode"> | number
+    code?: StringWithAggregatesFilter<"AuthCode"> | string
+    userId?: StringWithAggregatesFilter<"AuthCode"> | string
+    flow?: StringWithAggregatesFilter<"AuthCode"> | string
+    dateCreated?: DateTimeWithAggregatesFilter<"AuthCode"> | Date | string
+    expiresAt?: DateTimeWithAggregatesFilter<"AuthCode"> | Date | string
+  }
+
+  export type OutBoundEmailWhereInput = {
+    AND?: OutBoundEmailWhereInput | OutBoundEmailWhereInput[]
+    OR?: OutBoundEmailWhereInput[]
+    NOT?: OutBoundEmailWhereInput | OutBoundEmailWhereInput[]
+    id?: IntFilter<"OutBoundEmail"> | number
+    to?: StringFilter<"OutBoundEmail"> | string
+    subject?: StringFilter<"OutBoundEmail"> | string
+    body?: StringFilter<"OutBoundEmail"> | string
+    dateCreated?: DateTimeFilter<"OutBoundEmail"> | Date | string
+    sentAt?: DateTimeNullableFilter<"OutBoundEmail"> | Date | string | null
+    outBoundEmailQueues?: OutBoundEmailQueueListRelationFilter
+  }
+
+  export type OutBoundEmailOrderByWithRelationInput = {
+    id?: SortOrder
+    to?: SortOrder
+    subject?: SortOrder
+    body?: SortOrder
+    dateCreated?: SortOrder
+    sentAt?: SortOrderInput | SortOrder
+    outBoundEmailQueues?: OutBoundEmailQueueOrderByRelationAggregateInput
+  }
+
+  export type OutBoundEmailWhereUniqueInput = Prisma.AtLeast<{
+    id?: number
+    AND?: OutBoundEmailWhereInput | OutBoundEmailWhereInput[]
+    OR?: OutBoundEmailWhereInput[]
+    NOT?: OutBoundEmailWhereInput | OutBoundEmailWhereInput[]
+    to?: StringFilter<"OutBoundEmail"> | string
+    subject?: StringFilter<"OutBoundEmail"> | string
+    body?: StringFilter<"OutBoundEmail"> | string
+    dateCreated?: DateTimeFilter<"OutBoundEmail"> | Date | string
+    sentAt?: DateTimeNullableFilter<"OutBoundEmail"> | Date | string | null
+    outBoundEmailQueues?: OutBoundEmailQueueListRelationFilter
+  }, "id">
+
+  export type OutBoundEmailOrderByWithAggregationInput = {
+    id?: SortOrder
+    to?: SortOrder
+    subject?: SortOrder
+    body?: SortOrder
+    dateCreated?: SortOrder
+    sentAt?: SortOrderInput | SortOrder
+    _count?: OutBoundEmailCountOrderByAggregateInput
+    _avg?: OutBoundEmailAvgOrderByAggregateInput
+    _max?: OutBoundEmailMaxOrderByAggregateInput
+    _min?: OutBoundEmailMinOrderByAggregateInput
+    _sum?: OutBoundEmailSumOrderByAggregateInput
+  }
+
+  export type OutBoundEmailScalarWhereWithAggregatesInput = {
+    AND?: OutBoundEmailScalarWhereWithAggregatesInput | OutBoundEmailScalarWhereWithAggregatesInput[]
+    OR?: OutBoundEmailScalarWhereWithAggregatesInput[]
+    NOT?: OutBoundEmailScalarWhereWithAggregatesInput | OutBoundEmailScalarWhereWithAggregatesInput[]
+    id?: IntWithAggregatesFilter<"OutBoundEmail"> | number
+    to?: StringWithAggregatesFilter<"OutBoundEmail"> | string
+    subject?: StringWithAggregatesFilter<"OutBoundEmail"> | string
+    body?: StringWithAggregatesFilter<"OutBoundEmail"> | string
+    dateCreated?: DateTimeWithAggregatesFilter<"OutBoundEmail"> | Date | string
+    sentAt?: DateTimeNullableWithAggregatesFilter<"OutBoundEmail"> | Date | string | null
+  }
+
+  export type OutBoundEmailQueueWhereInput = {
+    AND?: OutBoundEmailQueueWhereInput | OutBoundEmailQueueWhereInput[]
+    OR?: OutBoundEmailQueueWhereInput[]
+    NOT?: OutBoundEmailQueueWhereInput | OutBoundEmailQueueWhereInput[]
+    id?: IntFilter<"OutBoundEmailQueue"> | number
+    emailId?: IntFilter<"OutBoundEmailQueue"> | number
+    dateQueued?: DateTimeFilter<"OutBoundEmailQueue"> | Date | string
+    sentAt?: DateTimeNullableFilter<"OutBoundEmailQueue"> | Date | string | null
+    email?: XOR<OutBoundEmailScalarRelationFilter, OutBoundEmailWhereInput>
+  }
+
+  export type OutBoundEmailQueueOrderByWithRelationInput = {
+    id?: SortOrder
+    emailId?: SortOrder
+    dateQueued?: SortOrder
+    sentAt?: SortOrderInput | SortOrder
+    email?: OutBoundEmailOrderByWithRelationInput
+  }
+
+  export type OutBoundEmailQueueWhereUniqueInput = Prisma.AtLeast<{
+    id?: number
+    AND?: OutBoundEmailQueueWhereInput | OutBoundEmailQueueWhereInput[]
+    OR?: OutBoundEmailQueueWhereInput[]
+    NOT?: OutBoundEmailQueueWhereInput | OutBoundEmailQueueWhereInput[]
+    emailId?: IntFilter<"OutBoundEmailQueue"> | number
+    dateQueued?: DateTimeFilter<"OutBoundEmailQueue"> | Date | string
+    sentAt?: DateTimeNullableFilter<"OutBoundEmailQueue"> | Date | string | null
+    email?: XOR<OutBoundEmailScalarRelationFilter, OutBoundEmailWhereInput>
+  }, "id">
+
+  export type OutBoundEmailQueueOrderByWithAggregationInput = {
+    id?: SortOrder
+    emailId?: SortOrder
+    dateQueued?: SortOrder
+    sentAt?: SortOrderInput | SortOrder
+    _count?: OutBoundEmailQueueCountOrderByAggregateInput
+    _avg?: OutBoundEmailQueueAvgOrderByAggregateInput
+    _max?: OutBoundEmailQueueMaxOrderByAggregateInput
+    _min?: OutBoundEmailQueueMinOrderByAggregateInput
+    _sum?: OutBoundEmailQueueSumOrderByAggregateInput
+  }
+
+  export type OutBoundEmailQueueScalarWhereWithAggregatesInput = {
+    AND?: OutBoundEmailQueueScalarWhereWithAggregatesInput | OutBoundEmailQueueScalarWhereWithAggregatesInput[]
+    OR?: OutBoundEmailQueueScalarWhereWithAggregatesInput[]
+    NOT?: OutBoundEmailQueueScalarWhereWithAggregatesInput | OutBoundEmailQueueScalarWhereWithAggregatesInput[]
+    id?: IntWithAggregatesFilter<"OutBoundEmailQueue"> | number
+    emailId?: IntWithAggregatesFilter<"OutBoundEmailQueue"> | number
+    dateQueued?: DateTimeWithAggregatesFilter<"OutBoundEmailQueue"> | Date | string
+    sentAt?: DateTimeNullableWithAggregatesFilter<"OutBoundEmailQueue"> | Date | string | null
+  }
+
+  export type SessionWhereInput = {
+    AND?: SessionWhereInput | SessionWhereInput[]
+    OR?: SessionWhereInput[]
+    NOT?: SessionWhereInput | SessionWhereInput[]
+    id?: IntFilter<"Session"> | number
+    token?: StringFilter<"Session"> | string
+    userId?: StringFilter<"Session"> | string
+    dateCreated?: DateTimeFilter<"Session"> | Date | string
+    expiresAt?: DateTimeFilter<"Session"> | Date | string
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }
+
+  export type SessionOrderByWithRelationInput = {
+    id?: SortOrder
+    token?: SortOrder
+    userId?: SortOrder
+    dateCreated?: SortOrder
+    expiresAt?: SortOrder
+    user?: UserOrderByWithRelationInput
+  }
+
+  export type SessionWhereUniqueInput = Prisma.AtLeast<{
+    id?: number
+    token?: string
+    AND?: SessionWhereInput | SessionWhereInput[]
+    OR?: SessionWhereInput[]
+    NOT?: SessionWhereInput | SessionWhereInput[]
+    userId?: StringFilter<"Session"> | string
+    dateCreated?: DateTimeFilter<"Session"> | Date | string
+    expiresAt?: DateTimeFilter<"Session"> | Date | string
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }, "id" | "token">
+
+  export type SessionOrderByWithAggregationInput = {
+    id?: SortOrder
+    token?: SortOrder
+    userId?: SortOrder
+    dateCreated?: SortOrder
+    expiresAt?: SortOrder
+    _count?: SessionCountOrderByAggregateInput
+    _avg?: SessionAvgOrderByAggregateInput
+    _max?: SessionMaxOrderByAggregateInput
+    _min?: SessionMinOrderByAggregateInput
+    _sum?: SessionSumOrderByAggregateInput
+  }
+
+  export type SessionScalarWhereWithAggregatesInput = {
+    AND?: SessionScalarWhereWithAggregatesInput | SessionScalarWhereWithAggregatesInput[]
+    OR?: SessionScalarWhereWithAggregatesInput[]
+    NOT?: SessionScalarWhereWithAggregatesInput | SessionScalarWhereWithAggregatesInput[]
+    id?: IntWithAggregatesFilter<"Session"> | number
+    token?: StringWithAggregatesFilter<"Session"> | string
+    userId?: StringWithAggregatesFilter<"Session"> | string
+    dateCreated?: DateTimeWithAggregatesFilter<"Session"> | Date | string
+    expiresAt?: DateTimeWithAggregatesFilter<"Session"> | Date | string
   }
 
   export type PostWhereInput = {
@@ -3331,7 +8605,7 @@ export namespace Prisma {
     title?: StringFilter<"Post"> | string
     content?: StringNullableFilter<"Post"> | string | null
     published?: BoolFilter<"Post"> | boolean
-    authorId?: IntFilter<"Post"> | number
+    authorId?: StringFilter<"Post"> | string
     author?: XOR<UserScalarRelationFilter, UserWhereInput>
   }
 
@@ -3352,7 +8626,7 @@ export namespace Prisma {
     title?: StringFilter<"Post"> | string
     content?: StringNullableFilter<"Post"> | string | null
     published?: BoolFilter<"Post"> | boolean
-    authorId?: IntFilter<"Post"> | number
+    authorId?: StringFilter<"Post"> | string
     author?: XOR<UserScalarRelationFilter, UserWhereInput>
   }, "id">
 
@@ -3377,50 +8651,323 @@ export namespace Prisma {
     title?: StringWithAggregatesFilter<"Post"> | string
     content?: StringNullableWithAggregatesFilter<"Post"> | string | null
     published?: BoolWithAggregatesFilter<"Post"> | boolean
-    authorId?: IntWithAggregatesFilter<"Post"> | number
+    authorId?: StringWithAggregatesFilter<"Post"> | string
   }
 
   export type UserCreateInput = {
+    id?: string
     email: string
     name?: string | null
+    password: string
+    emailverified?: boolean
+    datecreated?: Date | string
+    dateupdated?: Date | string
+    dateloggedin?: Date | string | null
+    userlevel?: number
     posts?: PostCreateNestedManyWithoutAuthorInput
+    authCodes?: AuthCodeCreateNestedManyWithoutUserInput
+    sessions?: SessionCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateInput = {
-    id?: number
+    id?: string
     email: string
     name?: string | null
+    password: string
+    emailverified?: boolean
+    datecreated?: Date | string
+    dateupdated?: Date | string
+    dateloggedin?: Date | string | null
+    userlevel?: number
     posts?: PostUncheckedCreateNestedManyWithoutAuthorInput
+    authCodes?: AuthCodeUncheckedCreateNestedManyWithoutUserInput
+    sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     name?: NullableStringFieldUpdateOperationsInput | string | null
+    password?: StringFieldUpdateOperationsInput | string
+    emailverified?: BoolFieldUpdateOperationsInput | boolean
+    datecreated?: DateTimeFieldUpdateOperationsInput | Date | string
+    dateupdated?: DateTimeFieldUpdateOperationsInput | Date | string
+    dateloggedin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    userlevel?: IntFieldUpdateOperationsInput | number
     posts?: PostUpdateManyWithoutAuthorNestedInput
+    authCodes?: AuthCodeUpdateManyWithoutUserNestedInput
+    sessions?: SessionUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateInput = {
-    id?: IntFieldUpdateOperationsInput | number
+    id?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     name?: NullableStringFieldUpdateOperationsInput | string | null
+    password?: StringFieldUpdateOperationsInput | string
+    emailverified?: BoolFieldUpdateOperationsInput | boolean
+    datecreated?: DateTimeFieldUpdateOperationsInput | Date | string
+    dateupdated?: DateTimeFieldUpdateOperationsInput | Date | string
+    dateloggedin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    userlevel?: IntFieldUpdateOperationsInput | number
     posts?: PostUncheckedUpdateManyWithoutAuthorNestedInput
+    authCodes?: AuthCodeUncheckedUpdateManyWithoutUserNestedInput
+    sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateManyInput = {
-    id?: number
+    id?: string
     email: string
     name?: string | null
+    password: string
+    emailverified?: boolean
+    datecreated?: Date | string
+    dateupdated?: Date | string
+    dateloggedin?: Date | string | null
+    userlevel?: number
   }
 
   export type UserUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     name?: NullableStringFieldUpdateOperationsInput | string | null
+    password?: StringFieldUpdateOperationsInput | string
+    emailverified?: BoolFieldUpdateOperationsInput | boolean
+    datecreated?: DateTimeFieldUpdateOperationsInput | Date | string
+    dateupdated?: DateTimeFieldUpdateOperationsInput | Date | string
+    dateloggedin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    userlevel?: IntFieldUpdateOperationsInput | number
   }
 
   export type UserUncheckedUpdateManyInput = {
-    id?: IntFieldUpdateOperationsInput | number
+    id?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     name?: NullableStringFieldUpdateOperationsInput | string | null
+    password?: StringFieldUpdateOperationsInput | string
+    emailverified?: BoolFieldUpdateOperationsInput | boolean
+    datecreated?: DateTimeFieldUpdateOperationsInput | Date | string
+    dateupdated?: DateTimeFieldUpdateOperationsInput | Date | string
+    dateloggedin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    userlevel?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type AuthCodeCreateInput = {
+    code: string
+    flow: string
+    dateCreated?: Date | string
+    expiresAt?: Date | string
+    user: UserCreateNestedOneWithoutAuthCodesInput
+  }
+
+  export type AuthCodeUncheckedCreateInput = {
+    id?: number
+    code: string
+    userId: string
+    flow: string
+    dateCreated?: Date | string
+    expiresAt?: Date | string
+  }
+
+  export type AuthCodeUpdateInput = {
+    code?: StringFieldUpdateOperationsInput | string
+    flow?: StringFieldUpdateOperationsInput | string
+    dateCreated?: DateTimeFieldUpdateOperationsInput | Date | string
+    expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutAuthCodesNestedInput
+  }
+
+  export type AuthCodeUncheckedUpdateInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    code?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    flow?: StringFieldUpdateOperationsInput | string
+    dateCreated?: DateTimeFieldUpdateOperationsInput | Date | string
+    expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type AuthCodeCreateManyInput = {
+    id?: number
+    code: string
+    userId: string
+    flow: string
+    dateCreated?: Date | string
+    expiresAt?: Date | string
+  }
+
+  export type AuthCodeUpdateManyMutationInput = {
+    code?: StringFieldUpdateOperationsInput | string
+    flow?: StringFieldUpdateOperationsInput | string
+    dateCreated?: DateTimeFieldUpdateOperationsInput | Date | string
+    expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type AuthCodeUncheckedUpdateManyInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    code?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    flow?: StringFieldUpdateOperationsInput | string
+    dateCreated?: DateTimeFieldUpdateOperationsInput | Date | string
+    expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type OutBoundEmailCreateInput = {
+    to: string
+    subject: string
+    body: string
+    dateCreated?: Date | string
+    sentAt?: Date | string | null
+    outBoundEmailQueues?: OutBoundEmailQueueCreateNestedManyWithoutEmailInput
+  }
+
+  export type OutBoundEmailUncheckedCreateInput = {
+    id?: number
+    to: string
+    subject: string
+    body: string
+    dateCreated?: Date | string
+    sentAt?: Date | string | null
+    outBoundEmailQueues?: OutBoundEmailQueueUncheckedCreateNestedManyWithoutEmailInput
+  }
+
+  export type OutBoundEmailUpdateInput = {
+    to?: StringFieldUpdateOperationsInput | string
+    subject?: StringFieldUpdateOperationsInput | string
+    body?: StringFieldUpdateOperationsInput | string
+    dateCreated?: DateTimeFieldUpdateOperationsInput | Date | string
+    sentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    outBoundEmailQueues?: OutBoundEmailQueueUpdateManyWithoutEmailNestedInput
+  }
+
+  export type OutBoundEmailUncheckedUpdateInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    to?: StringFieldUpdateOperationsInput | string
+    subject?: StringFieldUpdateOperationsInput | string
+    body?: StringFieldUpdateOperationsInput | string
+    dateCreated?: DateTimeFieldUpdateOperationsInput | Date | string
+    sentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    outBoundEmailQueues?: OutBoundEmailQueueUncheckedUpdateManyWithoutEmailNestedInput
+  }
+
+  export type OutBoundEmailCreateManyInput = {
+    id?: number
+    to: string
+    subject: string
+    body: string
+    dateCreated?: Date | string
+    sentAt?: Date | string | null
+  }
+
+  export type OutBoundEmailUpdateManyMutationInput = {
+    to?: StringFieldUpdateOperationsInput | string
+    subject?: StringFieldUpdateOperationsInput | string
+    body?: StringFieldUpdateOperationsInput | string
+    dateCreated?: DateTimeFieldUpdateOperationsInput | Date | string
+    sentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type OutBoundEmailUncheckedUpdateManyInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    to?: StringFieldUpdateOperationsInput | string
+    subject?: StringFieldUpdateOperationsInput | string
+    body?: StringFieldUpdateOperationsInput | string
+    dateCreated?: DateTimeFieldUpdateOperationsInput | Date | string
+    sentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type OutBoundEmailQueueCreateInput = {
+    dateQueued?: Date | string
+    sentAt?: Date | string | null
+    email: OutBoundEmailCreateNestedOneWithoutOutBoundEmailQueuesInput
+  }
+
+  export type OutBoundEmailQueueUncheckedCreateInput = {
+    id?: number
+    emailId: number
+    dateQueued?: Date | string
+    sentAt?: Date | string | null
+  }
+
+  export type OutBoundEmailQueueUpdateInput = {
+    dateQueued?: DateTimeFieldUpdateOperationsInput | Date | string
+    sentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    email?: OutBoundEmailUpdateOneRequiredWithoutOutBoundEmailQueuesNestedInput
+  }
+
+  export type OutBoundEmailQueueUncheckedUpdateInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    emailId?: IntFieldUpdateOperationsInput | number
+    dateQueued?: DateTimeFieldUpdateOperationsInput | Date | string
+    sentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type OutBoundEmailQueueCreateManyInput = {
+    id?: number
+    emailId: number
+    dateQueued?: Date | string
+    sentAt?: Date | string | null
+  }
+
+  export type OutBoundEmailQueueUpdateManyMutationInput = {
+    dateQueued?: DateTimeFieldUpdateOperationsInput | Date | string
+    sentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type OutBoundEmailQueueUncheckedUpdateManyInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    emailId?: IntFieldUpdateOperationsInput | number
+    dateQueued?: DateTimeFieldUpdateOperationsInput | Date | string
+    sentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type SessionCreateInput = {
+    token: string
+    dateCreated?: Date | string
+    expiresAt?: Date | string
+    user: UserCreateNestedOneWithoutSessionsInput
+  }
+
+  export type SessionUncheckedCreateInput = {
+    id?: number
+    token: string
+    userId: string
+    dateCreated?: Date | string
+    expiresAt?: Date | string
+  }
+
+  export type SessionUpdateInput = {
+    token?: StringFieldUpdateOperationsInput | string
+    dateCreated?: DateTimeFieldUpdateOperationsInput | Date | string
+    expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutSessionsNestedInput
+  }
+
+  export type SessionUncheckedUpdateInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    token?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    dateCreated?: DateTimeFieldUpdateOperationsInput | Date | string
+    expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SessionCreateManyInput = {
+    id?: number
+    token: string
+    userId: string
+    dateCreated?: Date | string
+    expiresAt?: Date | string
+  }
+
+  export type SessionUpdateManyMutationInput = {
+    token?: StringFieldUpdateOperationsInput | string
+    dateCreated?: DateTimeFieldUpdateOperationsInput | Date | string
+    expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SessionUncheckedUpdateManyInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    token?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    dateCreated?: DateTimeFieldUpdateOperationsInput | Date | string
+    expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type PostCreateInput = {
@@ -3435,7 +8982,7 @@ export namespace Prisma {
     title: string
     content?: string | null
     published?: boolean
-    authorId: number
+    authorId: string
   }
 
   export type PostUpdateInput = {
@@ -3450,7 +8997,7 @@ export namespace Prisma {
     title?: StringFieldUpdateOperationsInput | string
     content?: NullableStringFieldUpdateOperationsInput | string | null
     published?: BoolFieldUpdateOperationsInput | boolean
-    authorId?: IntFieldUpdateOperationsInput | number
+    authorId?: StringFieldUpdateOperationsInput | string
   }
 
   export type PostCreateManyInput = {
@@ -3458,7 +9005,7 @@ export namespace Prisma {
     title: string
     content?: string | null
     published?: boolean
-    authorId: number
+    authorId: string
   }
 
   export type PostUpdateManyMutationInput = {
@@ -3472,18 +9019,7 @@ export namespace Prisma {
     title?: StringFieldUpdateOperationsInput | string
     content?: NullableStringFieldUpdateOperationsInput | string | null
     published?: BoolFieldUpdateOperationsInput | boolean
-    authorId?: IntFieldUpdateOperationsInput | number
-  }
-
-  export type IntFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel>
-    in?: number[] | ListIntFieldRefInput<$PrismaModel>
-    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntFilter<$PrismaModel> | number
+    authorId?: StringFieldUpdateOperationsInput | string
   }
 
   export type StringFilter<$PrismaModel = never> = {
@@ -3516,10 +9052,60 @@ export namespace Prisma {
     not?: NestedStringNullableFilter<$PrismaModel> | string | null
   }
 
+  export type BoolFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolFilter<$PrismaModel> | boolean
+  }
+
+  export type DateTimeFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeFilter<$PrismaModel> | Date | string
+  }
+
+  export type DateTimeNullableFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
+  }
+
+  export type IntFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel>
+    in?: number[] | ListIntFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntFilter<$PrismaModel> | number
+  }
+
   export type PostListRelationFilter = {
     every?: PostWhereInput
     some?: PostWhereInput
     none?: PostWhereInput
+  }
+
+  export type AuthCodeListRelationFilter = {
+    every?: AuthCodeWhereInput
+    some?: AuthCodeWhereInput
+    none?: AuthCodeWhereInput
+  }
+
+  export type SessionListRelationFilter = {
+    every?: SessionWhereInput
+    some?: SessionWhereInput
+    none?: SessionWhereInput
   }
 
   export type SortOrderInput = {
@@ -3531,46 +9117,56 @@ export namespace Prisma {
     _count?: SortOrder
   }
 
+  export type AuthCodeOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type SessionOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
   export type UserCountOrderByAggregateInput = {
     id?: SortOrder
     email?: SortOrder
     name?: SortOrder
+    password?: SortOrder
+    emailverified?: SortOrder
+    datecreated?: SortOrder
+    dateupdated?: SortOrder
+    dateloggedin?: SortOrder
+    userlevel?: SortOrder
   }
 
   export type UserAvgOrderByAggregateInput = {
-    id?: SortOrder
+    userlevel?: SortOrder
   }
 
   export type UserMaxOrderByAggregateInput = {
     id?: SortOrder
     email?: SortOrder
     name?: SortOrder
+    password?: SortOrder
+    emailverified?: SortOrder
+    datecreated?: SortOrder
+    dateupdated?: SortOrder
+    dateloggedin?: SortOrder
+    userlevel?: SortOrder
   }
 
   export type UserMinOrderByAggregateInput = {
     id?: SortOrder
     email?: SortOrder
     name?: SortOrder
+    password?: SortOrder
+    emailverified?: SortOrder
+    datecreated?: SortOrder
+    dateupdated?: SortOrder
+    dateloggedin?: SortOrder
+    userlevel?: SortOrder
   }
 
   export type UserSumOrderByAggregateInput = {
-    id?: SortOrder
-  }
-
-  export type IntWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel>
-    in?: number[] | ListIntFieldRefInput<$PrismaModel>
-    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntWithAggregatesFilter<$PrismaModel> | number
-    _count?: NestedIntFilter<$PrismaModel>
-    _avg?: NestedFloatFilter<$PrismaModel>
-    _sum?: NestedIntFilter<$PrismaModel>
-    _min?: NestedIntFilter<$PrismaModel>
-    _max?: NestedIntFilter<$PrismaModel>
+    userlevel?: SortOrder
   }
 
   export type StringWithAggregatesFilter<$PrismaModel = never> = {
@@ -3609,14 +9205,209 @@ export namespace Prisma {
     _max?: NestedStringNullableFilter<$PrismaModel>
   }
 
-  export type BoolFilter<$PrismaModel = never> = {
+  export type BoolWithAggregatesFilter<$PrismaModel = never> = {
     equals?: boolean | BooleanFieldRefInput<$PrismaModel>
-    not?: NestedBoolFilter<$PrismaModel> | boolean
+    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedBoolFilter<$PrismaModel>
+    _max?: NestedBoolFilter<$PrismaModel>
+  }
+
+  export type DateTimeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeWithAggregatesFilter<$PrismaModel> | Date | string
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedDateTimeFilter<$PrismaModel>
+    _max?: NestedDateTimeFilter<$PrismaModel>
+  }
+
+  export type DateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableWithAggregatesFilter<$PrismaModel> | Date | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedDateTimeNullableFilter<$PrismaModel>
+    _max?: NestedDateTimeNullableFilter<$PrismaModel>
+  }
+
+  export type IntWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel>
+    in?: number[] | ListIntFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntWithAggregatesFilter<$PrismaModel> | number
+    _count?: NestedIntFilter<$PrismaModel>
+    _avg?: NestedFloatFilter<$PrismaModel>
+    _sum?: NestedIntFilter<$PrismaModel>
+    _min?: NestedIntFilter<$PrismaModel>
+    _max?: NestedIntFilter<$PrismaModel>
   }
 
   export type UserScalarRelationFilter = {
     is?: UserWhereInput
     isNot?: UserWhereInput
+  }
+
+  export type AuthCodeCountOrderByAggregateInput = {
+    id?: SortOrder
+    code?: SortOrder
+    userId?: SortOrder
+    flow?: SortOrder
+    dateCreated?: SortOrder
+    expiresAt?: SortOrder
+  }
+
+  export type AuthCodeAvgOrderByAggregateInput = {
+    id?: SortOrder
+  }
+
+  export type AuthCodeMaxOrderByAggregateInput = {
+    id?: SortOrder
+    code?: SortOrder
+    userId?: SortOrder
+    flow?: SortOrder
+    dateCreated?: SortOrder
+    expiresAt?: SortOrder
+  }
+
+  export type AuthCodeMinOrderByAggregateInput = {
+    id?: SortOrder
+    code?: SortOrder
+    userId?: SortOrder
+    flow?: SortOrder
+    dateCreated?: SortOrder
+    expiresAt?: SortOrder
+  }
+
+  export type AuthCodeSumOrderByAggregateInput = {
+    id?: SortOrder
+  }
+
+  export type OutBoundEmailQueueListRelationFilter = {
+    every?: OutBoundEmailQueueWhereInput
+    some?: OutBoundEmailQueueWhereInput
+    none?: OutBoundEmailQueueWhereInput
+  }
+
+  export type OutBoundEmailQueueOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type OutBoundEmailCountOrderByAggregateInput = {
+    id?: SortOrder
+    to?: SortOrder
+    subject?: SortOrder
+    body?: SortOrder
+    dateCreated?: SortOrder
+    sentAt?: SortOrder
+  }
+
+  export type OutBoundEmailAvgOrderByAggregateInput = {
+    id?: SortOrder
+  }
+
+  export type OutBoundEmailMaxOrderByAggregateInput = {
+    id?: SortOrder
+    to?: SortOrder
+    subject?: SortOrder
+    body?: SortOrder
+    dateCreated?: SortOrder
+    sentAt?: SortOrder
+  }
+
+  export type OutBoundEmailMinOrderByAggregateInput = {
+    id?: SortOrder
+    to?: SortOrder
+    subject?: SortOrder
+    body?: SortOrder
+    dateCreated?: SortOrder
+    sentAt?: SortOrder
+  }
+
+  export type OutBoundEmailSumOrderByAggregateInput = {
+    id?: SortOrder
+  }
+
+  export type OutBoundEmailScalarRelationFilter = {
+    is?: OutBoundEmailWhereInput
+    isNot?: OutBoundEmailWhereInput
+  }
+
+  export type OutBoundEmailQueueCountOrderByAggregateInput = {
+    id?: SortOrder
+    emailId?: SortOrder
+    dateQueued?: SortOrder
+    sentAt?: SortOrder
+  }
+
+  export type OutBoundEmailQueueAvgOrderByAggregateInput = {
+    id?: SortOrder
+    emailId?: SortOrder
+  }
+
+  export type OutBoundEmailQueueMaxOrderByAggregateInput = {
+    id?: SortOrder
+    emailId?: SortOrder
+    dateQueued?: SortOrder
+    sentAt?: SortOrder
+  }
+
+  export type OutBoundEmailQueueMinOrderByAggregateInput = {
+    id?: SortOrder
+    emailId?: SortOrder
+    dateQueued?: SortOrder
+    sentAt?: SortOrder
+  }
+
+  export type OutBoundEmailQueueSumOrderByAggregateInput = {
+    id?: SortOrder
+    emailId?: SortOrder
+  }
+
+  export type SessionCountOrderByAggregateInput = {
+    id?: SortOrder
+    token?: SortOrder
+    userId?: SortOrder
+    dateCreated?: SortOrder
+    expiresAt?: SortOrder
+  }
+
+  export type SessionAvgOrderByAggregateInput = {
+    id?: SortOrder
+  }
+
+  export type SessionMaxOrderByAggregateInput = {
+    id?: SortOrder
+    token?: SortOrder
+    userId?: SortOrder
+    dateCreated?: SortOrder
+    expiresAt?: SortOrder
+  }
+
+  export type SessionMinOrderByAggregateInput = {
+    id?: SortOrder
+    token?: SortOrder
+    userId?: SortOrder
+    dateCreated?: SortOrder
+    expiresAt?: SortOrder
+  }
+
+  export type SessionSumOrderByAggregateInput = {
+    id?: SortOrder
   }
 
   export type PostCountOrderByAggregateInput = {
@@ -3629,7 +9420,6 @@ export namespace Prisma {
 
   export type PostAvgOrderByAggregateInput = {
     id?: SortOrder
-    authorId?: SortOrder
   }
 
   export type PostMaxOrderByAggregateInput = {
@@ -3650,15 +9440,6 @@ export namespace Prisma {
 
   export type PostSumOrderByAggregateInput = {
     id?: SortOrder
-    authorId?: SortOrder
-  }
-
-  export type BoolWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
-    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedBoolFilter<$PrismaModel>
-    _max?: NestedBoolFilter<$PrismaModel>
   }
 
   export type PostCreateNestedManyWithoutAuthorInput = {
@@ -3668,11 +9449,39 @@ export namespace Prisma {
     connect?: PostWhereUniqueInput | PostWhereUniqueInput[]
   }
 
+  export type AuthCodeCreateNestedManyWithoutUserInput = {
+    create?: XOR<AuthCodeCreateWithoutUserInput, AuthCodeUncheckedCreateWithoutUserInput> | AuthCodeCreateWithoutUserInput[] | AuthCodeUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: AuthCodeCreateOrConnectWithoutUserInput | AuthCodeCreateOrConnectWithoutUserInput[]
+    createMany?: AuthCodeCreateManyUserInputEnvelope
+    connect?: AuthCodeWhereUniqueInput | AuthCodeWhereUniqueInput[]
+  }
+
+  export type SessionCreateNestedManyWithoutUserInput = {
+    create?: XOR<SessionCreateWithoutUserInput, SessionUncheckedCreateWithoutUserInput> | SessionCreateWithoutUserInput[] | SessionUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: SessionCreateOrConnectWithoutUserInput | SessionCreateOrConnectWithoutUserInput[]
+    createMany?: SessionCreateManyUserInputEnvelope
+    connect?: SessionWhereUniqueInput | SessionWhereUniqueInput[]
+  }
+
   export type PostUncheckedCreateNestedManyWithoutAuthorInput = {
     create?: XOR<PostCreateWithoutAuthorInput, PostUncheckedCreateWithoutAuthorInput> | PostCreateWithoutAuthorInput[] | PostUncheckedCreateWithoutAuthorInput[]
     connectOrCreate?: PostCreateOrConnectWithoutAuthorInput | PostCreateOrConnectWithoutAuthorInput[]
     createMany?: PostCreateManyAuthorInputEnvelope
     connect?: PostWhereUniqueInput | PostWhereUniqueInput[]
+  }
+
+  export type AuthCodeUncheckedCreateNestedManyWithoutUserInput = {
+    create?: XOR<AuthCodeCreateWithoutUserInput, AuthCodeUncheckedCreateWithoutUserInput> | AuthCodeCreateWithoutUserInput[] | AuthCodeUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: AuthCodeCreateOrConnectWithoutUserInput | AuthCodeCreateOrConnectWithoutUserInput[]
+    createMany?: AuthCodeCreateManyUserInputEnvelope
+    connect?: AuthCodeWhereUniqueInput | AuthCodeWhereUniqueInput[]
+  }
+
+  export type SessionUncheckedCreateNestedManyWithoutUserInput = {
+    create?: XOR<SessionCreateWithoutUserInput, SessionUncheckedCreateWithoutUserInput> | SessionCreateWithoutUserInput[] | SessionUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: SessionCreateOrConnectWithoutUserInput | SessionCreateOrConnectWithoutUserInput[]
+    createMany?: SessionCreateManyUserInputEnvelope
+    connect?: SessionWhereUniqueInput | SessionWhereUniqueInput[]
   }
 
   export type StringFieldUpdateOperationsInput = {
@@ -3681,6 +9490,26 @@ export namespace Prisma {
 
   export type NullableStringFieldUpdateOperationsInput = {
     set?: string | null
+  }
+
+  export type BoolFieldUpdateOperationsInput = {
+    set?: boolean
+  }
+
+  export type DateTimeFieldUpdateOperationsInput = {
+    set?: Date | string
+  }
+
+  export type NullableDateTimeFieldUpdateOperationsInput = {
+    set?: Date | string | null
+  }
+
+  export type IntFieldUpdateOperationsInput = {
+    set?: number
+    increment?: number
+    decrement?: number
+    multiply?: number
+    divide?: number
   }
 
   export type PostUpdateManyWithoutAuthorNestedInput = {
@@ -3697,12 +9526,32 @@ export namespace Prisma {
     deleteMany?: PostScalarWhereInput | PostScalarWhereInput[]
   }
 
-  export type IntFieldUpdateOperationsInput = {
-    set?: number
-    increment?: number
-    decrement?: number
-    multiply?: number
-    divide?: number
+  export type AuthCodeUpdateManyWithoutUserNestedInput = {
+    create?: XOR<AuthCodeCreateWithoutUserInput, AuthCodeUncheckedCreateWithoutUserInput> | AuthCodeCreateWithoutUserInput[] | AuthCodeUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: AuthCodeCreateOrConnectWithoutUserInput | AuthCodeCreateOrConnectWithoutUserInput[]
+    upsert?: AuthCodeUpsertWithWhereUniqueWithoutUserInput | AuthCodeUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: AuthCodeCreateManyUserInputEnvelope
+    set?: AuthCodeWhereUniqueInput | AuthCodeWhereUniqueInput[]
+    disconnect?: AuthCodeWhereUniqueInput | AuthCodeWhereUniqueInput[]
+    delete?: AuthCodeWhereUniqueInput | AuthCodeWhereUniqueInput[]
+    connect?: AuthCodeWhereUniqueInput | AuthCodeWhereUniqueInput[]
+    update?: AuthCodeUpdateWithWhereUniqueWithoutUserInput | AuthCodeUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: AuthCodeUpdateManyWithWhereWithoutUserInput | AuthCodeUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: AuthCodeScalarWhereInput | AuthCodeScalarWhereInput[]
+  }
+
+  export type SessionUpdateManyWithoutUserNestedInput = {
+    create?: XOR<SessionCreateWithoutUserInput, SessionUncheckedCreateWithoutUserInput> | SessionCreateWithoutUserInput[] | SessionUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: SessionCreateOrConnectWithoutUserInput | SessionCreateOrConnectWithoutUserInput[]
+    upsert?: SessionUpsertWithWhereUniqueWithoutUserInput | SessionUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: SessionCreateManyUserInputEnvelope
+    set?: SessionWhereUniqueInput | SessionWhereUniqueInput[]
+    disconnect?: SessionWhereUniqueInput | SessionWhereUniqueInput[]
+    delete?: SessionWhereUniqueInput | SessionWhereUniqueInput[]
+    connect?: SessionWhereUniqueInput | SessionWhereUniqueInput[]
+    update?: SessionUpdateWithWhereUniqueWithoutUserInput | SessionUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: SessionUpdateManyWithWhereWithoutUserInput | SessionUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: SessionScalarWhereInput | SessionScalarWhereInput[]
   }
 
   export type PostUncheckedUpdateManyWithoutAuthorNestedInput = {
@@ -3719,14 +9568,122 @@ export namespace Prisma {
     deleteMany?: PostScalarWhereInput | PostScalarWhereInput[]
   }
 
+  export type AuthCodeUncheckedUpdateManyWithoutUserNestedInput = {
+    create?: XOR<AuthCodeCreateWithoutUserInput, AuthCodeUncheckedCreateWithoutUserInput> | AuthCodeCreateWithoutUserInput[] | AuthCodeUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: AuthCodeCreateOrConnectWithoutUserInput | AuthCodeCreateOrConnectWithoutUserInput[]
+    upsert?: AuthCodeUpsertWithWhereUniqueWithoutUserInput | AuthCodeUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: AuthCodeCreateManyUserInputEnvelope
+    set?: AuthCodeWhereUniqueInput | AuthCodeWhereUniqueInput[]
+    disconnect?: AuthCodeWhereUniqueInput | AuthCodeWhereUniqueInput[]
+    delete?: AuthCodeWhereUniqueInput | AuthCodeWhereUniqueInput[]
+    connect?: AuthCodeWhereUniqueInput | AuthCodeWhereUniqueInput[]
+    update?: AuthCodeUpdateWithWhereUniqueWithoutUserInput | AuthCodeUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: AuthCodeUpdateManyWithWhereWithoutUserInput | AuthCodeUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: AuthCodeScalarWhereInput | AuthCodeScalarWhereInput[]
+  }
+
+  export type SessionUncheckedUpdateManyWithoutUserNestedInput = {
+    create?: XOR<SessionCreateWithoutUserInput, SessionUncheckedCreateWithoutUserInput> | SessionCreateWithoutUserInput[] | SessionUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: SessionCreateOrConnectWithoutUserInput | SessionCreateOrConnectWithoutUserInput[]
+    upsert?: SessionUpsertWithWhereUniqueWithoutUserInput | SessionUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: SessionCreateManyUserInputEnvelope
+    set?: SessionWhereUniqueInput | SessionWhereUniqueInput[]
+    disconnect?: SessionWhereUniqueInput | SessionWhereUniqueInput[]
+    delete?: SessionWhereUniqueInput | SessionWhereUniqueInput[]
+    connect?: SessionWhereUniqueInput | SessionWhereUniqueInput[]
+    update?: SessionUpdateWithWhereUniqueWithoutUserInput | SessionUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: SessionUpdateManyWithWhereWithoutUserInput | SessionUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: SessionScalarWhereInput | SessionScalarWhereInput[]
+  }
+
+  export type UserCreateNestedOneWithoutAuthCodesInput = {
+    create?: XOR<UserCreateWithoutAuthCodesInput, UserUncheckedCreateWithoutAuthCodesInput>
+    connectOrCreate?: UserCreateOrConnectWithoutAuthCodesInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type UserUpdateOneRequiredWithoutAuthCodesNestedInput = {
+    create?: XOR<UserCreateWithoutAuthCodesInput, UserUncheckedCreateWithoutAuthCodesInput>
+    connectOrCreate?: UserCreateOrConnectWithoutAuthCodesInput
+    upsert?: UserUpsertWithoutAuthCodesInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutAuthCodesInput, UserUpdateWithoutAuthCodesInput>, UserUncheckedUpdateWithoutAuthCodesInput>
+  }
+
+  export type OutBoundEmailQueueCreateNestedManyWithoutEmailInput = {
+    create?: XOR<OutBoundEmailQueueCreateWithoutEmailInput, OutBoundEmailQueueUncheckedCreateWithoutEmailInput> | OutBoundEmailQueueCreateWithoutEmailInput[] | OutBoundEmailQueueUncheckedCreateWithoutEmailInput[]
+    connectOrCreate?: OutBoundEmailQueueCreateOrConnectWithoutEmailInput | OutBoundEmailQueueCreateOrConnectWithoutEmailInput[]
+    createMany?: OutBoundEmailQueueCreateManyEmailInputEnvelope
+    connect?: OutBoundEmailQueueWhereUniqueInput | OutBoundEmailQueueWhereUniqueInput[]
+  }
+
+  export type OutBoundEmailQueueUncheckedCreateNestedManyWithoutEmailInput = {
+    create?: XOR<OutBoundEmailQueueCreateWithoutEmailInput, OutBoundEmailQueueUncheckedCreateWithoutEmailInput> | OutBoundEmailQueueCreateWithoutEmailInput[] | OutBoundEmailQueueUncheckedCreateWithoutEmailInput[]
+    connectOrCreate?: OutBoundEmailQueueCreateOrConnectWithoutEmailInput | OutBoundEmailQueueCreateOrConnectWithoutEmailInput[]
+    createMany?: OutBoundEmailQueueCreateManyEmailInputEnvelope
+    connect?: OutBoundEmailQueueWhereUniqueInput | OutBoundEmailQueueWhereUniqueInput[]
+  }
+
+  export type OutBoundEmailQueueUpdateManyWithoutEmailNestedInput = {
+    create?: XOR<OutBoundEmailQueueCreateWithoutEmailInput, OutBoundEmailQueueUncheckedCreateWithoutEmailInput> | OutBoundEmailQueueCreateWithoutEmailInput[] | OutBoundEmailQueueUncheckedCreateWithoutEmailInput[]
+    connectOrCreate?: OutBoundEmailQueueCreateOrConnectWithoutEmailInput | OutBoundEmailQueueCreateOrConnectWithoutEmailInput[]
+    upsert?: OutBoundEmailQueueUpsertWithWhereUniqueWithoutEmailInput | OutBoundEmailQueueUpsertWithWhereUniqueWithoutEmailInput[]
+    createMany?: OutBoundEmailQueueCreateManyEmailInputEnvelope
+    set?: OutBoundEmailQueueWhereUniqueInput | OutBoundEmailQueueWhereUniqueInput[]
+    disconnect?: OutBoundEmailQueueWhereUniqueInput | OutBoundEmailQueueWhereUniqueInput[]
+    delete?: OutBoundEmailQueueWhereUniqueInput | OutBoundEmailQueueWhereUniqueInput[]
+    connect?: OutBoundEmailQueueWhereUniqueInput | OutBoundEmailQueueWhereUniqueInput[]
+    update?: OutBoundEmailQueueUpdateWithWhereUniqueWithoutEmailInput | OutBoundEmailQueueUpdateWithWhereUniqueWithoutEmailInput[]
+    updateMany?: OutBoundEmailQueueUpdateManyWithWhereWithoutEmailInput | OutBoundEmailQueueUpdateManyWithWhereWithoutEmailInput[]
+    deleteMany?: OutBoundEmailQueueScalarWhereInput | OutBoundEmailQueueScalarWhereInput[]
+  }
+
+  export type OutBoundEmailQueueUncheckedUpdateManyWithoutEmailNestedInput = {
+    create?: XOR<OutBoundEmailQueueCreateWithoutEmailInput, OutBoundEmailQueueUncheckedCreateWithoutEmailInput> | OutBoundEmailQueueCreateWithoutEmailInput[] | OutBoundEmailQueueUncheckedCreateWithoutEmailInput[]
+    connectOrCreate?: OutBoundEmailQueueCreateOrConnectWithoutEmailInput | OutBoundEmailQueueCreateOrConnectWithoutEmailInput[]
+    upsert?: OutBoundEmailQueueUpsertWithWhereUniqueWithoutEmailInput | OutBoundEmailQueueUpsertWithWhereUniqueWithoutEmailInput[]
+    createMany?: OutBoundEmailQueueCreateManyEmailInputEnvelope
+    set?: OutBoundEmailQueueWhereUniqueInput | OutBoundEmailQueueWhereUniqueInput[]
+    disconnect?: OutBoundEmailQueueWhereUniqueInput | OutBoundEmailQueueWhereUniqueInput[]
+    delete?: OutBoundEmailQueueWhereUniqueInput | OutBoundEmailQueueWhereUniqueInput[]
+    connect?: OutBoundEmailQueueWhereUniqueInput | OutBoundEmailQueueWhereUniqueInput[]
+    update?: OutBoundEmailQueueUpdateWithWhereUniqueWithoutEmailInput | OutBoundEmailQueueUpdateWithWhereUniqueWithoutEmailInput[]
+    updateMany?: OutBoundEmailQueueUpdateManyWithWhereWithoutEmailInput | OutBoundEmailQueueUpdateManyWithWhereWithoutEmailInput[]
+    deleteMany?: OutBoundEmailQueueScalarWhereInput | OutBoundEmailQueueScalarWhereInput[]
+  }
+
+  export type OutBoundEmailCreateNestedOneWithoutOutBoundEmailQueuesInput = {
+    create?: XOR<OutBoundEmailCreateWithoutOutBoundEmailQueuesInput, OutBoundEmailUncheckedCreateWithoutOutBoundEmailQueuesInput>
+    connectOrCreate?: OutBoundEmailCreateOrConnectWithoutOutBoundEmailQueuesInput
+    connect?: OutBoundEmailWhereUniqueInput
+  }
+
+  export type OutBoundEmailUpdateOneRequiredWithoutOutBoundEmailQueuesNestedInput = {
+    create?: XOR<OutBoundEmailCreateWithoutOutBoundEmailQueuesInput, OutBoundEmailUncheckedCreateWithoutOutBoundEmailQueuesInput>
+    connectOrCreate?: OutBoundEmailCreateOrConnectWithoutOutBoundEmailQueuesInput
+    upsert?: OutBoundEmailUpsertWithoutOutBoundEmailQueuesInput
+    connect?: OutBoundEmailWhereUniqueInput
+    update?: XOR<XOR<OutBoundEmailUpdateToOneWithWhereWithoutOutBoundEmailQueuesInput, OutBoundEmailUpdateWithoutOutBoundEmailQueuesInput>, OutBoundEmailUncheckedUpdateWithoutOutBoundEmailQueuesInput>
+  }
+
+  export type UserCreateNestedOneWithoutSessionsInput = {
+    create?: XOR<UserCreateWithoutSessionsInput, UserUncheckedCreateWithoutSessionsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutSessionsInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type UserUpdateOneRequiredWithoutSessionsNestedInput = {
+    create?: XOR<UserCreateWithoutSessionsInput, UserUncheckedCreateWithoutSessionsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutSessionsInput
+    upsert?: UserUpsertWithoutSessionsInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutSessionsInput, UserUpdateWithoutSessionsInput>, UserUncheckedUpdateWithoutSessionsInput>
+  }
+
   export type UserCreateNestedOneWithoutPostsInput = {
     create?: XOR<UserCreateWithoutPostsInput, UserUncheckedCreateWithoutPostsInput>
     connectOrCreate?: UserCreateOrConnectWithoutPostsInput
     connect?: UserWhereUniqueInput
-  }
-
-  export type BoolFieldUpdateOperationsInput = {
-    set?: boolean
   }
 
   export type UserUpdateOneRequiredWithoutPostsNestedInput = {
@@ -3735,17 +9692,6 @@ export namespace Prisma {
     upsert?: UserUpsertWithoutPostsInput
     connect?: UserWhereUniqueInput
     update?: XOR<XOR<UserUpdateToOneWithWhereWithoutPostsInput, UserUpdateWithoutPostsInput>, UserUncheckedUpdateWithoutPostsInput>
-  }
-
-  export type NestedIntFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel>
-    in?: number[] | ListIntFieldRefInput<$PrismaModel>
-    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntFilter<$PrismaModel> | number
   }
 
   export type NestedStringFilter<$PrismaModel = never> = {
@@ -3776,7 +9722,34 @@ export namespace Prisma {
     not?: NestedStringNullableFilter<$PrismaModel> | string | null
   }
 
-  export type NestedIntWithAggregatesFilter<$PrismaModel = never> = {
+  export type NestedBoolFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolFilter<$PrismaModel> | boolean
+  }
+
+  export type NestedDateTimeFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeFilter<$PrismaModel> | Date | string
+  }
+
+  export type NestedDateTimeNullableFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
+  }
+
+  export type NestedIntFilter<$PrismaModel = never> = {
     equals?: number | IntFieldRefInput<$PrismaModel>
     in?: number[] | ListIntFieldRefInput<$PrismaModel>
     notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
@@ -3784,23 +9757,7 @@ export namespace Prisma {
     lte?: number | IntFieldRefInput<$PrismaModel>
     gt?: number | IntFieldRefInput<$PrismaModel>
     gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntWithAggregatesFilter<$PrismaModel> | number
-    _count?: NestedIntFilter<$PrismaModel>
-    _avg?: NestedFloatFilter<$PrismaModel>
-    _sum?: NestedIntFilter<$PrismaModel>
-    _min?: NestedIntFilter<$PrismaModel>
-    _max?: NestedIntFilter<$PrismaModel>
-  }
-
-  export type NestedFloatFilter<$PrismaModel = never> = {
-    equals?: number | FloatFieldRefInput<$PrismaModel>
-    in?: number[] | ListFloatFieldRefInput<$PrismaModel>
-    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel>
-    lt?: number | FloatFieldRefInput<$PrismaModel>
-    lte?: number | FloatFieldRefInput<$PrismaModel>
-    gt?: number | FloatFieldRefInput<$PrismaModel>
-    gte?: number | FloatFieldRefInput<$PrismaModel>
-    not?: NestedFloatFilter<$PrismaModel> | number
+    not?: NestedIntFilter<$PrismaModel> | number
   }
 
   export type NestedStringWithAggregatesFilter<$PrismaModel = never> = {
@@ -3848,17 +9805,67 @@ export namespace Prisma {
     not?: NestedIntNullableFilter<$PrismaModel> | number | null
   }
 
-  export type NestedBoolFilter<$PrismaModel = never> = {
-    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
-    not?: NestedBoolFilter<$PrismaModel> | boolean
-  }
-
   export type NestedBoolWithAggregatesFilter<$PrismaModel = never> = {
     equals?: boolean | BooleanFieldRefInput<$PrismaModel>
     not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedBoolFilter<$PrismaModel>
     _max?: NestedBoolFilter<$PrismaModel>
+  }
+
+  export type NestedDateTimeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeWithAggregatesFilter<$PrismaModel> | Date | string
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedDateTimeFilter<$PrismaModel>
+    _max?: NestedDateTimeFilter<$PrismaModel>
+  }
+
+  export type NestedDateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableWithAggregatesFilter<$PrismaModel> | Date | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedDateTimeNullableFilter<$PrismaModel>
+    _max?: NestedDateTimeNullableFilter<$PrismaModel>
+  }
+
+  export type NestedIntWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel>
+    in?: number[] | ListIntFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntWithAggregatesFilter<$PrismaModel> | number
+    _count?: NestedIntFilter<$PrismaModel>
+    _avg?: NestedFloatFilter<$PrismaModel>
+    _sum?: NestedIntFilter<$PrismaModel>
+    _min?: NestedIntFilter<$PrismaModel>
+    _max?: NestedIntFilter<$PrismaModel>
+  }
+
+  export type NestedFloatFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel>
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel>
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatFilter<$PrismaModel> | number
   }
 
   export type PostCreateWithoutAuthorInput = {
@@ -3881,6 +9888,54 @@ export namespace Prisma {
 
   export type PostCreateManyAuthorInputEnvelope = {
     data: PostCreateManyAuthorInput | PostCreateManyAuthorInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type AuthCodeCreateWithoutUserInput = {
+    code: string
+    flow: string
+    dateCreated?: Date | string
+    expiresAt?: Date | string
+  }
+
+  export type AuthCodeUncheckedCreateWithoutUserInput = {
+    id?: number
+    code: string
+    flow: string
+    dateCreated?: Date | string
+    expiresAt?: Date | string
+  }
+
+  export type AuthCodeCreateOrConnectWithoutUserInput = {
+    where: AuthCodeWhereUniqueInput
+    create: XOR<AuthCodeCreateWithoutUserInput, AuthCodeUncheckedCreateWithoutUserInput>
+  }
+
+  export type AuthCodeCreateManyUserInputEnvelope = {
+    data: AuthCodeCreateManyUserInput | AuthCodeCreateManyUserInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type SessionCreateWithoutUserInput = {
+    token: string
+    dateCreated?: Date | string
+    expiresAt?: Date | string
+  }
+
+  export type SessionUncheckedCreateWithoutUserInput = {
+    id?: number
+    token: string
+    dateCreated?: Date | string
+    expiresAt?: Date | string
+  }
+
+  export type SessionCreateOrConnectWithoutUserInput = {
+    where: SessionWhereUniqueInput
+    create: XOR<SessionCreateWithoutUserInput, SessionUncheckedCreateWithoutUserInput>
+  }
+
+  export type SessionCreateManyUserInputEnvelope = {
+    data: SessionCreateManyUserInput | SessionCreateManyUserInput[]
     skipDuplicates?: boolean
   }
 
@@ -3908,18 +9963,331 @@ export namespace Prisma {
     title?: StringFilter<"Post"> | string
     content?: StringNullableFilter<"Post"> | string | null
     published?: BoolFilter<"Post"> | boolean
-    authorId?: IntFilter<"Post"> | number
+    authorId?: StringFilter<"Post"> | string
+  }
+
+  export type AuthCodeUpsertWithWhereUniqueWithoutUserInput = {
+    where: AuthCodeWhereUniqueInput
+    update: XOR<AuthCodeUpdateWithoutUserInput, AuthCodeUncheckedUpdateWithoutUserInput>
+    create: XOR<AuthCodeCreateWithoutUserInput, AuthCodeUncheckedCreateWithoutUserInput>
+  }
+
+  export type AuthCodeUpdateWithWhereUniqueWithoutUserInput = {
+    where: AuthCodeWhereUniqueInput
+    data: XOR<AuthCodeUpdateWithoutUserInput, AuthCodeUncheckedUpdateWithoutUserInput>
+  }
+
+  export type AuthCodeUpdateManyWithWhereWithoutUserInput = {
+    where: AuthCodeScalarWhereInput
+    data: XOR<AuthCodeUpdateManyMutationInput, AuthCodeUncheckedUpdateManyWithoutUserInput>
+  }
+
+  export type AuthCodeScalarWhereInput = {
+    AND?: AuthCodeScalarWhereInput | AuthCodeScalarWhereInput[]
+    OR?: AuthCodeScalarWhereInput[]
+    NOT?: AuthCodeScalarWhereInput | AuthCodeScalarWhereInput[]
+    id?: IntFilter<"AuthCode"> | number
+    code?: StringFilter<"AuthCode"> | string
+    userId?: StringFilter<"AuthCode"> | string
+    flow?: StringFilter<"AuthCode"> | string
+    dateCreated?: DateTimeFilter<"AuthCode"> | Date | string
+    expiresAt?: DateTimeFilter<"AuthCode"> | Date | string
+  }
+
+  export type SessionUpsertWithWhereUniqueWithoutUserInput = {
+    where: SessionWhereUniqueInput
+    update: XOR<SessionUpdateWithoutUserInput, SessionUncheckedUpdateWithoutUserInput>
+    create: XOR<SessionCreateWithoutUserInput, SessionUncheckedCreateWithoutUserInput>
+  }
+
+  export type SessionUpdateWithWhereUniqueWithoutUserInput = {
+    where: SessionWhereUniqueInput
+    data: XOR<SessionUpdateWithoutUserInput, SessionUncheckedUpdateWithoutUserInput>
+  }
+
+  export type SessionUpdateManyWithWhereWithoutUserInput = {
+    where: SessionScalarWhereInput
+    data: XOR<SessionUpdateManyMutationInput, SessionUncheckedUpdateManyWithoutUserInput>
+  }
+
+  export type SessionScalarWhereInput = {
+    AND?: SessionScalarWhereInput | SessionScalarWhereInput[]
+    OR?: SessionScalarWhereInput[]
+    NOT?: SessionScalarWhereInput | SessionScalarWhereInput[]
+    id?: IntFilter<"Session"> | number
+    token?: StringFilter<"Session"> | string
+    userId?: StringFilter<"Session"> | string
+    dateCreated?: DateTimeFilter<"Session"> | Date | string
+    expiresAt?: DateTimeFilter<"Session"> | Date | string
+  }
+
+  export type UserCreateWithoutAuthCodesInput = {
+    id?: string
+    email: string
+    name?: string | null
+    password: string
+    emailverified?: boolean
+    datecreated?: Date | string
+    dateupdated?: Date | string
+    dateloggedin?: Date | string | null
+    userlevel?: number
+    posts?: PostCreateNestedManyWithoutAuthorInput
+    sessions?: SessionCreateNestedManyWithoutUserInput
+  }
+
+  export type UserUncheckedCreateWithoutAuthCodesInput = {
+    id?: string
+    email: string
+    name?: string | null
+    password: string
+    emailverified?: boolean
+    datecreated?: Date | string
+    dateupdated?: Date | string
+    dateloggedin?: Date | string | null
+    userlevel?: number
+    posts?: PostUncheckedCreateNestedManyWithoutAuthorInput
+    sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutAuthCodesInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutAuthCodesInput, UserUncheckedCreateWithoutAuthCodesInput>
+  }
+
+  export type UserUpsertWithoutAuthCodesInput = {
+    update: XOR<UserUpdateWithoutAuthCodesInput, UserUncheckedUpdateWithoutAuthCodesInput>
+    create: XOR<UserCreateWithoutAuthCodesInput, UserUncheckedCreateWithoutAuthCodesInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutAuthCodesInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutAuthCodesInput, UserUncheckedUpdateWithoutAuthCodesInput>
+  }
+
+  export type UserUpdateWithoutAuthCodesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    password?: StringFieldUpdateOperationsInput | string
+    emailverified?: BoolFieldUpdateOperationsInput | boolean
+    datecreated?: DateTimeFieldUpdateOperationsInput | Date | string
+    dateupdated?: DateTimeFieldUpdateOperationsInput | Date | string
+    dateloggedin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    userlevel?: IntFieldUpdateOperationsInput | number
+    posts?: PostUpdateManyWithoutAuthorNestedInput
+    sessions?: SessionUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutAuthCodesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    password?: StringFieldUpdateOperationsInput | string
+    emailverified?: BoolFieldUpdateOperationsInput | boolean
+    datecreated?: DateTimeFieldUpdateOperationsInput | Date | string
+    dateupdated?: DateTimeFieldUpdateOperationsInput | Date | string
+    dateloggedin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    userlevel?: IntFieldUpdateOperationsInput | number
+    posts?: PostUncheckedUpdateManyWithoutAuthorNestedInput
+    sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
+  }
+
+  export type OutBoundEmailQueueCreateWithoutEmailInput = {
+    dateQueued?: Date | string
+    sentAt?: Date | string | null
+  }
+
+  export type OutBoundEmailQueueUncheckedCreateWithoutEmailInput = {
+    id?: number
+    dateQueued?: Date | string
+    sentAt?: Date | string | null
+  }
+
+  export type OutBoundEmailQueueCreateOrConnectWithoutEmailInput = {
+    where: OutBoundEmailQueueWhereUniqueInput
+    create: XOR<OutBoundEmailQueueCreateWithoutEmailInput, OutBoundEmailQueueUncheckedCreateWithoutEmailInput>
+  }
+
+  export type OutBoundEmailQueueCreateManyEmailInputEnvelope = {
+    data: OutBoundEmailQueueCreateManyEmailInput | OutBoundEmailQueueCreateManyEmailInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type OutBoundEmailQueueUpsertWithWhereUniqueWithoutEmailInput = {
+    where: OutBoundEmailQueueWhereUniqueInput
+    update: XOR<OutBoundEmailQueueUpdateWithoutEmailInput, OutBoundEmailQueueUncheckedUpdateWithoutEmailInput>
+    create: XOR<OutBoundEmailQueueCreateWithoutEmailInput, OutBoundEmailQueueUncheckedCreateWithoutEmailInput>
+  }
+
+  export type OutBoundEmailQueueUpdateWithWhereUniqueWithoutEmailInput = {
+    where: OutBoundEmailQueueWhereUniqueInput
+    data: XOR<OutBoundEmailQueueUpdateWithoutEmailInput, OutBoundEmailQueueUncheckedUpdateWithoutEmailInput>
+  }
+
+  export type OutBoundEmailQueueUpdateManyWithWhereWithoutEmailInput = {
+    where: OutBoundEmailQueueScalarWhereInput
+    data: XOR<OutBoundEmailQueueUpdateManyMutationInput, OutBoundEmailQueueUncheckedUpdateManyWithoutEmailInput>
+  }
+
+  export type OutBoundEmailQueueScalarWhereInput = {
+    AND?: OutBoundEmailQueueScalarWhereInput | OutBoundEmailQueueScalarWhereInput[]
+    OR?: OutBoundEmailQueueScalarWhereInput[]
+    NOT?: OutBoundEmailQueueScalarWhereInput | OutBoundEmailQueueScalarWhereInput[]
+    id?: IntFilter<"OutBoundEmailQueue"> | number
+    emailId?: IntFilter<"OutBoundEmailQueue"> | number
+    dateQueued?: DateTimeFilter<"OutBoundEmailQueue"> | Date | string
+    sentAt?: DateTimeNullableFilter<"OutBoundEmailQueue"> | Date | string | null
+  }
+
+  export type OutBoundEmailCreateWithoutOutBoundEmailQueuesInput = {
+    to: string
+    subject: string
+    body: string
+    dateCreated?: Date | string
+    sentAt?: Date | string | null
+  }
+
+  export type OutBoundEmailUncheckedCreateWithoutOutBoundEmailQueuesInput = {
+    id?: number
+    to: string
+    subject: string
+    body: string
+    dateCreated?: Date | string
+    sentAt?: Date | string | null
+  }
+
+  export type OutBoundEmailCreateOrConnectWithoutOutBoundEmailQueuesInput = {
+    where: OutBoundEmailWhereUniqueInput
+    create: XOR<OutBoundEmailCreateWithoutOutBoundEmailQueuesInput, OutBoundEmailUncheckedCreateWithoutOutBoundEmailQueuesInput>
+  }
+
+  export type OutBoundEmailUpsertWithoutOutBoundEmailQueuesInput = {
+    update: XOR<OutBoundEmailUpdateWithoutOutBoundEmailQueuesInput, OutBoundEmailUncheckedUpdateWithoutOutBoundEmailQueuesInput>
+    create: XOR<OutBoundEmailCreateWithoutOutBoundEmailQueuesInput, OutBoundEmailUncheckedCreateWithoutOutBoundEmailQueuesInput>
+    where?: OutBoundEmailWhereInput
+  }
+
+  export type OutBoundEmailUpdateToOneWithWhereWithoutOutBoundEmailQueuesInput = {
+    where?: OutBoundEmailWhereInput
+    data: XOR<OutBoundEmailUpdateWithoutOutBoundEmailQueuesInput, OutBoundEmailUncheckedUpdateWithoutOutBoundEmailQueuesInput>
+  }
+
+  export type OutBoundEmailUpdateWithoutOutBoundEmailQueuesInput = {
+    to?: StringFieldUpdateOperationsInput | string
+    subject?: StringFieldUpdateOperationsInput | string
+    body?: StringFieldUpdateOperationsInput | string
+    dateCreated?: DateTimeFieldUpdateOperationsInput | Date | string
+    sentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type OutBoundEmailUncheckedUpdateWithoutOutBoundEmailQueuesInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    to?: StringFieldUpdateOperationsInput | string
+    subject?: StringFieldUpdateOperationsInput | string
+    body?: StringFieldUpdateOperationsInput | string
+    dateCreated?: DateTimeFieldUpdateOperationsInput | Date | string
+    sentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type UserCreateWithoutSessionsInput = {
+    id?: string
+    email: string
+    name?: string | null
+    password: string
+    emailverified?: boolean
+    datecreated?: Date | string
+    dateupdated?: Date | string
+    dateloggedin?: Date | string | null
+    userlevel?: number
+    posts?: PostCreateNestedManyWithoutAuthorInput
+    authCodes?: AuthCodeCreateNestedManyWithoutUserInput
+  }
+
+  export type UserUncheckedCreateWithoutSessionsInput = {
+    id?: string
+    email: string
+    name?: string | null
+    password: string
+    emailverified?: boolean
+    datecreated?: Date | string
+    dateupdated?: Date | string
+    dateloggedin?: Date | string | null
+    userlevel?: number
+    posts?: PostUncheckedCreateNestedManyWithoutAuthorInput
+    authCodes?: AuthCodeUncheckedCreateNestedManyWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutSessionsInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutSessionsInput, UserUncheckedCreateWithoutSessionsInput>
+  }
+
+  export type UserUpsertWithoutSessionsInput = {
+    update: XOR<UserUpdateWithoutSessionsInput, UserUncheckedUpdateWithoutSessionsInput>
+    create: XOR<UserCreateWithoutSessionsInput, UserUncheckedCreateWithoutSessionsInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutSessionsInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutSessionsInput, UserUncheckedUpdateWithoutSessionsInput>
+  }
+
+  export type UserUpdateWithoutSessionsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    password?: StringFieldUpdateOperationsInput | string
+    emailverified?: BoolFieldUpdateOperationsInput | boolean
+    datecreated?: DateTimeFieldUpdateOperationsInput | Date | string
+    dateupdated?: DateTimeFieldUpdateOperationsInput | Date | string
+    dateloggedin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    userlevel?: IntFieldUpdateOperationsInput | number
+    posts?: PostUpdateManyWithoutAuthorNestedInput
+    authCodes?: AuthCodeUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutSessionsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    password?: StringFieldUpdateOperationsInput | string
+    emailverified?: BoolFieldUpdateOperationsInput | boolean
+    datecreated?: DateTimeFieldUpdateOperationsInput | Date | string
+    dateupdated?: DateTimeFieldUpdateOperationsInput | Date | string
+    dateloggedin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    userlevel?: IntFieldUpdateOperationsInput | number
+    posts?: PostUncheckedUpdateManyWithoutAuthorNestedInput
+    authCodes?: AuthCodeUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateWithoutPostsInput = {
+    id?: string
     email: string
     name?: string | null
+    password: string
+    emailverified?: boolean
+    datecreated?: Date | string
+    dateupdated?: Date | string
+    dateloggedin?: Date | string | null
+    userlevel?: number
+    authCodes?: AuthCodeCreateNestedManyWithoutUserInput
+    sessions?: SessionCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutPostsInput = {
-    id?: number
+    id?: string
     email: string
     name?: string | null
+    password: string
+    emailverified?: boolean
+    datecreated?: Date | string
+    dateupdated?: Date | string
+    dateloggedin?: Date | string | null
+    userlevel?: number
+    authCodes?: AuthCodeUncheckedCreateNestedManyWithoutUserInput
+    sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutPostsInput = {
@@ -3939,14 +10307,31 @@ export namespace Prisma {
   }
 
   export type UserUpdateWithoutPostsInput = {
+    id?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     name?: NullableStringFieldUpdateOperationsInput | string | null
+    password?: StringFieldUpdateOperationsInput | string
+    emailverified?: BoolFieldUpdateOperationsInput | boolean
+    datecreated?: DateTimeFieldUpdateOperationsInput | Date | string
+    dateupdated?: DateTimeFieldUpdateOperationsInput | Date | string
+    dateloggedin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    userlevel?: IntFieldUpdateOperationsInput | number
+    authCodes?: AuthCodeUpdateManyWithoutUserNestedInput
+    sessions?: SessionUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutPostsInput = {
-    id?: IntFieldUpdateOperationsInput | number
+    id?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     name?: NullableStringFieldUpdateOperationsInput | string | null
+    password?: StringFieldUpdateOperationsInput | string
+    emailverified?: BoolFieldUpdateOperationsInput | boolean
+    datecreated?: DateTimeFieldUpdateOperationsInput | Date | string
+    dateupdated?: DateTimeFieldUpdateOperationsInput | Date | string
+    dateloggedin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    userlevel?: IntFieldUpdateOperationsInput | number
+    authCodes?: AuthCodeUncheckedUpdateManyWithoutUserNestedInput
+    sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type PostCreateManyAuthorInput = {
@@ -3954,6 +10339,21 @@ export namespace Prisma {
     title: string
     content?: string | null
     published?: boolean
+  }
+
+  export type AuthCodeCreateManyUserInput = {
+    id?: number
+    code: string
+    flow: string
+    dateCreated?: Date | string
+    expiresAt?: Date | string
+  }
+
+  export type SessionCreateManyUserInput = {
+    id?: number
+    token: string
+    dateCreated?: Date | string
+    expiresAt?: Date | string
   }
 
   export type PostUpdateWithoutAuthorInput = {
@@ -3974,6 +10374,72 @@ export namespace Prisma {
     title?: StringFieldUpdateOperationsInput | string
     content?: NullableStringFieldUpdateOperationsInput | string | null
     published?: BoolFieldUpdateOperationsInput | boolean
+  }
+
+  export type AuthCodeUpdateWithoutUserInput = {
+    code?: StringFieldUpdateOperationsInput | string
+    flow?: StringFieldUpdateOperationsInput | string
+    dateCreated?: DateTimeFieldUpdateOperationsInput | Date | string
+    expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type AuthCodeUncheckedUpdateWithoutUserInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    code?: StringFieldUpdateOperationsInput | string
+    flow?: StringFieldUpdateOperationsInput | string
+    dateCreated?: DateTimeFieldUpdateOperationsInput | Date | string
+    expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type AuthCodeUncheckedUpdateManyWithoutUserInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    code?: StringFieldUpdateOperationsInput | string
+    flow?: StringFieldUpdateOperationsInput | string
+    dateCreated?: DateTimeFieldUpdateOperationsInput | Date | string
+    expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SessionUpdateWithoutUserInput = {
+    token?: StringFieldUpdateOperationsInput | string
+    dateCreated?: DateTimeFieldUpdateOperationsInput | Date | string
+    expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SessionUncheckedUpdateWithoutUserInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    token?: StringFieldUpdateOperationsInput | string
+    dateCreated?: DateTimeFieldUpdateOperationsInput | Date | string
+    expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SessionUncheckedUpdateManyWithoutUserInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    token?: StringFieldUpdateOperationsInput | string
+    dateCreated?: DateTimeFieldUpdateOperationsInput | Date | string
+    expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type OutBoundEmailQueueCreateManyEmailInput = {
+    id?: number
+    dateQueued?: Date | string
+    sentAt?: Date | string | null
+  }
+
+  export type OutBoundEmailQueueUpdateWithoutEmailInput = {
+    dateQueued?: DateTimeFieldUpdateOperationsInput | Date | string
+    sentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type OutBoundEmailQueueUncheckedUpdateWithoutEmailInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    dateQueued?: DateTimeFieldUpdateOperationsInput | Date | string
+    sentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type OutBoundEmailQueueUncheckedUpdateManyWithoutEmailInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    dateQueued?: DateTimeFieldUpdateOperationsInput | Date | string
+    sentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
 

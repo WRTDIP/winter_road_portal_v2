@@ -123,7 +123,46 @@ exports.Prisma.TransactionIsolationLevel = makeStrictEnum({
 exports.Prisma.UserScalarFieldEnum = {
   id: 'id',
   email: 'email',
-  name: 'name'
+  name: 'name',
+  password: 'password',
+  emailverified: 'emailverified',
+  datecreated: 'datecreated',
+  dateupdated: 'dateupdated',
+  dateloggedin: 'dateloggedin',
+  userlevel: 'userlevel'
+};
+
+exports.Prisma.AuthCodeScalarFieldEnum = {
+  id: 'id',
+  code: 'code',
+  userId: 'userId',
+  flow: 'flow',
+  dateCreated: 'dateCreated',
+  expiresAt: 'expiresAt'
+};
+
+exports.Prisma.OutBoundEmailScalarFieldEnum = {
+  id: 'id',
+  to: 'to',
+  subject: 'subject',
+  body: 'body',
+  dateCreated: 'dateCreated',
+  sentAt: 'sentAt'
+};
+
+exports.Prisma.OutBoundEmailQueueScalarFieldEnum = {
+  id: 'id',
+  emailId: 'emailId',
+  dateQueued: 'dateQueued',
+  sentAt: 'sentAt'
+};
+
+exports.Prisma.SessionScalarFieldEnum = {
+  id: 'id',
+  token: 'token',
+  userId: 'userId',
+  dateCreated: 'dateCreated',
+  expiresAt: 'expiresAt'
 };
 
 exports.Prisma.PostScalarFieldEnum = {
@@ -152,6 +191,10 @@ exports.Prisma.NullsOrder = {
 
 exports.Prisma.ModelName = {
   User: 'User',
+  AuthCode: 'AuthCode',
+  OutBoundEmail: 'OutBoundEmail',
+  OutBoundEmailQueue: 'OutBoundEmailQueue',
+  Session: 'Session',
   Post: 'Post'
 };
 

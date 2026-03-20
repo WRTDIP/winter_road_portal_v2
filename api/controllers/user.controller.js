@@ -1,35 +1,64 @@
-//import express from "express";
-// import mongoose from "mongoose";
-// // import bcrypt from "bcrypt";
-// import User from "../prisma/generated/prisma/models/users.js";
+import { genUUID } from '../lib/utils.js';
+import { prisma } from '../lib/prisma.js';
 
-// // export const createUser = async (req, res) => {
-// //   const { name, email, date, password } = req.body;
-// //   bcrypt.hash(password, 10, function (err, hash) {
-// //     console.log(hash);
-// //     const newUser = new User({ name, email, date, password: hash });
-// //     newUser.save();
-// //   });
-// // };
+export const getAllUsers = async (req, res) => {
+    try {
+        const users = await prisma.user.findMany();
+        res.json(users);
+    } catch (err) {
+        res.status(500).json({ message: 'Server error' });
+    }
+};
 
-// export const findUser = async (req, res) => {
-//   const { email, password } = req.body;
-//   const authenticate = { authenticate: false, name: "" };
-//   const user = User.find({ email }, function (err, foundUser) {
-//     if (err) {
-//       console.log(err);
-//     }
-//     if (foundUser) {
-//       bcrypt.compare(password, foundUser[0].password).then(function (result) {
-//         authenticate.authenticate = result;
-//         authenticate.name = foundUser[0].name;
-//         res.send(authenticate);
-//       });
-//     }
-//   });
-// };
+export const getUserById = async (req, res) => {
+    const { id } = req.params;
+    try {
+        const user = await prisma.user.findUnique({ where: { id } });
+        if (!user) return res.status(404).json({ message: 'User not found' });
+        res.json(user);
+    } catch (err) {
+        res.status(500).json({ message: 'Server error' });
+    }
+};
 
-// export const getUsers = async (req, res) => {
-//   const users = await User.find({});
-//   res.send(users);
-// } 
+export const deleteUser = async (req, res) => {
+    const { id } = req.params; 
+
+    try {
+        const user = await prisma.user.findUnique({ where: { id } });
+        if (!user) return res.status(404).json({ message: 'User not found' }); 
+        await prisma.user.delete({ where: { id } });
+        res.json({ message: 'User deleted' });
+    } catch (err) {
+        res.status(500).json({ message: 'Server error' });
+    }
+};
+
+export const updateUser = async (req, res) => {
+    const { id } = req.params;
+    const { email, name } = req.body;  
+
+    try {
+        const user = await prisma.user.findUnique({ where: { id } });
+        if (!user) return res.status(404).json({ message: 'User not found' });
+        const updated = await prisma.user.update({
+            where: { id },
+            data: { email, name }
+        });
+        res.json(updated);
+    } catch (err) {
+        res.status(500).json({ message: 'Server error' });
+    }   
+};
+
+export const createUser = async (req, res) => {
+    const { email, name, password } = req;
+    try {
+        const user = await prisma.user.create({
+            data: { id: genUUID(), email, name, password }
+        });
+        res.status(201).json(user);
+    } catch (err) {
+        res.status(500).json({ message: 'Server error' });
+    }
+};

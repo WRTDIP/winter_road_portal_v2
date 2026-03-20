@@ -15,6 +15,8 @@ import Observation from "./pages/Observation/index.jsx";
 import Login from "./pages/Login/Login.jsx";
 import Map from "./components/Map/Map.jsx";
 import Register from "./pages/Register/Register.jsx";
+import ResendEmailValidation from "./pages/ResendEmailValidation/ResendEmailValidation.jsx";
+import EmailValidationFormPage from "./pages/ValidateEmail/EmailValidationFormPage.jsx";
 
 /**
  * Entry point of the React application.
@@ -37,6 +39,8 @@ ReactDOM.render(
         <Route path="/observation" element={<Observation />} exact />
         <Route path="/login" element={<Login />} exact />
         <Route path="/register" element={<Register />} exact />
+        <Route path="/resend-email-validation" element={<ResendEmailValidation />} exact />
+        <Route path="/validate-email" element={<EmailValidationFormPage />} exact />
       </Routes>
 
       {/* Render global footer */}

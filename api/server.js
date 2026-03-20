@@ -1,9 +1,10 @@
-const express = require("express")
-const cors = require("cors")
-const weather = require("./routes/weather.route")
-const login = require("./routes/login.route")
-const user = require("./routes/user.route")
-const dev = require("./routes/dev.route")
+import express from "express"
+import cors from "cors"
+import weather from "./routes/weather.route.js"
+import login from "./routes/login.route.js"
+import user from "./routes/user.route.js"
+import dev from "./routes/dev.route.js"
+import register from "./routes/register.route.js"
 const port = 4000
 const app = express()
 app.use(cors())
@@ -17,10 +18,14 @@ const logging = (req, res, next) => {
  
 app.use(logging)
 
+app.use(express.urlencoded({ extended: true })); // Parses application/x-www-form-urlencoded
+
 //Routes
 app.use("/api/weather", weather)
 app.use("/api/login", login)
 app.use("/api/dev", dev)
+app.use("/api/user", user)
+app.use("/api/register", register)
 
 //Start
 app.listen(port, () => {
