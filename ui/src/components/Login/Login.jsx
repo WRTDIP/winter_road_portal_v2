@@ -5,11 +5,26 @@ import "./styles.css"
 function LoginForm() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  function handleSubmit(){
-    fetch()
-  }
+  
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    fetch("/api/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        email: username,
+        password: password,
+      }),
+    })
+    .then((res) => res.json())
+    .then((data) => console.log(data))
+    .catch((err) => console.error(err));
+  };
+  
     return (
-      <Form className="loginForm">
+      <Form className="loginForm" onSubmit={handleSubmit}>
         <Form.Group className="mb-3">
           <Form.Label className="h3 pb-3">Email address</Form.Label>
           <Form.Control
@@ -22,7 +37,7 @@ function LoginForm() {
         </Form.Group>
 
         <Form.Group className="mb-3">
-          <Form.Label className="h3 pb-3">Password</Form.Label>
+          <Form.Label className="h3 pb-3">Password6</Form.Label>
           <Form.Control
             type="password"
             placeholder="Password"
@@ -31,8 +46,7 @@ function LoginForm() {
             }}
           />
         </Form.Group>
-        <Button className="mt-3" variant="primary" type="submit"
-        onClick={handleSubmit}>
+        <Button className="mt-3" variant="primary" type="submit">
           Submit
         </Button>
       </Form>

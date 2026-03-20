@@ -5,14 +5,14 @@ import "./index.css";
 import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
 import "antd/dist/antd.min.css";
 import "antd/dist/antd.variable.min.css";
-import NavigationBar from "./components/Global/NavigationBar";
-import Home from "./pages/Home/Home";
-import Footer from "./components/Global/Footer";
-import Projects from "./pages/Projects/Projects";
-import About from "./pages/About";
-import Transportation from "./pages/Transportation";
-import Observation from "./pages/Observation";
-import Login from "./pages/Login/Login.js";
+import NavigationBar from "./components/Global/NavigationBar/index.jsx";
+import Home from "./pages/Home/Home.jsx";
+import Footer from "./components/Global/Footer/index.jsx";
+import Projects from "./pages/Projects/Projects.jsx";
+import About from "./pages/About/index.jsx";
+import Transportation from "./pages/Transportation/index.jsx";
+import Observation from "./pages/Observation/index.jsx";
+import Login from "./pages/Login/Login.jsx";
 import Map from "./components/Map/Map.jsx";
 
 /**
