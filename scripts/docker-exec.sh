@@ -13,7 +13,17 @@ echo "Variables loaded from .env"
 
 #Docker Exec
 
-if [ -n $1 ]; then
+if [ -n "$1" ]; then
+
+    shlist=("ui")
+
+    for item in "${shlist[@]}"; do
+        if [ "$1" == "$item" ]; then
+            docker exec -it ${item}_${DEPLOY_MODE} sh
+            exit
+        fi
+    done
+
     docker exec -it $1_${DEPLOY_MODE} bash
     exit
 fi
