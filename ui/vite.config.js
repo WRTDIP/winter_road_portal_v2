@@ -5,9 +5,10 @@ import FullReload from 'vite-plugin-full-reload'
 export default defineConfig({
     plugins: [react(), FullReload(["./src/**/*.jsx", "./src/**/*.js"])],
     server: {
-        host: '0.0.0.0',
+        host: true,
         open: false,
         port: 3000,
+        allowedHosts: true,
         watch: {
             usePolling: true,
         },
