@@ -5,7 +5,7 @@ import FullReload from 'vite-plugin-full-reload'
 export default defineConfig({
     plugins: [react(), FullReload(["./src/**/*.jsx", "./src/**/*.js"])],
     server: {
-        host: true,
+        host: '0.0.0.0',
         open: false,
         port: 3000,
         watch: {
