@@ -5,13 +5,13 @@ import DOMPurify from 'dompurify';
 
 
 
-function AlertDismissibleExample(props) {
+function AlertDismissible(props) {
     if (props.show) {
         return (
-            <Alert className="mt-3" variant="danger" onClose={() => props.setShow(false)} dismissible>
-                <Alert.Heading>{props.errorHeading}</Alert.Heading>
+            <Alert className="mt-3" variant={props.variant} onClose={() => props.setShow(false)} dismissible>
+                <Alert.Heading>{props.dialogHeading}</Alert.Heading>
                 <p>
-                    <div dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(props.errorMessage) }} />
+                    <div dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(props.dialogMessage) }} />
                 </p>
             </Alert>
         );
@@ -19,21 +19,24 @@ function AlertDismissibleExample(props) {
   return <></>;
 }
 
+
 function RegisterForm() {
   const [fullName, setFullName] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [showAlert, setShowAlert] = useState(false);
-  const [errorHeading, setErrorHeading] = useState("");
-  const [errorMessage, setErrorMessage] = useState("");
+  const [dialogHeading, setDialogHeading] = useState("");
+  const [dialogMessage, setDialogMessage] = useState("");
+  const [variant, setvariant] = useState("danger");
+  const [buttonTimeout, setButtonTimeout] = useState(false);
 
 
   const validateFullName = (name) => {
     const nameParts = name.trim().split(" ");
     if (!/^[a-zA-Z]+\s[a-zA-Z]+$/.test(name.trim())) {
-        setErrorHeading("Invalid Full Name");
-        setErrorMessage("Please enter your full name (first and last name).");
+        setDialogHeading("Invalid Full Name");
+        setDialogMessage("Please enter your full name (first and last name).");
         setShowAlert(true);
         return false;
     } else {
@@ -44,8 +47,8 @@ function RegisterForm() {
 
   const validateEmail = (email) => {
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) {
-      setErrorHeading("Invalid Email");
-      setErrorMessage("Please enter a valid email address.");
+      setDialogHeading("Invalid Email");
+      setDialogMessage("Please enter a valid email address.");
       setShowAlert(true);
       return false;
     } else {
@@ -56,14 +59,14 @@ function RegisterForm() {
 
   const validatePassword = (pwd, confirmPwd) => {
     if (!pwd || pwd.length < 8 || !/[A-Za-z]/.test(pwd) || !/[0-9]/.test(pwd)) {
-      setErrorHeading("Invalid Password");
-      setErrorMessage("Password must be at least 8 characters and include letters and numbers.");
+      setDialogHeading("Invalid Password");
+      setDialogMessage("Password must be at least 8 characters and include letters and numbers.");
       setShowAlert(true);
       return false;
     }
     if (typeof confirmPwd !== "undefined" && pwd !== confirmPwd) {
-      setErrorHeading("Password Mismatch");
-      setErrorMessage("Password and confirmation do not match.");
+      setDialogHeading("Password Mismatch");
+      setDialogMessage("Password and confirmation do not match.");
       setShowAlert(true);
       return false;
     }
@@ -74,11 +77,20 @@ function RegisterForm() {
   const handleSubmit = (e) => {
     e.preventDefault();
 
+    if(buttonTimeout) {
+        setDialogHeading("Please Wait");
+        setDialogMessage("Your previous registration attempt is still being processed. Please wait a moment before trying again.");
+        setShowAlert(true);
+        return;
+    }
+
     if(!validateFullName(fullName) || !validateEmail(username) || !validatePassword(password, confirmPassword)) {
         return;
     }
 
     setShowAlert(true);
+    setButtonTimeout(true);
+    setTimeout(() => setButtonTimeout(false), 2000); // Disable button for 10 seconds to prevent spamming
     fetch("/api/register", {
       method: "POST",
       headers: {
@@ -93,21 +105,22 @@ function RegisterForm() {
     .then((res) => res.json())
     .then((data) => {
         if (data.status === "error") {
-            setErrorHeading("Registration Failed");
-            setErrorMessage(data.message);
+            setvariant("danger");
+            setDialogHeading("Registration Failed");
+            setDialogMessage(data.message);
             setShowAlert(true);
         } 
 
         if (data.status === "success") {
-            
-            // setErrorHeading("Registration Successful");
-            // setErrorMessage(data.message);
-            // setShowAlert(true);
+            setvariant("success");
+            setDialogHeading("Registration Successful");
+            setDialogMessage(data.message);
+            setShowAlert(true);
         } 
     })
     .catch((err) => {console.error(err); 
-        setErrorHeading("Registration Failed");
-        setErrorMessage(`An error occurred during registration. Please try again. ${err}`);
+        setDialogHeading("Registration Failed");
+        setDialogMessage(`An error occurred during registration. Please try again. ${err}`);
         setShowAlert(true);
     });
   };
@@ -158,16 +171,31 @@ function RegisterForm() {
                 />
             </Form.Group>
 
-            <Button className="mt-3" variant="primary" type="submit" onClick={handleSubmit}>
+            <Button
+                variant="outline-primary"
+                className="mt-3 w-100 rounded-pill shadow-sm"
+                style={{ textTransform: 'none', fontWeight: 600 }}
+                type="submit"
+            >
                 Submit
             </Button>
 
-            <AlertDismissibleExample
+            <Button
+                variant="outline-primary"
+                className="mt-3 w-100 rounded-pill shadow-sm"
+                style={{ textTransform: 'none', fontWeight: 600 }}
+                onClick={() => window.location.href = '/login'}
+            >
+                Back to Login
+            </Button>
+
+            <AlertDismissible
                 className="mt-3"
                 show={showAlert}
                 setShow={setShowAlert}
-                errorHeading={errorHeading}
-                errorMessage={errorMessage}
+                variant={variant}
+                dialogHeading={dialogHeading}
+                dialogMessage={dialogMessage}
             />
         </Form>
     );

@@ -38,10 +38,10 @@ router.post(
             const userSafe = { ...user };
             delete userSafe.password;
 
-            res.status(201).json(userSafe);
+            res.status(201).json({ status: 'success', message: "Registration successful. Please check your email for validation link." });
         } catch (err) {
             console.error(err);
-            res.status(500).json({ message: 'Server error' });
+            res.status(500).json({ status: 'error', message: 'Server error' });
         }
     }
 );
@@ -53,7 +53,7 @@ router.post(
     ],
     async (req, res) => {
         const errors = validationResult(req);
-        if (!errors.isEmpty()) return res.status(400).json({ errors: errors.array() });
+        if (!errors.isEmpty()) return res.status(400).json({ status: 'error', errors: errors.array() });
         console.log(req.body);
         const { email } = req.body;
         try {

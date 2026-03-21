@@ -17,6 +17,7 @@ import Map from "./components/Map/Map.jsx";
 import Register from "./pages/Register/Register.jsx";
 import ResendEmailValidation from "./pages/ResendEmailValidation/ResendEmailValidation.jsx";
 import EmailValidationFormPage from "./pages/ValidateEmail/EmailValidationFormPage.jsx";
+import Dashboard from "./pages/Dashboard/Dashboard.jsx";
 
 /**
  * Entry point of the React application.
@@ -41,6 +42,7 @@ ReactDOM.render(
         <Route path="/register" element={<Register />} exact />
         <Route path="/resend-email-validation" element={<ResendEmailValidation />} exact />
         <Route path="/validate-email" element={<EmailValidationFormPage />} exact />
+        <Route path="/dashboard" element={<Dashboard />} exact />
       </Routes>
 
       {/* Render global footer */}

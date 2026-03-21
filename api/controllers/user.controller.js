@@ -15,9 +15,9 @@ export const getUserById = async (req, res) => {
     try {
         const user = await prisma.user.findUnique({ where: { id } });
         if (!user) return res.status(404).json({ message: 'User not found' });
-        res.json(user);
+        res.json({ status: 'success', data: user });
     } catch (err) {
-        res.status(500).json({ message: 'Server error' });
+        res.status(500).json({ status: 'error', message: 'Server error' });
     }
 };
 
@@ -26,11 +26,11 @@ export const deleteUser = async (req, res) => {
 
     try {
         const user = await prisma.user.findUnique({ where: { id } });
-        if (!user) return res.status(404).json({ message: 'User not found' }); 
+        if (!user) return res.status(404).json({ status: 'error', message: 'User not found' }); 
         await prisma.user.delete({ where: { id } });
-        res.json({ message: 'User deleted' });
+        res.json({ status: 'success', message: 'User deleted' });
     } catch (err) {
-        res.status(500).json({ message: 'Server error' });
+        res.status(500).json({ status: 'error', message: 'Server error' });
     }
 };
 
@@ -40,25 +40,26 @@ export const updateUser = async (req, res) => {
 
     try {
         const user = await prisma.user.findUnique({ where: { id } });
-        if (!user) return res.status(404).json({ message: 'User not found' });
+        if (!user) return res.status(404).json({ status: 'error', message: 'User not found' });
         const updated = await prisma.user.update({
             where: { id },
             data: { email, name }
         });
-        res.json(updated);
+        res.json({ status: 'success', data: updated });
     } catch (err) {
-        res.status(500).json({ message: 'Server error' });
+        res.status(500).json({ status: 'error', message: 'Server error' });
     }   
 };
 
-export const createUser = async (req, res) => {
-    const { email, name, password } = req;
+export const createUser = async (userData) => {
+    const { email, name, password } = userData || {};
     try {
         const user = await prisma.user.create({
             data: { id: genUUID(), email, name, password }
         });
-        res.status(201).json(user);
+        return user;
     } catch (err) {
-        res.status(500).json({ message: 'Server error' });
+        console.log(err);
+        throw err;
     }
 };
