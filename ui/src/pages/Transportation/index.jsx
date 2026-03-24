@@ -1,8 +1,7 @@
 import TransportationFirst from "../../assets/big_data_icon.png";
 
-import DataTable from "../../components/DataTable";
 import CoverBanner from "../../components/Global/CoverBanner/CoverBanner";
-import ProjectBanner from "../../components/Projects/ProjectBanner/ProjectItem";
+// import ProjectBanner from "../../components/Projects/ProjectBanner/ProjectItem";
 import SubSectionBanner from "../../components/SubSectionBanner/SubSectionBanner";
 function Transportation() {
   const BannerContents = [
@@ -10,7 +9,7 @@ function Transportation() {
       id: 1,
       image: TransportationFirst,
       title: "Northern Transportation Network Study",
-      content: "Learn more about Northern transportation studies and projects related to Northern transportation.",
+      content: "Explore comprehensive research and insights into Northern transportation systems and infrastructure.",
       bgColor: "white",
     },
   ];
@@ -18,7 +17,17 @@ function Transportation() {
     <div>
       <CoverBanner title="Transportation" />
       <SubSectionBanner props={BannerContents[0]} />
-      <DataTable />
+      <p style={{ textAlign: 'center', fontSize: '18px', color: '#333' }}>
+        For more details, visit{" "}
+        <a
+          href="https://storymaps.arcgis.com/collections/6f533a8170a84785a48d5d6810115c58"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          our ArcGIS StoryMap Collection
+        </a>
+        .
+      </p>
     </div>
   );
 }
