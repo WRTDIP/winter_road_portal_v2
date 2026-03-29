@@ -9,7 +9,7 @@ function Transportation() {
     {
       id: 1,
       image: TransportationFirst,
-      title: "Northern Transportation Network Study",
+      title: "Northern Test Transportation Network Study",
       content: "Learn more about studies and projects related to Northern transportation.",
       bgColor: "white",
     },
