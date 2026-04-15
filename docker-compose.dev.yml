@@ -13,7 +13,7 @@ services:
       - -c
       - |
         npm install
-        npm start
+        npm run dev:simultaneous
     env_file:
       - path: ./.env
         required: true

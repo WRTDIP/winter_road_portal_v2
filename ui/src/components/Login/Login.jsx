@@ -1,7 +1,9 @@
-import {Button,Form} from 'react-bootstrap';
+import {Button, Form, Alert} from 'react-bootstrap';
 import {useState} from "react";
 import "./styles.css"
+import DOMPurify from 'dompurify';
 
+  
 function AlertDismissible(props) {
     if (props.show) {
         return (
@@ -87,11 +89,12 @@ function LoginForm() {
             setVariant("success");
             setDialogHeading("Login Successful");
             setDialogMessage(data.message);
-            setDialogMessage(`${data.message} <div class="mt-3"><a href="/register" class="btn btn-primary btn-lg rounded-pill shadow-sm" role="button" style="text-decoration:none;color:#fff;">Create an account</a></div>`);
             setShowAlert(true);
-            setTimeout(() => { 
-            window.location.href = "/dashboard"; // Example redirect
-            }, 2000);
+            // setDialogMessage(`${data.message} <div class="mt-3"><a href="/register" class="btn btn-primary btn-lg rounded-pill shadow-sm" role="button" style="text-decoration:none;color:#fff;">Create an account</a></div>`);
+            // setShowAlert(true);
+            // setTimeout(() => { 
+            // window.location.href = "/dashboard"; // Example redirect
+            // }, 2000);
         }
 
     })
