@@ -5,7 +5,7 @@ services:
       context: ./
       dockerfile: ui/Dockerfile.dev
     ports:
-      - 3000:3000
+      - "127.0.0.1:3000:3000"
     volumes:
       - ./ui:/app
     command:
@@ -27,7 +27,7 @@ services:
       context: ./
       dockerfile: api/Dockerfile.dev
     ports:
-      - 4000:4000
+      - "127.0.0.1:4000:4000"
     volumes:
       - ./api:/app
     command: 
@@ -43,7 +43,7 @@ services:
   #   image: mysql:latest
   #   restart: always
   #   ports:
-  #     - 3306:3306
+  #     - "127.0.0.1:3306:3306"
   #   volumes:
   #     - db-data:/var/lib/mysql
   #   # environment:
@@ -61,7 +61,7 @@ services:
       - ./db/data:/var/lib/postgresql/18/main
     shm_size: 128mb
     ports:
-      - 5432:5432
+      - "127.0.0.1:5432:5432"
     env_file:
       - path: ./.env
         required: true
