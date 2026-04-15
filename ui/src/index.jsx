@@ -18,12 +18,19 @@ import Register from "./pages/Register/Register.jsx";
 import ResendEmailValidation from "./pages/ResendEmailValidation/ResendEmailValidation.jsx";
 import EmailValidationFormPage from "./pages/ValidateEmail/EmailValidationFormPage.jsx";
 import Dashboard from "./pages/Dashboard/Dashboard.jsx";
+import { Auth0Provider } from "@auth0/auth0-react";
+
 
 /**
  * Entry point of the React application.
  * Renders the application with routing support.
  */
 ReactDOM.render(
+    <Auth0Provider
+      domain="dev-chk7fj0z6p5bj1da.ca.auth0.com"
+      clientId="qoVWsLJu8GfiJH4ZDlYZvh3eehrp4Ofa"
+      authorizationParams={{ redirect_uri: window.location.origin }}
+    >
   <div>
     {/* Set up router for client-side routing */}
     <Router>
@@ -48,7 +55,8 @@ ReactDOM.render(
       {/* Render global footer */}
       <Footer />
     </Router>
-  </div>,
+  </div>
+  </Auth0Provider>,
   // Mount the root component into the 'root' element in the HTML
   document.getElementById("root")
 );
