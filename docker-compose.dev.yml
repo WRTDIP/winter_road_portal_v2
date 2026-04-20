@@ -1,6 +1,7 @@
 services:
   ui:
     container_name: ui_dev
+    restart: always
     build:
       context: ./
       dockerfile: ui/Dockerfile.dev
