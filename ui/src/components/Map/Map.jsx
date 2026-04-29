@@ -21,6 +21,7 @@ import { Icon, Typography } from "@mui/material"
 import OpenInFullIcon from "@mui/icons-material/OpenInFull"
 import CloseFullscreenIcon from "@mui/icons-material/CloseFullscreen"
 import IconButton from "@mui/material/IconButton"
+import ForecastPanel from "./ForecastPanel.jsx"
 var ChartDataFDD = {
   Yellowknife: {
     x: [
@@ -783,49 +784,42 @@ function WeatherMap() {
   function generateChart() {
     let cityName = getCityName()
     let fddData = ChartDataFDD[cityName] || null
-    console.log("fddData", fddData, cityName)
     if (fddData) {
       return (
-        <div style={{ display: "flex", alignItems: "center" }}>
-        <div
-          style={{
-            writingMode: "vertical-rl",
-            transform: "rotate(180deg)",
-            marginRight: 5,
-            fontWeight: "normal",
-            fontSize: 12,
-            whiteSpace: "nowrap",
-          }}
-        >
-          Freezing Degree Days (FDDs)
-        </div>
         <LineChart
           xAxis={[
             {
               data: fddData.x,
-              valueFormatter: (year) => year.toString(), // remove thousand separator
-              label: "Year", // <-- X axis label
-              // data: [1],
+              valueFormatter: (year) => year.toString(),
+              label: "Year",
             },
           ]}
-           yAxis={[
-          {
-            
-          },
+          yAxis={[
+            {
+              label: "Freezing Degree Days (°C·days)",
+              labelStyle: { transform: "rotate(270deg) translate(-94px, -176px)" },
+            },
           ]}
           series={[
             {
               data: fddData.y,
-              // data: [2],
+              color: "#1976d2",
+              showMark: false,
+              curve: "monotoneX",
+              label: "FDDs",
             },
           ]}
-          height={300}
-          margin={{ left: 40, right: 20, top: 20, bottom: 40 }} //
+          height={260}
+          margin={{ left: 95, right: 20, top: 20, bottom: 50 }}
+          grid={{ horizontal: true }}
         />
-        </div>
       )
     } else {
-      return <Typography>No FDDs data available for this location.</Typography>
+      return (
+        <Typography variant="body2" color="text.secondary" sx={{ py: 2, textAlign: "center" }}>
+          No FDDs data available for this location.
+        </Typography>
+      )
     }
   }
 
@@ -849,93 +843,65 @@ function WeatherMap() {
       <Modal
         show={modalIsOpen}
         onHide={closeModal}
-        // dialogClassName="right-half-modal"
-        style={
-          modalEnlarge
-            ? {
-                width: "50vw",
-                height: "100vh",
-                overflow: "hidden",
-                position: "absolute",
-                left: "calc(100% - 500px)",
-              }
-            : {
-                width: "600px",
-                height: "500px",
-                overflow: "hidden",
-                position: "absolute",
-                top: mouse.y,
-                left: mouse.x,
-              }
+        centered={!modalEnlarge}
+        dialogClassName={
+          modalEnlarge ? "wrtdip-map-modal wrtdip-map-modal--enlarged" : "wrtdip-map-modal"
         }
+        contentClassName="wrtdip-map-modal__content"
+        backdropClassName="wrtdip-map-modal__backdrop"
       >
-        <Modal.Header
-          closeButton
-          style={{
-            width: "500px",
-            overflow: "hidden",
-          }}
-        >
-          <Modal.Title> Climate</Modal.Title>
-          <IconButton onClick={() => setModalEnlarge(!modalEnlarge)}>
-            {modalEnlarge ? <CloseFullscreenIcon /> : <OpenInFullIcon />}
-          </IconButton>
-        </Modal.Header>
-        <Modal.Body
-          sx={{ width: "500px", height: "350px", overflow: "hidden" }}
-        >
-          <Typography variant="h4" component="h5">
-            {territory == "yt" ? citiesOfYukon[key] : null}
-            {territory == "nt" ? citiesOfNorthwestTerritories[key] : null}
-            {territory == "nu" ? citiesOfNunavut[key] : null}
-          </Typography>
-          <Typography variant="h5" component="h5">
-            Freezing Degree Days (FDDs)
-          </Typography>
-          <div style={{ paddingLeft: 40, paddingRight: 10 }}>
-          {generateChart()}
+        <Modal.Header className="wrtdip-map-modal__header">
+          <div style={{ display: "flex", flexDirection: "column", flex: 1, minWidth: 0 }}>
+            <Typography variant="overline" sx={{ color: "rgba(255,255,255,0.85)", lineHeight: 1, letterSpacing: 1 }}>
+              Climate &amp; Weather
+            </Typography>
+            <Typography
+              variant="h5"
+              component="h2"
+              sx={{ color: "#fff", fontWeight: 600, lineHeight: 1.2, mt: 0.5, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}
+            >
+              {getCityName() || "Selected Location"}
+            </Typography>
           </div>
-          <Typography variant="h5" style={{ marginTop: 16 }}>
-          Weather Forecast 
-          </Typography>
-          <iframe
-            title="Environment Canada Weather"
-            width="400x"
-            height="400px"
-            // src={`https://weather.gc.ca/wxlink/wxlink.html?cityCode=${territory}-${key}&amp;lang=e`}
-            src={`https://weather.gc.ca/wxlink/wxlink.html?coords=${lat},${lon}&lang=e`} // new link
-            allowtransparency="true"
-            style={{ border: 0 }}
-          ></iframe>
+          <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
+            <IconButton
+              onClick={() => setModalEnlarge(!modalEnlarge)}
+              size="small"
+              sx={{ color: "#fff" }}
+              aria-label={modalEnlarge ? "Shrink" : "Enlarge"}
+            >
+              {modalEnlarge ? <CloseFullscreenIcon fontSize="small" /> : <OpenInFullIcon fontSize="small" />}
+            </IconButton>
+            <IconButton
+              onClick={closeModal}
+              size="small"
+              sx={{ color: "#fff" }}
+              aria-label="Close"
+            >
+              <span style={{ fontSize: 20, lineHeight: 1, fontWeight: 300 }}>×</span>
+            </IconButton>
+          </div>
+        </Modal.Header>
+        <Modal.Body className="wrtdip-map-modal__body">
+          <section className="wrtdip-map-modal__section">
+            <Typography variant="subtitle1" className="wrtdip-map-modal__section-title">
+              Freezing Degree Days (FDDs)
+            </Typography>
+            <Typography variant="caption" color="text.secondary" sx={{ display: "block", mb: 1 }}>
+              Annual cumulative freezing degree days, 1980–2019
+            </Typography>
+            <div className="wrtdip-map-modal__chart">{generateChart()}</div>
+          </section>
 
-        {/* REMOVE THIS BLOCK:
-        <Typography variant="h5" style={{ marginTop: 16 }}>
-          Weather Forecast 2
-        </Typography>
-        
-        <iframe // try to use iframe to appear the weather forecast wedgit
-        title="Environment Canada Weather"
-        width="400"
-        height="400"
-        src={`https://weather.gc.ca/wxlink/wxlink.html?cityCode=${territory}-${key}&lang=e`}
-        allowtransparency="true"
-        />
-        */}
-
-        {/* REMOVE THIS BLOCK:
-        {climateLoading ? (
-          <Typography>Loading weather forecast data...</Typography>
-        ) : climateData && climateData.error ? (
-            <Typography color="error">{climateData.error}</Typography>
-        ) : climateData ? (
-          <pre style={{ maxHeight: 200, overflow: "auto", background: "#f5f5f5", padding: 8 }}>
-            {JSON.stringify(climateData, null, 2)}
-          </pre>
-        ) : (
-          <Typography>No weather forecast data loaded.</Typography>
-        )}
-        */}
-
+          <section className="wrtdip-map-modal__section">
+            <Typography variant="subtitle1" className="wrtdip-map-modal__section-title">
+              3-Day Weather Forecast
+            </Typography>
+            <Typography variant="caption" color="text.secondary" sx={{ display: "block", mb: 1.5 }}>
+              Current conditions and outlook for the next 3 days
+            </Typography>
+            <ForecastPanel lat={lat} lon={lon} />
+          </section>
         </Modal.Body>
       </Modal>
     </div>
@@ -1085,28 +1051,217 @@ function WeatherMap() {
     featureLayer.renderer = layer.renderer;
   }
 
+  // Clip Major/Minor Roads (GNWT Transportation service extends south into
+  // BC/Alberta) to the three territories — everything north of 60°N.
+  if (layer.title === "Major Roads" || layer.title === "Minor Roads") {
+    featureLayer.featureEffect = {
+      filter: {
+        geometry: {
+          type: "extent",
+          xmin: -141.5,
+          ymin: 60,
+          xmax: -60,
+          ymax: 84,
+          spatialReference: { wkid: 4326 },
+        },
+        spatialRelationship: "intersects",
+      },
+      excludedEffect: "opacity(0%)",
+    };
+  }
+
   featureLayer.title = layer.title;
   map.add(featureLayer);
   });
 
-  // Create Layer List widget
-  const layerList = new LayerList({
-    view,
-    container: "layer-list-container",
-    listItemCreatedFunction: (event) => {
-    const item = event.item;
-    console.log(`Layer in Layer List: ${item.layer.title}`); // Debugging
+  // Create a custom layer list panel (replaces the default ArcGIS LayerList).
+  // It's wrapped in an Expand widget so it occupies the exact same UI slot.
+  const layerListContainer = document.createElement("div")
+  layerListContainer.className = "wrtdip-layer-panel"
+  layerListContainer.innerHTML = `
+    <div class="wrtdip-layer-panel__header">
+      <span class="wrtdip-layer-panel__title">Map Layers</span>
+      <div class="wrtdip-layer-panel__actions">
+        <button type="button" class="wrtdip-layer-panel__btn" data-action="all">All</button>
+        <button type="button" class="wrtdip-layer-panel__btn" data-action="none">None</button>
+      </div>
+    </div>
+    <div class="wrtdip-layer-panel__featured" data-featured-slot></div>
+    <ul class="wrtdip-layer-panel__list" role="list"></ul>
+  `
 
-    // Customize layer titles if needed
-      if (item.layer.title.includes("Airports")) {
-        item.title = item.layer.title; // Keep the original title or customize it
-      } else if (item.layer.title.includes("Winter Roads")) {
-        item.title = item.layer.title; // Keep the original title or customize it
-      } else if (item.layer.title.includes("Ferries") || item.layer.title.includes("Ice Crossings")) {
-        item.title = item.layer.title; // Keep the original title or customize it
-      }
-    },
-  });
+  // Title of the layer that the pinned "3-Day Forecast" row controls.
+  const FORECAST_LAYER_TITLE = "Weather Forecast"
+  const miniForecastState = {
+    loading: false,
+    days: [],
+    hasLoaded: false,
+    cityName: "",
+  }
+
+  function getMiniWeatherIcon(code) {
+    if (code === 0) return "☀️"
+    if (code === 1 || code === 2) return "⛅"
+    if (code === 3) return "☁️"
+    if (code >= 45 && code <= 48) return "🌫️"
+    if ((code >= 51 && code <= 67) || (code >= 80 && code <= 82)) return "🌧️"
+    if (code >= 71 && code <= 77) return "❄️"
+    if (code >= 95) return "⛈️"
+    return "🌡️"
+  }
+
+  function buildMiniForecastMarkup() {
+    if (miniForecastState.loading) {
+      return `<div class="wrtdip-layer-panel__mini-loading">Loading 3-day forecast...</div>`
+    }
+    if (!miniForecastState.days.length) {
+      const hint = miniForecastState.hasLoaded
+        ? "Forecast unavailable"
+        : "Select a city marker"
+      return `<div class="wrtdip-layer-panel__mini-hint">${hint}</div>`
+    }
+
+    return `
+      <div class="wrtdip-layer-panel__mini-grid">
+        ${miniForecastState.days
+          .map(
+            (day) => `
+              <div class="wrtdip-layer-panel__mini-day">
+                <span class="wrtdip-layer-panel__mini-icon" aria-hidden="true">${getMiniWeatherIcon(day.code)}</span>
+                <span class="wrtdip-layer-panel__mini-temp">${day.temp}°</span>
+              </div>
+            `
+          )
+          .join("")}
+      </div>
+    `
+  }
+
+  async function updateLayerPanelMiniForecast(lat, lon) {
+    miniForecastState.loading = true
+    renderCustomLayerList()
+    try {
+      const url =
+        `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}` +
+        `&daily=weather_code,temperature_2m_max&timezone=auto&forecast_days=3&temperature_unit=celsius`
+      const json = await fetch(url).then((r) => r.json())
+      const daily = json?.daily || {}
+      const codes = Array.isArray(daily.weather_code) ? daily.weather_code : []
+      const temps = Array.isArray(daily.temperature_2m_max)
+        ? daily.temperature_2m_max
+        : []
+      miniForecastState.days = [0, 1, 2]
+        .map((i) => ({
+          code: codes[i],
+          temp: Number.isFinite(temps[i]) ? Math.round(temps[i]) : null,
+        }))
+        .filter((d) => d.temp !== null)
+    } catch (e) {
+      miniForecastState.days = []
+    } finally {
+      miniForecastState.loading = false
+      miniForecastState.hasLoaded = true
+      renderCustomLayerList()
+    }
+  }
+
+  /**
+   * Build / rebuild the list of layers as checkbox rows. Wires up two-way
+   * sync: clicks toggle layer.visible, and external visibility changes
+   * (e.g. via code) update the checkboxes.
+   */
+  const layerWatchHandles = []
+  function renderCustomLayerList() {
+    // Clean up previous per-layer watchers
+    while (layerWatchHandles.length) {
+      const h = layerWatchHandles.pop()
+      try { h.remove() } catch (e) { /* ignore */ }
+    }
+
+    // ---- Featured row: 3-Day Forecast ----
+    const featuredSlot = layerListContainer.querySelector("[data-featured-slot]")
+    featuredSlot.innerHTML = ""
+    const forecastLayer = map.layers.find(
+      (l) => l && l.title === FORECAST_LAYER_TITLE
+    )
+    if (forecastLayer) {
+      const featured = document.createElement("div")
+      featured.className = "wrtdip-layer-panel__featured-row"
+
+      const label = document.createElement("label")
+      label.className = "wrtdip-layer-panel__featured-label"
+      label.innerHTML = `
+        <span class="wrtdip-layer-panel__featured-icon" aria-hidden="true">⛅</span>
+        <span class="wrtdip-layer-panel__featured-text">
+          <span class="wrtdip-layer-panel__featured-title">3-Day Forecast</span>
+          <span class="wrtdip-layer-panel__featured-sub">${
+            miniForecastState.cityName || "Select a city marker"
+          }</span>
+          ${buildMiniForecastMarkup()}
+        </span>
+      `
+
+      featured.appendChild(label)
+      featuredSlot.appendChild(featured)
+    }
+
+    // ---- Regular layer list ----
+    const ul = layerListContainer.querySelector(".wrtdip-layer-panel__list")
+    ul.innerHTML = ""
+
+    // Render in reverse so the top-most map layer appears at the top of the list.
+    const layers = map.layers.toArray().slice().reverse()
+    layers.forEach((layer) => {
+      if (!layer.title) return
+      // Skip the forecast layer here — it's pinned at the top instead.
+      if (layer.title === FORECAST_LAYER_TITLE) return
+
+      const li = document.createElement("li")
+      li.className = "wrtdip-layer-panel__item"
+
+      const id = `wrtdip-layer-${Math.random().toString(36).slice(2, 9)}`
+      const checkbox = document.createElement("input")
+      checkbox.type = "checkbox"
+      checkbox.id = id
+      checkbox.className = "wrtdip-layer-panel__checkbox"
+      checkbox.checked = !!layer.visible
+
+      const label = document.createElement("label")
+      label.htmlFor = id
+      label.className = "wrtdip-layer-panel__label"
+      label.textContent = layer.title
+
+      checkbox.addEventListener("change", () => {
+        layer.visible = checkbox.checked
+      })
+
+      // Keep checkbox in sync with external changes
+      const handle = layer.watch("visible", (v) => {
+        checkbox.checked = !!v
+      })
+      layerWatchHandles.push(handle)
+
+      li.appendChild(checkbox)
+      li.appendChild(label)
+      ul.appendChild(li)
+    })
+  }
+
+  // "All" / "None" bulk toggles
+  layerListContainer.querySelectorAll(".wrtdip-layer-panel__btn").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const action = btn.getAttribute("data-action")
+      const next = action === "all"
+      map.layers.forEach((layer) => {
+        if (layer.title) layer.visible = next
+      })
+    })
+  })
+
+  // Re-render whenever layers are added/removed from the map
+  map.layers.on("change", () => renderCustomLayerList())
+  // Initial render (more layers may be added later — change handler will refresh)
+  renderCustomLayerList()
 
 
  
@@ -1116,7 +1271,7 @@ function WeatherMap() {
 
         // Add expand widgets for layer list and legend
         const layerListExpand = new Expand({
-          content: layerList.domNode,
+          content: layerListContainer,
           view,
           expanded: false,
           expandIconClass: "custom-layerlist-icon",
@@ -1207,6 +1362,8 @@ function WeatherMap() {
           view.on("click", (event) => {
             let uniqueKey = -1,
               territory = null
+            let selectedCityName = null
+            let selectedCoordinates = null
             const clickedPoint = event.mapPoint
             const latitude = clickedPoint.latitude,
               longitude = clickedPoint.longitude
@@ -1228,6 +1385,8 @@ function WeatherMap() {
               ) {
                 uniqueKey = yukonKey
                 territory = "yt"
+                selectedCoordinates = yukonCoordinates[yukonKey]
+                selectedCityName = citiesOfYukon[yukonKey]
                 let city = cities.find(
                   (c) => c.name_e == citiesOfYukon[uniqueKey]
                 )
@@ -1269,6 +1428,8 @@ function WeatherMap() {
                 ) {
                   uniqueKey = northKey
                   territory = "nt"
+                  selectedCoordinates = northWestCoordinates[northKey]
+                  selectedCityName = citiesOfNorthwestTerritories[northKey]
                   return false
                 }
               } else if (
@@ -1285,6 +1446,8 @@ function WeatherMap() {
               ) {
                 uniqueKey = northKey
                 territory = "nt"
+                selectedCoordinates = northWestCoordinates[northKey]
+                selectedCityName = citiesOfNorthwestTerritories[northKey]
                 return false
               }
               return true
@@ -1306,10 +1469,22 @@ function WeatherMap() {
               ) {
                 uniqueKey = nunavutKey
                 territory = "nu"
+                selectedCoordinates = nunavutCoordinates[nunavutKey]
+                selectedCityName = citiesOfNunavut[nunavutKey]
                 return false
               }
               return true
             })
+
+            miniForecastState.cityName = selectedCityName || ""
+            renderCustomLayerList()
+
+            if (territory != null && selectedCoordinates) {
+              updateLayerPanelMiniForecast(
+                selectedCoordinates[0],
+                selectedCoordinates[1]
+              )
+            }
             setKey((prevKey) => uniqueKey)
             setTerritory((prevTerritory) => territory)
             setModalIsOpen(true)
