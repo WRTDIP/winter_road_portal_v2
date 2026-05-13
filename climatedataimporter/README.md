@@ -178,6 +178,11 @@ The script accepts standard two-letter codes and common aliases:
 ## Full Workflow Example
 
 ```bash
+
+# Create Venv 
+python3 -m venv venv
+source venv/bin/activate
+
 # Install
 pip install -r requirements.txt
 
