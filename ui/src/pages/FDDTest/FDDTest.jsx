@@ -3,7 +3,7 @@ import { Container, Row, Col, Form, Button, Spinner } from "react-bootstrap";
 import { LineChart } from "@mui/x-charts/LineChart";
 import CoverBanner from "../../components/Global/CoverBanner/CoverBanner";
 
-const API_BASE = "https://192.99.167.151:8000";
+const API_BASE = "https://dev-moh.wramp.ca/python-api";
 
 function FDDTest() {
   const [stations, setStations] = useState([]);
