@@ -18,6 +18,7 @@ import Register from "./pages/Register/Register.jsx";
 import ResendEmailValidation from "./pages/ResendEmailValidation/ResendEmailValidation.jsx";
 import EmailValidationFormPage from "./pages/ValidateEmail/EmailValidationFormPage.jsx";
 import Dashboard from "./pages/Dashboard/Dashboard.jsx";
+import FDDTest from "./pages/FDDTest/FDDTest.jsx";
 import { Auth0Provider } from "@auth0/auth0-react";
 
 
@@ -50,6 +51,7 @@ ReactDOM.render(
         <Route path="/resend-email-validation" element={<ResendEmailValidation />} exact />
         <Route path="/validate-email" element={<EmailValidationFormPage />} exact />
         <Route path="/dashboard" element={<Dashboard />} exact />
+        <Route path="/fdd-test" element={<FDDTest />} exact />
       </Routes>
 
       {/* Render global footer */}

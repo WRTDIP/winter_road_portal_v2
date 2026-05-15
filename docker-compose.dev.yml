@@ -53,13 +53,34 @@ services:
   #     - path: ./.env
   #       required: true
 
+  python-api:
+    container_name: python-api_dev
+    restart: always
+    privileged: true    
+    build:
+      context: ./
+      dockerfile: python-api/Dockerfile.dev
+    ports:
+      - "127.0.0.1:8000:8000"
+    volumes:
+      - ./python-api/src:/app/src
+    command: /app/venv/bin/fastapi dev /app/src/main.py --host 0.0.0.0 --port 8000 --reload
+    # command: uvicorn src.main:app --host 0.0.0.0 --port 8000 --reload
+    env_file:
+      - path: ./.env
+        required: true
+    depends_on:
+      - db
+    networks:
+      - wramp-network
+
   db:
     container_name: db_dev
     image: postgres
     restart: always
     volumes:
       #- db-data:/var/lib/postgresql/data
-      - ./db/data:/var/lib/postgresql/18/main
+      - ./db/data:/var/lib/postgresql/18/docker
     shm_size: 128mb
     ports:
       - "127.0.0.1:5432:5432"

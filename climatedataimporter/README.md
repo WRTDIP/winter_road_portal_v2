@@ -197,5 +197,9 @@ python climate_importer.py download --province NT YT NU --out ./data --workers 6
 
 # Load into Postgres
 python climate_importer.py dbload --province NT YT NU --data-dir ./data \
-    --dbname climate --user postgres --password secret --drop
+    --dbname wramp --user postgres --password yourpassword --drop
+
+# The command I use
+./venv/bin/python climate_importer.py dbload --province NT YT NU --data-dir ./data --dbname wramp --user postgres --password password --drop
+
 ```

@@ -1,17 +1,42 @@
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 import psycopg2
 import pandas as pd
 
-# Connect to your postgres DB
-conn = psycopg2.connect(
-    dbname="wramp", 
-    user="postgres", 
-    password="password", 
-    host="localhost", 
-    port="5432"
-)
+import os
+
+conn=None
+
+if len(os.getenv('POSTGRES_DB')) == 0:
+
+    # Connect to your postgres DB
+    conn = psycopg2.connect(
+        dbname="wramp", 
+        user="postgres", 
+        password="password", 
+        host=os.environ.get("DB_HOST", "localhost"), 
+        port="5432"
+    )
+
+else:
+    # Connect to your postgres DB using environment variables
+    conn = psycopg2.connect(
+        dbname=os.getenv('POSTGRES_DB'),
+        user=os.getenv('POSTGRES_USER'),
+        password=os.getenv('POSTGRES_PASSWORD'),
+        host="db",
+        port=os.getenv('DB_PORT', '5432')
+    )
 
 app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 @app.get("/")
 
@@ -127,3 +152,5 @@ async def FDD(fromyear: int, toyear: int, stationid: int):
     cur.close()
     
     return {"data": rows}   
+
+

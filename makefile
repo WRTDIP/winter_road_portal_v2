@@ -18,6 +18,9 @@ start-db:
 start-apache:
 	./scripts/docker-start.sh apache
 
+start-python-api:
+	./scripts/docker-start.sh python-api
+
 stop:
 	./scripts/docker-stop.sh
 
@@ -33,6 +36,9 @@ stop-db:
 stop-apache:
 	./scripts/docker-stop.sh apache
 
+stop-python-api:
+	./scripts/docker-stop.sh python-api
+
 restart: stop start
 
 restart-ui: stop-ui start-ui
@@ -42,6 +48,8 @@ restart-api: stop-api start-api
 restart-db: stop-db start-db
 
 restart-apache: stop-apache start-apache
+
+restart-python-api: stop-python-api start-python-api
 
 exec:
 	./scripts/docker-exec.sh
@@ -58,6 +66,9 @@ exec-db:
 exec-apache:
 	./scripts/docker-exec.sh apache
 
+exec-python-api:
+	./scripts/docker-exec.sh python-api
+
 build:
 	./scripts/docker-build.sh
 
@@ -73,6 +84,9 @@ build-db:
 build-apache:
 	./scripts/docker-build.sh apache
 
+build-python-api:
+	./scripts/docker-build.sh python-api
+
 logs:
 	./scripts/docker-logs.sh
 
@@ -87,6 +101,9 @@ logs-db:
 
 logs-apache:
 	./scripts/docker-logs.sh apache
+
+logs-python-api:
+	./scripts/docker-logs.sh python-api
 
 clean-all:
 	./scripts/docker-clean-all.sh
