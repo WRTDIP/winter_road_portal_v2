@@ -59,36 +59,82 @@ async def stations():
 
     return {"data": cur.fetchall()}
 
+@app.get("/datasets")
+async def datasets():
+    cur = conn.cursor()
+    cur.execute("SELECT id, name, resourcelink FROM public.datasets ORDER BY id;")
+    rows = cur.fetchall()
+    cur.close()
+    return {"data": rows}
+
+@app.get("/station-datasets")
+async def station_datasets(stationid: int):
+    cur = conn.cursor()
+    cur.execute("""
+        SELECT DISTINCT d.id, d.name
+        FROM public.daily_data dd
+        JOIN public.datasets d ON d.id = dd.dataset_id
+        WHERE dd.station_id = %s
+        ORDER BY d.id;
+    """, (stationid,))
+    rows = cur.fetchall()
+    cur.close()
+    return {"data": rows}
+
+@app.get("/city-stations")
+async def city_stations(name: str):
+    """Return all stations whose name matches a city (case-insensitive prefix)."""
+    cur = conn.cursor()
+    cur.execute("""
+        SELECT DISTINCT ws.station_id, ws.name
+        FROM public.weather_stations ws
+        JOIN public.daily_data dd ON dd.station_id = ws.station_id
+        WHERE UPPER(ws.name) LIKE UPPER(%s) || '%%'
+        ORDER BY ws.name, ws.station_id;
+    """, (name,))
+    rows = cur.fetchall()
+    cur.close()
+    return {"data": rows}
+
 @app.get("/fdd")
-async def FDD(fromyear: int, toyear: int, stationid: int):
+async def FDD(fromyear: int, toyear: int, stationid: int, dataset_id: int = None):
     cur = conn.cursor()
 
+    dataset_filter = ""
+    params_alldata = [fromyear - 1, toyear, stationid]
+    if dataset_id is not None:
+        dataset_filter = "AND dataset_id = %s"
+        params_alldata.append(dataset_id)
+
     cur.execute(
-        """
+        f"""
         WITH alldata AS (
             SELECT id, station_id, obs_date, "year", "month", "day",
-                   data_quality, max_temp_c, max_temp_flag, min_temp_c,
-                   min_temp_flag, mean_temp_c, mean_temp_flag,
-                   heat_deg_days_c, heat_deg_days_flag,
-                   cool_deg_days_c, cool_deg_days_flag,
-                   total_rain_mm, total_rain_flag,
-                   total_snow_cm, total_snow_flag,
-                   total_precip_mm, total_precip_flag,
-                   snow_on_grnd_cm, snow_on_grnd_flag,
-                   dir_of_max_gust_10s_deg, dir_of_max_gust_flag,
-                   spd_of_max_gust_kmh, spd_of_max_gust_flag
+                   mean_temp_c,
+                   -- September-May "winter year": Sept+ belongs to next year
+                   CASE WHEN "month" >= 9 THEN "year" + 1
+                        ELSE "year"
+                   END AS fdd_year
             FROM public.daily_data
             WHERE "year" >= %s AND "year" <= %s AND station_id = %s
+            {dataset_filter}
         ),
 
+        -- Only keep months Sept-May (exclude Jun/Jul/Aug)
+        filtered AS (
+            SELECT * FROM alldata
+            WHERE "month" NOT IN (6, 7, 8)
+        ),
+
+        -- Find months with missing data (within our date range)
         missingdays AS (
-            SELECT dd.*
-            FROM public.daily_data dd
-            WHERE dd.station_id = %s AND dd.mean_temp_c IS NULL
+            SELECT * FROM filtered
+            WHERE mean_temp_c IS NULL
         ),
 
+        -- Months with 3 consecutive missing days
         missing3consecutivedays AS (
-            SELECT m1."year", m1."month"
+            SELECT DISTINCT m1.fdd_year, m1."year", m1."month"
             FROM missingdays m1
             JOIN missingdays m2
                 ON m1."year" = m2."year"
@@ -98,54 +144,59 @@ async def FDD(fromyear: int, toyear: int, stationid: int):
                 ON m2."year" = m3."year"
                 AND m2."month" = m3."month"
                 AND m2."day" = m3."day" + 1
-            WHERE m1.station_id = %s
-                AND m1.mean_temp_c IS NULL
-                AND m2.mean_temp_c IS NULL
-                AND m3.mean_temp_c IS NULL
-            GROUP BY m1."year", m1."month"
         ),
 
+        -- Months with 5+ missing days
         missing5days AS (
-            SELECT md."year", md."month"
-            FROM missingdays md
-            WHERE md.station_id = %s AND md.mean_temp_c IS NULL
-            GROUP BY md."year", md."month"
-            HAVING count(id) >= 5
+            SELECT fdd_year, "year", "month"
+            FROM missingdays
+            GROUP BY fdd_year, "year", "month"
+            HAVING count(*) >= 5
         ),
 
+        -- Combine all violating months and get their fdd_years
+        violating_years AS (
+            SELECT DISTINCT fdd_year FROM missing3consecutivedays
+            UNION
+            SELECT DISTINCT fdd_year FROM missing5days
+        ),
+
+        -- Exclude entire fdd_years that have any violation
         validdays AS (
-            SELECT ad.*,
-                   CASE WHEN ad.mean_temp_c > 0 THEN 0
-                        ELSE ad.mean_temp_c
+            SELECT f.*,
+                   CASE WHEN f.mean_temp_c > 0 THEN 0
+                        ELSE f.mean_temp_c
                    END AS adjusted_mean_temp_c
-            FROM alldata ad
-            WHERE (ad."year", ad."month") NOT IN (
-                    SELECT m3cd."year", m3cd."month"
-                    FROM missing3consecutivedays m3cd
-                  )
-              AND (ad."year", ad."month") NOT IN (
-                    SELECT m5d."year", m5d."month"
-                    FROM missing5days m5d
-                  )
+            FROM filtered f
+            WHERE f.fdd_year NOT IN (SELECT fdd_year FROM violating_years)
+              AND f.mean_temp_c IS NOT NULL
         ),
 
+        -- Check that each fdd_year has all 9 months (Sep-May)
+        year_month_counts AS (
+            SELECT fdd_year, COUNT(DISTINCT "month") AS month_count
+            FROM validdays
+            GROUP BY fdd_year
+        ),
+
+        complete_years AS (
+            SELECT fdd_year FROM year_month_counts
+            WHERE month_count = 9
+        ),
+
+        -- Sum FDD per fdd_year
         fdd AS (
-            SELECT vd."year", vd."month",
-                   SUM(vd.adjusted_mean_temp_c) AS total_adjusted_mean_temp
+            SELECT vd.fdd_year,
+                   SUM(ABS(vd.adjusted_mean_temp_c)) AS total_fdd
             FROM validdays vd
-            WHERE true
-            GROUP BY vd."year", vd."month"
-        ),
-
-        fdd_include_missing_months AS (
-            SELECT DISTINCT ad."year", ad."month", fdd.total_adjusted_mean_temp
-            FROM alldata ad
-            JOIN fdd ON ad."month" = fdd."month" AND ad."year" = fdd."year"
+            WHERE vd.fdd_year IN (SELECT fdd_year FROM complete_years)
+              AND vd.fdd_year >= %s AND vd.fdd_year <= %s
+            GROUP BY vd.fdd_year
         )
 
-        SELECT * FROM fdd_include_missing_months;
+        SELECT fdd_year, total_fdd FROM fdd ORDER BY fdd_year;
         """,
-        (fromyear, toyear, stationid, stationid, stationid, stationid)
+        (*params_alldata, fromyear, toyear)
     )
 
     rows = cur.fetchall()

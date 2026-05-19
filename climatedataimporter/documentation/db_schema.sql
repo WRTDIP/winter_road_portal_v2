@@ -1,3 +1,12 @@
+-- datasets: describes data sources / origins
+CREATE TABLE public.datasets (
+    id               INTEGER PRIMARY KEY,
+    name             VARCHAR,
+    timecreated      INTEGER,
+    timeupdated      INTEGER,
+    resourcelink     VARCHAR
+);
+
 -- weather_stations: one row per ECCC weather station
 CREATE TABLE public.weather_stations (
     station_id       INTEGER PRIMARY KEY,
@@ -55,9 +64,11 @@ CREATE TABLE public.daily_data (
     dir_of_max_gust_flag     TEXT,
     spd_of_max_gust_kmh      NUMERIC(6, 1),
     spd_of_max_gust_flag     TEXT,
+    dataset_id               INTEGER REFERENCES public.datasets(id) ON DELETE SET NULL,
 
     CONSTRAINT daily_data_station_date_uniq UNIQUE (station_id, obs_date)
 );
 
 CREATE INDEX daily_data_station_idx ON public.daily_data (station_id);
 CREATE INDEX daily_data_date_idx ON public.daily_data (obs_date);
+CREATE INDEX daily_data_dataset_idx ON public.daily_data (dataset_id);

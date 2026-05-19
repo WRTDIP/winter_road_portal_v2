@@ -7,7 +7,9 @@ const API_BASE = "https://dev-moh.wramp.ca/python-api";
 
 function FDDTest() {
   const [stations, setStations] = useState([]);
+  const [datasets, setDatasets] = useState([]);
   const [stationId, setStationId] = useState("");
+  const [datasetId, setDatasetId] = useState("");
   const [fromYear, setFromYear] = useState(1951);
   const [toYear, setToYear] = useState(2023);
   const [fddData, setFddData] = useState(null);
@@ -23,6 +25,21 @@ function FDDTest() {
       .catch((err) => setError("Failed to load stations: " + err.message));
   }, []);
 
+  useEffect(() => {
+    if (!stationId) {
+      setDatasets([]);
+      setDatasetId("");
+      return;
+    }
+    fetch(`${API_BASE}/station-datasets?stationid=${stationId}`)
+      .then((r) => r.json())
+      .then((json) => {
+        setDatasets(json.data || []);
+        setDatasetId("");
+      })
+      .catch((err) => setError("Failed to load datasets: " + err.message));
+  }, [stationId]);
+
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!stationId) return;
@@ -31,27 +48,18 @@ function FDDTest() {
     setError(null);
     setFddData(null);
 
-    fetch(
-      `${API_BASE}/fdd?fromyear=${fromYear}&toyear=${toYear}&stationid=${stationId}`
-    )
+    let url = `${API_BASE}/fdd?fromyear=${fromYear}&toyear=${toYear}&stationid=${stationId}`;
+    if (datasetId) {
+      url += `&dataset_id=${datasetId}`;
+    }
+
+    fetch(url)
       .then((r) => r.json())
       .then((json) => {
         const rows = json.data || [];
-        // Data comes as [year, month, fdd] tuples
-        // Group by year and sum the FDD values
-        const yearMap = {};
-        rows.forEach((row) => {
-          const year = row[0];
-          const fdd = row[2];
-          if (fdd != null) {
-            yearMap[year] = (yearMap[year] || 0) + Math.abs(parseFloat(fdd));
-          }
-        });
-
-        const years = Object.keys(yearMap)
-          .map(Number)
-          .sort((a, b) => a - b);
-        const fdds = years.map((y) => yearMap[y]);
+        // Data comes as [fdd_year, total_fdd] tuples
+        const years = rows.map((row) => row[0]);
+        const fdds = rows.map((row) => parseFloat(row[1]));
 
         setFddData({ years, fdds });
       })
@@ -78,7 +86,22 @@ function FDDTest() {
                   <option value="">Select a station...</option>
                   {stations.map((s) => (
                     <option key={s[0]} value={s[0]}>
-                      {s[1]} ({s[0]})
+                      {s[1]} ({s[0]}) 
+                    </option>
+                  ))}
+                </Form.Select>
+              </Form.Group>
+
+              <Form.Group className="mb-3">
+                <Form.Label>Dataset</Form.Label>
+                <Form.Select
+                  value={datasetId}
+                  onChange={(e) => setDatasetId(e.target.value)}
+                >
+                  <option value="">All datasets</option>
+                  {datasets.map((d) => (
+                    <option key={d[0]} value={d[0]}>
+                      {d[1]}
                     </option>
                   ))}
                 </Form.Select>

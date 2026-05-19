@@ -12,7 +12,6 @@ import {
   northWestCoordinates,
   nunavutCoordinates,
   yukonCoordinates,
-  ChartDataFDD,
 } from "./Data.js"
 import { width } from "@fortawesome/free-regular-svg-icons/faAddressBook"
 import { getClimateCity } from "../../services/meteo.service.js"
@@ -23,6 +22,67 @@ import OpenInFullIcon from "@mui/icons-material/OpenInFull"
 import CloseFullscreenIcon from "@mui/icons-material/CloseFullscreen"
 import IconButton from "@mui/material/IconButton"
 import ForecastPanel from "./ForecastPanel.jsx"
+
+const API_BASE = "https://dev-moh.wramp.ca/python-api";
+
+// Map city names (as they appear in Data.js) to weather station IDs
+// Uses station IDs that have both ECCC and AHCCD data where possible
+const CITY_STATION_MAP = {
+  // NWT
+  "Yellowknife": 51058,
+  "Hay River": 1663,
+  "Inuvik": 27222,
+  "Norman Wells": 50717,
+  "Fort Simpson": 27609,
+  "Fort Smith": 1659,
+  "Fort Good Hope": 53580,
+  "Fort McPherson": 1647,
+  "Fort Liard": 10687,
+  "Fort Providence": 1651,
+  "Fort Resolution": 1653,
+  "Tuktoyaktuk": 26987,
+  "Sachs Harbour": 10076,
+  "Paulatuk": 26986,
+  "Wrigley": 53601,
+  "Deline": 27749,
+  "Tulita": 52967,
+  "Ulukhaktok": 1692,
+  "Colville Lake": 1636,
+  "Lutselke": 1676,
+  // Yukon
+  "Whitehorse": 50842,
+  "Dawson": 10194,
+  "Old Crow": 53023,
+  "Mayo": 54178,
+  "Watson Lake": 54198,
+  "Carmacks": 1527,
+  "Teslin": 1609,
+  "Faro": 8964,
+  "Ross River": 1592,
+  "Haines Junction": 1556,
+  "Burwash Landing": 10192,
+  "Beaver Creek": 1516,
+  // Nunavut
+  "Iqaluit": 52079,
+  "Resolute": 53060,
+  "Alert": 1731,
+  "Cambridge Bay": 54139,
+  "Baker Lake": 54138,
+  "Rankin Inlet": 51277,
+  "Coral Harbour": 54220,
+  "Arviat": 41576,
+  "Kugluktuk": 54158,
+  "Gjoa Haven": 41943,
+  "Pond Inlet": 1773,
+  "Arctic Bay": 1732,
+  "Grise Fiord": 1754,
+  "Clyde River": 1743,
+  "Pangnirtung": 10721,
+  "Kugaaruk": 43006,
+  "Chesterfield": 1710,
+  "Ennadai": 1714,
+  "Taloyoak": 54219,
+};
 
 function WeatherMap() {
   // References for DOM elements and data
@@ -40,12 +100,92 @@ function WeatherMap() {
   const [modalIsOpen, setModalIsOpen] = useState(false)
   const [modalEnlarge, setModalEnlarge] = useState(false)
 
+  // FDD chart state
+  const [fddSeries, setFddSeries] = useState([]) // [{stationId, stationName, years, fdds}]
+  const [fddLoading, setFddLoading] = useState(false)
+  const [fddDatasets, setFddDatasets] = useState([])
+  const [fddDatasetId, setFddDatasetId] = useState("")
+  const [cityStations, setCityStations] = useState([]) // [{station_id, name}]
+  const [selectedStations, setSelectedStations] = useState([]) // [stationId, ...]
+  const [showAdvanced, setShowAdvanced] = useState(false)
+
   /**
    * Effect hook to load data when component mounts.
    */
   useEffect(() => {
     loadData(weatherData, MapElement)
   }, [])
+
+  // Fetch available stations for this city when modal opens
+  useEffect(() => {
+    if (!modalIsOpen) return
+    const cityName = getCityName()
+    if (!cityName) {
+      setCityStations([])
+      setSelectedStations([])
+      return
+    }
+
+    fetch(`${API_BASE}/city-stations?name=${encodeURIComponent(cityName)}`)
+      .then((r) => r.json())
+      .then((json) => {
+        const stations = json.data || []
+        setCityStations(stations)
+        // Default: select the mapped station, or first available
+        const defaultId = CITY_STATION_MAP[cityName]
+        if (defaultId && stations.some((s) => s[0] === defaultId)) {
+          setSelectedStations([defaultId])
+        } else if (stations.length > 0) {
+          setSelectedStations([stations[0][0]])
+        } else {
+          setSelectedStations([])
+        }
+      })
+      .catch(() => {
+        setCityStations([])
+        setSelectedStations([])
+      })
+  }, [modalIsOpen, territory, key])
+
+  // Fetch FDD data for all selected stations
+  useEffect(() => {
+    if (!modalIsOpen || selectedStations.length === 0) {
+      setFddSeries([])
+      setFddDatasets([])
+      return
+    }
+
+    // Fetch datasets for the first selected station (for the dropdown)
+    fetch(`${API_BASE}/station-datasets?stationid=${selectedStations[0]}`)
+      .then((r) => r.json())
+      .then((json) => setFddDatasets(json.data || []))
+      .catch(() => setFddDatasets([]))
+
+    setFddLoading(true)
+    const fetches = selectedStations.map((stationId) => {
+      let url = `${API_BASE}/fdd?fromyear=1951&toyear=2023&stationid=${stationId}`
+      if (fddDatasetId) {
+        url += `&dataset_id=${fddDatasetId}`
+      }
+      const stationName = cityStations.find((s) => s[0] === stationId)?.[1] || `Station ${stationId}`
+      return fetch(url)
+        .then((r) => r.json())
+        .then((json) => {
+          const rows = json.data || []
+          return {
+            stationId,
+            stationName,
+            years: rows.map((row) => row[0]),
+            fdds: rows.map((row) => parseFloat(row[1])),
+          }
+        })
+        .catch(() => ({ stationId, stationName, years: [], fdds: [] }))
+    })
+
+    Promise.all(fetches)
+      .then((results) => setFddSeries(results.filter((r) => r.years.length > 0)))
+      .finally(() => setFddLoading(false))
+  }, [modalIsOpen, selectedStations, fddDatasetId])
 
   useEffect(() => {
     console.log("Print Mouse", mouse)
@@ -57,7 +197,13 @@ function WeatherMap() {
   function closeModal() {
     setModalEnlarge(false)
     setModalIsOpen(false)
-    setClimateData(null) // Clear climate forecast data when closing
+    setClimateData(null)
+    setFddSeries([])
+    setFddDatasets([])
+    setFddDatasetId("")
+    setCityStations([])
+    setSelectedStations([])
+    setShowAdvanced(false)
   }
 
   /**
@@ -82,37 +228,68 @@ function WeatherMap() {
   }
 
   function generateChart() {
-    let cityName = getCityName()
-    let fddData = ChartDataFDD[cityName] || null
-    if (fddData) {
+    if (fddLoading) {
       return (
-        <LineChart
-          xAxis={[
-            {
-              data: fddData.x,
-              valueFormatter: (year) => year.toString(),
-              label: "Year",
-            },
-          ]}
-          yAxis={[
-            {
-              label: "Freezing Degree Days (°C·days)",
-              labelStyle: { transform: "rotate(270deg) translate(-94px, -176px)" },
-            },
-          ]}
-          series={[
-            {
-              data: fddData.y,
-              color: "#1976d2",
-              showMark: false,
-              curve: "monotoneX",
-              label: "FDDs",
-            },
-          ]}
-          height={260}
-          margin={{ left: 95, right: 20, top: 20, bottom: 50 }}
-          grid={{ horizontal: true }}
-        />
+        <Typography variant="body2" color="text.secondary" sx={{ py: 2, textAlign: "center" }}>
+          Loading FDD data...
+        </Typography>
+      )
+    }
+    if (fddSeries.length > 0) {
+      // Combine all years from all series for the x-axis
+      const allYears = [...new Set(fddSeries.flatMap((s) => s.years))].sort((a, b) => a - b)
+
+      const colors = ["#1976d2", "#d32f2f", "#388e3c", "#f57c00", "#7b1fa2", "#0097a7"]
+      const series = fddSeries.map((s, idx) => {
+        // Align data to the combined x-axis (null for missing years)
+        const yearMap = {}
+        s.years.forEach((y, i) => { yearMap[y] = s.fdds[i] })
+        const alignedData = allYears.map((y) => yearMap[y] ?? null)
+        return {
+          data: alignedData,
+          color: colors[idx % colors.length],
+          showMark: false,
+          curve: "monotoneX",
+          label: s.stationName,
+          connectNulls: true,
+        }
+      })
+
+      const chartHeight = fddSeries.length > 1 ? 300 : 260
+
+      return (
+        <div>
+          <LineChart
+            xAxis={[
+              {
+                data: allYears,
+                valueFormatter: (year) => year.toString(),
+                label: "Year",
+              },
+            ]}
+            yAxis={[
+              {
+                label: "Freezing Degree Days (°C·days)",
+                labelStyle: { transform: "rotate(270deg) translate(-94px, -176px)" },
+              },
+            ]}
+            series={series}
+            height={chartHeight}
+            margin={{ left: 95, right: 20, top: 10, bottom: 50 }}
+            grid={{ horizontal: true }}
+            slotProps={{ legend: { hidden: true } }}
+          />
+          {fddSeries.length > 1 && (
+            <div style={{ display: "flex", flexWrap: "wrap", gap: "12px", justifyContent: "center", padding: "8px 0" }}>
+              {fddSeries.map((s, idx) => (
+                <div key={s.stationId} style={{ display: "flex", alignItems: "center", gap: "6px", fontSize: "0.75rem" }}>
+                  <span style={{ width: 14, height: 3, backgroundColor: colors[idx % colors.length], display: "inline-block", borderRadius: 2 }} />
+                  <span>{s.stationName}</span>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
       )
     } else {
       return (
@@ -188,9 +365,73 @@ function WeatherMap() {
               Freezing Degree Days (FDDs)
             </Typography>
             <Typography variant="caption" color="text.secondary" sx={{ display: "block", mb: 1 }}>
-              Annual cumulative freezing degree days, 1980–2019
+              Annual cumulative freezing degree days (Sept–May)
             </Typography>
             <div className="wrtdip-map-modal__chart">{generateChart()}</div>
+            <div style={{ marginTop: "0.5rem" }}>
+              <button
+                onClick={() => setShowAdvanced(!showAdvanced)}
+                style={{
+                  background: "none",
+                  border: "1px solid #ccc",
+                  borderRadius: "4px",
+                  padding: "4px 10px",
+                  fontSize: "0.8rem",
+                  cursor: "pointer",
+                  color: "#555",
+                }}
+              >
+                {showAdvanced ? "▾ Hide Advanced" : "▸ Advanced Options"}
+              </button>
+              {showAdvanced && (
+                <div style={{ marginTop: "0.75rem", padding: "0.75rem", background: "#f8f9fa", borderRadius: "6px", border: "1px solid #e9ecef" }}>
+                  {cityStations.length > 1 && (
+                    <div style={{ marginBottom: "0.75rem" }}>
+                      <Typography variant="caption" sx={{ fontWeight: 600, display: "block", mb: 0.5 }}>
+                        Compare Stations:
+                      </Typography>
+                      <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
+                        {cityStations.map((s) => (
+                          <label key={s[0]} style={{ fontSize: "0.8rem", display: "flex", alignItems: "center", gap: "6px", cursor: "pointer" }}>
+                            <input
+                              type="checkbox"
+                              checked={selectedStations.includes(s[0])}
+                              onChange={(e) => {
+                                if (e.target.checked) {
+                                  setSelectedStations([...selectedStations, s[0]])
+                                } else {
+                                  setSelectedStations(selectedStations.filter((id) => id !== s[0]))
+                                }
+                              }}
+                            />
+                            {s[1]} ({s[0]})
+                          </label>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                  {fddDatasets.length > 0 && (
+                    <div>
+                      <Typography variant="caption" sx={{ fontWeight: 600, display: "block", mb: 0.5 }}>
+                        Dataset:
+                      </Typography>
+                      <select
+                        value={fddDatasetId}
+                        onChange={(e) => setFddDatasetId(e.target.value)}
+                        style={{ padding: "4px 8px", fontSize: "0.85rem", width: "100%" }}
+                      >
+                        <option value="">All datasets</option>
+                        {fddDatasets.map((d) => (
+                          <option key={d[0]} value={d[0]}>
+                            {d[1]}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
           </section>
 
           <section className="wrtdip-map-modal__section">
@@ -601,198 +842,137 @@ function WeatherMap() {
         view.ui.add(customZoomButton, "top-left")
 
         /**
-         * Creates a graphic representing a city on the map. Also contains a click event that triggers a modal when that city is clicked
+         * Creates a graphic representing a city on the map.
          * @param {number[]} coordinates - Array containing latitude and longitude of the city.
          * @param {string} color - Color of the marker representing the city.
          * @param {GraphicsLayer} layer - Graphics layer where the city graphic will be added.
+         * @param {string} cityKey - The key used to identify this city in the coordinates object.
+         * @param {string} territoryCode - Territory code ("yt", "nt", "nu").
          */
-        async function createCityGraphic(coordinates, color, layer) {
+        function createCityGraphic(coordinates, color, layer, cityKey, territoryCode) {
           const pinCoordinates = {
             type: "point",
             longitude: coordinates[1],
             latitude: coordinates[0],
           }
 
-          // Set marker style based on the layer (default marker style by ArcGIS API)
           let markerStyle = {
             type: "simple-marker",
             color: color,
-            size: "5px",
+            size: "10px",
+            outline: {
+              color: "white",
+              width: 1,
+            },
           };
-
-          // For the Climate Data, use the style below
-          if (layer.title === "Weather and Climate Data") {
-            markerStyle = {
-              type: "simple-marker",
-              color: "blue", // Change to your desired color
-              size: "10px", // Change to your desired size
-              outline: {
-                color: "white",
-                width: 1,
-              },
-            };
-          }
-
-          // For the Weather Forecast, use the style below
-          if (layer.title === "Weather Forecast") {
-            markerStyle = {
-              type: "simple-marker",
-              color: "orange", // Change to your desired color
-              size: "10px",    // Change to your desired size
-              outline: {
-                color: "white",
-                width: 1,
-              },
-            };
-          }
-
-
 
           let newPointGraphic = new Graphic({
             symbol: markerStyle,
             geometry: pinCoordinates,
             attributes: {
-              cityName: "City Name",
-              weatherDetails: "Weather Details",
+              cityKey: cityKey,
+              territory: territoryCode,
             },
           });
-          layer.add(newPointGraphic);             
-           
-          //click event that triggers when a point on the map is clicked and checks to see if the point clicked contains any point located in the three territories
-          view.on("click", (event) => {
-            let uniqueKey = -1,
-              territory = null
+          layer.add(newPointGraphic);
+        }
+
+        // --- Hover: enlarge marker on pointer-move ---
+        let highlightedGraphic = null
+        const NORMAL_SIZE = "10px"
+        const HOVER_SIZE = "15px"
+
+        view.on("pointer-move", (event) => {
+          view.hitTest(event).then((response) => {
+            const hit = response.results.find(
+              (r) => r.graphic && r.graphic.attributes && r.graphic.attributes.cityKey != null
+            )
+
+            if (hit) {
+              const graphic = hit.graphic
+              // Only update if it's a different graphic than currently highlighted
+              if (highlightedGraphic !== graphic) {
+                // Reset previous
+                if (highlightedGraphic) {
+                  const prevSymbol = highlightedGraphic.symbol.clone()
+                  prevSymbol.size = NORMAL_SIZE
+                  highlightedGraphic.symbol = prevSymbol
+                }
+                // Enlarge current
+                const newSymbol = graphic.symbol.clone()
+                newSymbol.size = HOVER_SIZE
+                graphic.symbol = newSymbol
+                highlightedGraphic = graphic
+              }
+              view.container.style.cursor = "pointer"
+            } else {
+              // Reset if we moved off all markers
+              if (highlightedGraphic) {
+                const prevSymbol = highlightedGraphic.symbol.clone()
+                prevSymbol.size = NORMAL_SIZE
+                highlightedGraphic.symbol = prevSymbol
+                highlightedGraphic = null
+              }
+              view.container.style.cursor = "default"
+            }
+          })
+        })
+
+        // --- Click: use hitTest for precise marker detection ---
+        view.on("click", (event) => {
+          view.hitTest(event).then((response) => {
+            const hit = response.results.find(
+              (r) => r.graphic && r.graphic.attributes && r.graphic.attributes.cityKey != null
+            )
+
+            if (!hit) {
+              // No city marker clicked — do nothing (don't open modal)
+              return
+            }
+
+            const { cityKey, territory: terr } = hit.graphic.attributes
             let selectedCityName = null
             let selectedCoordinates = null
-            const clickedPoint = event.mapPoint
-            const latitude = clickedPoint.latitude,
-              longitude = clickedPoint.longitude
 
-            setMouse({ x: event.x, y: event.y })
-            // Checks if area clicked is a point located at a lat/long point in yukonCoordinates
-            Object.keys(yukonCoordinates).every((yukonKey) => {
-              if (
-                isWithinRange(
-                  yukonCoordinates[yukonKey][1],
-                  longitude - 0.07,
-                  longitude + 0.07
-                ) &&
-                isWithinRange(
-                  yukonCoordinates[yukonKey][0],
-                  latitude - 0.07,
-                  latitude + 0.07
-                )
-              ) {
-                uniqueKey = yukonKey
-                territory = "yt"
-                selectedCoordinates = yukonCoordinates[yukonKey]
-                selectedCityName = citiesOfYukon[yukonKey]
-                let city = cities.find(
-                  (c) => c.name_e == citiesOfYukon[uniqueKey]
-                )
-                console.log("Selected city:", city); //added for the province and stationCode
-                if (city) {
-                  // console.log(getClimateCity(city.key))
-                  console.log(getClimateCity(city.province, city.stationCode))
-                }
-                //added for the province and stationCode
-                if (city && city.province && city.stationCode) {
-                  setClimateLoading(true)
-                  setClimateData(null)
-                  getClimateCity(city.province, city.stationCode) //added the province and station code to constants.js (only for Yukon as a test)
-                    .then((data) => setClimateData(data))
-                    .finally(() => setClimateLoading(false))
-                } else if (city) {
-                  setClimateData({ error: "No weather data available for this location." })
-                  setClimateLoading(false)
-                }               
-                return false
+            if (terr === "yt") {
+              selectedCityName = citiesOfYukon[cityKey]
+              selectedCoordinates = yukonCoordinates[cityKey]
+              let city = cities.find((c) => c.name_e == selectedCityName)
+              if (city && city.province && city.stationCode) {
+                setClimateLoading(true)
+                setClimateData(null)
+                getClimateCity(city.province, city.stationCode)
+                  .then((data) => setClimateData(data))
+                  .finally(() => setClimateLoading(false))
+              } else if (city) {
+                setClimateData({ error: "No weather data available for this location." })
+                setClimateLoading(false)
               }
-              return true
-            })
-
-            // Checks if area clicked is a point located at a lat/long point in northWestCoordinates
-            Object.keys(northWestCoordinates).every((northKey) => {
-              if (northKey === 1 || northKey === 24) {
-                if (
-                  isWithinRange(
-                    northWestCoordinates[northKey][1],
-                    longitude - 0.01,
-                    longitude + 0.01
-                  ) &&
-                  isWithinRange(
-                    northWestCoordinates[northKey][0],
-                    latitude - 0.01,
-                    latitude + 0.01
-                  )
-                ) {
-                  uniqueKey = northKey
-                  territory = "nt"
-                  selectedCoordinates = northWestCoordinates[northKey]
-                  selectedCityName = citiesOfNorthwestTerritories[northKey]
-                  return false
-                }
-              } else if (
-                isWithinRange(
-                  northWestCoordinates[northKey][1],
-                  longitude - 0.07,
-                  longitude + 0.07
-                ) &&
-                isWithinRange(
-                  northWestCoordinates[northKey][0],
-                  latitude - 0.07,
-                  latitude + 0.07
-                )
-              ) {
-                uniqueKey = northKey
-                territory = "nt"
-                selectedCoordinates = northWestCoordinates[northKey]
-                selectedCityName = citiesOfNorthwestTerritories[northKey]
-                return false
-              }
-              return true
-            })
-
-            // Checks if area clicked is a point located at a lat/long point in nunavutCoordinates
-            Object.keys(nunavutCoordinates).every((nunavutKey) => {
-              if (
-                isWithinRange(
-                  nunavutCoordinates[nunavutKey][1],
-                  longitude - 0.07,
-                  longitude + 0.07
-                ) &&
-                isWithinRange(
-                  nunavutCoordinates[nunavutKey][0],
-                  latitude - 0.07,
-                  latitude + 0.07
-                )
-              ) {
-                uniqueKey = nunavutKey
-                territory = "nu"
-                selectedCoordinates = nunavutCoordinates[nunavutKey]
-                selectedCityName = citiesOfNunavut[nunavutKey]
-                return false
-              }
-              return true
-            })
+            } else if (terr === "nt") {
+              selectedCityName = citiesOfNorthwestTerritories[cityKey]
+              selectedCoordinates = northWestCoordinates[cityKey]
+            } else if (terr === "nu") {
+              selectedCityName = citiesOfNunavut[cityKey]
+              selectedCoordinates = nunavutCoordinates[cityKey]
+            }
 
             miniForecastState.cityName = selectedCityName || ""
             renderCustomLayerList()
 
-            if (territory != null && selectedCoordinates) {
+            if (terr != null && selectedCoordinates) {
               updateLayerPanelMiniForecast(
                 selectedCoordinates[0],
                 selectedCoordinates[1]
               )
             }
-            setKey((prevKey) => uniqueKey)
-            setTerritory((prevTerritory) => territory)
+            setKey(cityKey)
+            setTerritory(terr)
             setModalIsOpen(true)
-            if (territory == null) {
-              setModalIsOpen(false)
-            }
           })
-        }
+        })
+
+        // Disable default popup so other layer popups don't interfere
+        view.popup.autoOpenEnabled = false
 
         //Adds the feature layers from the ArcGIS web map. Certain layers are hidden via the featureLayer.visible parameter
       //  layerData.forEach((layer, index) => {
@@ -827,50 +1007,39 @@ function WeatherMap() {
         //adds the live weather data from the GeoMet API for towns in the three territories
         const liveWeatherDataLayer = new GraphicsLayer({
           title: "Weather and Climate Data",
-          featureReduction: {
-            type: "cluster",
-          },
         })
 
         Object.keys(yukonCoordinates).forEach((key) => {
-          createCityGraphic(yukonCoordinates[key], "blue", liveWeatherDataLayer)
+          createCityGraphic(yukonCoordinates[key], "blue", liveWeatherDataLayer, key, "yt")
         })
         Object.keys(northWestCoordinates).forEach((key) => {
-          createCityGraphic(northWestCoordinates[key], "blue", liveWeatherDataLayer)
+          createCityGraphic(northWestCoordinates[key], "blue", liveWeatherDataLayer, key, "nt")
         })
         Object.keys(nunavutCoordinates).forEach((key) => {
-          createCityGraphic(nunavutCoordinates[key], "blue", liveWeatherDataLayer)
+          createCityGraphic(nunavutCoordinates[key], "blue", liveWeatherDataLayer, key, "nu")
         })
         map.add(liveWeatherDataLayer)
 
         // Create a new GraphicsLayer for the weather forecast
         const weatherForecastLayer = new GraphicsLayer({
           title: "Weather Forecast",
-          featureReduction: {
-            type: "cluster",
-          },
           visible: false,
         })
                 
         // Add Weather Forecast markers to the Weather Forecast layer
         Object.keys(yukonCoordinates).forEach((key) => {
-          createCityGraphic(yukonCoordinates[key], "green", weatherForecastLayer)
+          createCityGraphic(yukonCoordinates[key], "orange", weatherForecastLayer, key, "yt")
         })
         Object.keys(northWestCoordinates).forEach((key) => {
-          createCityGraphic(northWestCoordinates[key], "green", weatherForecastLayer)
+          createCityGraphic(northWestCoordinates[key], "orange", weatherForecastLayer, key, "nt")
         })
         Object.keys(nunavutCoordinates).forEach((key) => {
-          createCityGraphic(nunavutCoordinates[key], "green", weatherForecastLayer)
+          createCityGraphic(nunavutCoordinates[key], "orange", weatherForecastLayer, key, "nu")
         })
         
-        map.add(weatherForecastLayer);      
-        
+map.add(weatherForecastLayer);
       }
     )
-  }
-
-  function isWithinRange(number, min, max) {
-    return number >= min && number <= max
   }
 }
 
