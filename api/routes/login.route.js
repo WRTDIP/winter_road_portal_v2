@@ -1,5 +1,6 @@
 import express from "express";
 import { prisma } from "../lib/prisma.js";
+import bcrypt from "bcryptjs";
 const router = express.Router();
 // const { getUsers } = require("../controllers/user.controller")
 
@@ -22,10 +23,9 @@ router.post("/", async (req, res) => {
       return res.status(401).json({ status: "error", message: "User doesn't exist please register." });
     }
 
-    const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(password, salt);
+    const isMatch = await bcrypt.compare(password, user.password);
 
-    if (user.password !== hashedPassword) {
+    if (!isMatch) {
       return res.status(401).json({ status: "error", message: "Invalid email or password." });
     }
 
@@ -33,7 +33,15 @@ router.post("/", async (req, res) => {
     req.session.email = user.email;
     req.session.userlevel = user.userlevel;
 
-    return res.json({ status: "success", message: "Login successful." });
+    req.session.regenerate((err) => {
+      if (err) {
+        console.error(err);
+        return res.status(500).json({ status: "error", message: "Session regeneration error" });
+      }
+      console.log("User logged in successfully:", user.email);
+      return res.status(200).json({ status: "success", message: "Login successful." });
+    });
+
   } catch (error) {
     console.error(error);
     return res.status(500).json({ status: "error", message: "Server error" });
@@ -47,7 +55,7 @@ router.post("/logout", (req, res) => {
       return res.status(500).json({ status: "error", message: "Logout failed" });
     }
     res.clearCookie("connect.sid");
-    return res.json({ status: "success", message: "Logout successful" });
+    return res.status(200).json({ status: "success", message: "Logout successful" });
   });
 });
 

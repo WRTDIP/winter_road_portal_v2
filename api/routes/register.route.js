@@ -30,13 +30,48 @@ router.post(
                 });
             }
 
-            const salt = await bcrypt.genSalt(10);
-            const hashed = await bcrypt.hash(password, salt);
+            const hashedPassword = await bcrypt.hash(password, 10);
 
-            const user = await createUser(req={ email, name: fullName, password: hashed });
+            const user = await createUser(req={ email, name: fullName, password: hashedPassword });
 
             const userSafe = { ...user };
             delete userSafe.password;
+
+            // Generate a new auth code and send validation email logic would go here
+
+            let newCode = await prisma.authCode.create({
+                data: {
+                    userId: user.id,
+                    code: Math.random().toString(36).substring(2, 8).toUpperCase(),
+                    flow: "email_validation",
+                    expiresAt: new Date(Date.now() + 48 * 60 * 60 * 1000)
+                }
+            });
+            
+
+            // Send validation email using Mailtrap
+
+            const recipients = [
+                {
+                    email: user.email
+                }
+            ];
+
+            await mtclient.send({
+                from: mtsender,
+                to: recipients,
+                subject: "Email Validation",
+                text: `Hello! Please validate your email using the following code: ${newCode.code}
+                https://${req.get('host')}/validate-email?code=${newCode.code}&email=${user.email}
+                `,
+                category: "Email Validation",
+            }).then(() => {
+                console.log({ status: "success", message: "Auth email sent successfully." });
+            })
+            .catch((error) => {
+                console.log(error);
+                res.status(500).json({status: "error", message: 'Server error' });
+            });
 
             res.status(201).json({ status: 'success', message: "Registration successful. Please check your email for validation link." });
         } catch (err) {

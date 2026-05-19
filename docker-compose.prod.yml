@@ -1,20 +1,117 @@
 services:
   ui:
-    container_name: ui_wrdip_prod
+    container_name: ui_prod
     build:
-      context: ui
-      dockerfile: Dockerfile.prod
+      context: ./
+      dockerfile: ui/Dockerfile.prod
     ports:
-      - 80:3000
-    command: "npm start"
-  
-  mysql:
-    container_name: mysql
-    image: mysql
+      - "127.0.0.1:3000:3000"
+    volumes:
+      - ./ui:/app
+    command:
+      - /bin/sh
+      - -c
+      - |
+        npm install
+        npm start
+    env_file:
+      - path: ./.env
+        required: true
+    networks:
+      - wramp-network
+      
+  api:
+    container_name: api_prod
+    restart: always
+    build:
+      context: ./
+      dockerfile: api/Dockerfile.dev
+    ports:
+      - "127.0.0.1:4000:4000"
+    volumes:
+      - ./api:/app
+    command: 
+      sh -c "DEBUG=nodemon:* && npm install && npx nodemon -L"
+    env_file:
+      - path: ./.env
+        required: true
+    networks:
+      - wramp-network
+
+  # mysql:
+  #   container_name: db_dev
+  #   image: mysql:latest
+  #   restart: always
+  #   ports:
+  #     - "127.0.0.1:3306:3306"
+  #   volumes:
+  #     - db-data:/var/lib/mysql
+  #   # environment:
+  #     # - MYSQL_DATABASE=${DATABASE_NAME}_${DEPLOY_MODE} not needed
+  #   env_file:
+  #     - path: ./.env
+  #       required: true
+
+  python-api:
+    container_name: python-api_prod
+    restart: always
+    build:
+      context: ./
+      dockerfile: python-api/Dockerfile.dev
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./python-api/src:/app/src
+      - ./python-api/certs:/app/certs
+    command: uvicorn src.main:app --host 0.0.0.0 --port 8000 --ssl-certfile /app/certs/cert.pem --ssl-keyfile /app/certs/key.pem
+    env_file:
+      - path: ./.env
+        required: true
+    depends_on:
+      - db
+    networks:
+      - wramp-network
+
+  db:
+    container_name: db_prod
+    image: postgres
+    restart: always
+    volumes:
+      #- db-data:/var/lib/postgresql/data
+      - ./db/data:/var/lib/postgresql/18/main
+    shm_size: 128mb
+    ports:
+      - "127.0.0.1:5432:5432"
+    env_file:
+      - path: ./.env
+        required: true
+    networks:
+      - wramp-network
+
+  apache:
+    container_name: apache_prod
+    build:
+      context: ./
+      dockerfile: apache/Dockerfile.dev
+    privileged: true   
     restart: always
     ports:
-      - 5432:5432
+      - 80:80
+      - 443:443
+    networks:
+      - wramp-network
+    depends_on:
+      - ui
+      - api
+      - db
     volumes:
-      - ./db/data/mysql:/var/lib/mysql
-    env_file:
-      - .env
+      - ./apache:/usr/local/apache2/htdocs/
+      - ./apache/apache-loadbalancer.conf:/usr/local/apache2/conf/httpd.conf
+
+networks:
+  wramp-network:
+    driver: bridge
+
+# volumes:
+#   db-data:
+#     name: wramp-db-volume

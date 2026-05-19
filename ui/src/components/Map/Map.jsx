@@ -12,6 +12,7 @@ import {
   northWestCoordinates,
   nunavutCoordinates,
   yukonCoordinates,
+  ChartDataFDD,
 } from "./Data.js"
 import { width } from "@fortawesome/free-regular-svg-icons/faAddressBook"
 import { getClimateCity } from "../../services/meteo.service.js"
@@ -21,707 +22,7 @@ import { Icon, Typography } from "@mui/material"
 import OpenInFullIcon from "@mui/icons-material/OpenInFull"
 import CloseFullscreenIcon from "@mui/icons-material/CloseFullscreen"
 import IconButton from "@mui/material/IconButton"
-var ChartDataFDD = {
-  Yellowknife: {
-    x: [
-      1980, 1981, 1982, 1983, 1984, 1985, 1986, 1987, 1988, 1989, 1990, 1991,
-      1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003,
-      2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015,
-      2016, 2017, 2018, 2019,
-    ],
-    y: [
-      3020.1, 3698.9, 3813.2, 3020.9, 3876.9, 3519.6, 2878.3, 2986.0, 3634.2,
-      3676.8, 3800.3, 3595.2, 2818.7, 3604.5, 3073.3, 3634.5, 3467.6, 2745.5,
-      2553.0, 2823.2, 3101.2, 3513.6, 3164.4, 3299.7, 3354.8, 2274.1, 3081.9,
-      3547.2, 3391.7, 2582.8, 3356.4, 2839.3, 3671.3, 3738.0, 3274.7, 2830.6,
-      2937.2, 3249.5, 2970.5, 3474.1,
-    ],
-  },
-  Whitehorse: {
-    x: [
-      1980, 1981, 1982, 1983, 1984, 1985, 1986, 1987, 1988, 1989, 1990, 1991,
-      1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003,
-      2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015,
-      2016, 2017, 2018, 2019,
-    ],
-    y: [
-      1625.7,
-      2529.7,
-      2068.4,
-      1719.0,
-      1917.3,
-      1928.6,
-      1446.8,
-      1462.1,
-      2230.9,
-      null,
-      2284.3,
-      1589.5,
-      1909.4,
-      1779.2,
-      2092.6,
-      2548.5,
-      2407.8,
-      1568.3,
-      2197.0,
-      1523.2,
-      1439.2,
-      null,
-      null,
-      1860.8,
-      null,
-      null,
-      2205.8,
-      1962.3,
-      2351.9,
-      1346.3,
-      2023.2,
-      1541.5,
-      2187.7,
-      1834.4,
-      null,
-      1076.9,
-      null,
-      2054.4,
-      1496.5,
-      1784.2,
-    ],
-  },
-  Iqaluit: {
-    x: [
-      1980, 1981, 1982, 1983, 1984, 1985, 1986, 1987, 1988, 1989, 1990, 1991,
-      1992, 1993, 1994, 1995, 1996, 1997, 1999, 2000, 2001, 2002, 2003, 2004,
-      2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016,
-      2017, 2018, 2019,
-    ],
-    y: [
-      3130.5,
-      3621.0,
-      4563.7,
-      4537.1,
-      3762.1,
-      3259.5,
-      4544.7,
-      3805.7,
-      4302.5,
-      4201.5,
-      4382.5,
-      4237.9,
-      4736.4,
-      4177.4,
-      3745.6,
-      3358.2,
-      3701.3,
-      null,
-      3689.1,
-      3344.9,
-      3877.3,
-      3552.0,
-      3498.5,
-      3462.6,
-      3158.2,
-      3267.6,
-      3957.2,
-      3787.4,
-      2942.2,
-      2862.6,
-      3551.8,
-      3131.4,
-      3724.4,
-      4122.0,
-      3703.7,
-      null,
-      3373.4,
-      3553.6,
-      null,
-    ],
-  },
-  Dawson: {
-    x: [
-      1980, 1981, 1982, 1983, 1984, 1985, 1986, 1987, 1988, 1989, 1990, 1991,
-      1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003,
-      2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015,
-      2016, 2017, 2018, 2019,
-    ],
-    y: [
-      2864.3,
-      3681.2,
-      3529.4,
-      3280.7,
-      3355.9,
-      3316.8,
-      3253.5,
-      2895.6,
-      3727.9,
-      3581.6,
-      3651.4,
-      3214.8,
-      3346.7,
-      3239.3,
-      3326.8,
-      3845.5,
-      4067.5,
-      2886.1,
-      3435.3,
-      2914.4,
-      2642.4,
-      3335.8,
-      2314.0,
-      3478.7,
-      3115.8,
-      3068.6,
-      3852.3,
-      3235.0,
-      null,
-      2705.4,
-      3466.1,
-      3161.6,
-      4026.2,
-      3327.8,
-      2734.4,
-      2114.5,
-      3493.2,
-      3285.4,
-      2748.4,
-      3473.8,
-    ],
-  },
-  Mayo: {
-    x: [
-      1980, 1981, 1982, 1983, 1984, 1985, 1986, 1987, 1989, 1990, 1991, 1992,
-      1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004,
-      2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016,
-      2017, 2018, 2019,
-    ],
-    y: [
-      2411.2,
-      3462.2,
-      2868.3,
-      2836.6,
-      2837.2,
-      2690.4,
-      2508.3,
-      2139.2,
-      3014.4,
-      3233.5,
-      2491.4,
-      2704.6,
-      2790.6,
-      null,
-      null,
-      3221.7,
-      2165.0,
-      2797.4,
-      2268.5,
-      2183.9,
-      2830.6,
-      1972.3,
-      2801.7,
-      2594.7,
-      2322.3,
-      3191.1,
-      2666.9,
-      3252.2,
-      2060.8,
-      2900.0,
-      2424.0,
-      3330.8,
-      2904.6,
-      2352.5,
-      1685.6,
-      2866.0,
-      3013.8,
-      null,
-      3073.6,
-    ],
-  },
-  Carmacks: {
-    x: [
-      1981, 1982, 1983, 1984, 1985, 1986, 1987, 1988, 1989, 1990, 1991, 1992,
-      1994, 1995, 1996, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005, 2006,
-      2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018,
-      2019,
-    ],
-    y: [
-      null,
-      3004.8,
-      2639.0,
-      null,
-      null,
-      null,
-      null,
-      null,
-      null,
-      null,
-      null,
-      null,
-      null,
-      null,
-      null,
-      null,
-      null,
-      null,
-      null,
-      1894.5,
-      null,
-      2288.2,
-      null,
-      3236.4,
-      2841.4,
-      3178.4,
-      2220.2,
-      2863.6,
-      2576.0,
-      3260.5,
-      2677.8,
-      2232.3,
-      1836.7,
-      2781.6,
-      2814.4,
-      2276.2,
-      2858.0,
-    ],
-  },
-  Faro: {
-    x: [
-      1980, 1981, 1982, 1983, 1984, 1985, 1986, 1987, 1988, 1989, 1990, 1991,
-      1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2002, 2003, 2004,
-      2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016,
-      2017, 2018, 2019,
-    ],
-    y: [
-      2319.9,
-      3360.6,
-      2769.9,
-      2491.1,
-      2613.3,
-      2510.0,
-      2198.9,
-      1969.4,
-      2904.9,
-      null,
-      2721.2,
-      2190.4,
-      null,
-      2448.0,
-      2589.9,
-      3220.4,
-      3039.4,
-      2210.5,
-      2691.6,
-      2041.1,
-      null,
-      null,
-      null,
-      null,
-      2165.0,
-      2841.3,
-      null,
-      2952.7,
-      null,
-      2691.9,
-      null,
-      null,
-      2623.9,
-      null,
-      1675.5,
-      2539.8,
-      2834.7,
-      2252.0,
-      2742.3,
-    ],
-  },
-  Teslin: {
-    x: [
-      1980, 1981, 1982, 1983, 1984, 1985, 1986, 1987, 1988, 1989, 1990, 1991,
-      1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003,
-      2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015,
-      2016, 2017, 2018, 2019,
-    ],
-    y: [
-      null,
-      null,
-      null,
-      null,
-      2076.2,
-      2051.1,
-      1713.7,
-      1591.0,
-      2334.0,
-      2029.5,
-      2420.6,
-      1764.0,
-      2263.5,
-      1802.9,
-      null,
-      2647.9,
-      null,
-      1664.1,
-      2270.6,
-      1654.5,
-      1759.5,
-      2220.3,
-      1671.5,
-      1897.9,
-      1767.1,
-      1846.0,
-      2321.2,
-      2227.6,
-      2399.0,
-      1710.6,
-      2318.3,
-      1759.1,
-      2359.8,
-      2163.9,
-      1533.5,
-      1297.9,
-      1998.0,
-      2225.5,
-      1699.9,
-      1864.8,
-    ],
-  },
-  "Watson Lake": {
-    x: [
-      1980, 1981, 1982, 1983, 1984, 1985, 1986, 1987, 1988, 1989, 1990, 1991,
-      1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003,
-      2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015,
-      2016, 2017, 2018, 2019,
-    ],
-    y: [
-      2409.6,
-      3259.4,
-      2890.7,
-      2470.6,
-      2844.4,
-      2670.7,
-      2479.2,
-      2180.6,
-      2913.1,
-      2587.2,
-      2900.8,
-      2535.8,
-      2925.6,
-      null,
-      2424.5,
-      3127.7,
-      3167.2,
-      2521.4,
-      2816.7,
-      2355.1,
-      2369.3,
-      2938.5,
-      2305.5,
-      2395.0,
-      2266.9,
-      2325.8,
-      2707.4,
-      2670.6,
-      2948.2,
-      2538.6,
-      2627.0,
-      2265.6,
-      2811.6,
-      2639.6,
-      2139.9,
-      2082.8,
-      2563.0,
-      null,
-      2346.6,
-      2451.1,
-    ],
-  },
-  "Fort Mcpherson": {
-    x: [
-      1980, 1981, 1982, 1983, 1984, 1985, 1986, 1987, 1988, 1989, 1990, 1991,
-      1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003,
-      2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013,
-    ],
-    y: [
-      null,
-      null,
-      null,
-      null,
-      null,
-      null,
-      4195.6,
-      null,
-      3924.2,
-      null,
-      null,
-      4385.3,
-      3659.1,
-      4024.4,
-      4074.5,
-      4191.7,
-      null,
-      3689.9,
-      null,
-      4223.5,
-      null,
-      3897.0,
-      3569.2,
-      4242.1,
-      null,
-      null,
-      null,
-      null,
-      null,
-      null,
-      null,
-      null,
-      null,
-    ],
-  },
-  "Fort Good Hope": {
-    x: [
-      1980, 1981, 1982, 1983, 1984, 1986, 1987, 1988, 1989, 1990, 1991, 1992,
-      1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004,
-      2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016,
-      2017, 2018, 2019,
-    ],
-    y: [
-      null,
-      null,
-      null,
-      null,
-      null,
-      null,
-      null,
-      null,
-      null,
-      null,
-      null,
-      null,
-      3912.2,
-      3977.4,
-      4202.1,
-      4279.5,
-      3643.1,
-      3913.4,
-      3912.3,
-      3690.4,
-      3868.2,
-      3381.7,
-      3940.7,
-      null,
-      3718.8,
-      3930.8,
-      3995.6,
-      4062.7,
-      3348.8,
-      null,
-      null,
-      4160.2,
-      3515.6,
-      3412.7,
-      null,
-      3364.8,
-      3079.7,
-      null,
-      3955.1,
-    ],
-  },
-  "Fort Simpson": {
-    x: [
-      1980, 1981, 1982, 1983, 1984, 1985, 1986, 1987, 1988, 1989, 1990, 1991,
-      1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003,
-      2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015,
-      2016, 2017, 2018, 2019,
-    ],
-    y: [
-      2686.6,
-      3572.7,
-      3573.3,
-      3060.2,
-      3261.9,
-      3196.2,
-      2712.8,
-      2712.8,
-      3253.9,
-      3263.2,
-      3256.4,
-      3163.5,
-      2585.5,
-      3141.9,
-      2995.8,
-      3349.2,
-      3146.2,
-      2644.0,
-      2577.6,
-      2774.2,
-      2790.6,
-      3228.4,
-      2703.2,
-      3009.1,
-      2952.9,
-      2520.4,
-      2926.3,
-      3182.2,
-      3198.1,
-      2554.5,
-      2971.2,
-      2695.4,
-      null,
-      3157.3,
-      2881.6,
-      2445.3,
-      2696.0,
-      null,
-      2482.1,
-      3214.2,
-    ],
-  },
-  "Fort Liard": {
-    x: [
-      1980, 1981, 1982, 1983, 1984, 1985, 1986, 1987, 1988, 1989, 1990, 1991,
-      1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003,
-      2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015,
-      2016, 2017, 2018, 2019,
-    ],
-    y: [
-      2253.3,
-      null,
-      null,
-      2653.2,
-      null,
-      2679.3,
-      2144.0,
-      2278.3,
-      null,
-      2793.0,
-      2806.6,
-      2621.4,
-      2261.4,
-      2497.6,
-      2730.8,
-      2949.2,
-      2735.3,
-      2490.7,
-      2533.2,
-      2202.8,
-      2253.8,
-      2831.8,
-      null,
-      null,
-      null,
-      null,
-      2592.7,
-      2832.3,
-      2288.0,
-      2580.7,
-      2182.4,
-      2932.6,
-      2468.9,
-      2279.4,
-      1812.1,
-      2352.5,
-      null,
-      2214.4,
-      null,
-    ],
-  },
-  "Hay River": {
-    x: [
-      1980, 1981, 1982, 1983, 1984, 1985, 1986, 1987, 1988, 1989, 1990, 1991,
-      1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003,
-      2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015,
-      2016, 2017, 2018, 2019,
-    ],
-    y: [
-      2450.0,
-      3201.7,
-      3354.7,
-      2635.2,
-      3169.0,
-      2932.8,
-      2351.4,
-      2423.2,
-      2996.4,
-      3044.1,
-      3156.9,
-      2910.2,
-      2280.6,
-      3130.4,
-      2663.9,
-      3157.9,
-      3012.5,
-      2259.6,
-      2251.5,
-      2276.6,
-      2467.7,
-      2925.5,
-      2521.0,
-      2719.6,
-      2716.9,
-      1931.1,
-      2696.0,
-      2967.3,
-      2891.9,
-      2196.5,
-      2827.6,
-      2396.8,
-      3192.5,
-      3129.6,
-      2680.8,
-      2220.2,
-      2414.3,
-      null,
-      2346.5,
-      2921.7,
-    ],
-  },
-  "Fort Smith": {
-    x: [
-      1980, 1981, 1982, 1983, 1984, 1985, 1986, 1987, 1988, 1989, 1990, 1991,
-      1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003,
-      2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015,
-      2016, 2017, 2018, 2019,
-    ],
-    y: [
-      2392.6,
-      3264.8,
-      3016.7,
-      2526.4,
-      3210.7,
-      2848.2,
-      2305.8,
-      2382.0,
-      3010.8,
-      3034.7,
-      3103.6,
-      2800.1,
-      2245.6,
-      2913.3,
-      2480.0,
-      3098.9,
-      2888.6,
-      2057.8,
-      2044.0,
-      2231.4,
-      2389.7,
-      2802.2,
-      2662.7,
-      2568.6,
-      2629.8,
-      1672.9,
-      2597.0,
-      2877.0,
-      2797.8,
-      2069.5,
-      2731.5,
-      2238.2,
-      3007.1,
-      3254.2,
-      2668.7,
-      null,
-      2261.6,
-      2717.9,
-      2486.7,
-      2714.6,
-    ],
-  },
-}
+import ForecastPanel from "./ForecastPanel.jsx"
 
 function WeatherMap() {
   // References for DOM elements and data
@@ -783,49 +84,42 @@ function WeatherMap() {
   function generateChart() {
     let cityName = getCityName()
     let fddData = ChartDataFDD[cityName] || null
-    console.log("fddData", fddData, cityName)
     if (fddData) {
       return (
-        <div style={{ display: "flex", alignItems: "center" }}>
-        <div
-          style={{
-            writingMode: "vertical-rl",
-            transform: "rotate(180deg)",
-            marginRight: 5,
-            fontWeight: "normal",
-            fontSize: 12,
-            whiteSpace: "nowrap",
-          }}
-        >
-          Freezing Degree Days (FDDs)
-        </div>
         <LineChart
           xAxis={[
             {
               data: fddData.x,
-              valueFormatter: (year) => year.toString(), // remove thousand separator
-              label: "Year", // <-- X axis label
-              // data: [1],
+              valueFormatter: (year) => year.toString(),
+              label: "Year",
             },
           ]}
-           yAxis={[
-          {
-            
-          },
+          yAxis={[
+            {
+              label: "Freezing Degree Days (°C·days)",
+              labelStyle: { transform: "rotate(270deg) translate(-94px, -176px)" },
+            },
           ]}
           series={[
             {
               data: fddData.y,
-              // data: [2],
+              color: "#1976d2",
+              showMark: false,
+              curve: "monotoneX",
+              label: "FDDs",
             },
           ]}
-          height={300}
-          margin={{ left: 40, right: 20, top: 20, bottom: 40 }} //
+          height={260}
+          margin={{ left: 95, right: 20, top: 20, bottom: 50 }}
+          grid={{ horizontal: true }}
         />
-        </div>
       )
     } else {
-      return <Typography>No FDDs data available for this location.</Typography>
+      return (
+        <Typography variant="body2" color="text.secondary" sx={{ py: 2, textAlign: "center" }}>
+          No FDDs data available for this location.
+        </Typography>
+      )
     }
   }
 
@@ -849,93 +143,65 @@ function WeatherMap() {
       <Modal
         show={modalIsOpen}
         onHide={closeModal}
-        // dialogClassName="right-half-modal"
-        style={
-          modalEnlarge
-            ? {
-                width: "50vw",
-                height: "100vh",
-                overflow: "hidden",
-                position: "absolute",
-                left: "calc(100% - 500px)",
-              }
-            : {
-                width: "600px",
-                height: "500px",
-                overflow: "hidden",
-                position: "absolute",
-                top: mouse.y,
-                left: mouse.x,
-              }
+        centered={!modalEnlarge}
+        dialogClassName={
+          modalEnlarge ? "wrtdip-map-modal wrtdip-map-modal--enlarged" : "wrtdip-map-modal"
         }
+        contentClassName="wrtdip-map-modal__content"
+        backdropClassName="wrtdip-map-modal__backdrop"
       >
-        <Modal.Header
-          closeButton
-          style={{
-            width: "500px",
-            overflow: "hidden",
-          }}
-        >
-          <Modal.Title> Climate</Modal.Title>
-          <IconButton onClick={() => setModalEnlarge(!modalEnlarge)}>
-            {modalEnlarge ? <CloseFullscreenIcon /> : <OpenInFullIcon />}
-          </IconButton>
-        </Modal.Header>
-        <Modal.Body
-          sx={{ width: "500px", height: "350px", overflow: "hidden" }}
-        >
-          <Typography variant="h4" component="h5">
-            {territory == "yt" ? citiesOfYukon[key] : null}
-            {territory == "nt" ? citiesOfNorthwestTerritories[key] : null}
-            {territory == "nu" ? citiesOfNunavut[key] : null}
-          </Typography>
-          <Typography variant="h5" component="h5">
-            Freezing Degree Days (FDDs)
-          </Typography>
-          <div style={{ paddingLeft: 40, paddingRight: 10 }}>
-          {generateChart()}
+        <Modal.Header className="wrtdip-map-modal__header">
+          <div style={{ display: "flex", flexDirection: "column", flex: 1, minWidth: 0 }}>
+            <Typography variant="overline" sx={{ color: "rgba(255,255,255,0.85)", lineHeight: 1, letterSpacing: 1 }}>
+              Climate &amp; Weather
+            </Typography>
+            <Typography
+              variant="h5"
+              component="h2"
+              sx={{ color: "#fff", fontWeight: 600, lineHeight: 1.2, mt: 0.5, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}
+            >
+              {getCityName() || "Selected Location"}
+            </Typography>
           </div>
-          <Typography variant="h5" style={{ marginTop: 16 }}>
-          Weather Forecast 
-          </Typography>
-          <iframe
-            title="Environment Canada Weather"
-            width="400x"
-            height="400px"
-            // src={`https://weather.gc.ca/wxlink/wxlink.html?cityCode=${territory}-${key}&amp;lang=e`}
-            src={`https://weather.gc.ca/wxlink/wxlink.html?coords=${lat},${lon}&lang=e`} // new link
-            allowtransparency="true"
-            style={{ border: 0 }}
-          ></iframe>
+          <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
+            <IconButton
+              onClick={() => setModalEnlarge(!modalEnlarge)}
+              size="small"
+              sx={{ color: "#fff" }}
+              aria-label={modalEnlarge ? "Shrink" : "Enlarge"}
+            >
+              {modalEnlarge ? <CloseFullscreenIcon fontSize="small" /> : <OpenInFullIcon fontSize="small" />}
+            </IconButton>
+            <IconButton
+              onClick={closeModal}
+              size="small"
+              sx={{ color: "#fff" }}
+              aria-label="Close"
+            >
+              <span style={{ fontSize: 20, lineHeight: 1, fontWeight: 300 }}>×</span>
+            </IconButton>
+          </div>
+        </Modal.Header>
+        <Modal.Body className="wrtdip-map-modal__body">
+          <section className="wrtdip-map-modal__section">
+            <Typography variant="subtitle1" className="wrtdip-map-modal__section-title">
+              Freezing Degree Days (FDDs)
+            </Typography>
+            <Typography variant="caption" color="text.secondary" sx={{ display: "block", mb: 1 }}>
+              Annual cumulative freezing degree days, 1980–2019
+            </Typography>
+            <div className="wrtdip-map-modal__chart">{generateChart()}</div>
+          </section>
 
-        {/* REMOVE THIS BLOCK:
-        <Typography variant="h5" style={{ marginTop: 16 }}>
-          Weather Forecast 2
-        </Typography>
-        
-        <iframe // try to use iframe to appear the weather forecast wedgit
-        title="Environment Canada Weather"
-        width="400"
-        height="400"
-        src={`https://weather.gc.ca/wxlink/wxlink.html?cityCode=${territory}-${key}&lang=e`}
-        allowtransparency="true"
-        />
-        */}
-
-        {/* REMOVE THIS BLOCK:
-        {climateLoading ? (
-          <Typography>Loading weather forecast data...</Typography>
-        ) : climateData && climateData.error ? (
-            <Typography color="error">{climateData.error}</Typography>
-        ) : climateData ? (
-          <pre style={{ maxHeight: 200, overflow: "auto", background: "#f5f5f5", padding: 8 }}>
-            {JSON.stringify(climateData, null, 2)}
-          </pre>
-        ) : (
-          <Typography>No weather forecast data loaded.</Typography>
-        )}
-        */}
-
+          <section className="wrtdip-map-modal__section">
+            <Typography variant="subtitle1" className="wrtdip-map-modal__section-title">
+              3-Day Weather Forecast
+            </Typography>
+            <Typography variant="caption" color="text.secondary" sx={{ display: "block", mb: 1.5 }}>
+              Current conditions and outlook for the next 3 days
+            </Typography>
+            <ForecastPanel lat={lat} lon={lon} />
+          </section>
         </Modal.Body>
       </Modal>
     </div>
@@ -1085,28 +351,217 @@ function WeatherMap() {
     featureLayer.renderer = layer.renderer;
   }
 
+  // Clip Major/Minor Roads (GNWT Transportation service extends south into
+  // BC/Alberta) to the three territories — everything north of 60°N.
+  if (layer.title === "Major Roads" || layer.title === "Minor Roads") {
+    featureLayer.featureEffect = {
+      filter: {
+        geometry: {
+          type: "extent",
+          xmin: -141.5,
+          ymin: 60,
+          xmax: -60,
+          ymax: 84,
+          spatialReference: { wkid: 4326 },
+        },
+        spatialRelationship: "intersects",
+      },
+      excludedEffect: "opacity(0%)",
+    };
+  }
+
   featureLayer.title = layer.title;
   map.add(featureLayer);
   });
 
-  // Create Layer List widget
-  const layerList = new LayerList({
-    view,
-    container: "layer-list-container",
-    listItemCreatedFunction: (event) => {
-    const item = event.item;
-    console.log(`Layer in Layer List: ${item.layer.title}`); // Debugging
+  // Create a custom layer list panel (replaces the default ArcGIS LayerList).
+  // It's wrapped in an Expand widget so it occupies the exact same UI slot.
+  const layerListContainer = document.createElement("div")
+  layerListContainer.className = "wrtdip-layer-panel"
+  layerListContainer.innerHTML = `
+    <div class="wrtdip-layer-panel__header">
+      <span class="wrtdip-layer-panel__title">Map Layers</span>
+      <div class="wrtdip-layer-panel__actions">
+        <button type="button" class="wrtdip-layer-panel__btn" data-action="all">All</button>
+        <button type="button" class="wrtdip-layer-panel__btn" data-action="none">None</button>
+      </div>
+    </div>
+    <div class="wrtdip-layer-panel__featured" data-featured-slot></div>
+    <ul class="wrtdip-layer-panel__list" role="list"></ul>
+  `
 
-    // Customize layer titles if needed
-      if (item.layer.title.includes("Airports")) {
-        item.title = item.layer.title; // Keep the original title or customize it
-      } else if (item.layer.title.includes("Winter Roads")) {
-        item.title = item.layer.title; // Keep the original title or customize it
-      } else if (item.layer.title.includes("Ferries") || item.layer.title.includes("Ice Crossings")) {
-        item.title = item.layer.title; // Keep the original title or customize it
-      }
-    },
-  });
+  // Title of the layer that the pinned "3-Day Forecast" row controls.
+  const FORECAST_LAYER_TITLE = "Weather Forecast"
+  const miniForecastState = {
+    loading: false,
+    days: [],
+    hasLoaded: false,
+    cityName: "",
+  }
+
+  function getMiniWeatherIcon(code) {
+    if (code === 0) return "☀️"
+    if (code === 1 || code === 2) return "⛅"
+    if (code === 3) return "☁️"
+    if (code >= 45 && code <= 48) return "🌫️"
+    if ((code >= 51 && code <= 67) || (code >= 80 && code <= 82)) return "🌧️"
+    if (code >= 71 && code <= 77) return "❄️"
+    if (code >= 95) return "⛈️"
+    return "🌡️"
+  }
+
+  function buildMiniForecastMarkup() {
+    if (miniForecastState.loading) {
+      return `<div class="wrtdip-layer-panel__mini-loading">Loading 3-day forecast...</div>`
+    }
+    if (!miniForecastState.days.length) {
+      const hint = miniForecastState.hasLoaded
+        ? "Forecast unavailable"
+        : "Select a city marker"
+      return `<div class="wrtdip-layer-panel__mini-hint">${hint}</div>`
+    }
+
+    return `
+      <div class="wrtdip-layer-panel__mini-grid">
+        ${miniForecastState.days
+          .map(
+            (day) => `
+              <div class="wrtdip-layer-panel__mini-day">
+                <span class="wrtdip-layer-panel__mini-icon" aria-hidden="true">${getMiniWeatherIcon(day.code)}</span>
+                <span class="wrtdip-layer-panel__mini-temp">${day.temp}°</span>
+              </div>
+            `
+          )
+          .join("")}
+      </div>
+    `
+  }
+
+  async function updateLayerPanelMiniForecast(lat, lon) {
+    miniForecastState.loading = true
+    renderCustomLayerList()
+    try {
+      const url =
+        `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}` +
+        `&daily=weather_code,temperature_2m_max&timezone=auto&forecast_days=3&temperature_unit=celsius`
+      const json = await fetch(url).then((r) => r.json())
+      const daily = json?.daily || {}
+      const codes = Array.isArray(daily.weather_code) ? daily.weather_code : []
+      const temps = Array.isArray(daily.temperature_2m_max)
+        ? daily.temperature_2m_max
+        : []
+      miniForecastState.days = [0, 1, 2]
+        .map((i) => ({
+          code: codes[i],
+          temp: Number.isFinite(temps[i]) ? Math.round(temps[i]) : null,
+        }))
+        .filter((d) => d.temp !== null)
+    } catch (e) {
+      miniForecastState.days = []
+    } finally {
+      miniForecastState.loading = false
+      miniForecastState.hasLoaded = true
+      renderCustomLayerList()
+    }
+  }
+
+  /**
+   * Build / rebuild the list of layers as checkbox rows. Wires up two-way
+   * sync: clicks toggle layer.visible, and external visibility changes
+   * (e.g. via code) update the checkboxes.
+   */
+  const layerWatchHandles = []
+  function renderCustomLayerList() {
+    // Clean up previous per-layer watchers
+    while (layerWatchHandles.length) {
+      const h = layerWatchHandles.pop()
+      try { h.remove() } catch (e) { /* ignore */ }
+    }
+
+    // ---- Featured row: 3-Day Forecast ----
+    const featuredSlot = layerListContainer.querySelector("[data-featured-slot]")
+    featuredSlot.innerHTML = ""
+    const forecastLayer = map.layers.find(
+      (l) => l && l.title === FORECAST_LAYER_TITLE
+    )
+    if (forecastLayer) {
+      const featured = document.createElement("div")
+      featured.className = "wrtdip-layer-panel__featured-row"
+
+      const label = document.createElement("label")
+      label.className = "wrtdip-layer-panel__featured-label"
+      label.innerHTML = `
+        <span class="wrtdip-layer-panel__featured-icon" aria-hidden="true">⛅</span>
+        <span class="wrtdip-layer-panel__featured-text">
+          <span class="wrtdip-layer-panel__featured-title">3-Day Forecast</span>
+          <span class="wrtdip-layer-panel__featured-sub">${
+            miniForecastState.cityName || "Select a city marker"
+          }</span>
+          ${buildMiniForecastMarkup()}
+        </span>
+      `
+
+      featured.appendChild(label)
+      featuredSlot.appendChild(featured)
+    }
+
+    // ---- Regular layer list ----
+    const ul = layerListContainer.querySelector(".wrtdip-layer-panel__list")
+    ul.innerHTML = ""
+
+    // Render in reverse so the top-most map layer appears at the top of the list.
+    const layers = map.layers.toArray().slice().reverse()
+    layers.forEach((layer) => {
+      if (!layer.title) return
+      // Skip the forecast layer here — it's pinned at the top instead.
+      if (layer.title === FORECAST_LAYER_TITLE) return
+
+      const li = document.createElement("li")
+      li.className = "wrtdip-layer-panel__item"
+
+      const id = `wrtdip-layer-${Math.random().toString(36).slice(2, 9)}`
+      const checkbox = document.createElement("input")
+      checkbox.type = "checkbox"
+      checkbox.id = id
+      checkbox.className = "wrtdip-layer-panel__checkbox"
+      checkbox.checked = !!layer.visible
+
+      const label = document.createElement("label")
+      label.htmlFor = id
+      label.className = "wrtdip-layer-panel__label"
+      label.textContent = layer.title
+
+      checkbox.addEventListener("change", () => {
+        layer.visible = checkbox.checked
+      })
+
+      // Keep checkbox in sync with external changes
+      const handle = layer.watch("visible", (v) => {
+        checkbox.checked = !!v
+      })
+      layerWatchHandles.push(handle)
+
+      li.appendChild(checkbox)
+      li.appendChild(label)
+      ul.appendChild(li)
+    })
+  }
+
+  // "All" / "None" bulk toggles
+  layerListContainer.querySelectorAll(".wrtdip-layer-panel__btn").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const action = btn.getAttribute("data-action")
+      const next = action === "all"
+      map.layers.forEach((layer) => {
+        if (layer.title) layer.visible = next
+      })
+    })
+  })
+
+  // Re-render whenever layers are added/removed from the map
+  map.layers.on("change", () => renderCustomLayerList())
+  // Initial render (more layers may be added later — change handler will refresh)
+  renderCustomLayerList()
 
 
  
@@ -1116,7 +571,7 @@ function WeatherMap() {
 
         // Add expand widgets for layer list and legend
         const layerListExpand = new Expand({
-          content: layerList.domNode,
+          content: layerListContainer,
           view,
           expanded: false,
           expandIconClass: "custom-layerlist-icon",
@@ -1207,6 +662,8 @@ function WeatherMap() {
           view.on("click", (event) => {
             let uniqueKey = -1,
               territory = null
+            let selectedCityName = null
+            let selectedCoordinates = null
             const clickedPoint = event.mapPoint
             const latitude = clickedPoint.latitude,
               longitude = clickedPoint.longitude
@@ -1228,6 +685,8 @@ function WeatherMap() {
               ) {
                 uniqueKey = yukonKey
                 territory = "yt"
+                selectedCoordinates = yukonCoordinates[yukonKey]
+                selectedCityName = citiesOfYukon[yukonKey]
                 let city = cities.find(
                   (c) => c.name_e == citiesOfYukon[uniqueKey]
                 )
@@ -1269,6 +728,8 @@ function WeatherMap() {
                 ) {
                   uniqueKey = northKey
                   territory = "nt"
+                  selectedCoordinates = northWestCoordinates[northKey]
+                  selectedCityName = citiesOfNorthwestTerritories[northKey]
                   return false
                 }
               } else if (
@@ -1285,6 +746,8 @@ function WeatherMap() {
               ) {
                 uniqueKey = northKey
                 territory = "nt"
+                selectedCoordinates = northWestCoordinates[northKey]
+                selectedCityName = citiesOfNorthwestTerritories[northKey]
                 return false
               }
               return true
@@ -1306,10 +769,22 @@ function WeatherMap() {
               ) {
                 uniqueKey = nunavutKey
                 territory = "nu"
+                selectedCoordinates = nunavutCoordinates[nunavutKey]
+                selectedCityName = citiesOfNunavut[nunavutKey]
                 return false
               }
               return true
             })
+
+            miniForecastState.cityName = selectedCityName || ""
+            renderCustomLayerList()
+
+            if (territory != null && selectedCoordinates) {
+              updateLayerPanelMiniForecast(
+                selectedCoordinates[0],
+                selectedCoordinates[1]
+              )
+            }
             setKey((prevKey) => uniqueKey)
             setTerritory((prevTerritory) => territory)
             setModalIsOpen(true)
