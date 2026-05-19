@@ -205,6 +205,30 @@
   .wrtdip-map-modal__iframe-wrap iframe {
     height: 320px;
   }
+
+  .wrtdip-map-modal--enlarged {
+    max-width: 100%;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+  }
+
+  .wrtdip-map-modal--enlarged .modal-content,
+  .wrtdip-map-modal--enlarged.modal-dialog .modal-content {
+    border-radius: 0;
+    height: 100vh;
+    max-height: 100vh;
+  }
+
+  .wrtdip-map-modal--enlarged .wrtdip-map-modal__body {
+    max-height: calc(100vh - 52px);
+    height: calc(100vh - 52px);
+  }
+
+  .wrtdip-map-modal--enlarged .wrtdip-map-modal__iframe-wrap iframe {
+    height: calc(100vh - 200px);
+  }
 }
 
 /* ===========================================================

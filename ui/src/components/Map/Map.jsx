@@ -931,10 +931,16 @@ function WeatherMap() {
             latitude: coordinates[0],
           }
 
+          // Resolve city name for the label
+          let cityName = ""
+          if (territoryCode === "yt") cityName = citiesOfYukon[cityKey] || ""
+          else if (territoryCode === "nt") cityName = citiesOfNorthwestTerritories[cityKey] || ""
+          else if (territoryCode === "nu") cityName = citiesOfNunavut[cityKey] || ""
+
           let markerStyle = {
             type: "simple-marker",
             color: color,
-            size: "10px",
+            size: "15px",
             outline: {
               color: "white",
               width: 1,
@@ -950,12 +956,30 @@ function WeatherMap() {
             },
           });
           layer.add(newPointGraphic);
+
+          // Add text label for the city
+          let labelGraphic = new Graphic({
+            symbol: {
+              type: "text",
+              color: "#333",
+              text: cityName,
+              font: {
+                size: 10,
+                weight: "bold",
+              },
+              haloColor: "white",
+              haloSize: 1,
+              yoffset: -14,
+            },
+            geometry: pinCoordinates,
+          });
+          layer.add(labelGraphic);
         }
 
         // --- Hover: enlarge marker on pointer-move ---
         let highlightedGraphic = null
-        const NORMAL_SIZE = "10px"
-        const HOVER_SIZE = "15px"
+        const NORMAL_SIZE = "15px"
+        const HOVER_SIZE = "22px"
 
         view.on("pointer-move", (event) => {
           view.hitTest(event).then((response) => {
