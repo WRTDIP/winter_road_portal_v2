@@ -113,6 +113,8 @@ function WeatherMap() {
   const [showAdvanced, setShowAdvanced] = useState(false)
   const [fddViewRange, setFddViewRange] = useState([1951, 2023])
   const [fddYRange, setFddYRange] = useState([0, 5000])
+  const [showLowess, setShowLowess] = useState(false)
+  const [lowessSeries, setLowessSeries] = useState([]) // [{stationId, years, fdds}]
   const isMobile = useMediaQuery("(max-width:768px)")
 
   /**
@@ -193,6 +195,33 @@ function WeatherMap() {
       .finally(() => setFddLoading(false))
   }, [modalIsOpen, selectedStations, fddDatasetId])
 
+  // Fetch LOWESS data when toggle is on
+  useEffect(() => {
+    if (!showLowess || !modalIsOpen || selectedStations.length === 0) {
+      setLowessSeries([])
+      return
+    }
+    const fetches = selectedStations.map((stationId) => {
+      let url = `${API_BASE}/lowess?fromyear=1951&toyear=2023&stationid=${stationId}`
+      if (fddDatasetId) {
+        url += `&dataset_id=${fddDatasetId}`
+      }
+      return fetch(url)
+        .then((r) => r.json())
+        .then((json) => {
+          const rows = json.data || []
+          return {
+            stationId,
+            years: rows.map((row) => row[0]),
+            fdds: rows.map((row) => row[1]),
+          }
+        })
+        .catch(() => ({ stationId, years: [], fdds: [] }))
+    })
+    Promise.all(fetches)
+      .then((results) => setLowessSeries(results.filter((r) => r.years.length > 0)))
+  }, [showLowess, modalIsOpen, selectedStations, fddDatasetId])
+
   useEffect(() => {
     console.log("Print Mouse", mouse)
   }, [mouse])
@@ -246,6 +275,8 @@ function WeatherMap() {
     setShowAdvanced(false)
     setFddViewRange([1951, 2023])
     setFddYRange([0, 5000])
+    setShowLowess(false)
+    setLowessSeries([])
   }
 
   /**
@@ -287,6 +318,7 @@ function WeatherMap() {
       const dataMax = allYears[allYears.length - 1]
 
       const colors = ["#1976d2", "#d32f2f", "#388e3c", "#f57c00", "#7b1fa2", "#0097a7"]
+      const lowessColors = ["#ff6f00", "#6a1b9a", "#00695c", "#c62828", "#1565c0", "#4e342e"]
       const series = fddSeries.map((s, idx) => {
         // Align data to the filtered x-axis (null for missing years)
         const yearMap = {}
@@ -301,6 +333,25 @@ function WeatherMap() {
           connectNulls: true,
         }
       })
+
+      // Add LOWESS trend lines if enabled
+      if (showLowess && lowessSeries.length > 0) {
+        lowessSeries.forEach((ls, idx) => {
+          const yearMap = {}
+          ls.years.forEach((y, i) => { yearMap[y] = ls.fdds[i] })
+          const alignedData = filteredYears.map((y) => yearMap[y] ?? null)
+          const matchingStation = fddSeries.find((s) => s.stationId === ls.stationId)
+          const label = matchingStation ? `${matchingStation.stationName} (LOWESS)` : `LOWESS ${idx + 1}`
+          series.push({
+            data: alignedData,
+            color: lowessColors[idx % lowessColors.length],
+            showMark: false,
+            curve: "monotoneX",
+            label,
+            connectNulls: true,
+          })
+        })
+      }
 
       const chartHeight = fddSeries.length > 1 ? 300 : 260
 
@@ -460,6 +511,16 @@ function WeatherMap() {
               </button>
               {showAdvanced && (
                 <div style={{ marginTop: "0.75rem", padding: "0.75rem", background: "#f8f9fa", borderRadius: "6px", border: "1px solid #e9ecef" }}>
+                  <div style={{ marginBottom: "0.75rem" }}>
+                    <label style={{ fontSize: "0.8rem", display: "flex", alignItems: "center", gap: "6px", cursor: "pointer" }}>
+                      <input
+                        type="checkbox"
+                        checked={showLowess}
+                        onChange={(e) => setShowLowess(e.target.checked)}
+                      />
+                      Show LOWESS trend curve
+                    </label>
+                  </div>
                   {cityStations.length > 1 && (
                     <div style={{ marginBottom: "0.75rem" }}>
                       <Typography variant="caption" sx={{ fontWeight: 600, display: "block", mb: 0.5 }}>

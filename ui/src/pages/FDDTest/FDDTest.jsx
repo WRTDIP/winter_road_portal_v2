@@ -19,6 +19,8 @@ function FDDTest() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [viewRange, setViewRange] = useState([1951, 2023]);
+  const [showLowess, setShowLowess] = useState(false);
+  const [lowessData, setLowessData] = useState(null);
   const isMobile = useMediaQuery("(max-width:768px)");
 
   useEffect(() => {
@@ -52,6 +54,7 @@ function FDDTest() {
     setLoading(true);
     setError(null);
     setFddData(null);
+    setLowessData(null);
 
     let url = `${API_BASE}/fdd?fromyear=${fromYear}&toyear=${toYear}&stationid=${stationId}`;
     if (datasetId) {
@@ -67,6 +70,22 @@ function FDDTest() {
         const fdds = rows.map((row) => parseFloat(row[1]));
 
         setFddData({ years, fdds });
+
+        // Fetch LOWESS curve
+        let lowessUrl = `${API_BASE}/lowess?fromyear=${fromYear}&toyear=${toYear}&stationid=${stationId}`;
+        if (datasetId) {
+          lowessUrl += `&dataset_id=${datasetId}`;
+        }
+        return fetch(lowessUrl).then((r) => r.json());
+      })
+      .then((json) => {
+        if (json && json.data) {
+          const rows = json.data;
+          setLowessData({
+            years: rows.map((row) => row[0]),
+            fdds: rows.map((row) => row[1]),
+          });
+        }
       })
       .catch((err) => setError("Failed to fetch FDD data: " + err.message))
       .finally(() => setLoading(false));
@@ -158,13 +177,27 @@ function FDDTest() {
         )}
 
         {fddData && fddData.years.length > 0 && (
-          <FDDChartSection
-            fddData={fddData}
-            stationName={stationName}
-            viewRange={viewRange}
-            setViewRange={setViewRange}
-            isMobile={isMobile}
-          />
+          <>
+            <Row className="mb-3">
+              <Col>
+                <Form.Check
+                  type="switch"
+                  id="lowess-toggle"
+                  label="Show LOWESS trend curve"
+                  checked={showLowess}
+                  onChange={(e) => setShowLowess(e.target.checked)}
+                />
+              </Col>
+            </Row>
+            <FDDChartSection
+              fddData={fddData}
+              lowessData={showLowess ? lowessData : null}
+              stationName={stationName}
+              viewRange={viewRange}
+              setViewRange={setViewRange}
+              isMobile={isMobile}
+            />
+          </>
         )}
 
         {fddData && fddData.years.length === 0 && (
@@ -181,7 +214,7 @@ function FDDTest() {
   );
 }
 
-function FDDChartSection({ fddData, stationName, viewRange, setViewRange, isMobile }) {
+function FDDChartSection({ fddData, lowessData, stationName, viewRange, setViewRange, isMobile }) {
   const dataMin = fddData.years[0];
   const dataMax = fddData.years[fddData.years.length - 1];
 
@@ -211,6 +244,28 @@ function FDDChartSection({ fddData, stationName, viewRange, setViewRange, isMobi
       fdds: fddData.fdds.slice(startIdx, endIdx + 1),
     };
   }, [fddData, viewRange]);
+
+  const filteredLowess = useMemo(() => {
+    if (!lowessData) return null;
+    const yearMap = {};
+    lowessData.years.forEach((y, i) => { yearMap[y] = lowessData.fdds[i]; });
+    return filteredData.years.map((y) => yearMap[y] ?? null);
+  }, [lowessData, filteredData]);
+
+  const chartSeries = useMemo(() => {
+    const series = [{ data: filteredData.fdds, label: "FDDs", showMark: true }];
+    if (filteredLowess) {
+      series.push({
+        data: filteredLowess,
+        label: "LOWESS Trend",
+        showMark: false,
+        curve: "monotoneX",
+        color: "#d32f2f",
+        connectNulls: true,
+      });
+    }
+    return series;
+  }, [filteredData, filteredLowess]);
 
   const pinchRef = usePinchZoomYears(viewRange, setViewRange, dataMin, dataMax, {
     range: yRange,
@@ -246,7 +301,7 @@ function FDDChartSection({ fddData, stationName, viewRange, setViewRange, isMobi
             <LineChart
               xAxis={[{ data: filteredData.years, label: "Year", scaleType: "point" }]}
               yAxis={[{ min: yRange[0], max: yRange[1], label: "FDDs (°C·days)" }]}
-              series={[{ data: filteredData.fdds, label: "FDDs", showMark: true }]}
+              series={chartSeries}
               height={500}
             />
           )}
