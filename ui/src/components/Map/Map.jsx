@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react"
+import { useEffect, useRef, useState, useMemo } from "react"
 
 import { Modal } from "react-bootstrap"
 import "bootstrap/dist/css/bootstrap.min.css"
@@ -18,10 +18,13 @@ import { getClimateCity } from "../../services/meteo.service.js"
 import { cities } from "../../utils/constants.js"
 import { LineChart } from "@mui/x-charts/LineChart"
 import { Icon, Typography } from "@mui/material"
+import useMediaQuery from "@mui/material/useMediaQuery"
 import OpenInFullIcon from "@mui/icons-material/OpenInFull"
 import CloseFullscreenIcon from "@mui/icons-material/CloseFullscreen"
 import IconButton from "@mui/material/IconButton"
 import ForecastPanel from "./ForecastPanel.jsx"
+import YearRangeSlider from "../YearRangeSlider/YearRangeSlider.jsx"
+import usePinchZoomYears from "../../hooks/usePinchZoomYears.js"
 
 const API_BASE = "https://dev-moh.wramp.ca/python-api";
 
@@ -108,6 +111,9 @@ function WeatherMap() {
   const [cityStations, setCityStations] = useState([]) // [{station_id, name}]
   const [selectedStations, setSelectedStations] = useState([]) // [stationId, ...]
   const [showAdvanced, setShowAdvanced] = useState(false)
+  const [fddViewRange, setFddViewRange] = useState([1951, 2023])
+  const [fddYRange, setFddYRange] = useState([0, 5000])
+  const isMobile = useMediaQuery("(max-width:768px)")
 
   /**
    * Effect hook to load data when component mounts.
@@ -191,6 +197,40 @@ function WeatherMap() {
     console.log("Print Mouse", mouse)
   }, [mouse])
 
+  // Sync fddViewRange when fddSeries data changes
+  useEffect(() => {
+    if (fddSeries.length > 0) {
+      const allYears = [...new Set(fddSeries.flatMap((s) => s.years))].sort((a, b) => a - b)
+      if (allYears.length > 0) {
+        setFddViewRange([allYears[0], allYears[allYears.length - 1]])
+      }
+      const allFdds = fddSeries.flatMap((s) => s.fdds).filter((v) => v != null && !isNaN(v))
+      if (allFdds.length > 0) {
+        setFddYRange([Math.floor(Math.min(...allFdds)), Math.ceil(Math.max(...allFdds))])
+      }
+    }
+  }, [fddSeries])
+
+  // Compute FDD value bounds for Y-axis slider
+  const fddYBounds = useMemo(() => {
+    const allFdds = fddSeries.flatMap((s) => s.fdds).filter((v) => v != null && !isNaN(v))
+    if (allFdds.length === 0) return { min: 0, max: 5000 }
+    return { min: Math.floor(Math.min(...allFdds)), max: Math.ceil(Math.max(...allFdds)) }
+  }, [fddSeries])
+
+  // Pinch-to-zoom ref for the popup chart
+  const fddAllYears = useMemo(() => {
+    if (fddSeries.length === 0) return []
+    return [...new Set(fddSeries.flatMap((s) => s.years))].sort((a, b) => a - b)
+  }, [fddSeries])
+  const fddPinchRef = usePinchZoomYears(
+    fddViewRange,
+    setFddViewRange,
+    fddAllYears[0],
+    fddAllYears[fddAllYears.length - 1],
+    { range: fddYRange, setRange: setFddYRange, min: fddYBounds.min, max: fddYBounds.max }
+  )
+
   /**
    * Function to close the modal.
    */
@@ -204,6 +244,8 @@ function WeatherMap() {
     setCityStations([])
     setSelectedStations([])
     setShowAdvanced(false)
+    setFddViewRange([1951, 2023])
+    setFddYRange([0, 5000])
   }
 
   /**
@@ -239,12 +281,17 @@ function WeatherMap() {
       // Combine all years from all series for the x-axis
       const allYears = [...new Set(fddSeries.flatMap((s) => s.years))].sort((a, b) => a - b)
 
+      // Filter by view range
+      const filteredYears = allYears.filter((y) => y >= fddViewRange[0] && y <= fddViewRange[1])
+      const dataMin = allYears[0]
+      const dataMax = allYears[allYears.length - 1]
+
       const colors = ["#1976d2", "#d32f2f", "#388e3c", "#f57c00", "#7b1fa2", "#0097a7"]
       const series = fddSeries.map((s, idx) => {
-        // Align data to the combined x-axis (null for missing years)
+        // Align data to the filtered x-axis (null for missing years)
         const yearMap = {}
         s.years.forEach((y, i) => { yearMap[y] = s.fdds[i] })
-        const alignedData = allYears.map((y) => yearMap[y] ?? null)
+        const alignedData = filteredYears.map((y) => yearMap[y] ?? null)
         return {
           data: alignedData,
           color: colors[idx % colors.length],
@@ -259,26 +306,54 @@ function WeatherMap() {
 
       return (
         <div>
-          <LineChart
-            xAxis={[
-              {
-                data: allYears,
-                valueFormatter: (year) => year.toString(),
-                label: "Year",
-              },
-            ]}
-            yAxis={[
-              {
-                label: "Freezing Degree Days (°C·days)",
-                labelStyle: { transform: "rotate(270deg) translate(-94px, -176px)" },
-              },
-            ]}
-            series={series}
-            height={chartHeight}
-            margin={{ left: 95, right: 20, top: 10, bottom: 50 }}
-            grid={{ horizontal: true }}
-            slotProps={{ legend: { hidden: true } }}
+          <YearRangeSlider
+            value={fddViewRange}
+            onChange={setFddViewRange}
+            min={dataMin}
+            max={dataMax}
           />
+          <YearRangeSlider
+            value={fddYRange}
+            onChange={setFddYRange}
+            min={fddYBounds.min}
+            max={fddYBounds.max}
+            label="FDD Range (°C·days)"
+          />
+          <div ref={fddPinchRef} style={{ touchAction: "none", overflow: "hidden" }}>
+            {filteredYears.length > 0 ? (
+              <LineChart
+                xAxis={[
+                  {
+                    data: filteredYears,
+                    valueFormatter: (year) => year.toString(),
+                    label: "Year",
+                  },
+                ]}
+                yAxis={[
+                  {
+                    min: fddYRange[0],
+                    max: fddYRange[1],
+                    label: "Freezing Degree Days (°C·days)",
+                    labelStyle: { transform: "rotate(270deg) translate(-94px, -176px)" },
+                  },
+                ]}
+                series={series}
+                height={chartHeight}
+                margin={{ left: 95, right: 20, top: 10, bottom: 50 }}
+                grid={{ horizontal: true }}
+                slotProps={{ legend: { hidden: true } }}
+              />
+            ) : (
+              <Typography variant="body2" color="text.secondary" sx={{ py: 2, textAlign: "center" }}>
+                No data in the selected year range.
+              </Typography>
+            )}
+          </div>
+          {isMobile && (
+            <p style={{ textAlign: "center", fontSize: "0.7rem", color: "#888", margin: "4px 0 0" }}>
+              Pinch to zoom · Swipe to pan
+            </p>
+          )}
           {fddSeries.length > 1 && (
             <div style={{ display: "flex", flexWrap: "wrap", gap: "12px", justifyContent: "center", padding: "8px 0" }}>
               {fddSeries.map((s, idx) => (

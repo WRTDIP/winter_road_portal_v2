@@ -1,7 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { Container, Row, Col, Form, Button, Spinner } from "react-bootstrap";
 import { LineChart } from "@mui/x-charts/LineChart";
+import useMediaQuery from "@mui/material/useMediaQuery";
 import CoverBanner from "../../components/Global/CoverBanner/CoverBanner";
+import YearRangeSlider from "../../components/YearRangeSlider/YearRangeSlider";
+import usePinchZoomYears from "../../hooks/usePinchZoomYears";
 
 const API_BASE = "https://dev-moh.wramp.ca/python-api";
 
@@ -15,6 +18,8 @@ function FDDTest() {
   const [fddData, setFddData] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [viewRange, setViewRange] = useState([1951, 2023]);
+  const isMobile = useMediaQuery("(max-width:768px)");
 
   useEffect(() => {
     fetch(`${API_BASE}/stations`)
@@ -153,20 +158,13 @@ function FDDTest() {
         )}
 
         {fddData && fddData.years.length > 0 && (
-          <Row>
-            <Col>
-              <h4 style={{ textAlign: "center", marginBottom: "1rem" }}>
-                Freezing Degree Days
-                {stationName && ` — ${stationName}`}
-                {` (${fddData.years[0]}–${fddData.years[fddData.years.length - 1]})`}
-              </h4>
-              <LineChart
-                xAxis={[{ data: fddData.years, label: "Year", scaleType: "point" }]}
-                series={[{ data: fddData.fdds, label: "FDDs", showMark: true }]}
-                height={500}
-              />
-            </Col>
-          </Row>
+          <FDDChartSection
+            fddData={fddData}
+            stationName={stationName}
+            viewRange={viewRange}
+            setViewRange={setViewRange}
+            isMobile={isMobile}
+          />
         )}
 
         {fddData && fddData.years.length === 0 && (
@@ -180,6 +178,86 @@ function FDDTest() {
         )}
       </Container>
     </div>
+  );
+}
+
+function FDDChartSection({ fddData, stationName, viewRange, setViewRange, isMobile }) {
+  const dataMin = fddData.years[0];
+  const dataMax = fddData.years[fddData.years.length - 1];
+
+  const fddMin = useMemo(() => Math.floor(Math.min(...fddData.fdds)), [fddData.fdds]);
+  const fddMax = useMemo(() => Math.ceil(Math.max(...fddData.fdds)), [fddData.fdds]);
+
+  const [yRange, setYRange] = useState([fddMin, fddMax]);
+
+  // Sync viewRange with loaded data bounds
+  useEffect(() => {
+    setViewRange([dataMin, dataMax]);
+  }, [dataMin, dataMax, setViewRange]);
+
+  // Sync yRange with data bounds
+  useEffect(() => {
+    setYRange([fddMin, fddMax]);
+  }, [fddMin, fddMax]);
+
+  const filteredData = useMemo(() => {
+    const startIdx = fddData.years.findIndex((y) => y >= viewRange[0]);
+    const endIdx = fddData.years.findLastIndex((y) => y <= viewRange[1]);
+    if (startIdx === -1 || endIdx === -1 || endIdx < startIdx) {
+      return { years: [], fdds: [] };
+    }
+    return {
+      years: fddData.years.slice(startIdx, endIdx + 1),
+      fdds: fddData.fdds.slice(startIdx, endIdx + 1),
+    };
+  }, [fddData, viewRange]);
+
+  const pinchRef = usePinchZoomYears(viewRange, setViewRange, dataMin, dataMax, {
+    range: yRange,
+    setRange: setYRange,
+    min: fddMin,
+    max: fddMax,
+  });
+
+  return (
+    <Row>
+      <Col>
+        <h4 style={{ textAlign: "center", marginBottom: "1rem" }}>
+          Freezing Degree Days
+          {stationName && ` — ${stationName}`}
+          {filteredData.years.length > 0 &&
+            ` (${filteredData.years[0]}–${filteredData.years[filteredData.years.length - 1]})`}
+        </h4>
+        <YearRangeSlider
+          value={viewRange}
+          onChange={setViewRange}
+          min={dataMin}
+          max={dataMax}
+        />
+        <YearRangeSlider
+          value={yRange}
+          onChange={setYRange}
+          min={fddMin}
+          max={fddMax}
+          label="FDD Range (°C·days)"
+        />
+        <div ref={pinchRef} style={{ touchAction: "none", overflow: "hidden" }}>
+          {filteredData.years.length > 0 && (
+            <LineChart
+              xAxis={[{ data: filteredData.years, label: "Year", scaleType: "point" }]}
+              yAxis={[{ min: yRange[0], max: yRange[1], label: "FDDs (°C·days)" }]}
+              series={[{ data: filteredData.fdds, label: "FDDs", showMark: true }]}
+              height={500}
+            />
+          )}
+        </div>
+        {isMobile && (
+          <p style={{ textAlign: "center", fontSize: "0.75rem", color: "#888", marginTop: "0.5rem" }}>
+            Pinch to zoom · Swipe to pan
+          </p>
+        )}
+      </Col>
+    </Row>
   );
 }
 
