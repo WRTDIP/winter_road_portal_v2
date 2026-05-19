@@ -895,7 +895,7 @@ function WeatherMap() {
         const legendExpand = new Expand({
           content: legend.domNode,
           view,
-          expanded: true,
+          expanded: window.innerWidth > 768,
           expandIconClass: "custom-legend-icon",
         })
 
