@@ -405,7 +405,7 @@ function WeatherMap() {
               Pinch to zoom · Swipe to pan
             </p>
           )}
-          {fddSeries.length > 1 && (
+          {(fddSeries.length > 1 || (showLowess && lowessSeries.length > 0)) && (
             <div style={{ display: "flex", flexWrap: "wrap", gap: "12px", justifyContent: "center", padding: "8px 0" }}>
               {fddSeries.map((s, idx) => (
                 <div key={s.stationId} style={{ display: "flex", alignItems: "center", gap: "6px", fontSize: "0.75rem" }}>
@@ -413,6 +413,16 @@ function WeatherMap() {
                   <span>{s.stationName}</span>
                 </div>
               ))}
+              {showLowess && lowessSeries.map((ls, idx) => {
+                const matchingStation = fddSeries.find((s) => s.stationId === ls.stationId)
+                const label = matchingStation ? `${matchingStation.stationName} (LOWESS)` : `LOWESS ${idx + 1}`
+                return (
+                  <div key={`lowess-${ls.stationId}`} style={{ display: "flex", alignItems: "center", gap: "6px", fontSize: "0.75rem" }}>
+                    <span style={{ width: 14, height: 3, backgroundColor: lowessColors[idx % lowessColors.length], display: "inline-block", borderRadius: 2 }} />
+                    <span>{label}</span>
+                  </div>
+                )
+              })}
             </div>
           )}
         </div>
