@@ -332,6 +332,16 @@ def cmd_download(args: argparse.Namespace) -> int:
 
 # ---------- PostgreSQL loader ------------------------------------------------
 
+DDL_DATASETS = """
+CREATE TABLE IF NOT EXISTS {schema}.datasets (
+    id               INTEGER PRIMARY KEY,
+    name             VARCHAR,
+    timecreated      INTEGER,
+    timeupdated      INTEGER,
+    resourcelink     VARCHAR
+);
+"""
+
 DDL_STATIONS = """
 CREATE TABLE IF NOT EXISTS {schema}.weather_stations (
     station_id       INTEGER PRIMARY KEY,
@@ -390,13 +400,43 @@ CREATE TABLE IF NOT EXISTS {schema}.daily_data (
     dir_of_max_gust_flag     TEXT,
     spd_of_max_gust_kmh      NUMERIC(6, 1),
     spd_of_max_gust_flag     TEXT,
+    dataset_id               INTEGER
+        REFERENCES {schema}.datasets(id) ON DELETE SET NULL,
     CONSTRAINT daily_data_station_date_uniq UNIQUE (station_id, obs_date)
 );
 CREATE INDEX IF NOT EXISTS daily_data_station_idx
     ON {schema}.daily_data (station_id);
 CREATE INDEX IF NOT EXISTS daily_data_date_idx
     ON {schema}.daily_data (obs_date);
+CREATE INDEX IF NOT EXISTS daily_data_dataset_idx
+    ON {schema}.daily_data (dataset_id);
 """
+
+# Pre-defined dataset IDs
+DATASET_ECCC_DAILY = 1
+DATASET_AHCCD_MEAN_TEMP = 2
+DATASET_AHCCD_MAX_TEMP = 3
+DATASET_AHCCD_MIN_TEMP = 4
+DATASET_AHCCD_RAINFALL = 5
+DATASET_AHCCD_SNOWFALL = 6
+DATASET_AHCCD_TOTAL_PRECIP = 7
+
+DATASETS = [
+    (DATASET_ECCC_DAILY, "ECCC Daily Climate Data",
+     "https://climate.weather.gc.ca/climate_data/bulk_data_e.html"),
+    (DATASET_AHCCD_MEAN_TEMP, "AHCCD Homogenized Daily Mean Temperature",
+     "https://crd-data-donnees-rdc.ec.gc.ca/CDAS/products/AHCCD/Homog_daily_mean_temp_Gen3.zip"),
+    (DATASET_AHCCD_MAX_TEMP, "AHCCD Homogenized Daily Max Temperature",
+     "https://crd-data-donnees-rdc.ec.gc.ca/CDAS/products/AHCCD/Homog_daily_max_temp_Gen3.zip"),
+    (DATASET_AHCCD_MIN_TEMP, "AHCCD Homogenized Daily Min Temperature",
+     "https://crd-data-donnees-rdc.ec.gc.ca/CDAS/products/AHCCD/Homog_daily_min_temp_Gen3.zip"),
+    (DATASET_AHCCD_RAINFALL, "AHCCD Adjusted Daily Rainfall",
+     "https://crd-data-donnees-rdc.ec.gc.ca/CDAS/products/AHCCD/Adj_daily_rainfall_v2023.zip"),
+    (DATASET_AHCCD_SNOWFALL, "AHCCD Adjusted Daily Snowfall",
+     "https://crd-data-donnees-rdc.ec.gc.ca/CDAS/products/AHCCD/Adj_daily_snowfall_v2023.zip"),
+    (DATASET_AHCCD_TOTAL_PRECIP, "AHCCD Adjusted Daily Total Precipitation",
+     "https://crd-data-donnees-rdc.ec.gc.ca/CDAS/products/AHCCD/Adj_daily_total_precip_v2023.zip"),
+]
 
 # Mapping CSV header -> (db_column, parser).
 _NUM = "num"
@@ -520,8 +560,25 @@ def cmd_dbload(args: argparse.Namespace) -> int:
                     sql.Identifier(schema)))
                 cur.execute(sql.SQL("DROP TABLE IF EXISTS {}.weather_stations CASCADE").format(
                     sql.Identifier(schema)))
+                cur.execute(sql.SQL("DROP TABLE IF EXISTS {}.datasets CASCADE").format(
+                    sql.Identifier(schema)))
+            cur.execute(DDL_DATASETS.format(schema=schema))
             cur.execute(DDL_STATIONS.format(schema=schema))
             cur.execute(DDL_DAILY.format(schema=schema))
+
+            # Pre-create dataset entries
+            import time as _time
+            now_epoch = int(_time.time())
+            for ds_id, ds_name, ds_link in DATASETS:
+                cur.execute(sql.SQL("""
+                    INSERT INTO {schema}.datasets (id, name, timecreated, timeupdated, resourcelink)
+                    VALUES (%s, %s, %s, %s, %s)
+                    ON CONFLICT (id) DO UPDATE SET
+                        name = EXCLUDED.name,
+                        timeupdated = EXCLUDED.timeupdated,
+                        resourcelink = EXCLUDED.resourcelink
+                """).format(schema=sql.Identifier(schema)),
+                    (ds_id, ds_name, now_epoch, now_epoch, ds_link))
         conn.commit()
 
         # Upsert stations.
@@ -598,7 +655,7 @@ def cmd_dbload(args: argparse.Namespace) -> int:
         # Restrict by station IDs in inventory subset (if --province given).
         valid_ids = {int(s.station_id) for s in stations if s.station_id}
 
-        columns = ["station_id"] + [c for _, c, _ in CSV_TO_COLUMN]
+        columns = ["station_id"] + [c for _, c, _ in CSV_TO_COLUMN] + ["dataset_id"]
         copy_sql = sql.SQL("COPY daily_stage ({cols}) FROM STDIN").format(
             cols=sql.SQL(", ").join(map(sql.Identifier, columns)),
         )
@@ -642,7 +699,7 @@ def cmd_dbload(args: argparse.Namespace) -> int:
                             parsed = _parse_row(row)
                             if parsed is None:
                                 continue
-                            copy.write_row((station_id, *parsed))
+                            copy.write_row((station_id, *parsed, DATASET_ECCC_DAILY))
                             file_rows += 1
                 cur.execute(merge_sql)
                 conn.commit()
@@ -653,6 +710,251 @@ def cmd_dbload(args: argparse.Namespace) -> int:
         pbar.close()
         print(f"\nDone. Inserted {total_rows:,} daily rows from "
               f"{len(csv_files) - skipped} file(s) ({skipped} skipped).")
+    return 0
+
+
+# ---------- AHCCD download & load -------------------------------------------
+
+AHCCD_DOWNLOADS = {
+    "mean_temp": (
+        "https://crd-data-donnees-rdc.ec.gc.ca/CDAS/products/AHCCD/Homog_daily_mean_temp_Gen3.zip",
+        DATASET_AHCCD_MEAN_TEMP,
+    ),
+    "max_temp": (
+        "https://crd-data-donnees-rdc.ec.gc.ca/CDAS/products/AHCCD/Homog_daily_max_temp_Gen3.zip",
+        DATASET_AHCCD_MAX_TEMP,
+    ),
+    "min_temp": (
+        "https://crd-data-donnees-rdc.ec.gc.ca/CDAS/products/AHCCD/Homog_daily_min_temp_Gen3.zip",
+        DATASET_AHCCD_MIN_TEMP,
+    ),
+    "rainfall": (
+        "https://crd-data-donnees-rdc.ec.gc.ca/CDAS/products/AHCCD/Adj_daily_rainfall_v2023.zip",
+        DATASET_AHCCD_RAINFALL,
+    ),
+    "snowfall": (
+        "https://crd-data-donnees-rdc.ec.gc.ca/CDAS/products/AHCCD/Adj_daily_snowfall_v2023.zip",
+        DATASET_AHCCD_SNOWFALL,
+    ),
+    "total_precip": (
+        "https://crd-data-donnees-rdc.ec.gc.ca/CDAS/products/AHCCD/Adj_daily_total_precip_v2023.zip",
+        DATASET_AHCCD_TOTAL_PRECIP,
+    ),
+}
+
+
+def cmd_ahccd_download(args: argparse.Namespace) -> int:
+    """Download AHCCD daily data zip files and extract dm files."""
+    import zipfile
+
+    out_dir = Path(args.out)
+    out_dir.mkdir(parents=True, exist_ok=True)
+    session = _make_session()
+
+    variables = args.variable or list(AHCCD_DOWNLOADS.keys())
+
+    for var in variables:
+        if var not in AHCCD_DOWNLOADS:
+            print(f"Unknown variable: {var}. "
+                  f"Choose from: {', '.join(AHCCD_DOWNLOADS.keys())}", file=sys.stderr)
+            return 1
+
+        url, _dataset_id = AHCCD_DOWNLOADS[var]
+        zip_name = url.rsplit("/", 1)[-1]
+        zip_path = out_dir / zip_name
+        var_dir = out_dir / var
+
+        print(f"Downloading {var}: {url}")
+        for attempt in range(3):
+            try:
+                r = session.get(url, timeout=120, stream=True)
+                r.raise_for_status()
+                with zip_path.open("wb") as f:
+                    for chunk in r.iter_content(chunk_size=8192):
+                        f.write(chunk)
+                break
+            except requests.RequestException as exc:
+                if attempt == 2:
+                    print(f"  Failed to download {var}: {exc}", file=sys.stderr)
+                    continue
+                time.sleep(2 ** attempt)
+
+        if not zip_path.exists():
+            continue
+
+        print(f"  Extracting to {var_dir}/")
+        var_dir.mkdir(parents=True, exist_ok=True)
+        try:
+            with zipfile.ZipFile(zip_path, "r") as zf:
+                zf.extractall(var_dir)
+        except zipfile.BadZipFile as e:
+            print(f"  Bad zip file for {var}: {e}", file=sys.stderr)
+            continue
+
+        # Clean up zip
+        zip_path.unlink()
+        print(f"  Done: {var}")
+
+    print("\nAHCCD download complete.")
+    return 0
+
+
+def cmd_ahccd_load(args: argparse.Namespace) -> int:
+    """Load AHCCD CSV files (Year,Mo,Day01..Day31 format) into daily_data."""
+    try:
+        import psycopg
+        from psycopg import sql
+    except ImportError:
+        print(
+            "psycopg is required. Install with:\n    pip install 'psycopg[binary]'",
+            file=sys.stderr,
+        )
+        return 1
+
+    import calendar as _cal
+
+    schema = args.schema
+    conninfo = (
+        f"host={args.host} port={args.port} dbname={args.dbname} "
+        f"user={args.user} password={args.password}"
+    )
+
+    data_dir = Path(args.data_dir)
+    if not data_dir.is_dir():
+        print(f"Data directory not found: {data_dir}", file=sys.stderr)
+        return 1
+
+    # Determine which dataset this is
+    dataset_id = args.dataset_id
+    target_column = args.column
+
+    # Find CSV files (output of dm_to_csv.py)
+    csv_files = sorted(data_dir.glob("*.csv"))
+    if not csv_files:
+        print(f"No CSV files found in {data_dir}.")
+        return 0
+
+    print(f"Found {len(csv_files)} AHCCD CSV file(s) in {data_dir}")
+    print(f"  Dataset ID: {dataset_id}, Target column: {target_column}")
+
+    # AHCCD CSVs map station names to station_ids via weather_stations table
+    with psycopg.connect(conninfo) as conn:
+        # Ensure datasets table and entries exist
+        with conn.cursor() as cur:
+            cur.execute(DDL_DATASETS.format(schema=schema))
+            import time as _time
+            now_epoch = int(_time.time())
+            for ds_id, ds_name, ds_link in DATASETS:
+                cur.execute(sql.SQL("""
+                    INSERT INTO {schema}.datasets (id, name, timecreated, timeupdated, resourcelink)
+                    VALUES (%s, %s, %s, %s, %s)
+                    ON CONFLICT (id) DO NOTHING
+                """).format(schema=sql.Identifier(schema)),
+                    (ds_id, ds_name, now_epoch, now_epoch, ds_link))
+        conn.commit()
+
+        # Build station lookup by name (normalized)
+        with conn.cursor() as cur:
+            cur.execute(sql.SQL(
+                "SELECT station_id, name, climate_id FROM {}.weather_stations"
+            ).format(sql.Identifier(schema)))
+            station_rows = cur.fetchall()
+
+        station_by_name: dict[str, int] = {}
+        for sid, sname, _cid in station_rows:
+            norm = re.sub(r'[^A-Z0-9]', '_', sname.upper()).strip('_')
+            norm = re.sub(r'_+', '_', norm)
+            station_by_name[norm] = sid
+
+        # Columns for the insert: we insert into mean_temp_c (or other column)
+        # based on --column argument
+        total_rows = 0
+        skipped_files = 0
+        pbar = tqdm(csv_files, desc="Loading AHCCD CSVs", unit="file")
+
+        for csv_path in pbar:
+            # Try to match station from filename
+            # Filename format: STATIONNAME_PROV_STARTYEAR_ENDYEAR.csv
+            fname_parts = csv_path.stem.rsplit('_', 2)
+            # Remove year parts from end to get station+prov
+            stem = csv_path.stem
+            # Try to extract station name from filename (everything before _PROV_YEAR_YEAR)
+            m = re.match(r'^(.+?)_([A-Z]{2,3})_(\d{4})_(\d{4})$', stem)
+            if not m:
+                tqdm.write(f"  skip (can't parse filename): {csv_path.name}")
+                skipped_files += 1
+                continue
+
+            station_name_norm = m.group(1)
+            prov_code = m.group(2)
+
+            # Try to find station in DB
+            station_id = station_by_name.get(station_name_norm)
+            if station_id is None:
+                # Try with province appended
+                with_prov = f"{station_name_norm}_{prov_code}"
+                station_id = station_by_name.get(with_prov)
+            if station_id is None:
+                # Try fuzzy: find best prefix match
+                for db_name, db_id in station_by_name.items():
+                    if db_name.startswith(station_name_norm):
+                        station_id = db_id
+                        break
+            if station_id is None:
+                tqdm.write(f"  skip (station not found): {csv_path.name}")
+                skipped_files += 1
+                continue
+
+            pbar.set_postfix_str(csv_path.stem[:30], refresh=True)
+
+            # Read the AHCCD CSV (Year, Mo, Day01..Day31)
+            file_rows = 0
+            with conn.cursor() as cur:
+                with csv_path.open("r", encoding="utf-8", newline="") as fh:
+                    reader = csv.DictReader(fh)
+                    for row in reader:
+                        try:
+                            year = int(row["Year"])
+                            month = int(row["Mo"])
+                        except (ValueError, KeyError):
+                            continue
+
+                        mdays = _cal.monthrange(year, month)[1]
+
+                        for day in range(1, mdays + 1):
+                            day_key = f"Day{day:02d}"
+                            val = row.get(day_key, "").strip()
+                            if not val or val == "-9999.9":
+                                continue
+
+                            try:
+                                float(val)
+                            except ValueError:
+                                continue
+
+                            obs_date = f"{year:04d}-{month:02d}-{day:02d}"
+
+                            cur.execute(sql.SQL("""
+                                INSERT INTO {schema}.daily_data
+                                    (station_id, obs_date, year, month, day, {col}, dataset_id)
+                                VALUES (%s, %s, %s, %s, %s, %s, %s)
+                                ON CONFLICT (station_id, obs_date) DO UPDATE SET
+                                    {col} = EXCLUDED.{col},
+                                    dataset_id = COALESCE({schema}.daily_data.dataset_id, EXCLUDED.dataset_id)
+                            """).format(
+                                schema=sql.Identifier(schema),
+                                col=sql.Identifier(target_column),
+                            ), (station_id, obs_date, year, month, day, val, dataset_id))
+                            file_rows += 1
+
+                conn.commit()
+                total_rows += file_rows
+
+            pbar.set_postfix(rows=total_rows, skipped=skipped_files)
+
+        pbar.close()
+        print(f"\nDone. Inserted/updated {total_rows:,} daily rows from "
+              f"{len(csv_files) - skipped_files} file(s) ({skipped_files} skipped).")
     return 0
 
 
@@ -710,6 +1012,40 @@ def build_parser() -> argparse.ArgumentParser:
                       help="Only create tables and load station metadata; "
                            "do not import any daily CSVs.")
     p_db.set_defaults(func=cmd_dbload)
+
+    # AHCCD download
+    p_ahccd_dl = sub.add_parser(
+        "ahccd-download",
+        help="Download AHCCD daily data zip files (dm format) from ECCC.",
+    )
+    p_ahccd_dl.add_argument("--variable", "-v", nargs="+",
+                            choices=list(AHCCD_DOWNLOADS.keys()),
+                            help="Variables to download. Default: all. "
+                                 f"Options: {', '.join(AHCCD_DOWNLOADS.keys())}")
+    p_ahccd_dl.add_argument("--out", "-o", default="./ahccd",
+                            help="Output directory (default: ./ahccd).")
+    p_ahccd_dl.set_defaults(func=cmd_ahccd_download)
+
+    # AHCCD load
+    p_ahccd_load = sub.add_parser(
+        "ahccd-load",
+        help="Load AHCCD CSV files (Year,Mo,Day01..Day31) into daily_data.",
+    )
+    p_ahccd_load.add_argument("--data-dir", "-d", default="./ahccd/upload",
+                              help="Directory containing AHCCD CSV files.")
+    p_ahccd_load.add_argument("--dataset-id", type=int, default=DATASET_AHCCD_MEAN_TEMP,
+                              help="Dataset ID to assign. Default: 2 (mean temp).")
+    p_ahccd_load.add_argument("--column", "-c", default="mean_temp_c",
+                              choices=["mean_temp_c", "max_temp_c", "min_temp_c",
+                                       "total_rain_mm", "total_snow_cm", "total_precip_mm"],
+                              help="Target column in daily_data for the values.")
+    p_ahccd_load.add_argument("--host", default=os.environ.get("PGHOST", "localhost"))
+    p_ahccd_load.add_argument("--port", default=os.environ.get("PGPORT", "5432"))
+    p_ahccd_load.add_argument("--dbname", default=os.environ.get("PGDATABASE", "postgres"))
+    p_ahccd_load.add_argument("--user", default=os.environ.get("PGUSER", "postgres"))
+    p_ahccd_load.add_argument("--password", default=os.environ.get("PGPASSWORD", ""))
+    p_ahccd_load.add_argument("--schema", default="public")
+    p_ahccd_load.set_defaults(func=cmd_ahccd_load)
 
     return p
 

@@ -152,8 +152,30 @@ export PGPASSWORD=secret
 | snow_on_grnd_cm | NUMERIC | Snow on ground (cm) |
 | dir_of_max_gust_10s_deg | NUMERIC | Direction of max gust (tens of degrees) |
 | spd_of_max_gust_kmh | NUMERIC | Speed of max gust (km/h) |
+| dataset_id | INTEGER (FK) | References `datasets` table |
 
 Each numeric column has an associated `_flag` TEXT column. A unique constraint on `(station_id, obs_date)` ensures idempotent re-imports.
+
+**`datasets`** – describes data sources:
+
+| Column | Type | Description |
+|--------|------|-------------|
+| id | INTEGER (PK) | Dataset identifier |
+| name | VARCHAR | Human-readable dataset name |
+| timecreated | INTEGER | Unix epoch when created |
+| timeupdated | INTEGER | Unix epoch when last updated |
+| resourcelink | VARCHAR | URL to the data source |
+
+Pre-defined dataset IDs:
+| ID | Name |
+|----|------|
+| 1 | ECCC Daily Climate Data |
+| 2 | AHCCD Homogenized Daily Mean Temperature |
+| 3 | AHCCD Homogenized Daily Max Temperature |
+| 4 | AHCCD Homogenized Daily Min Temperature |
+| 5 | AHCCD Adjusted Daily Rainfall |
+| 6 | AHCCD Adjusted Daily Snowfall |
+| 7 | AHCCD Adjusted Daily Total Precipitation |
 
 ## Province Codes
 
@@ -203,3 +225,48 @@ python climate_importer.py dbload --province NT YT NU --data-dir ./data \
 ./venv/bin/python climate_importer.py dbload --province NT YT NU --data-dir ./data --dbname wramp --user postgres --password password --drop
 
 ```
+
+### 5. Download AHCCD Data
+
+```bash
+# Download all AHCCD daily variables (mean/max/min temp, rain, snow, precip)
+python climate_importer.py ahccd-download --out ./ahccd
+
+# Download only specific variables
+python climate_importer.py ahccd-download --variable mean_temp max_temp --out ./ahccd
+```
+
+This downloads zip files from ECCC, extracts the dm-format files into subdirectories.
+
+### 6. Convert AHCCD dm Files to CSV
+
+```bash
+# Convert extracted dm files to CSV
+python dm_to_csv.py --ahccd-dir ./ahccd/mean_temp -o ./ahccd/upload
+
+# Or convert individual files
+python dm_to_csv.py ./ahccd/mean_temp/*.txt -o ./ahccd/upload
+```
+
+### 7. Load AHCCD Data into PostgreSQL
+
+```bash
+# Using climate_importer.py
+python climate_importer.py ahccd-load --data-dir ./ahccd/upload \
+    --column mean_temp_c --dataset-id 2 \
+    --dbname wramp --user postgres --password password
+
+# Or using the standalone csv_to_db.py
+python csv_to_db.py --data-dir ./ahccd/upload --column mean_temp_c --dataset-id 2
+```
+
+#### AHCCD Column/Dataset Mapping
+
+| Variable | --column | --dataset-id |
+|----------|----------|--------------|
+| Mean temperature | mean_temp_c | 2 |
+| Max temperature | max_temp_c | 3 |
+| Min temperature | min_temp_c | 4 |
+| Rainfall | total_rain_mm | 5 |
+| Snowfall | total_snow_cm | 6 |
+| Total precipitation | total_precip_mm | 7 |
