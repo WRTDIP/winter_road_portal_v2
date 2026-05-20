@@ -28,12 +28,12 @@ const PRECACHE_URLS = [
 
 // The install handler takes care of precaching the resources we always need.
 self.addEventListener("install", (event) => {
-  console.log("serviceworker INSTALL", event)
+  //console.log("serviceworker INSTALL", event)
 })
 
 // The activate handler takes care of cleaning up old caches.
 self.addEventListener("activate", (event) => {
-  console.log("serviceworker ACTIVATE", event)
+  //console.log("serviceworker ACTIVATE", event)
 })
 
 // The fetch handler serves responses for same-origin resources from a cache.
@@ -41,5 +41,5 @@ self.addEventListener("activate", (event) => {
 // from the network before returning it to the page.
 self.addEventListener("fetch", (event) => {
   // Skip cross-origin requests, like those for Google Analytics.
-  console.log("serviceworker FETCH", event)
+  //console.log("serviceworker FETCH", event)
 })
