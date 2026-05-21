@@ -1362,7 +1362,23 @@ function WeatherMap() {
             )
 
             if (!hit) {
-              // No city marker clicked — do nothing (don't open modal)
+              // No city marker clicked — check for feature layer popups
+              // (e.g. Winter Roads, Airports, Ice Crossings)
+              const featureHit = response.results.find(
+                (r) =>
+                  r.graphic &&
+                  r.graphic.layer &&
+                  r.graphic.layer.popupEnabled &&
+                  r.graphic.layer.popupTemplate
+              )
+              if (featureHit) {
+                view.popup.open({
+                  features: [featureHit.graphic],
+                  location: event.mapPoint,
+                })
+              } else {
+                view.popup.close()
+              }
               return
             }
 
