@@ -232,6 +232,101 @@
 }
 
 /* ===========================================================
+   FDD Calculation Information collapsible
+   =========================================================== */
+.wrtdip-calc-info__toggle {
+  background: none;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  padding: 6px 12px;
+  font-size: 0.8rem;
+  cursor: pointer;
+  color: #475569;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+}
+
+.wrtdip-calc-info__toggle:hover {
+  background: #f1f5f9;
+  border-color: #94a3b8;
+  color: #1e3a8a;
+}
+
+.wrtdip-calc-info__toggle-icon {
+  font-size: 0.7rem;
+  line-height: 1;
+}
+
+.wrtdip-calc-info__body {
+  margin-top: 0.75rem;
+  padding: 14px 16px;
+  background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+  border: 1px solid #bae6fd;
+  border-radius: 8px;
+  animation: wrtdip-calcInfoSlideIn 0.2s ease-out;
+}
+
+@keyframes wrtdip-calcInfoSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.wrtdip-calc-info__text {
+  font-size: 0.82rem;
+  color: #334155;
+  line-height: 1.55;
+  margin: 0 0 10px;
+}
+
+.wrtdip-calc-info__formula {
+  font-family: "Courier New", Courier, monospace;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #1e3a8a;
+  background: rgba(255, 255, 255, 0.7);
+  border: 1px solid #93c5fd;
+  border-radius: 6px;
+  padding: 8px 14px;
+  margin-bottom: 12px;
+  text-align: center;
+  letter-spacing: 0.02em;
+}
+
+.wrtdip-calc-info__list {
+  margin: 0 0 10px;
+  padding-left: 18px;
+  font-size: 0.8rem;
+  color: #334155;
+  line-height: 1.6;
+}
+
+.wrtdip-calc-info__list li {
+  margin-bottom: 4px;
+}
+
+.wrtdip-calc-info__list li:last-child {
+  margin-bottom: 0;
+}
+
+.wrtdip-calc-info__note {
+  font-size: 0.78rem;
+  color: #64748b;
+  font-style: italic;
+  margin: 0;
+  line-height: 1.5;
+  border-top: 1px solid #bae6fd;
+  padding-top: 8px;
+}
+
+/* ===========================================================
    3-day forecast panel (custom, replaces ECCC iframe)
    =========================================================== */
 .wrtdip-forecast {
