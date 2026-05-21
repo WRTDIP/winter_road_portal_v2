@@ -104,6 +104,9 @@ function WeatherMap() {
   const [modalIsOpen, setModalIsOpen] = useState(false)
   const [modalEnlarge, setModalEnlarge] = useState(false)
 
+  // Custom feature popup state (replaces ArcGIS native popup)
+  const [featurePopup, setFeaturePopup] = useState(null) // {title, content, layerTitle, screenX, screenY}
+
   // FDD chart state
   const [fddSeries, setFddSeries] = useState([]) // [{stationId, stationName, years, fdds}]
   const [fddLoading, setFddLoading] = useState(false)
@@ -541,6 +544,40 @@ function WeatherMap() {
     <div style={{ height: "84vh", border: "none" }} ref={MapElement}>
       <div id="legend-container"></div>
       <div id="layer-list-container"></div>
+
+      {/* Custom feature popup (replaces ArcGIS native popup) */}
+      {featurePopup && (
+        <div
+          className="wrtdip-feature-popup"
+          style={{
+            left: Math.min(featurePopup.screenX, (MapElement.current?.clientWidth || 600) - 300),
+            top: Math.max(featurePopup.screenY - 10, 10),
+          }}
+        >
+          <div className="wrtdip-feature-popup__header">
+            <div className="wrtdip-feature-popup__header-text">
+              {featurePopup.layerTitle && (
+                <span className="wrtdip-feature-popup__layer-tag">{featurePopup.layerTitle}</span>
+              )}
+              <span className="wrtdip-feature-popup__title">{featurePopup.title || "Feature"}</span>
+            </div>
+            <button
+              className="wrtdip-feature-popup__close"
+              onClick={() => setFeaturePopup(null)}
+              aria-label="Close"
+            >
+              ×
+            </button>
+          </div>
+          {featurePopup.content && (
+            <div
+              className="wrtdip-feature-popup__body"
+              dangerouslySetInnerHTML={{ __html: featurePopup.content }}
+            />
+          )}
+          <div className="wrtdip-feature-popup__arrow" />
+        </div>
+      )}
       <Modal
         show={modalIsOpen}
         onHide={closeModal}
@@ -1372,12 +1409,28 @@ function WeatherMap() {
                   r.graphic.layer.popupTemplate
               )
               if (featureHit) {
-                view.popup.open({
-                  features: [featureHit.graphic],
-                  location: event.mapPoint,
+                const graphic = featureHit.graphic
+                const attrs = graphic.attributes || {}
+                const tmpl = graphic.layer.popupTemplate
+
+                // Substitute {FIELD} placeholders with actual attribute values
+                const sub = (str) => (str || "").replace(/\{([^}]+)\}/g, (_, field) => {
+                  const val = attrs[field]
+                  return val != null ? val : ""
                 })
+
+                const title = sub(tmpl.title || "")
+                const content = sub(typeof tmpl.content === "string" ? tmpl.content : "")
+                const layerTitle = graphic.layer.title || ""
+
+                // Get screen position relative to map container
+                const mapRect = MapElement.current.getBoundingClientRect()
+                const screenX = event.x - mapRect.left
+                const screenY = event.y - mapRect.top
+
+                setFeaturePopup({ title, content, layerTitle, screenX, screenY })
               } else {
-                view.popup.close()
+                setFeaturePopup(null)
               }
               return
             }
@@ -1419,6 +1472,7 @@ function WeatherMap() {
             }
             setKey(cityKey)
             setTerritory(terr)
+            setFeaturePopup(null) // Close feature popup when city modal opens
             setModalIsOpen(true)
           })
         })
