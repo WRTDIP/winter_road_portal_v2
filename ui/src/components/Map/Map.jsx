@@ -112,6 +112,7 @@ function WeatherMap() {
   const [cityStations, setCityStations] = useState([]) // [{station_id, name}]
   const [selectedStations, setSelectedStations] = useState([]) // [stationId, ...]
   const [showAdvanced, setShowAdvanced] = useState(false)
+  const [showCalcInfo, setShowCalcInfo] = useState(false)
   const [fddViewRange, setFddViewRange] = useState([1951, 2023])
   const [fddYRange, setFddYRange] = useState([0, 5000])
   const [showLowess, setShowLowess] = useState(true)
@@ -350,6 +351,7 @@ function WeatherMap() {
     setCityStations([])
     setSelectedStations([])
     setShowAdvanced(false)
+    setShowCalcInfo(false)
     setFddViewRange([1951, 2023])
     setFddYRange([0, 5000])
     setShowLowess(false)
@@ -659,6 +661,44 @@ function WeatherMap() {
                       </select>
                     </div>
                   )}
+                </div>
+              )}
+            </div>
+
+            {/* Calculation Information collapsible */}
+            <div style={{ marginTop: "0.5rem" }}>
+              <button
+                onClick={() => setShowCalcInfo(!showCalcInfo)}
+                className="wrtdip-calc-info__toggle"
+              >
+                <span className="wrtdip-calc-info__toggle-icon">{showCalcInfo ? "▾" : "▸"}</span>
+                Calculation Information
+              </button>
+              {showCalcInfo && (
+                <div className="wrtdip-calc-info__body">
+                  <p className="wrtdip-calc-info__text">
+                    <strong>Freezing Degree Days (FDD)</strong> quantify the cumulative intensity and duration of below-freezing temperatures over a winter season.
+                  </p>
+                  <div className="wrtdip-calc-info__formula">
+                    FDD = Σ |T<sub>mean</sub>| &nbsp; for each day where T<sub>mean</sub> &lt; 0 °C
+                  </div>
+                  <ul className="wrtdip-calc-info__list">
+                    <li>
+                      For each day in the accumulation period <strong>(September 1 – May 31)</strong>, the daily mean temperature (T<sub>mean</sub>) is checked.
+                    </li>
+                    <li>
+                      If T<sub>mean</sub> is below 0 °C, its absolute value is added to the running total.
+                    </li>
+                    <li>
+                      Days with T<sub>mean</sub> ≥ 0 °C contribute zero to the sum.
+                    </li>
+                    <li>
+                      The final sum for the season is the annual FDD value, expressed in <strong>°C·days</strong>.
+                    </li>
+                  </ul>
+                  <p className="wrtdip-calc-info__note">
+                    Higher FDD values indicate a colder and/or longer winter, which is critical for ice road bearing capacity and construction scheduling.
+                  </p>
                 </div>
               )}
             </div>
