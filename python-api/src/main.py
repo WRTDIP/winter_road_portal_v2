@@ -73,10 +73,11 @@ async def datasets():
 async def station_datasets(stationid: int):
     cur = conn.cursor()
     cur.execute("""
-        SELECT DISTINCT d.id, d.name
+        SELECT d.id, d.name, COUNT(dd.id) AS row_count
         FROM public.daily_data dd
         JOIN public.datasets d ON d.id = dd.dataset_id
         WHERE dd.station_id = %s
+        GROUP BY d.id, d.name
         ORDER BY d.id;
     """, (stationid,))
     rows = cur.fetchall()
@@ -205,6 +206,87 @@ async def FDD(fromyear: int, toyear: int, stationid: int, dataset_id: int = None
     cur.close()
     
     return {"data": rows}   
+
+
+@app.get("/avg-snowfall")
+async def avg_snowfall(stationid: int, month_start: int, month_end: int = None, dataset_id: int = None):
+    """Return avg, max, and min historical daily snowfall (cm) for each day in a month range."""
+    if month_end is None:
+        month_end = month_start
+
+    cur = conn.cursor()
+
+    dataset_filter = ""
+    params = [stationid, month_start, month_end]
+    if dataset_id is not None:
+        dataset_filter = "AND dataset_id = %s"
+        params.append(dataset_id)
+
+    cur.execute(
+        f"""
+        SELECT "month", "day",
+               AVG(total_snow_cm) AS avg_snow_cm,
+               MAX(total_snow_cm) AS max_snow_cm,
+               MIN(total_snow_cm) AS min_snow_cm
+        FROM public.daily_data
+        WHERE station_id = %s
+          AND "month" >= %s AND "month" <= %s
+          AND total_snow_cm IS NOT NULL
+          {dataset_filter}
+        GROUP BY "month", "day"
+        ORDER BY "month", "day";
+        """,
+        params
+    )
+
+    rows = cur.fetchall()
+    cur.close()
+
+    result = [[int(r[0]), int(r[1]), round(float(r[2]), 2), round(float(r[3]), 2), round(float(r[4]), 2)] for r in rows]
+    return {"data": result}
+
+
+@app.get("/avg-temperature")
+async def avg_temperature(stationid: int, month_start: int, month_end: int = None, dataset_id: int = None):
+    """Return avg, max, and min historical daily temperature (°C) for each day in a month range."""
+    if month_end is None:
+        month_end = month_start
+
+    cur = conn.cursor()
+
+    dataset_filter = ""
+    params = [stationid, month_start, month_end]
+    if dataset_id is not None:
+        dataset_filter = "AND dataset_id = %s"
+        params.append(dataset_id)
+
+    cur.execute(
+        f"""
+        SELECT "month", "day",
+               AVG(mean_temp_c) AS avg_mean_temp,
+               MAX(max_temp_c) AS max_temp,
+               MIN(min_temp_c) AS min_temp
+        FROM public.daily_data
+        WHERE station_id = %s
+          AND "month" >= %s AND "month" <= %s
+          AND mean_temp_c IS NOT NULL
+          {dataset_filter}
+        GROUP BY "month", "day"
+        ORDER BY "month", "day";
+        """,
+        params
+    )
+
+    rows = cur.fetchall()
+    cur.close()
+
+    result = []
+    for r in rows:
+        avg_val = round(float(r[2]), 2) if r[2] is not None else None
+        max_val = round(float(r[3]), 2) if r[3] is not None else None
+        min_val = round(float(r[4]), 2) if r[4] is not None else None
+        result.append([int(r[0]), int(r[1]), avg_val, max_val, min_val])
+    return {"data": result}
 
 
 @app.get("/lowess")

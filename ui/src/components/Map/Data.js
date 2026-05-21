@@ -109,10 +109,7 @@ export const layerData = [
   {
     title: "Minor Roads",
     link: "https://www.apps.geomatics.gov.nt.ca/arcgis/rest/services/GNWT/Transportation_LCC/MapServer/15",
-    popupTemplate: {
-      title: "{R_STNAME_C}",
-      content: "",
-    },
+    popupTemplate: null,
     renderer: {
       type: "simple", // autocasts as new SimpleRenderer()
       symbol: {
@@ -126,9 +123,7 @@ export const layerData = [
   {
     title: "Major Roads",
     link: "https://www.apps.geomatics.gov.nt.ca/arcgis/rest/services/GNWT/Transportation_LCC/MapServer/14",
-    popupTemplate: {
-      title: "{R_STNAME_C}",
-    },
+    popupTemplate: null,
   },
   {
     title: "Airports - Northwest Territories",

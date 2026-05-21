@@ -17,6 +17,7 @@ import { width } from "@fortawesome/free-regular-svg-icons/faAddressBook"
 import { getClimateCity } from "../../services/meteo.service.js"
 import { cities } from "../../utils/constants.js"
 import { LineChart } from "@mui/x-charts/LineChart"
+import { BarChart } from "@mui/x-charts/BarChart"
 import { Icon, Typography } from "@mui/material"
 import useMediaQuery from "@mui/material/useMediaQuery"
 import OpenInFullIcon from "@mui/icons-material/OpenInFull"
@@ -113,8 +114,20 @@ function WeatherMap() {
   const [showAdvanced, setShowAdvanced] = useState(false)
   const [fddViewRange, setFddViewRange] = useState([1951, 2023])
   const [fddYRange, setFddYRange] = useState([0, 5000])
-  const [showLowess, setShowLowess] = useState(false)
+  const [showLowess, setShowLowess] = useState(true)
   const [lowessSeries, setLowessSeries] = useState([]) // [{stationId, years, fdds}]
+  const [snowfallData, setSnowfallData] = useState(null) // {labels: [], avgs: [], maxs: [], mins: []}
+  const [snowfallLoading, setSnowfallLoading] = useState(false)
+  const [snowMonthRange, setSnowMonthRange] = useState([new Date().getMonth() + 1, new Date().getMonth() + 1])
+  const [snowShowMax, setSnowShowMax] = useState(true)
+  const [snowShowAvg, setSnowShowAvg] = useState(true)
+  const [snowShowMin, setSnowShowMin] = useState(true)
+  const [tempData, setTempData] = useState(null) // {labels: [], avgs: [], maxs: [], mins: []}
+  const [tempLoading, setTempLoading] = useState(false)
+  const [tempMonthRange, setTempMonthRange] = useState([new Date().getMonth() + 1, new Date().getMonth() + 1])
+  const [tempShowMax, setTempShowMax] = useState(true)
+  const [tempShowAvg, setTempShowAvg] = useState(true)
+  const [tempShowMin, setTempShowMin] = useState(true)
   const isMobile = useMediaQuery("(max-width:768px)")
 
   /**
@@ -164,9 +177,17 @@ function WeatherMap() {
     }
 
     // Fetch datasets for the first selected station (for the dropdown)
+    // Auto-select the dataset with the most data points
     fetch(`${API_BASE}/station-datasets?stationid=${selectedStations[0]}`)
       .then((r) => r.json())
-      .then((json) => setFddDatasets(json.data || []))
+      .then((json) => {
+        const datasets = json.data || []
+        setFddDatasets(datasets)
+        if (datasets.length > 0 && !fddDatasetId) {
+          const best = datasets.reduce((a, b) => (b[2] > a[2] ? b : a), datasets[0])
+          setFddDatasetId(String(best[0]))
+        }
+      })
       .catch(() => setFddDatasets([]))
 
     setFddLoading(true)
@@ -221,6 +242,62 @@ function WeatherMap() {
     Promise.all(fetches)
       .then((results) => setLowessSeries(results.filter((r) => r.years.length > 0)))
   }, [showLowess, modalIsOpen, selectedStations, fddDatasetId])
+
+  // Fetch average snowfall for selected month range when modal opens
+  useEffect(() => {
+    if (!modalIsOpen || selectedStations.length === 0) {
+      setSnowfallData(null)
+      return
+    }
+    const stationId = selectedStations[0]
+    let url = `${API_BASE}/avg-snowfall?stationid=${stationId}&month_start=${snowMonthRange[0]}&month_end=${snowMonthRange[1]}`
+    if (fddDatasetId) {
+      url += `&dataset_id=${fddDatasetId}`
+    }
+    setSnowfallLoading(true)
+    fetch(url)
+      .then((r) => r.json())
+      .then((json) => {
+        const rows = json.data || []
+        const monthNames = ["", "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+        setSnowfallData({
+          labels: rows.map((r) => `${monthNames[r[0]]} ${r[1]}`),
+          avgs: rows.map((r) => r[2]),
+          maxs: rows.map((r) => r[3]),
+          mins: rows.map((r) => r[4]),
+        })
+      })
+      .catch(() => setSnowfallData(null))
+      .finally(() => setSnowfallLoading(false))
+  }, [modalIsOpen, selectedStations, fddDatasetId, snowMonthRange])
+
+  // Fetch average temperature for selected month range
+  useEffect(() => {
+    if (!modalIsOpen || selectedStations.length === 0) {
+      setTempData(null)
+      return
+    }
+    const stationId = selectedStations[0]
+    let url = `${API_BASE}/avg-temperature?stationid=${stationId}&month_start=${tempMonthRange[0]}&month_end=${tempMonthRange[1]}`
+    if (fddDatasetId) {
+      url += `&dataset_id=${fddDatasetId}`
+    }
+    setTempLoading(true)
+    fetch(url)
+      .then((r) => r.json())
+      .then((json) => {
+        const rows = json.data || []
+        const monthNames = ["", "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+        setTempData({
+          labels: rows.map((r) => `${monthNames[r[0]]} ${r[1]}`),
+          avgs: rows.map((r) => r[2]),
+          maxs: rows.map((r) => r[3]),
+          mins: rows.map((r) => r[4]),
+        })
+      })
+      .catch(() => setTempData(null))
+      .finally(() => setTempLoading(false))
+  }, [modalIsOpen, selectedStations, fddDatasetId, tempMonthRange])
 
   useEffect(() => {
     console.log("Print Mouse", mouse)
@@ -277,6 +354,10 @@ function WeatherMap() {
     setFddYRange([0, 5000])
     setShowLowess(false)
     setLowessSeries([])
+    setSnowfallData(null)
+    setSnowMonthRange([new Date().getMonth() + 1, new Date().getMonth() + 1])
+    setTempData(null)
+    setTempMonthRange([new Date().getMonth() + 1, new Date().getMonth() + 1])
   }
 
   /**
@@ -503,6 +584,9 @@ function WeatherMap() {
             <Typography variant="caption" color="text.secondary" sx={{ display: "block", mb: 1 }}>
               Annual cumulative freezing degree days (Sept–May)
             </Typography>
+            <Typography variant="caption" color="text.secondary" sx={{ display: "block", mb: 1 }}>
+              We are taking AHCCD data from .... 
+            </Typography>
             <div className="wrtdip-map-modal__chart">{generateChart()}</div>
             <div style={{ marginTop: "0.5rem" }}>
               <button
@@ -576,6 +660,130 @@ function WeatherMap() {
                     </div>
                   )}
                 </div>
+              )}
+            </div>
+          </section>
+
+          <section className="wrtdip-map-modal__section">
+            <Typography variant="subtitle1" className="wrtdip-map-modal__section-title">
+              Average Daily Snowfall
+            </Typography>
+            <Typography variant="caption" color="text.secondary" sx={{ display: "block", mb: 1 }}>
+              Historical snowfall (cm) for each day in the selected month(s)
+            </Typography>
+            <div style={{ marginBottom: "0.5rem" }}>
+              <YearRangeSlider
+                value={snowMonthRange}
+                onChange={setSnowMonthRange}
+                min={1}
+                max={12}
+                label="Months"
+              />
+              <Typography variant="caption" sx={{ display: "block", textAlign: "center", mt: -0.5 }}>
+                {new Date(2000, snowMonthRange[0] - 1).toLocaleString("default", { month: "long" })}
+                {snowMonthRange[0] !== snowMonthRange[1] && ` – ${new Date(2000, snowMonthRange[1] - 1).toLocaleString("default", { month: "long" })}`}
+              </Typography>
+            </div>
+            <div className="wrtdip-map-modal__chart">
+              {snowfallLoading ? (
+                <Typography variant="body2" color="text.secondary" sx={{ py: 2, textAlign: "center" }}>
+                  Loading snowfall data...
+                </Typography>
+              ) : snowfallData && snowfallData.labels.length > 0 ? (
+                <div>
+                  <div style={{ display: "flex", gap: "12px", marginBottom: "0.5rem", justifyContent: "center" }}>
+                    <label style={{ fontSize: "0.8rem", display: "flex", alignItems: "center", gap: "4px", cursor: "pointer" }}>
+                      <input type="checkbox" checked={snowShowMax} onChange={(e) => setSnowShowMax(e.target.checked)} />
+                      <span style={{ color: "#e53935" }}>Max</span>
+                    </label>
+                    <label style={{ fontSize: "0.8rem", display: "flex", alignItems: "center", gap: "4px", cursor: "pointer" }}>
+                      <input type="checkbox" checked={snowShowAvg} onChange={(e) => setSnowShowAvg(e.target.checked)} />
+                      <span style={{ color: "#42a5f5" }}>Avg</span>
+                    </label>
+                    <label style={{ fontSize: "0.8rem", display: "flex", alignItems: "center", gap: "4px", cursor: "pointer" }}>
+                      <input type="checkbox" checked={snowShowMin} onChange={(e) => setSnowShowMin(e.target.checked)} />
+                      <span style={{ color: "#66bb6a" }}>Min</span>
+                    </label>
+                  </div>
+                  <BarChart
+                    xAxis={[{ data: snowfallData.labels, label: "Date", scaleType: "band" }]}
+                    yAxis={[{ label: "Snowfall (cm)" }]}
+                    series={[
+                      ...(snowShowMax ? [{ data: snowfallData.maxs, label: "Max", color: "#e53935" }] : []),
+                      ...(snowShowAvg ? [{ data: snowfallData.avgs, label: "Avg", color: "#42a5f5" }] : []),
+                      ...(snowShowMin ? [{ data: snowfallData.mins, label: "Min", color: "#66bb6a" }] : []),
+                    ]}
+                    height={240}
+                    margin={{ left: 50, right: 10, top: 10, bottom: 40 }}
+                    grid={{ horizontal: true }}
+                  />
+                </div>
+              ) : (
+                <Typography variant="body2" color="text.secondary" sx={{ py: 2, textAlign: "center" }}>
+                  No snowfall data available for this location.
+                </Typography>
+              )}
+            </div>
+          </section>
+
+          <section className="wrtdip-map-modal__section">
+            <Typography variant="subtitle1" className="wrtdip-map-modal__section-title">
+              Average Daily Temperature
+            </Typography>
+            <Typography variant="caption" color="text.secondary" sx={{ display: "block", mb: 1 }}>
+              Historical temperature (°C) for each day in the selected month(s)
+            </Typography>
+            <div style={{ marginBottom: "0.5rem" }}>
+              <YearRangeSlider
+                value={tempMonthRange}
+                onChange={setTempMonthRange}
+                min={1}
+                max={12}
+                label="Months"
+              />
+              <Typography variant="caption" sx={{ display: "block", textAlign: "center", mt: -0.5 }}>
+                {new Date(2000, tempMonthRange[0] - 1).toLocaleString("default", { month: "long" })}
+                {tempMonthRange[0] !== tempMonthRange[1] && ` – ${new Date(2000, tempMonthRange[1] - 1).toLocaleString("default", { month: "long" })}`}
+              </Typography>
+            </div>
+            <div className="wrtdip-map-modal__chart">
+              {tempLoading ? (
+                <Typography variant="body2" color="text.secondary" sx={{ py: 2, textAlign: "center" }}>
+                  Loading temperature data...
+                </Typography>
+              ) : tempData && tempData.labels.length > 0 ? (
+                <div>
+                  <div style={{ display: "flex", gap: "12px", marginBottom: "0.5rem", justifyContent: "center" }}>
+                    <label style={{ fontSize: "0.8rem", display: "flex", alignItems: "center", gap: "4px", cursor: "pointer" }}>
+                      <input type="checkbox" checked={tempShowMax} onChange={(e) => setTempShowMax(e.target.checked)} />
+                      <span style={{ color: "#e53935" }}>Max</span>
+                    </label>
+                    <label style={{ fontSize: "0.8rem", display: "flex", alignItems: "center", gap: "4px", cursor: "pointer" }}>
+                      <input type="checkbox" checked={tempShowAvg} onChange={(e) => setTempShowAvg(e.target.checked)} />
+                      <span style={{ color: "#42a5f5" }}>Avg</span>
+                    </label>
+                    <label style={{ fontSize: "0.8rem", display: "flex", alignItems: "center", gap: "4px", cursor: "pointer" }}>
+                      <input type="checkbox" checked={tempShowMin} onChange={(e) => setTempShowMin(e.target.checked)} />
+                      <span style={{ color: "#66bb6a" }}>Min</span>
+                    </label>
+                  </div>
+                  <BarChart
+                    xAxis={[{ data: tempData.labels, label: "Date", scaleType: "band" }]}
+                    yAxis={[{ label: "Temperature (°C)" }]}
+                    series={[
+                      ...(tempShowMax ? [{ data: tempData.maxs, label: "Max", color: "#e53935" }] : []),
+                      ...(tempShowAvg ? [{ data: tempData.avgs, label: "Avg", color: "#42a5f5" }] : []),
+                      ...(tempShowMin ? [{ data: tempData.mins, label: "Min", color: "#66bb6a" }] : []),
+                    ]}
+                    height={240}
+                    margin={{ left: 50, right: 10, top: 10, bottom: 40 }}
+                    grid={{ horizontal: true }}
+                  />
+                </div>
+              ) : (
+                <Typography variant="body2" color="text.secondary" sx={{ py: 2, textAlign: "center" }}>
+                  No temperature data available for this location.
+                </Typography>
               )}
             </div>
           </section>
@@ -730,6 +938,7 @@ function WeatherMap() {
     const featureLayer = new FeatureLayer({
       url: layer.link,
       popupTemplate: layer.popupTemplate,
+      popupEnabled: layer.popupTemplate !== null,
       visible: layer.visible, // Apply the visible property from layerData
     });
 

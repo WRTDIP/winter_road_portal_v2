@@ -19,7 +19,7 @@ function FDDTest() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [viewRange, setViewRange] = useState([1951, 2023]);
-  const [showLowess, setShowLowess] = useState(false);
+  const [showLowess, setShowLowess] = useState(true);
   const [lowessData, setLowessData] = useState(null);
   const isMobile = useMediaQuery("(max-width:768px)");
 
@@ -41,8 +41,14 @@ function FDDTest() {
     fetch(`${API_BASE}/station-datasets?stationid=${stationId}`)
       .then((r) => r.json())
       .then((json) => {
-        setDatasets(json.data || []);
-        setDatasetId("");
+        const ds = json.data || [];
+        setDatasets(ds);
+        if (ds.length > 0) {
+          const best = ds.reduce((a, b) => (b[2] > a[2] ? b : a), ds[0]);
+          setDatasetId(String(best[0]));
+        } else {
+          setDatasetId("");
+        }
       })
       .catch((err) => setError("Failed to load datasets: " + err.message));
   }, [stationId]);
