@@ -1401,6 +1401,7 @@ function WeatherMap() {
             if (!hit) {
               // No city marker clicked — check for feature layer popups
               // (e.g. Winter Roads, Airports, Ice Crossings)
+              console.log("Response",response.results)
               const featureHit = response.results.find(
                 (r) =>
                   r.graphic &&
