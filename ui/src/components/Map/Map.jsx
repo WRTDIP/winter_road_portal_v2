@@ -1413,23 +1413,34 @@ function WeatherMap() {
                 const attrs = graphic.attributes || {}
                 const layerTitle = graphic.layer.title || ""
 
+                console.log("--- CUSTOM POPUP PROCESSING START ---")
+                console.log("1. Layer Title:", layerTitle)
+                console.log("2. Graphic Attributes:", attrs)
+
                 // Get original string template from layerData because ArcGIS autocasts popupTemplate.content into an object array
                 const originalLayer = layerData.find((l) => l.title === layerTitle)
                 const origTmpl = originalLayer?.popupTemplate || {}
+                console.log("3. Original Template from layerData:", origTmpl)
 
                 // Substitute {FIELD} placeholders with actual attribute values (case-insensitive key match)
                 const sub = (str) =>
                   (str || "").replace(/\{([^}]+)\}/g, (_, field) => {
                     const key = Object.keys(attrs).find((k) => k.toLowerCase() === field.toLowerCase())
                     const val = key ? attrs[key] : null
+                    console.log(`  -> Substituting {${field}}: matched attribute key '${key}' with value '${val}'`)
                     return val != null ? val : ""
                   })
 
                 const rawTitle = typeof origTmpl.title === "string" ? origTmpl.title : (graphic.layer.popupTemplate?.title || "")
                 const rawContent = typeof origTmpl.content === "string" ? origTmpl.content : ""
+                console.log("4. Raw Title before substitution:", rawTitle)
+                console.log("5. Raw Content before substitution:", rawContent)
 
                 const title = sub(rawTitle)
                 const content = sub(rawContent)
+                console.log("6. Final Title after substitution:", title)
+                console.log("7. Final Content after substitution:", content)
+                console.log("--- CUSTOM POPUP PROCESSING END ---")
 
                 // Get screen position relative to map container
                 const mapRect = MapElement.current.getBoundingClientRect()
