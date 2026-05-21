@@ -93,6 +93,119 @@
 }
 
 /* ===========================================================
+   Custom feature popup (replaces ArcGIS native popup)
+   =========================================================== */
+.wrtdip-feature-popup {
+  position: absolute;
+  z-index: 100;
+  width: 280px;
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 12px 36px rgba(15, 23, 42, 0.22), 0 2px 8px rgba(15, 23, 42, 0.08);
+  overflow: hidden;
+  animation: wrtdip-featurePopupIn 0.2s ease-out;
+  pointer-events: auto;
+  transform: translateX(-50%);
+}
+
+@keyframes wrtdip-featurePopupIn {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(6px) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0) scale(1);
+  }
+}
+
+.wrtdip-feature-popup__header {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 10px 12px;
+  background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%);
+  color: #ffffff;
+}
+
+.wrtdip-feature-popup__header-text {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.wrtdip-feature-popup__layer-tag {
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: rgba(255, 255, 255, 0.75);
+  line-height: 1;
+}
+
+.wrtdip-feature-popup__title {
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.25;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.wrtdip-feature-popup__close {
+  flex-shrink: 0;
+  width: 22px;
+  height: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.15);
+  border: none;
+  border-radius: 6px;
+  color: #ffffff;
+  font-size: 16px;
+  line-height: 1;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.wrtdip-feature-popup__close:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.wrtdip-feature-popup__body {
+  padding: 10px 14px 12px;
+  font-size: 13px;
+  color: #334155;
+  line-height: 1.65;
+}
+
+.wrtdip-feature-popup__body b {
+  color: #0f172a;
+  font-weight: 600;
+}
+
+.wrtdip-feature-popup__arrow {
+  position: absolute;
+  bottom: -7px;
+  left: 50%;
+  transform: translateX(-50%) rotate(45deg);
+  width: 14px;
+  height: 14px;
+  background: #ffffff;
+  box-shadow: 3px 3px 6px rgba(15, 23, 42, 0.1);
+  border-radius: 0 0 3px 0;
+}
+
+@media (max-width: 600px) {
+  .wrtdip-feature-popup {
+    width: 240px;
+  }
+}
+
+/* ===========================================================
    Map popup modal — modern, clean styling
    =========================================================== */
 .wrtdip-map-modal__backdrop {
