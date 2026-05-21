@@ -119,13 +119,18 @@ function WeatherMap() {
   const [lowessSeries, setLowessSeries] = useState([]) // [{stationId, years, fdds}]
   const [snowfallData, setSnowfallData] = useState(null) // {labels: [], avgs: [], maxs: [], mins: []}
   const [snowfallLoading, setSnowfallLoading] = useState(false)
-  const [snowMonthRange, setSnowMonthRange] = useState([new Date().getMonth() + 1, new Date().getMonth() + 1])
+  // Default month range: current month ±1 (wrapping Dec↔Jan)
+  const currentMonth = new Date().getMonth() + 1 // 1-indexed
+  const defaultMonthStart = currentMonth === 1 ? 12 : currentMonth - 1
+  const defaultMonthEnd = currentMonth === 12 ? 1 : currentMonth + 1
+
+  const [snowMonthRange, setSnowMonthRange] = useState([defaultMonthStart, defaultMonthEnd])
   const [snowShowMax, setSnowShowMax] = useState(true)
   const [snowShowAvg, setSnowShowAvg] = useState(true)
   const [snowShowMin, setSnowShowMin] = useState(true)
   const [tempData, setTempData] = useState(null) // {labels: [], avgs: [], maxs: [], mins: []}
   const [tempLoading, setTempLoading] = useState(false)
-  const [tempMonthRange, setTempMonthRange] = useState([new Date().getMonth() + 1, new Date().getMonth() + 1])
+  const [tempMonthRange, setTempMonthRange] = useState([defaultMonthStart, defaultMonthEnd])
   const [tempShowMax, setTempShowMax] = useState(true)
   const [tempShowAvg, setTempShowAvg] = useState(true)
   const [tempShowMin, setTempShowMin] = useState(true)
@@ -357,9 +362,9 @@ function WeatherMap() {
     setShowLowess(false)
     setLowessSeries([])
     setSnowfallData(null)
-    setSnowMonthRange([new Date().getMonth() + 1, new Date().getMonth() + 1])
+    setSnowMonthRange([defaultMonthStart, defaultMonthEnd])
     setTempData(null)
-    setTempMonthRange([new Date().getMonth() + 1, new Date().getMonth() + 1])
+    setTempMonthRange([defaultMonthStart, defaultMonthEnd])
   }
 
   /**
@@ -694,6 +699,9 @@ function WeatherMap() {
                     </li>
                     <li>
                       The final sum for the season is the annual FDD value, expressed in <strong>°C·days</strong>.
+                    </li>
+                    <li>
+                      <strong>Quality filtering:</strong> Any month that has <strong>3 or more consecutive days</strong> of missing data, or <strong>5 or more total days</strong> missing, is excluded from the calculation. If any month within the season is excluded, the entire season's FDD is not reported.
                     </li>
                   </ul>
                   <div className="wrtdip-calc-info__datasource">
