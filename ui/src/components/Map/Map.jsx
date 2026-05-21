@@ -696,6 +696,15 @@ function WeatherMap() {
                       The final sum for the season is the annual FDD value, expressed in <strong>°C·days</strong>.
                     </li>
                   </ul>
+                  <div className="wrtdip-calc-info__datasource">
+                    <p className="wrtdip-calc-info__datasource-title">Data Sources</p>
+                    <p className="wrtdip-calc-info__text">
+                      Our primary data source is the <strong>Adjusted and Homogenized Canadian Climate Data (AHCCD)</strong>. AHCCD records undergo rigorous quality control and statistical adjustments to account for non-climatic factors such as station relocations, changes in instrumentation, and modifications to observing procedures. This homogenization process makes AHCCD highly accurate and reliable for long-term trend analysis.
+                    </p>
+                    <p className="wrtdip-calc-info__text" style={{ marginBottom: 0 }}>
+                      When AHCCD data is not available for a given station or time period, we fall back to <strong>Environment and Climate Change Canada (ECCC)</strong> daily climate data. While ECCC records have not undergone the same homogenization adjustments, they provide broader station coverage and more recent observations, ensuring FDD values can still be computed where AHCCD gaps exist.
+                    </p>
+                  </div>
                   <p className="wrtdip-calc-info__note">
                     Higher FDD values indicate a colder and/or longer winter, which is critical for ice road bearing capacity and construction scheduling.
                   </p>

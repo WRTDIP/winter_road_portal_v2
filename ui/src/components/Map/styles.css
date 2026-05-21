@@ -316,6 +316,21 @@
   margin-bottom: 0;
 }
 
+.wrtdip-calc-info__datasource {
+  margin-bottom: 10px;
+  padding: 10px 14px;
+  background: rgba(255, 255, 255, 0.55);
+  border: 1px solid #93c5fd;
+  border-radius: 6px;
+}
+
+.wrtdip-calc-info__datasource-title {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #1e3a8a;
+  margin: 0 0 6px;
+}
+
 .wrtdip-calc-info__note {
   font-size: 0.78rem;
   color: #64748b;
