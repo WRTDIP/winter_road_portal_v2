@@ -1411,17 +1411,25 @@ function WeatherMap() {
               if (featureHit) {
                 const graphic = featureHit.graphic
                 const attrs = graphic.attributes || {}
-                const tmpl = graphic.layer.popupTemplate
-
-                // Substitute {FIELD} placeholders with actual attribute values
-                const sub = (str) => (str || "").replace(/\{([^}]+)\}/g, (_, field) => {
-                  const val = attrs[field]
-                  return val != null ? val : ""
-                })
-
-                const title = sub(tmpl.title || "")
-                const content = sub(typeof tmpl.content === "string" ? tmpl.content : "")
                 const layerTitle = graphic.layer.title || ""
+
+                // Get original string template from layerData because ArcGIS autocasts popupTemplate.content into an object array
+                const originalLayer = layerData.find((l) => l.title === layerTitle)
+                const origTmpl = originalLayer?.popupTemplate || {}
+
+                // Substitute {FIELD} placeholders with actual attribute values (case-insensitive key match)
+                const sub = (str) =>
+                  (str || "").replace(/\{([^}]+)\}/g, (_, field) => {
+                    const key = Object.keys(attrs).find((k) => k.toLowerCase() === field.toLowerCase())
+                    const val = key ? attrs[key] : null
+                    return val != null ? val : ""
+                  })
+
+                const rawTitle = typeof origTmpl.title === "string" ? origTmpl.title : (graphic.layer.popupTemplate?.title || "")
+                const rawContent = typeof origTmpl.content === "string" ? origTmpl.content : ""
+
+                const title = sub(rawTitle)
+                const content = sub(rawContent)
 
                 // Get screen position relative to map container
                 const mapRect = MapElement.current.getBoundingClientRect()
