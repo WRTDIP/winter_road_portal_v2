@@ -75,16 +75,16 @@ model Post {
 }
 
 model RoadClosure {
-  id           BigInt    @id @default(autoincrement())
-  dataset_id   Int?
-  dataset_name String?
-  year         String
-  road_name    String
-  road_type    String
-  open_date    DateTime? @db.Date
-  close_date   DateTime? @db.Date
+  id         BigInt @id @default(autoincrement())
+  dataset_id Int?
+  year       Int
+  road_name  String
+  road_type  String
+  status     String
+  month      Int?
+  day        Int?
 
-  @@unique([year, road_name], name: "road_closures_year_road_uniq")
+  @@unique([year, road_name, status], name: "road_closures_year_road_status_uniq")
   @@index([year])
   @@index([road_name])
   @@index([road_type])

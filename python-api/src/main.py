@@ -391,3 +391,199 @@ async def lowess_curve(fromyear: int, toyear: int, stationid: int, dataset_id: i
     result = [[int(row[0]), round(float(row[1]), 2)] for row in smoothed]
     return {"data": result}
 
+## Road Closures
+
+def _resolve_road_name(cur, road_name: str):
+    """Resolve a (possibly partial) road name to a canonical DB road_name.
+
+    Tries an exact case-insensitive match first, then a contains (ILIKE)
+    match. Returns the matched road_name or None.
+    """
+    cur.execute(
+        "SELECT road_name FROM public.road_closures WHERE LOWER(road_name) = LOWER(%s) LIMIT 1;",
+        (road_name,),
+    )
+    row = cur.fetchone()
+    if row:
+        return row[0]
+
+    cur.execute(
+        "SELECT road_name FROM public.road_closures WHERE road_name ILIKE %s LIMIT 1;",
+        (f"%{road_name}%",),
+    )
+    row = cur.fetchone()
+    return row[0] if row else None
+
+
+@app.get("/road-closures")
+async def road_closures(road_name: str = None, road_type: str = None,
+                        year: int = None, status: str = None,
+                        dataset_id: int = None):
+    """List road closure records with optional filters."""
+    cur = conn.cursor()
+
+    filters = []
+    params = []
+    if road_name is not None:
+        filters.append("road_name = %s")
+        params.append(road_name)
+    if road_type is not None:
+        filters.append("road_type = %s")
+        params.append(road_type)
+    if year is not None:
+        filters.append("year = %s")
+        params.append(year)
+    if status is not None:
+        filters.append("status = %s")
+        params.append(status)
+    if dataset_id is not None:
+        filters.append("dataset_id = %s")
+        params.append(dataset_id)
+
+    where = ("WHERE " + " AND ".join(filters)) if filters else ""
+
+    cur.execute(
+        f"""
+        SELECT road_name, road_type, year, status, month, day
+        FROM public.road_closures
+        {where}
+        ORDER BY road_name, year, status;
+        """,
+        params,
+    )
+
+    rows = cur.fetchall()
+    cur.close()
+
+    result = [
+        {
+            "road_name": r[0],
+            "road_type": r[1],
+            "year": r[2],
+            "status": r[3],
+            "month": r[4],
+            "day": r[5],
+        }
+        for r in rows
+    ]
+    return {"data": result}
+
+
+@app.get("/road-closure-forecast")
+async def road_closure_forecast(road_name: str, year: int = None,
+                                dataset_id: int = None):
+    """Expected open and closure dates for a road in a given season.
+
+    Averages the historical open / close month-and-day across all years and
+    maps them onto the requested season (``year`` = season start year). If no
+    ``year`` is given, the current/upcoming season is used.
+    """
+    from datetime import date
+
+    today = date.today()
+    if year is None:
+        # Aug onward -> upcoming season starts this year; otherwise the active
+        # season started the previous year.
+        year = today.year if today.month >= 8 else today.year - 1
+
+    cur = conn.cursor()
+    resolved = _resolve_road_name(cur, road_name)
+    if resolved is None:
+        cur.close()
+        return {
+            "data": {
+                "road_name": road_name,
+                "matched": None,
+                "season": f"{year}/{str((year + 1) % 100).zfill(2)}",
+                "expected_open": None,
+                "open_predicted": False,
+                "expected_close": None,
+                "close_predicted": False,
+                "open_samples": 0,
+                "close_samples": 0,
+            }
+        }
+
+    filters = ["road_name = %s", "month IS NOT NULL", "day IS NOT NULL"]
+    params = [resolved]
+    if dataset_id is not None:
+        filters.append("dataset_id = %s")
+        params.append(dataset_id)
+    where = " AND ".join(filters)
+
+    cur.execute(
+        f"SELECT year, status, month, day FROM public.road_closures WHERE {where};",
+        params,
+    )
+    rows = cur.fetchall()
+    cur.close()
+
+    def avg_md(records):
+        """Average a list of (month, day) handling the Dec/Jan winter wrap."""
+        ref = 2001
+        ordinals = []
+        for m, d in records:
+            # Months in the latter half of the year anchor to the reference
+            # year; earlier months belong to the following calendar year so
+            # December and January average together correctly.
+            y = ref if m >= 8 else ref + 1
+            try:
+                ordinals.append(date(y, m, d).toordinal())
+            except ValueError:
+                continue
+        if not ordinals:
+            return None
+        avg = date.fromordinal(round(sum(ordinals) / len(ordinals)))
+        return avg.month, avg.day
+
+    def to_iso(md, season_start):
+        if md is None:
+            return None
+        m, d = md
+        cal_year = season_start if m >= 8 else season_start + 1
+        try:
+            return date(cal_year, m, d).isoformat()
+        except ValueError:
+            return None
+
+    # The importer stores the Open record under the season's first (lower)
+    # year and the Closed record under the second (higher) year.
+    actual_open = next(
+        ((m, d) for y, s, m, d in rows if s == "Open" and y == year), None
+    )
+    actual_close = next(
+        ((m, d) for y, s, m, d in rows if s == "Closed" and y == year + 1), None
+    )
+
+    opens = [(m, d) for y, s, m, d in rows if s == "Open"]
+    closes = [(m, d) for y, s, m, d in rows if s == "Closed"]
+
+    # Use the actual recorded date when present; otherwise predict from the
+    # historical average of all seasons.
+    if actual_open is not None:
+        open_iso = to_iso(actual_open, year)
+        open_predicted = False
+    else:
+        open_iso = to_iso(avg_md(opens), year)
+        open_predicted = True
+
+    if actual_close is not None:
+        close_iso = to_iso(actual_close, year)
+        close_predicted = False
+    else:
+        close_iso = to_iso(avg_md(closes), year)
+        close_predicted = True
+
+    return {
+        "data": {
+            "road_name": road_name,
+            "matched": resolved,
+            "season": f"{year}/{str((year + 1) % 100).zfill(2)}",
+            "expected_open": open_iso,
+            "open_predicted": open_predicted,
+            "expected_close": close_iso,
+            "close_predicted": close_predicted,
+            "open_samples": len(opens),
+            "close_samples": len(closes),
+        }
+    }

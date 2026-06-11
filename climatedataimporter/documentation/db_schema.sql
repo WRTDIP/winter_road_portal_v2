@@ -74,18 +74,20 @@ CREATE INDEX daily_data_date_idx ON public.daily_data (obs_date);
 CREATE INDEX daily_data_dataset_idx ON public.daily_data (dataset_id);
 
 
--- road_closures: one row per road per season (year) with open/close dates
+-- road_closures: one row per road per status (Open/Closed) for a season.
+-- The season year (e.g. "2024/25") is split: the lower year (2024) is stored
+-- for the Open row, the higher year (2025) for the Closed row.
 CREATE TABLE public.road_closures (
     id            BIGSERIAL PRIMARY KEY,
     dataset_id    INTEGER REFERENCES public.datasets(id) ON DELETE SET NULL,
-    dataset_name  TEXT,
-    year          TEXT NOT NULL,
+    year          INTEGER NOT NULL,
     road_name     TEXT NOT NULL,
     road_type     TEXT NOT NULL,
-    open_date     DATE,
-    close_date    DATE,
+    status        TEXT NOT NULL,
+    month         INTEGER,
+    day           INTEGER,
 
-    CONSTRAINT road_closures_year_road_uniq UNIQUE (year, road_name)
+    CONSTRAINT road_closures_year_road_status_uniq UNIQUE (year, road_name, status)
 );
 
 CREATE INDEX road_closures_year_idx ON public.road_closures (year);

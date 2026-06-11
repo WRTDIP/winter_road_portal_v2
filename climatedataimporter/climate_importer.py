@@ -499,13 +499,13 @@ CREATE INDEX IF NOT EXISTS daily_data_dataset_idx ON {s}.daily_data (dataset_id)
 CREATE TABLE IF NOT EXISTS {s}.road_closures (
     id            BIGSERIAL PRIMARY KEY,
     dataset_id    INTEGER REFERENCES {s}.datasets(id) ON DELETE SET NULL,
-    dataset_name  TEXT,
-    year          TEXT NOT NULL,
+    year          INTEGER NOT NULL,
     road_name     TEXT NOT NULL,
     road_type     TEXT NOT NULL,
-    open_date     DATE,
-    close_date    DATE,
-    CONSTRAINT road_closures_year_road_uniq UNIQUE (year, road_name)
+    status        TEXT NOT NULL,
+    month         INTEGER,
+    day           INTEGER,
+    CONSTRAINT road_closures_year_road_status_uniq UNIQUE (year, road_name, status)
 );
 CREATE INDEX IF NOT EXISTS road_closures_year_idx ON {s}.road_closures (year);
 CREATE INDEX IF NOT EXISTS road_closures_road_name_idx ON {s}.road_closures (road_name);
@@ -878,11 +878,26 @@ _MONTH_ABBR = {
 }
 
 
-def _resolve_road_date(date_str: str, year_str: str) -> str | None:
-    """Resolve a date like '14-Dec' with a season year like '2024/25'.
+def _parse_season_years(year_str: str) -> tuple[int, int] | None:
+    """Parse a season year like '2024/25' into (2024, 2025).
 
-    Oct-Dec -> first calendar year, Jan-Sep -> second calendar year.
-    Returns ISO date string or None if not parseable.
+    The lower year is used for the open date, the higher year for the close.
+    Returns None if the string is not parseable.
+    """
+    year_parts = year_str.strip().split("/")
+    if len(year_parts) != 2:
+        return None
+    try:
+        first_year = int(year_parts[0])
+    except ValueError:
+        return None
+    return first_year, first_year + 1
+
+
+def _parse_road_md(date_str: str) -> tuple[int, int] | None:
+    """Parse a date like '14-Dec' into (month, day).
+
+    Returns None if the value is empty, N/A or not parseable.
     """
     date_str = (date_str or "").strip()
     if not date_str or date_str.upper() == "N/A":
@@ -897,25 +912,11 @@ def _resolve_road_date(date_str: str, year_str: str) -> str | None:
     except ValueError:
         return None
 
-    month_abbr = parts[1].strip().capitalize()
-    month = _MONTH_ABBR.get(month_abbr)
+    month = _MONTH_ABBR.get(parts[1].strip().capitalize())
     if month is None:
         return None
 
-    # Parse the season year (e.g. "2024/25" -> first=2024, second=2025)
-    year_parts = year_str.strip().split("/")
-    if len(year_parts) != 2:
-        return None
-    try:
-        first_year = int(year_parts[0])
-    except ValueError:
-        return None
-    second_year = first_year + 1
-
-    # Oct-Dec belong to the first year; Jan-Sep belong to the second year
-    cal_year = first_year if month >= 10 else second_year
-
-    return f"{cal_year:04d}-{month:02d}-{day:02d}"
+    return month, day
 
 
 def cmd_roadload(args: argparse.Namespace) -> int:
@@ -978,7 +979,6 @@ def cmd_roadload(args: argparse.Namespace) -> int:
                 year_data[year_str][road_name]["close"] = date_val
 
     # Connect and load
-    dataset_name = "NWT Road Closures"
     with psycopg.connect(_conninfo(args)) as conn:
         with conn.cursor() as cur:
             cur.execute(sql.SQL("CREATE SCHEMA IF NOT EXISTS {}").format(
@@ -1004,40 +1004,59 @@ def cmd_roadload(args: argparse.Namespace) -> int:
         # Upsert road closure records
         upsert_sql = sql.SQL("""
             INSERT INTO {s}.road_closures
-                (dataset_id, dataset_name, year, road_name, road_type, open_date, close_date)
+                (dataset_id, year, road_name, road_type, status, month, day)
             VALUES (%s, %s, %s, %s, %s, %s, %s)
-            ON CONFLICT (year, road_name) DO UPDATE SET
-                dataset_id   = EXCLUDED.dataset_id,
-                dataset_name = EXCLUDED.dataset_name,
-                road_type    = EXCLUDED.road_type,
-                open_date    = EXCLUDED.open_date,
-                close_date   = EXCLUDED.close_date
+            ON CONFLICT (year, road_name, status) DO UPDATE SET
+                dataset_id = EXCLUDED.dataset_id,
+                road_type  = EXCLUDED.road_type,
+                month      = EXCLUDED.month,
+                day        = EXCLUDED.day
         """).format(s=sql.Identifier(schema))
 
         total_rows = 0
         skipped = 0
         with conn.cursor() as cur:
             for year_str in sorted(year_data.keys()):
+                years = _parse_season_years(year_str)
+                if years is None:
+                    skipped += 1
+                    continue
+                first_year, second_year = years
+
                 roads = year_data[year_str]
                 for road_name, info in roads.items():
-                    open_date = _resolve_road_date(info["open"], year_str)
-                    close_date = _resolve_road_date(info["close"], year_str)
+                    # Lower year goes with the open date, higher year with close
+                    open_md = _parse_road_md(info["open"])
+                    close_md = _parse_road_md(info["close"])
 
                     # Skip roads where both dates are N/A
-                    if open_date is None and close_date is None:
+                    if open_md is None and close_md is None:
                         skipped += 1
                         continue
 
-                    cur.execute(upsert_sql, (
-                        DATASET_NWT_ROAD_CLOSURES,
-                        dataset_name,
-                        year_str,
-                        road_name,
-                        info["type"],
-                        open_date,
-                        close_date,
-                    ))
-                    total_rows += 1
+                    if open_md is not None:
+                        cur.execute(upsert_sql, (
+                            DATASET_NWT_ROAD_CLOSURES,
+                            first_year,
+                            road_name,
+                            info["type"],
+                            "Open",
+                            open_md[0],
+                            open_md[1],
+                        ))
+                        total_rows += 1
+
+                    if close_md is not None:
+                        cur.execute(upsert_sql, (
+                            DATASET_NWT_ROAD_CLOSURES,
+                            second_year,
+                            road_name,
+                            info["type"],
+                            "Closed",
+                            close_md[0],
+                            close_md[1],
+                        ))
+                        total_rows += 1
         conn.commit()
 
     print(f"\nDone. Upserted {total_rows} road closure records "

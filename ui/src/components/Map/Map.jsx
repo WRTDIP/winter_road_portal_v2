@@ -146,6 +146,90 @@ function WeatherMap() {
     loadData(weatherData, MapElement)
   }, [])
 
+  // Layers whose popups should show expected (historical-average) open/close
+  // dates fetched from the road_closures dataset.
+  const ROAD_CLOSURE_LAYERS = useMemo(
+    () => [
+      "Winter Roads - Northwest Territories",
+      "Winter Roads - Nunavut",
+      "Ice Crossings - Northwest Territories",
+      "Ice Crossings - Yukon",
+    ],
+    []
+  )
+
+  // When a road-closure feature popup opens, fetch the expected open/close
+  // dates for the current season and fill in the placeholder in the popup body.
+  useEffect(() => {
+    if (!featurePopup) return
+    if (!ROAD_CLOSURE_LAYERS.includes(featurePopup.layerTitle)) return
+    if (featurePopup.roadForecastDone) return
+    if (!featurePopup.content || !featurePopup.content.includes("data-road-forecast")) return
+
+    const roadName = featurePopup.title
+    let cancelled = false
+
+    const fmt = (iso) => {
+      if (!iso) return null
+      const d = new Date(iso + "T00:00:00")
+      return d.toLocaleDateString("en-CA", { year: "numeric", month: "long", day: "numeric" })
+    }
+
+    fetch(`${API_BASE}/road-closure-forecast?road_name=${encodeURIComponent(roadName)}`)
+      .then((r) => r.json())
+      .then((res) => {
+        if (cancelled) return
+        const d = res?.data || {}
+        const open = fmt(d.expected_open)
+        const close = fmt(d.expected_close)
+
+        let html
+        if (!d.matched || (!open && !close)) {
+          html = `<div data-road-forecast><em>No historical closure data available.</em></div>`
+        } else {
+          const openLabel = d.open_predicted ? "Predicted Opening" : "Opening"
+          const closeLabel = d.close_predicted ? "Predicted Closure" : "Closure"
+          html =
+            `<div data-road-forecast>` +
+            `<b>${openLabel} (${d.season}):</b> ${open || "N/A"}<br>` +
+            `<b>${closeLabel} (${d.season}):</b> ${close || "N/A"}<br>` +
+            `</div>`
+        }
+
+        setFeaturePopup((prev) => {
+          if (!prev || prev.title !== roadName || prev.layerTitle !== featurePopup.layerTitle) {
+            return prev
+          }
+          return {
+            ...prev,
+            roadForecastDone: true,
+            content: prev.content.replace(
+              /<div data-road-forecast>[\s\S]*?<\/div>/,
+              html
+            ),
+          }
+        })
+      })
+      .catch(() => {
+        if (cancelled) return
+        setFeaturePopup((prev) => {
+          if (!prev || prev.title !== roadName) return prev
+          return {
+            ...prev,
+            roadForecastDone: true,
+            content: prev.content.replace(
+              /<div data-road-forecast>[\s\S]*?<\/div>/,
+              `<div data-road-forecast><em>Expected dates unavailable.</em></div>`
+            ),
+          }
+        })
+      })
+
+    return () => {
+      cancelled = true
+    }
+  }, [featurePopup, ROAD_CLOSURE_LAYERS])
+
   // Fetch available stations for this city when modal opens
   useEffect(() => {
     if (!modalIsOpen) return

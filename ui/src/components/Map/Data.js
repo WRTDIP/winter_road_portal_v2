@@ -197,8 +197,7 @@ export const layerData = [
       content: `
         <b>Community:</b> {Community}<br>
         <b>Length (m):</b> {Length}<br>
-        <b>Opening Date:</b> December 15, 2024<br>
-        <b>Closure Date:</b> April 1, 2025<br>
+        <div data-road-forecast>Loading expected dates…</div>
       `
     },
     visible: false
@@ -211,8 +210,7 @@ export const layerData = [
       content: `
         <b>Community:</b> {Community}<br>
         <b>Length (m):</b> {Length}<br>
-        <b>Opening Date:</b> December 20, 2024<br>
-        <b>Closure Date:</b> March 25, 2025<br>
+        <div data-road-forecast>Loading expected dates…</div>
       `
     },
     visible: false
@@ -226,8 +224,7 @@ export const layerData = [
       content: `
         <b>Category:</b> {Category}<br>
         <b>Length (km):</b> {Length}<br>
-        <b>Opening Date:</b> January 1, 2025<br>
-        <b>Closure Date:</b> March 31, 2025<br>
+        <div data-road-forecast>Loading expected dates…</div>
       `
     },
     outFields: ["*"],
@@ -241,8 +238,7 @@ export const layerData = [
       content: `
         <b>Category:</b> {Category}<br>
         <b>Length (km):</b> {Length}<br>
-        <b>Opening Date:</b> January 10, 2025<br>
-        <b>Closure Date:</b> April 5, 2025<br>
+        <div data-road-forecast>Loading expected dates…</div>
       `
     },
     visible: true
