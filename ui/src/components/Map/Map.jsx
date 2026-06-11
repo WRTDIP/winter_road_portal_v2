@@ -16,7 +16,7 @@ import {
 import { width } from "@fortawesome/free-regular-svg-icons/faAddressBook"
 import { getClimateCity } from "../../services/meteo.service.js"
 import { cities } from "../../utils/constants.js"
-import { LineChart } from "@mui/x-charts/LineChart"
+import { LineChart, lineElementClasses, areaElementClasses } from "@mui/x-charts/LineChart"
 import { BarChart } from "@mui/x-charts/BarChart"
 import { Icon, Typography } from "@mui/material"
 import useMediaQuery from "@mui/material/useMediaQuery"
@@ -408,20 +408,28 @@ function WeatherMap() {
       const dataMin = allYears[0]
       const dataMax = allYears[allYears.length - 1]
 
-      const colors = ["#1976d2", "#d32f2f", "#388e3c", "#f57c00", "#7b1fa2", "#0097a7"]
-      const lowessColors = ["#ff6f00", "#6a1b9a", "#00695c", "#c62828", "#1565c0", "#4e342e"]
+      const colors = ["#2563eb", "#dc2626", "#16a34a", "#ea580c", "#7c3aed", "#0891b2"]
+      const lowessColors = ["#f59e0b", "#9333ea", "#0d9488", "#e11d48", "#1d4ed8", "#78716c"]
+      const cityName = getCityName()
+      // Use an area fill only when a single station is shown (cleaner with one line)
+      const singleSeries = fddSeries.length === 1
       const series = fddSeries.map((s, idx) => {
         // Align data to the filtered x-axis (null for missing years)
         const yearMap = {}
         s.years.forEach((y, i) => { yearMap[y] = s.fdds[i] })
         const alignedData = filteredYears.map((y) => yearMap[y] ?? null)
+        // Show just the city name by default; full station name in advanced mode
+        const displayLabel = showAdvanced ? s.stationName : (cityName || s.stationName)
         return {
+          id: `fdd-${s.stationId}`,
           data: alignedData,
           color: colors[idx % colors.length],
           showMark: false,
           curve: "monotoneX",
-          label: s.stationName,
+          label: displayLabel,
           connectNulls: true,
+          area: singleSeries,
+          valueFormatter: (v) => (v == null ? "No data" : `${Math.round(v)} °C·days`),
         }
       })
 
@@ -432,19 +440,43 @@ function WeatherMap() {
           ls.years.forEach((y, i) => { yearMap[y] = ls.fdds[i] })
           const alignedData = filteredYears.map((y) => yearMap[y] ?? null)
           const matchingStation = fddSeries.find((s) => s.stationId === ls.stationId)
-          const label = matchingStation ? `${matchingStation.stationName} (LOWESS)` : `LOWESS ${idx + 1}`
+          const baseName = showAdvanced ? (matchingStation?.stationName || `Station ${ls.stationId}`) : (cityName || matchingStation?.stationName || `Station ${ls.stationId}`)
+          const label = `${baseName} (LOWESS)`
           series.push({
+            id: `lowess-${ls.stationId}`,
             data: alignedData,
             color: lowessColors[idx % lowessColors.length],
             showMark: false,
             curve: "monotoneX",
             label,
             connectNulls: true,
+            valueFormatter: (v) => (v == null ? "" : `${Math.round(v)} °C·days`),
           })
         })
       }
 
+      // Build per-series styling: thick smooth data lines, dashed LOWESS trend lines,
+      // and a soft gradient fill under a single-station line for a modern look.
+      const chartSx = {
+        [`.${lineElementClasses.root}`]: {
+          strokeWidth: 2.5,
+          strokeLinecap: "round",
+        },
+        [`.${areaElementClasses.root}`]: {
+          fillOpacity: 0.12,
+        },
+      }
+      if (showLowess && lowessSeries.length > 0) {
+        lowessSeries.forEach((ls) => {
+          chartSx[`.MuiLineElement-series-lowess-${ls.stationId}`] = {
+            strokeWidth: 2,
+            strokeDasharray: "6 5",
+          }
+        })
+      }
+
       const chartHeight = fddSeries.length > 1 ? 300 : 260
+
 
       return (
         <div>
@@ -469,6 +501,7 @@ function WeatherMap() {
                     data: filteredYears,
                     valueFormatter: (year) => year.toString(),
                     label: "Year",
+                    tickMinStep: 1,
                   },
                 ]}
                 yAxis={[
@@ -484,6 +517,7 @@ function WeatherMap() {
                 margin={{ left: 95, right: 20, top: 10, bottom: 50 }}
                 grid={{ horizontal: true }}
                 slotProps={{ legend: { hidden: true } }}
+                sx={chartSx}
               />
             ) : (
               <Typography variant="body2" color="text.secondary" sx={{ py: 2, textAlign: "center" }}>
@@ -498,18 +532,22 @@ function WeatherMap() {
           )}
           {(fddSeries.length > 1 || (showLowess && lowessSeries.length > 0)) && (
             <div style={{ display: "flex", flexWrap: "wrap", gap: "12px", justifyContent: "center", padding: "8px 0" }}>
-              {fddSeries.map((s, idx) => (
-                <div key={s.stationId} style={{ display: "flex", alignItems: "center", gap: "6px", fontSize: "0.75rem" }}>
-                  <span style={{ width: 14, height: 3, backgroundColor: colors[idx % colors.length], display: "inline-block", borderRadius: 2 }} />
-                  <span>{s.stationName}</span>
-                </div>
-              ))}
+              {fddSeries.map((s, idx) => {
+                const displayLabel = showAdvanced ? s.stationName : (cityName || s.stationName)
+                return (
+                  <div key={s.stationId} style={{ display: "flex", alignItems: "center", gap: "6px", fontSize: "0.75rem" }}>
+                    <span style={{ width: 14, height: 3, backgroundColor: colors[idx % colors.length], display: "inline-block", borderRadius: 2 }} />
+                    <span>{displayLabel}</span>
+                  </div>
+                )
+              })}
               {showLowess && lowessSeries.map((ls, idx) => {
                 const matchingStation = fddSeries.find((s) => s.stationId === ls.stationId)
-                const label = matchingStation ? `${matchingStation.stationName} (LOWESS)` : `LOWESS ${idx + 1}`
+                const baseName = showAdvanced ? (matchingStation?.stationName || `Station ${ls.stationId}`) : (cityName || matchingStation?.stationName || `Station ${ls.stationId}`)
+                const label = `${baseName} (LOWESS)`
                 return (
                   <div key={`lowess-${ls.stationId}`} style={{ display: "flex", alignItems: "center", gap: "6px", fontSize: "0.75rem" }}>
-                    <span style={{ width: 14, height: 3, backgroundColor: lowessColors[idx % lowessColors.length], display: "inline-block", borderRadius: 2 }} />
+                    <span style={{ width: 14, height: 0, borderTop: `2px dashed ${lowessColors[idx % lowessColors.length]}`, display: "inline-block" }} />
                     <span>{label}</span>
                   </div>
                 )
@@ -526,6 +564,15 @@ function WeatherMap() {
       )
     }
   }
+
+  // Name of the climate station currently providing the FDD data, so the
+  // user can clearly see where the numbers for this place come from.
+  const activeStationName =
+    cityStations.find((s) => s[0] === selectedStations[0])?.[1] || null
+
+  // Name of the dataset currently providing the FDD data.
+  const activeDatasetName =
+    fddDatasets.find((d) => String(d[0]) === String(fddDatasetId))?.[1] || null
 
   // Get coordinates for the selected city by lat and lon
   let lat = null, lon = null;
@@ -621,36 +668,97 @@ function WeatherMap() {
           </div>
         </Modal.Header>
         <Modal.Body className="wrtdip-map-modal__body">
+          <div className="wrtdip-map-modal__data-badge">
+            <Typography variant="caption" sx={{ display: "block", lineHeight: 1.4 }}>
+              Datasource from <strong>CanHomT V4</strong>, Canada's gold-standard climate record. It's carefully corrected for station moves and equipment changes, so you get the most accurate picture of how the climate is changing.
+            </Typography>
+          </div>
           <section className="wrtdip-map-modal__section">
             <Typography variant="subtitle1" className="wrtdip-map-modal__section-title">
               Freezing Degree Days (FDDs)
             </Typography>
             <Typography variant="caption" color="text.secondary" sx={{ display: "block", mb: 1 }}>
-              Annual cumulative freezing degree days (Sept–May)
+              Annual cumulative freezing degree days (Sept–May) for {getCityName() || "this location"}
             </Typography>
-            <Typography variant="caption" color="text.secondary" sx={{ display: "block", mb: 1 }}>
-              We are taking AHCCD data from .... 
-            </Typography>
+            {showAdvanced && activeStationName && (
+              <Typography variant="caption" color="text.secondary" sx={{ display: "block", mb: 1 }}>
+                📍 Based on data from the <strong>{activeStationName}</strong> climate station
+                {activeDatasetName && (
+                  <> (<strong>{activeDatasetName}</strong> dataset)</>
+                )}
+              </Typography>
+            )}
             <div className="wrtdip-map-modal__chart">{generateChart()}</div>
-            <div style={{ marginTop: "0.5rem" }}>
+            <div className="wrtdip-toggle-row">
               <button
                 onClick={() => setShowAdvanced(!showAdvanced)}
-                style={{
-                  background: "none",
-                  border: "1px solid #ccc",
-                  borderRadius: "4px",
-                  padding: "4px 10px",
-                  fontSize: "0.8rem",
-                  cursor: "pointer",
-                  color: "#555",
-                }}
+                className={`wrtdip-toggle-btn${showAdvanced ? " wrtdip-toggle-btn--active" : ""}`}
               >
-                {showAdvanced ? "▾ Hide Advanced" : "▸ Advanced Options"}
+                <span className="wrtdip-toggle-btn__icon">{showAdvanced ? "▾" : "▸"}</span>
+                Advanced Options
               </button>
+              <button
+                onClick={() => setShowCalcInfo(!showCalcInfo)}
+                className={`wrtdip-toggle-btn${showCalcInfo ? " wrtdip-toggle-btn--active" : ""}`}
+              >
+                <span className="wrtdip-toggle-btn__icon">{showCalcInfo ? "▾" : "▸"}</span>
+                Calculation Information
+              </button>
+            </div>
+            <div style={{ marginTop: "0.5rem" }}>
               {showAdvanced && (
-                <div style={{ marginTop: "0.75rem", padding: "0.75rem", background: "#f8f9fa", borderRadius: "6px", border: "1px solid #e9ecef" }}>
-                  <div style={{ marginBottom: "0.75rem" }}>
-                    <label style={{ fontSize: "0.8rem", display: "flex", alignItems: "center", gap: "6px", cursor: "pointer" }}>
+                <div className="wrtdip-adv-panel">
+                  <div className="wrtdip-adv-row">
+                    {cityStations.length > 1 && (
+                      <div className="wrtdip-adv-field">
+                        <label className="wrtdip-adv-label">
+                          Climate Station
+                        </label>
+                        <select
+                          value={selectedStations[0] || ""}
+                          onChange={(e) => {
+                            const id = Number(e.target.value)
+                            setSelectedStations([id])
+                            // Reset so the best dataset for the new station is auto-selected
+                            setFddDatasetId("")
+                          }}
+                          className="wrtdip-select"
+                        >
+                          {cityStations.map((s) => (
+                            <option key={s[0]} value={s[0]}>
+                              {s[1]}
+                            </option>
+                          ))}
+                        </select>
+                        <span className="wrtdip-adv-help">
+                          Choose which nearby weather station provides the FDD data.
+                        </span>
+                      </div>
+                    )}
+                    {fddDatasets.length > 0 && (
+                      <div className="wrtdip-adv-field">
+                        <label className="wrtdip-adv-label">
+                          Dataset
+                        </label>
+                        <select
+                          value={fddDatasetId}
+                          onChange={(e) => setFddDatasetId(e.target.value)}
+                          className="wrtdip-select"
+                        >
+                          {fddDatasets.map((d) => (
+                            <option key={d[0]} value={d[0]}>
+                              {d[1]}
+                            </option>
+                          ))}
+                        </select>
+                        <span className="wrtdip-adv-help">
+                          The dataset with the most data is selected automatically. Change it here if needed.
+                        </span>
+                      </div>
+                    )}
+                  </div>
+                  <div className="wrtdip-adv-field">
+                    <label className="wrtdip-adv-check">
                       <input
                         type="checkbox"
                         checked={showLowess}
@@ -659,71 +767,17 @@ function WeatherMap() {
                       Show LOWESS trend curve
                     </label>
                   </div>
-                  {cityStations.length > 1 && (
-                    <div style={{ marginBottom: "0.75rem" }}>
-                      <Typography variant="caption" sx={{ fontWeight: 600, display: "block", mb: 0.5 }}>
-                        Compare Stations:
-                      </Typography>
-                      <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
-                        {cityStations.map((s) => (
-                          <label key={s[0]} style={{ fontSize: "0.8rem", display: "flex", alignItems: "center", gap: "6px", cursor: "pointer" }}>
-                            <input
-                              type="checkbox"
-                              checked={selectedStations.includes(s[0])}
-                              onChange={(e) => {
-                                if (e.target.checked) {
-                                  setSelectedStations([...selectedStations, s[0]])
-                                } else {
-                                  setSelectedStations(selectedStations.filter((id) => id !== s[0]))
-                                }
-                              }}
-                            />
-                            {s[1]} ({s[0]})
-                          </label>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-                  {fddDatasets.length > 0 && (
-                    <div>
-                      <Typography variant="caption" sx={{ fontWeight: 600, display: "block", mb: 0.5 }}>
-                        Dataset:
-                      </Typography>
-                      <select
-                        value={fddDatasetId}
-                        onChange={(e) => setFddDatasetId(e.target.value)}
-                        style={{ padding: "4px 8px", fontSize: "0.85rem", width: "100%" }}
-                      >
-                        <option value="">All datasets</option>
-                        {fddDatasets.map((d) => (
-                          <option key={d[0]} value={d[0]}>
-                            {d[1]}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
-                  )}
                 </div>
               )}
             </div>
 
             {/* Calculation Information collapsible */}
             <div style={{ marginTop: "0.5rem" }}>
-              <button
-                onClick={() => setShowCalcInfo(!showCalcInfo)}
-                className="wrtdip-calc-info__toggle"
-              >
-                <span className="wrtdip-calc-info__toggle-icon">{showCalcInfo ? "▾" : "▸"}</span>
-                Calculation Information
-              </button>
               {showCalcInfo && (
                 <div className="wrtdip-calc-info__body">
                   <p className="wrtdip-calc-info__text">
                     <strong>Freezing Degree Days (FDD)</strong> quantify the cumulative intensity and duration of below-freezing temperatures over a winter season.
                   </p>
-                  <div className="wrtdip-calc-info__formula">
-                    FDD = Σ |T<sub>mean</sub>| &nbsp; for each day where T<sub>mean</sub> &lt; 0 °C
-                  </div>
                   <ul className="wrtdip-calc-info__list">
                     <li>
                       For each day in the accumulation period <strong>(September 1 – May 31)</strong>, the daily mean temperature (T<sub>mean</sub>) is checked.
@@ -1031,6 +1085,7 @@ function WeatherMap() {
    console.log(`Adding layer: ${layer.title}`); // Debugging
     const featureLayer = new FeatureLayer({
       url: layer.link,
+      outFields: ["*"],
       popupTemplate: layer.popupTemplate,
       popupEnabled: layer.popupTemplate !== null,
       visible: layer.visible, // Apply the visible property from layerData
@@ -1290,6 +1345,275 @@ function WeatherMap() {
 
         view.ui.add(customZoomButton, "top-left")
 
+        // --- GPS Location Button ---
+        const gpsButton = document.createElement("div")
+        gpsButton.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="#333"><path d="M12 8c-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4-1.79-4-4-4zm8.94 3A8.994 8.994 0 0 0 13 3.06V1h-2v2.06A8.994 8.994 0 0 0 3.06 11H1v2h2.06A8.994 8.994 0 0 0 11 20.94V23h2v-2.06A8.994 8.994 0 0 0 20.94 13H23v-2h-2.06zM12 19c-3.87 0-7-3.13-7-7s3.13-7 7-7 7 3.13 7 7-3.13 7-7 7z"/></svg>'
+        gpsButton.title = "My Location"
+        gpsButton.classList.add(
+          "esri-widget",
+          "esri-widget--button",
+          "esri-widget--icon",
+          "esri-zoom__custom-button"
+        )
+
+        let gpsMarkerGraphic = null
+        let gpsLocationGranted = false
+        const DEBUG_GPS = { enabled: true, latitude: 62.45, longitude: -114.37 }
+        const DEBUG_GPS_DRAGGABLE = true  // Allow dragging the GPS pin to simulate different locations
+
+        function findNearestCity(lat, lon) {
+          let nearest = null
+          let minDist = Infinity
+
+          const allCoords = [
+            { coords: yukonCoordinates, territory: "yt", names: citiesOfYukon },
+            { coords: northWestCoordinates, territory: "nt", names: citiesOfNorthwestTerritories },
+            { coords: nunavutCoordinates, territory: "nu", names: citiesOfNunavut },
+          ]
+
+          allCoords.forEach(({ coords, territory, names }) => {
+            Object.keys(coords).forEach((key) => {
+              const [cLat, cLon] = coords[key]
+              const dist = Math.sqrt(Math.pow(cLat - lat, 2) + Math.pow(cLon - lon, 2))
+              if (dist < minDist) {
+                minDist = dist
+                nearest = { key, territory, name: names[key], lat: cLat, lon: cLon, dist }
+              }
+            })
+          })
+          return nearest
+        }
+
+        // Threshold in degrees — roughly 0.1 ≈ 10km
+        const GPS_CITY_THRESHOLD = 0.1
+        const GPS_ROAD_QUERY_RADIUS = 0.3  // degrees for road buffer query
+
+        const ROAD_LAYER_TITLES = [
+          "Winter Roads - Northwest Territories",
+          "Winter Roads - Nunavut",
+          "Ice Crossings - Northwest Territories",
+          "Ice Crossings - Yukon",
+        ]
+
+        function findNearestRoad(latitude, longitude) {
+          const roadLayers = map.layers
+            .toArray()
+            .filter((l) => ROAD_LAYER_TITLES.includes(l.title) && l.visible)
+
+          if (roadLayers.length === 0) return Promise.resolve(null)
+
+          const queryGeometry = {
+            type: "extent",
+            xmin: longitude - GPS_ROAD_QUERY_RADIUS,
+            ymin: latitude - GPS_ROAD_QUERY_RADIUS,
+            xmax: longitude + GPS_ROAD_QUERY_RADIUS,
+            ymax: latitude + GPS_ROAD_QUERY_RADIUS,
+            spatialReference: { wkid: 4326 },
+          }
+
+          const queries = roadLayers.map((layer) => {
+            const query = layer.createQuery()
+            query.geometry = queryGeometry
+            query.spatialRelationship = "intersects"
+            query.outFields = ["*"]
+            query.returnGeometry = true
+            return layer.queryFeatures(query).then((result) => {
+              if (result.features.length > 0) {
+                return { feature: result.features[0], layer }
+              }
+              return null
+            }).catch(() => null)
+          })
+
+          return Promise.all(queries).then((results) => {
+            return results.find((r) => r !== null) || null
+          })
+        }
+
+        function showGpsLocation(openNearestCity) {
+          const handlePosition = (latitude, longitude) => {
+              const gpsPoint = {
+                type: "point",
+                latitude: latitude,
+                longitude: longitude,
+              }
+
+              // Remove previous GPS marker if it exists
+              if (gpsMarkerGraphic) {
+                view.graphics.remove(gpsMarkerGraphic)
+              }
+
+              // Add GPS marker (red location pin matching MUI LocationOn)
+              const locationPinSvg = 'data:image/svg+xml;base64,' + btoa('<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="#d32f2f"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>')
+              gpsMarkerGraphic = new Graphic({
+                geometry: gpsPoint,
+                symbol: {
+                  type: "picture-marker",
+                  url: locationPinSvg,
+                  width: "36px",
+                  height: "36px",
+                  yoffset: "18px",
+                },
+              })
+              view.graphics.add(gpsMarkerGraphic)
+
+              // Enable dragging of GPS marker for debugging
+              if (DEBUG_GPS_DRAGGABLE) {
+                let isDraggingGps = false
+
+                view.on("drag", (event) => {
+                  if (!gpsMarkerGraphic) return
+
+                  if (event.action === "start") {
+                    view.hitTest(event).then((response) => {
+                      const hit = response.results.find((r) => r.graphic === gpsMarkerGraphic)
+                      if (hit) {
+                        isDraggingGps = true
+                        event.stopPropagation()
+                      }
+                    })
+                  } else if (event.action === "update" && isDraggingGps) {
+                    event.stopPropagation()
+                    const point = view.toMap({ x: event.x, y: event.y })
+                    if (point) {
+                      gpsMarkerGraphic.geometry = point
+                    }
+                  } else if (event.action === "end" && isDraggingGps) {
+                    isDraggingGps = false
+                    event.stopPropagation()
+                    const finalPoint = gpsMarkerGraphic.geometry
+                    console.log("GPS marker moved to:", finalPoint.latitude, finalPoint.longitude)
+
+                    // Trigger the same logic as clicking the GPS button
+                    const lat = finalPoint.latitude
+                    const lon = finalPoint.longitude
+                    const nearestCity = findNearestCity(lat, lon)
+
+                    findNearestRoad(lat, lon).then((roadResult) => {
+                      if (roadResult && (!nearestCity || nearestCity.dist > GPS_CITY_THRESHOLD)) {
+                        const graphic = roadResult.feature
+                        const attrs = graphic.attributes || {}
+                        const layerTitle = roadResult.layer.title || ""
+                        const originalLayer = layerData.find((l) => l.title === layerTitle)
+                        const origTmpl = originalLayer?.popupTemplate || {}
+
+                        const sub = (str) =>
+                          (str || "").replace(/\{([^}]+)\}/g, (_, field) => {
+                            const key = Object.keys(attrs).find((k) => k.toLowerCase() === field.toLowerCase())
+                            const val = key ? attrs[key] : null
+                            return val != null ? val : ""
+                          })
+
+                        const title = sub(typeof origTmpl.title === "string" ? origTmpl.title : "")
+                        const content = sub(typeof origTmpl.content === "string" ? origTmpl.content : "")
+
+                        const mapRect = MapElement.current.getBoundingClientRect()
+                        const screenX = mapRect.width / 2
+                        const screenY = mapRect.height / 2
+
+                        setFeaturePopup({ title, content, layerTitle, screenX, screenY })
+                      } else if (nearestCity && nearestCity.dist <= GPS_CITY_THRESHOLD) {
+                        setKey(nearestCity.key)
+                        setTerritory(nearestCity.territory)
+                        setFeaturePopup(null)
+                        setModalIsOpen(true)
+                      } else if (nearestCity) {
+                        setKey(nearestCity.key)
+                        setTerritory(nearestCity.territory)
+                        setFeaturePopup(null)
+                        setModalIsOpen(true)
+                      }
+                    })
+                  }
+                })
+              }
+
+              // Zoom to user location
+              view.goTo({ center: [longitude, latitude], zoom: 8 })
+
+              // If triggered by click, open nearest city or road popup
+              if (openNearestCity) {
+                const nearestCity = findNearestCity(latitude, longitude)
+
+                findNearestRoad(latitude, longitude).then((roadResult) => {
+                  if (roadResult && (!nearestCity || nearestCity.dist > GPS_CITY_THRESHOLD)) {
+                    // Road is nearby and city is not close — open road popup
+                    const graphic = roadResult.feature
+                    const attrs = graphic.attributes || {}
+                    const layerTitle = roadResult.layer.title || ""
+                    const originalLayer = layerData.find((l) => l.title === layerTitle)
+                    const origTmpl = originalLayer?.popupTemplate || {}
+
+                    const sub = (str) =>
+                      (str || "").replace(/\{([^}]+)\}/g, (_, field) => {
+                        const key = Object.keys(attrs).find((k) => k.toLowerCase() === field.toLowerCase())
+                        const val = key ? attrs[key] : null
+                        return val != null ? val : ""
+                      })
+
+                    const title = sub(typeof origTmpl.title === "string" ? origTmpl.title : "")
+                    const content = sub(typeof origTmpl.content === "string" ? origTmpl.content : "")
+
+                    // Position popup at center of screen
+                    const mapRect = MapElement.current.getBoundingClientRect()
+                    const screenX = mapRect.width / 2
+                    const screenY = mapRect.height / 2
+
+                    setFeaturePopup({ title, content, layerTitle, screenX, screenY })
+                  } else if (nearestCity && nearestCity.dist <= GPS_CITY_THRESHOLD) {
+                    // City is very close — open city modal
+                    setKey(nearestCity.key)
+                    setTerritory(nearestCity.territory)
+                    setFeaturePopup(null)
+                    setModalIsOpen(true)
+                  } else if (nearestCity) {
+                    // Fallback: open nearest city regardless
+                    setKey(nearestCity.key)
+                    setTerritory(nearestCity.territory)
+                    setFeaturePopup(null)
+                    setModalIsOpen(true)
+                  }
+                })
+              }
+
+              gpsLocationGranted = true
+          }
+
+          if (DEBUG_GPS.enabled) {
+            handlePosition(DEBUG_GPS.latitude, DEBUG_GPS.longitude)
+          } else {
+            navigator.geolocation.getCurrentPosition(
+              (position) => handlePosition(position.coords.latitude, position.coords.longitude),
+              (error) => {
+                console.warn("GPS error:", error.message)
+                alert("Unable to retrieve your location. Please allow GPS access.")
+              },
+              { enableHighAccuracy: true, timeout: 10000 }
+            )
+          }
+        }
+
+        // On page load, if GPS permission is already granted, show marker + zoom
+        if (navigator.permissions) {
+          navigator.permissions.query({ name: "geolocation" }).then((result) => {
+            if (result.state === "granted") {
+              showGpsLocation(false)
+            }
+          })
+        }
+
+        gpsButton.addEventListener("click", () => {
+          if (gpsLocationGranted) {
+            // Already have location — just zoom + open nearest city
+            showGpsLocation(true)
+          } else {
+            // First time — request permission, show marker, zoom, open nearest city
+            showGpsLocation(true)
+          }
+        })
+
+        view.ui.add(gpsButton, "top-left")
+
         /**
          * Creates a graphic representing a city on the map.
          * @param {number[]} coordinates - Array containing latitude and longitude of the city.
@@ -1393,7 +1717,10 @@ function WeatherMap() {
 
         // --- Click: use hitTest for precise marker detection ---
         view.on("click", (event) => {
+          console.log("Response0", event)
           view.hitTest(event).then((response) => {
+            console.log("hitTest response", response)
+            console.log("Response1", response.results)
             const hit = response.results.find(
               (r) => r.graphic && r.graphic.attributes && r.graphic.attributes.cityKey != null
             )
@@ -1401,7 +1728,7 @@ function WeatherMap() {
             if (!hit) {
               // No city marker clicked — check for feature layer popups
               // (e.g. Winter Roads, Airports, Ice Crossings)
-              console.log("Response",response.results)
+              console.log("Response2",response.results)
               const featureHit = response.results.find(
                 (r) =>
                   r.graphic &&

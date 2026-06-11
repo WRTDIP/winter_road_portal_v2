@@ -197,6 +197,8 @@ export const layerData = [
       content: `
         <b>Community:</b> {Community}<br>
         <b>Length (m):</b> {Length}<br>
+        <b>Opening Date:</b> December 15, 2024<br>
+        <b>Closure Date:</b> April 1, 2025<br>
       `
     },
     visible: false
@@ -209,6 +211,8 @@ export const layerData = [
       content: `
         <b>Community:</b> {Community}<br>
         <b>Length (m):</b> {Length}<br>
+        <b>Opening Date:</b> December 20, 2024<br>
+        <b>Closure Date:</b> March 25, 2025<br>
       `
     },
     visible: false
@@ -217,12 +221,16 @@ export const layerData = [
     title: "Winter Roads - Northwest Territories",
     link: "https://services1.arcgis.com/9NvE8jKNWWlDGsUJ/arcgis/rest/services/Winter_Roads_v1/FeatureServer/4",
     popupTemplate: {
+      outFields: ["*"],
       title: "{STREET}",
       content: `
         <b>Category:</b> {Category}<br>
         <b>Length (km):</b> {Length}<br>
+        <b>Opening Date:</b> January 1, 2025<br>
+        <b>Closure Date:</b> March 31, 2025<br>
       `
     },
+    outFields: ["*"],
     visible: true
   },
   {
@@ -233,6 +241,8 @@ export const layerData = [
       content: `
         <b>Category:</b> {Category}<br>
         <b>Length (km):</b> {Length}<br>
+        <b>Opening Date:</b> January 10, 2025<br>
+        <b>Closure Date:</b> April 5, 2025<br>
       `
     },
     visible: true
