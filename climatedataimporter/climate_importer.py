@@ -83,10 +83,13 @@ DATASETS = {
         "https://climate.weather.gc.ca/climate_data/bulk_data_e.html"),
     2: ("CanHomT V4 Homogenized Daily Temperature",
         "https://crd-data-donnees-rdc.ec.gc.ca/CDAS/products/CanHomTV4/CanHomT_dlyV4.tar.gz"),
+    8: ("NWT Road Closures",
+        "NWT_Roads_Combined_Full.csv"),
 }
 
 DATASET_ECCC_DAILY = 1
 DATASET_CANHOMT_TEMP = 2
+DATASET_NWT_ROAD_CLOSURES = 8
 
 # CanHomT V4 homogenized daily temperature archive. It contains one CSV per
 # station named "<climate_id>.csv" with columns:
@@ -492,7 +495,69 @@ CREATE TABLE IF NOT EXISTS {s}.daily_data (
 CREATE INDEX IF NOT EXISTS daily_data_station_idx ON {s}.daily_data (station_id);
 CREATE INDEX IF NOT EXISTS daily_data_date_idx ON {s}.daily_data (obs_date);
 CREATE INDEX IF NOT EXISTS daily_data_dataset_idx ON {s}.daily_data (dataset_id);
+
+CREATE TABLE IF NOT EXISTS {s}.road_closures (
+    id            BIGSERIAL PRIMARY KEY,
+    dataset_id    INTEGER REFERENCES {s}.datasets(id) ON DELETE SET NULL,
+    dataset_name  TEXT,
+    year          TEXT NOT NULL,
+    road_name     TEXT NOT NULL,
+    road_type     TEXT NOT NULL,
+    open_date     DATE,
+    close_date    DATE,
+    CONSTRAINT road_closures_year_road_uniq UNIQUE (year, road_name)
+);
+CREATE INDEX IF NOT EXISTS road_closures_year_idx ON {s}.road_closures (year);
+CREATE INDEX IF NOT EXISTS road_closures_road_name_idx ON {s}.road_closures (road_name);
+CREATE INDEX IF NOT EXISTS road_closures_road_type_idx ON {s}.road_closures (road_type);
+CREATE INDEX IF NOT EXISTS road_closures_dataset_idx ON {s}.road_closures (dataset_id);
 """
+
+# Mapping of CSV column headers to (road_name, road_type).
+# Category headers ("WINTER ROADS", "ICE ROADS", etc.) and "Year"/"Status"
+# are excluded — they are not individual roads.
+ROAD_COLUMNS: dict[str, tuple[str, str]] = {
+    "Ft. Simpson - Wrigley (Highway #1)":
+        ("Ft. Simpson - Wrigley (Highway #1)", "WINTER ROAD"),
+    "Wrigley to Tulita Winter Road (Highway #1)":
+        ("Wrigley to Tulita Winter Road (Highway #1)", "WINTER ROAD"),
+    "Tulita to Norman Wells Winter Road (Highway #1)":
+        ("Tulita to Norman Wells Winter Road (Highway #1)", "WINTER ROAD"),
+    "Norman Wells to Fort Good Hope Winter Road (Highway #1)":
+        ("Norman Wells to Fort Good Hope Winter Road (Highway #1)", "WINTER ROAD"),
+    "Colville Lake Winter Road":
+        ("Colville Lake Winter Road", "WINTER ROAD"),
+    "D\u00e9l\u012fne Winter Road":
+        ("D\u00e9l\u012fne Winter Road", "WINTER ROAD"),
+    "Sambaa K'e Winter Road":
+        ("Sambaa K\u2019e Winter Road", "WINTER ROAD"),
+    "Nahanni Butte Winter Road":
+        ("Nahanni Butte Winter Road", "WINTER ROAD"),
+    "Wekw\u00e8\u00e8t\u00ec Winter Road":
+        ("Wekw\u00e8\u00e8t\u00ec Winter Road", "WINTER ROAD"),
+    "What\u00ec Winter Road":
+        ("What\u00ec Winter Road", "WINTER ROAD"),
+    "Gam\u00e8t\u00ec Winter Road":
+        ("Gam\u00e8t\u00ec Winter Road", "WINTER ROAD"),
+    "Aklavik Ice Road":
+        ("Aklavik Ice Road", "ICE ROAD"),
+    "Dettah Ice Road":
+        ("Dettah Ice Road", "ICE ROAD"),
+    "Tuktoyaktuk Ice Road":
+        ("Tuktoyaktuk Ice Road", "ICE ROAD"),
+    "Mackenzie River Crossing at Fort Providence":
+        ("Mackenzie River Crossing at Fort Providence", "ICE CROSSING"),
+    "Liard River Crossing at Fort Simpson":
+        ("Liard River Crossing at Fort Simpson", "ICE CROSSING"),
+    "Mackenzie River Crossing at Tsiigehtchic":
+        ("Mackenzie River Crossing at Tsiigehtchic", "ICE CROSSING"),
+    "Peel River Crossing":
+        ("Peel River Crossing", "ICE CROSSING"),
+    "Mackenzie River Crossing at Camsell Bend":
+        ("Mackenzie River Crossing at Camsell Bend", "ICE CROSSING"),
+    "Tibbitt-Contwoyto Winter Road":
+        ("Tibbitt-Contwoyto Winter Road", "PRIVATE MINING ROAD"),
+}
 
 
 def _import_psycopg():
@@ -516,7 +581,7 @@ def ensure_schema(conn, sql, schema: str, drop: bool = False) -> None:
             sql.Identifier(schema)))
         if drop:
             print("Dropping existing tables...")
-            for table in ("daily_data", "weather_stations", "datasets"):
+            for table in ("road_closures", "daily_data", "weather_stations", "datasets"):
                 cur.execute(sql.SQL("DROP TABLE IF EXISTS {}.{} CASCADE").format(
                     sql.Identifier(schema), sql.Identifier(table)))
         cur.execute(DDL.format(s=schema))
@@ -804,6 +869,183 @@ def cmd_populate(args: argparse.Namespace) -> int:
 
 
 # ---------------------------------------------------------------------------
+# NWT Road Closures loader
+# ---------------------------------------------------------------------------
+
+_MONTH_ABBR = {
+    "Jan": 1, "Feb": 2, "Mar": 3, "Apr": 4, "May": 5, "Jun": 6,
+    "Jul": 7, "Aug": 8, "Sep": 9, "Oct": 10, "Nov": 11, "Dec": 12,
+}
+
+
+def _resolve_road_date(date_str: str, year_str: str) -> str | None:
+    """Resolve a date like '14-Dec' with a season year like '2024/25'.
+
+    Oct-Dec -> first calendar year, Jan-Sep -> second calendar year.
+    Returns ISO date string or None if not parseable.
+    """
+    date_str = (date_str or "").strip()
+    if not date_str or date_str.upper() == "N/A":
+        return None
+
+    parts = date_str.split("-")
+    if len(parts) != 2:
+        return None
+
+    try:
+        day = int(parts[0])
+    except ValueError:
+        return None
+
+    month_abbr = parts[1].strip().capitalize()
+    month = _MONTH_ABBR.get(month_abbr)
+    if month is None:
+        return None
+
+    # Parse the season year (e.g. "2024/25" -> first=2024, second=2025)
+    year_parts = year_str.strip().split("/")
+    if len(year_parts) != 2:
+        return None
+    try:
+        first_year = int(year_parts[0])
+    except ValueError:
+        return None
+    second_year = first_year + 1
+
+    # Oct-Dec belong to the first year; Jan-Sep belong to the second year
+    cal_year = first_year if month >= 10 else second_year
+
+    return f"{cal_year:04d}-{month:02d}-{day:02d}"
+
+
+def cmd_roadload(args: argparse.Namespace) -> int:
+    """Load NWT road closure data from CSV into road_closures table."""
+    psycopg, sql = _import_psycopg()
+
+    csv_path = Path(args.csv)
+    if not csv_path.is_file():
+        print(f"CSV file not found: {csv_path}", file=sys.stderr)
+        return 1
+
+    schema = args.schema
+
+    # Read and parse the CSV
+    print(f"Reading road closure data from {csv_path}")
+    with csv_path.open("r", encoding="utf-8-sig", newline="") as fh:
+        reader = csv.DictReader(fh)
+        headers = reader.fieldnames or []
+        rows = list(reader)
+
+    # Build the mapping of CSV columns that are actual roads
+    active_road_cols: list[tuple[str, str, str]] = []  # (csv_header, road_name, road_type)
+    for hdr in headers:
+        if hdr in ROAD_COLUMNS:
+            road_name, road_type = ROAD_COLUMNS[hdr]
+            active_road_cols.append((hdr, road_name, road_type))
+
+    if not active_road_cols:
+        print("Error: No matching road columns found in CSV headers.", file=sys.stderr)
+        print(f"  CSV headers: {headers}", file=sys.stderr)
+        return 1
+
+    print(f"  Found {len(active_road_cols)} road columns in CSV.")
+
+    # Group rows by year: collect Open and Closed dates
+    # Skip average rows (year starts with "Last")
+    year_data: dict[str, dict[str, dict[str, str]]] = {}  # year -> road_name -> {open, close, type}
+    for row in rows:
+        year_str = (row.get("Year") or "").strip()
+        status = (row.get("Status") or "").strip().capitalize()
+
+        if not year_str or year_str.startswith("Last"):
+            continue
+
+        # Normalize "Opend" typo in CSV
+        if status.startswith("Open"):
+            status = "Open"
+
+        if year_str not in year_data:
+            year_data[year_str] = {}
+
+        for csv_hdr, road_name, road_type in active_road_cols:
+            date_val = (row.get(csv_hdr) or "").strip()
+            if road_name not in year_data[year_str]:
+                year_data[year_str][road_name] = {"open": "", "close": "", "type": road_type}
+
+            if status == "Open":
+                year_data[year_str][road_name]["open"] = date_val
+            elif status == "Closed":
+                year_data[year_str][road_name]["close"] = date_val
+
+    # Connect and load
+    dataset_name = "NWT Road Closures"
+    with psycopg.connect(_conninfo(args)) as conn:
+        with conn.cursor() as cur:
+            cur.execute(sql.SQL("CREATE SCHEMA IF NOT EXISTS {}").format(
+                sql.Identifier(schema)))
+            if args.drop:
+                print("Dropping existing road_closures table...")
+                cur.execute(sql.SQL(
+                    "DROP TABLE IF EXISTS {}.road_closures CASCADE"
+                ).format(sql.Identifier(schema)))
+            cur.execute(DDL.format(s=schema))
+
+            # Ensure dataset entries exist
+            now = int(time.time())
+            for ds_id, (ds_name, ds_link) in DATASETS.items():
+                cur.execute(sql.SQL("""
+                    INSERT INTO {s}.datasets (id, name, timecreated, timeupdated, resourcelink)
+                    VALUES (%s, %s, %s, %s, %s)
+                    ON CONFLICT (id) DO NOTHING
+                """).format(s=sql.Identifier(schema)),
+                    (ds_id, ds_name, now, now, ds_link))
+        conn.commit()
+
+        # Upsert road closure records
+        upsert_sql = sql.SQL("""
+            INSERT INTO {s}.road_closures
+                (dataset_id, dataset_name, year, road_name, road_type, open_date, close_date)
+            VALUES (%s, %s, %s, %s, %s, %s, %s)
+            ON CONFLICT (year, road_name) DO UPDATE SET
+                dataset_id   = EXCLUDED.dataset_id,
+                dataset_name = EXCLUDED.dataset_name,
+                road_type    = EXCLUDED.road_type,
+                open_date    = EXCLUDED.open_date,
+                close_date   = EXCLUDED.close_date
+        """).format(s=sql.Identifier(schema))
+
+        total_rows = 0
+        skipped = 0
+        with conn.cursor() as cur:
+            for year_str in sorted(year_data.keys()):
+                roads = year_data[year_str]
+                for road_name, info in roads.items():
+                    open_date = _resolve_road_date(info["open"], year_str)
+                    close_date = _resolve_road_date(info["close"], year_str)
+
+                    # Skip roads where both dates are N/A
+                    if open_date is None and close_date is None:
+                        skipped += 1
+                        continue
+
+                    cur.execute(upsert_sql, (
+                        DATASET_NWT_ROAD_CLOSURES,
+                        dataset_name,
+                        year_str,
+                        road_name,
+                        info["type"],
+                        open_date,
+                        close_date,
+                    ))
+                    total_rows += 1
+        conn.commit()
+
+    print(f"\nDone. Upserted {total_rows} road closure records "
+          f"({skipped} skipped due to N/A).")
+    return 0
+
+
+# ---------------------------------------------------------------------------
 # argparse
 # ---------------------------------------------------------------------------
 
@@ -883,14 +1125,9 @@ def build_parser() -> argparse.ArgumentParser:
     p_road.add_argument("--csv", default="./NWT_Roads_Combined_Full.csv",
                         help="Path to NWT_Roads_Combined_Full.csv "
                              "(default: ./NWT_Roads_Combined_Full.csv).")
-    p_road.add_argument("--host", default=os.environ.get("PGHOST", "localhost"))
-    p_road.add_argument("--port", default=os.environ.get("PGPORT", "5432"))
-    p_road.add_argument("--dbname", default=os.environ.get("PGDATABASE", "postgres"))
-    p_road.add_argument("--user", default=os.environ.get("PGUSER", "postgres"))
-    p_road.add_argument("--password", default=os.environ.get("PGPASSWORD", ""))
-    p_road.add_argument("--schema", default="public")
     p_road.add_argument("--drop", action="store_true",
                         help="Drop road_closures table before creating it.")
+    _add_db_args(p_road)
     p_road.set_defaults(func=cmd_roadload)
 
     return p
