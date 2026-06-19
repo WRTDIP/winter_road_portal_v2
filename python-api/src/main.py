@@ -587,3 +587,163 @@ async def road_closure_forecast(road_name: str, year: int = None,
             "close_samples": len(closes),
         }
     }
+
+
+@app.get("/road-closure-trend")
+async def road_closure_trend(road_name: str, dataset_id: int = None,
+                             frac: float = 0.5):
+    """Scatter + LOWESS trend of open / close dates for a road over the years.
+
+    The y value is the "day of season" — the number of days since Aug 1 of the
+    season's starting year. This keeps the Dec→May winter period continuous and
+    monotonic so opening (early season) plots below closing (late season).
+    Both series share the season's starting year on the x axis.
+    """
+    from datetime import date
+
+    cur = conn.cursor()
+    resolved = _resolve_road_name(cur, road_name)
+    if resolved is None:
+        cur.close()
+        return {
+            "data": {
+                "road_name": road_name,
+                "matched": None,
+                "years": [],
+                "open_scatter": [],
+                "close_scatter": [],
+                "open_lowess": [],
+                "close_lowess": [],
+            }
+        }
+
+    filters = ["road_name = %s", "month IS NOT NULL", "day IS NOT NULL"]
+    params = [resolved]
+    if dataset_id is not None:
+        filters.append("dataset_id = %s")
+        params.append(dataset_id)
+    where = " AND ".join(filters)
+
+    cur.execute(
+        f"SELECT year, status, month, day FROM public.road_closures WHERE {where};",
+        params,
+    )
+    rows = cur.fetchall()
+    cur.close()
+
+    def day_of_season(season_start, m, d):
+        # Aug-Dec fall in the season's starting year; Jan-Jul in the next.
+        date_year = season_start if m >= 8 else season_start + 1
+        try:
+            return date(date_year, m, d).toordinal() - date(season_start, 8, 1).toordinal()
+        except ValueError:
+            return None
+
+    # Open rows are stored under the season's starting year; Closed rows under
+    # the following year (so the season start is year - 1).
+    open_pts = {}
+    close_pts = {}
+    for y, s, m, d in rows:
+        if s == "Open":
+            dos = day_of_season(y, m, d)
+            if dos is not None:
+                open_pts[y] = dos
+        elif s == "Closed":
+            season_start = y - 1
+            dos = day_of_season(season_start, m, d)
+            if dos is not None:
+                close_pts[season_start] = dos
+
+    def lowess_map(points):
+        """Return {season_year: smoothed_dos} for a {season_year: dos} dict."""
+        if len(points) < 3:
+            return {}
+        xs = np.array(sorted(points.keys()), dtype=float)
+        ys = np.array([points[int(x)] for x in xs], dtype=float)
+        frac_clamped = max(2.0 / len(xs), min(frac, 1.0))
+        smoothed = lowess(ys, xs, frac=frac_clamped, return_sorted=True)
+        return {int(round(r[0])): round(float(r[1]), 2) for r in smoothed}
+
+    open_low = lowess_map(open_pts)
+    close_low = lowess_map(close_pts)
+
+    years = sorted(set(open_pts) | set(close_pts))
+
+    return {
+        "data": {
+            "road_name": road_name,
+            "matched": resolved,
+            "years": years,
+            "open_scatter": [{"x": y, "y": open_pts[y]} for y in sorted(open_pts)],
+            "close_scatter": [{"x": y, "y": close_pts[y]} for y in sorted(close_pts)],
+            "open_lowess": [open_low.get(y) for y in years],
+            "close_lowess": [close_low.get(y) for y in years],
+        }
+    }
+
+
+@app.get("/road-closure-duration-range")
+async def road_closure_duration_range(dataset_id: int = None):
+    """Global min / max / average open duration (days) across all roads.
+
+    For every road and every season that has both an opening and a closing
+    record, the duration is the number of days between them. The min and max of
+    all these durations are returned so a single road's stats can be placed on a
+    shared scale.
+    """
+    from datetime import date
+
+    cur = conn.cursor()
+    filters = ["month IS NOT NULL", "day IS NOT NULL"]
+    params = []
+    if dataset_id is not None:
+        filters.append("dataset_id = %s")
+        params.append(dataset_id)
+    where = " AND ".join(filters)
+
+    cur.execute(
+        f"SELECT road_name, year, status, month, day FROM public.road_closures WHERE {where};",
+        params,
+    )
+    rows = cur.fetchall()
+    cur.close()
+
+    def day_of_season(season_start, m, d):
+        date_year = season_start if m >= 8 else season_start + 1
+        try:
+            return date(date_year, m, d).toordinal() - date(season_start, 8, 1).toordinal()
+        except ValueError:
+            return None
+
+    # Build {road_name: {season_start: {"open": dos, "close": dos}}}.
+    seasons = {}
+    for road_name, y, s, m, d in rows:
+        if s == "Open":
+            dos = day_of_season(y, m, d)
+            if dos is not None:
+                seasons.setdefault(road_name, {}).setdefault(y, {})["open"] = dos
+        elif s == "Closed":
+            season_start = y - 1
+            dos = day_of_season(season_start, m, d)
+            if dos is not None:
+                seasons.setdefault(road_name, {}).setdefault(season_start, {})["close"] = dos
+
+    durations = []
+    for road in seasons.values():
+        for pts in road.values():
+            if "open" in pts and "close" in pts:
+                days = pts["close"] - pts["open"]
+                if days >= 0:
+                    durations.append(days)
+
+    if not durations:
+        return {"data": {"min": None, "max": None, "avg": None, "count": 0}}
+
+    return {
+        "data": {
+            "min": min(durations),
+            "max": max(durations),
+            "avg": round(sum(durations) / len(durations), 2),
+            "count": len(durations),
+        }
+    }

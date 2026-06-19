@@ -88,6 +88,177 @@ const CITY_STATION_MAP = {
   "Taloyoak": 54219,
 };
 
+// Interactive gauge summarising the min / average / max days a road is open.
+// The track is coloured by distance from the average: green within one standard
+// deviation, yellow out to two, red out to three, then white beyond. The colour
+// boundaries are hard-edged. Hovering the track shows the day count at the
+// cursor and which standard-deviation band (1σ / 2σ / 3σ) it falls in.
+function DurationHeatGauge({ durationDays }) {
+  const trackRef = useRef(null)
+  const [hover, setHover] = useState(null) // { pct, days, label, color }
+
+  if (!durationDays || durationDays.length === 0) return null
+
+  const min = Math.min(...durationDays)
+  const max = Math.max(...durationDays)
+  const avg = durationDays.reduce((s, d) => s + d, 0) / durationDays.length
+  // Population standard deviation of the per-season durations.
+  const sd = Math.sqrt(
+    durationDays.reduce((s, d) => s + (d - avg) ** 2, 0) / durationDays.length
+  )
+
+  const GREEN = "#66bb6a"
+  const YELLOW = "#fdd835"
+  const RED = "#ef5350"
+  const WHITE = "#ffffff"
+  const GREY = "#94a3b8"
+
+  // Domain spans three standard deviations either side of the average (with a
+  // little padding for the white "beyond 3σ" zones). Fall back to a small
+  // window when every season has the same duration (sd === 0).
+  const unit = sd > 0 ? sd : Math.max(avg * 0.1, 1)
+  const pad = Math.max(unit * 0.5, 4)
+  const lo = avg - 3 * unit - pad
+  const hi = avg + 3 * unit + pad
+  const span = hi - lo
+  const pos = (v) => Math.max(0, Math.min(100, ((v - lo) / span) * 100))
+  const valueAt = (pct) => lo + (pct / 100) * span
+
+  const minPct = pos(min)
+  const avgPct = pos(avg)
+  const maxPct = pos(max)
+
+  // Standard-deviation band boundaries around the average.
+  const sd1Lo = pos(avg - unit)
+  const sd1Hi = pos(avg + unit)
+  const sd2Lo = pos(avg - 2 * unit)
+  const sd2Hi = pos(avg + 2 * unit)
+  const sd3Lo = pos(avg - 3 * unit)
+  const sd3Hi = pos(avg + 3 * unit)
+
+  // Hard-edged bands (coincident stops at each boundary so colours don't
+  // blend): white | red (3σ) | yellow (2σ) | green (1σ) | yellow | red | white.
+  const gradient =
+    `linear-gradient(to right, ` +
+    `${WHITE} 0%, ${WHITE} ${sd3Lo}%, ` +
+    `${RED} ${sd3Lo}%, ${RED} ${sd2Lo}%, ` +
+    `${YELLOW} ${sd2Lo}%, ${YELLOW} ${sd1Lo}%, ` +
+    `${GREEN} ${sd1Lo}%, ${GREEN} ${sd1Hi}%, ` +
+    `${YELLOW} ${sd1Hi}%, ${YELLOW} ${sd2Hi}%, ` +
+    `${RED} ${sd2Hi}%, ${RED} ${sd3Hi}%, ` +
+    `${WHITE} ${sd3Hi}%, ${WHITE} 100%)`
+
+  // Classify a duration value into its σ band for the hover readout, expressed
+  // as the likelihood of a season falling in that band under a normal
+  // distribution (per-band probabilities: ≈68% / ≈27% / ≈4% / <1%).
+  const classify = (value) => {
+    const z = Math.abs(value - avg) / unit
+    if (z <= 1) return { color: GREEN, label: "typical · ≈68% of seasons" }
+    if (z <= 2) return { color: YELLOW, label: "uncommon · ≈27% of seasons" }
+    if (z <= 3) return { color: RED, label: "rare · ≈4% of seasons" }
+    return { color: GREY, label: "very rare · <1% of seasons" }
+  }
+
+  const handleMove = (e) => {
+    const el = trackRef.current
+    if (!el) return
+    const rect = el.getBoundingClientRect()
+    const pct = Math.max(0, Math.min(100, ((e.clientX - rect.left) / rect.width) * 100))
+    const value = valueAt(pct)
+    const days = Math.max(0, Math.round(value))
+    const { color, label } = classify(value)
+    setHover({ pct, days, label, color })
+  }
+
+  const Marker = ({ pct, color, label, value, below }) => (
+    <div
+      style={{
+        position: "absolute",
+        left: `${pct}%`,
+        top: below ? "auto" : 0,
+        bottom: below ? 0 : "auto",
+        transform: "translateX(-50%)",
+        display: "flex",
+        flexDirection: below ? "column-reverse" : "column",
+        alignItems: "center",
+        pointerEvents: "none",
+      }}
+    >
+      <span style={{ fontSize: 11, fontWeight: 700, color, lineHeight: 1.2, whiteSpace: "nowrap" }}>
+        {label}
+      </span>
+      <span style={{ fontSize: 10, color: "#475569", lineHeight: 1.2, whiteSpace: "nowrap" }}>
+        {Math.round(value)} days
+      </span>
+      <div style={{ width: 2, height: 8, background: color, marginTop: below ? 0 : 2, marginBottom: below ? 2 : 0 }} />
+    </div>
+  )
+
+  return (
+    <div style={{ width: "100%", padding: "4px 12px 2px" }}>
+      <div style={{ position: "relative", height: 36 }}>
+        {hover ? (
+          <div
+            style={{
+              position: "absolute",
+              left: `${hover.pct}%`,
+              top: 0,
+              transform: "translateX(-50%)",
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              pointerEvents: "none",
+            }}
+          >
+            <span style={{ fontSize: 11, fontWeight: 700, color: hover.color, lineHeight: 1.2, whiteSpace: "nowrap" }}>
+              {hover.days} days
+            </span>
+            <span style={{ fontSize: 10, color: "#475569", lineHeight: 1.2, whiteSpace: "nowrap" }}>
+              {hover.label}
+            </span>
+            <div style={{ width: 2, height: 8, background: hover.color, marginTop: 2 }} />
+          </div>
+        ) : (
+          <Marker pct={avgPct} color="#2e7d32" label="Avg" value={avg} />
+        )}
+      </div>
+      <div
+        ref={trackRef}
+        onMouseMove={handleMove}
+        onMouseLeave={() => setHover(null)}
+        style={{
+          position: "relative",
+          height: 22,
+          borderRadius: 11,
+          background: gradient,
+          border: "1px solid #e2e8f0",
+          boxShadow: "inset 0 1px 2px rgba(0,0,0,0.08)",
+          cursor: "crosshair",
+        }}
+      >
+        {hover ? (
+          <div
+            style={{
+              position: "absolute",
+              left: `${hover.pct}%`,
+              top: 0,
+              bottom: 0,
+              width: 2,
+              background: "rgba(15,23,42,0.7)",
+              transform: "translateX(-50%)",
+              pointerEvents: "none",
+            }}
+          />
+        ) : null}
+      </div>
+      <div style={{ position: "relative", height: 36, marginTop: 2 }}>
+        <Marker pct={minPct} color="#c62828" label="Min" value={min} below />
+        <Marker pct={maxPct} color="#c62828" label="Max" value={max} below />
+      </div>
+    </div>
+  )
+}
+
 function WeatherMap() {
   // References for DOM elements and data
   const weatherData = useRef(null)
@@ -107,6 +278,19 @@ function WeatherMap() {
   // Custom feature popup state (replaces ArcGIS native popup)
   const [featurePopup, setFeaturePopup] = useState(null) // {title, content, layerTitle, screenX, screenY}
 
+  // Road closure open/close trend chart state
+  const [roadTrendName, setRoadTrendName] = useState("")
+  const [roadTrendLoading, setRoadTrendLoading] = useState(false)
+  const [roadTrend, setRoadTrend] = useState(null) // backend payload
+  // Whether the road popup is enlarged (centered on screen like a modal).
+  const [roadPopupEnlarged, setRoadPopupEnlarged] = useState(false)
+  // Whether the inline trend chart is collapsed. Persists for the lifetime of
+  // the page (session) so the user's choice is remembered across road popups.
+  // Defaults to expanded (open) on page load.
+  const [roadTrendCollapsed, setRoadTrendCollapsed] = useState(false)
+  // Whether the inline open-duration chart is collapsed. Same persistence
+  // behaviour as the trend chart; defaults to expanded.
+  const [roadDurationCollapsed, setRoadDurationCollapsed] = useState(false)
   // FDD chart state
   const [fddSeries, setFddSeries] = useState([]) // [{stationId, stationName, years, fdds}]
   const [fddLoading, setFddLoading] = useState(false)
@@ -229,6 +413,349 @@ function WeatherMap() {
       cancelled = true
     }
   }, [featurePopup, ROAD_CLOSURE_LAYERS])
+
+  // When a road-closure feature popup opens, load the open/close trend data
+  // so the chart can be rendered inline inside the popup.
+  const roadTrendFetchedFor = useRef(null)
+  const popupRoadName =
+    featurePopup && ROAD_CLOSURE_LAYERS.includes(featurePopup.layerTitle)
+      ? featurePopup.title
+      : null
+
+  useEffect(() => {
+    if (!popupRoadName) return
+    if (roadTrendFetchedFor.current === popupRoadName) return // already loaded for this road
+
+    roadTrendFetchedFor.current = popupRoadName
+    let cancelled = false
+    setRoadTrendName(popupRoadName)
+    setRoadTrend(null)
+    setRoadTrendLoading(true)
+    fetch(`${API_BASE}/road-closure-trend?road_name=${encodeURIComponent(popupRoadName)}`)
+      .then((r) => r.json())
+      .then((res) => {
+        if (!cancelled) setRoadTrend(res?.data || null)
+      })
+      .catch(() => {
+        if (!cancelled) setRoadTrend(null)
+      })
+      .finally(() => {
+        if (!cancelled) setRoadTrendLoading(false)
+      })
+
+    return () => {
+      cancelled = true
+    }
+  }, [popupRoadName])
+
+  // Convert a "day of season" (days since Aug 1) back to a readable date label.
+  const SEASON_BASE_MS = Date.UTC(2001, 7, 1) // Aug 1
+  const dosToLabel = (dos) => {
+    if (dos == null || isNaN(dos)) return ""
+    const d = new Date(SEASON_BASE_MS + dos * 86400000)
+    return d.toLocaleDateString("en-CA", { month: "short", day: "numeric", timeZone: "UTC" })
+  }
+
+  // Render the open/close scatter + LOWESS trend chart for the current road.
+  const renderRoadTrendChart = (height = 320) => {
+    if (roadTrendLoading) {
+      return (
+        <Typography variant="body2" color="text.secondary" sx={{ py: 3, textAlign: "center" }}>
+          Loading trend data…
+        </Typography>
+      )
+    }
+
+    const years = roadTrend?.years || []
+    const openScatter = roadTrend?.open_scatter || []
+    const closeScatter = roadTrend?.close_scatter || []
+    const openLowess = roadTrend?.open_lowess || []
+    const closeLowess = roadTrend?.close_lowess || []
+
+    if (!roadTrend?.matched || (openScatter.length === 0 && closeScatter.length === 0)) {
+      return (
+        <Typography variant="body2" color="text.secondary" sx={{ py: 3, textAlign: "center" }}>
+          No historical open/close data available for this road.
+        </Typography>
+      )
+    }
+
+    // Green = opening, Red = closing.
+    const OPEN_COLOR = "#16a34a"
+    const CLOSE_COLOR = "#dc2626"
+
+    // Align the raw points to the shared year axis (null where a year has no
+    // record) so they can be drawn as marks on a LineChart.
+    const openByYear = Object.fromEntries(openScatter.map((p) => [p.x, p.y]))
+    const closeByYear = Object.fromEntries(closeScatter.map((p) => [p.x, p.y]))
+    const openRaw = years.map((y) => (openByYear[y] != null ? openByYear[y] : null))
+    const closeRaw = years.map((y) => (closeByYear[y] != null ? closeByYear[y] : null))
+
+    // Tighten the y-axis to the data range (with a little padding) so the
+    // points and trends use the full vertical space instead of clustering.
+    const allY = [
+      ...openScatter.map((p) => p.y),
+      ...closeScatter.map((p) => p.y),
+      ...openLowess.filter((v) => v != null),
+      ...closeLowess.filter((v) => v != null),
+    ]
+    const yMin = allY.length ? Math.floor(Math.min(...allY) - 5) : undefined
+    const yMax = allY.length ? Math.ceil(Math.max(...allY) + 5) : undefined
+
+    // Shade the chart by road status: solid green between the opening and
+    // closing trend lines (road open) and solid red everywhere else (road
+    // closed). The red is a full-height area covering the whole plot; the green
+    // band is two stacked areas — a transparent base on the opening trend and a
+    // fill carrying the (close − open) gap — so it spans exactly from the
+    // opening line up to the closing line. Both are null wherever either trend
+    // is missing so the shading only covers the range where both trends exist.
+    const redBackgroundData = years.map(() => yMax)
+    const bandFillData = years.map((_, i) => {
+      const o = openLowess[i]
+      const c = closeLowess[i]
+      return o != null && c != null ? c - o : null
+    })
+    const bandBaseData = years.map((_, i) =>
+      bandFillData[i] != null ? openLowess[i] : null
+    )
+
+    const series = [
+      // Red "closed" background: a full-height area filling the whole plot.
+      // Drawn first so the green band and the data sit on top of it.
+      {
+        type: "line",
+        id: "redBg",
+        data: redBackgroundData,
+        area: true,
+        showMark: false,
+        connectNulls: true,
+        color: "transparent",
+        valueFormatter: () => null,
+      },
+      // Green "open" band between the trend lines (transparent stacked base on
+      // the opening trend + a fill carrying the close−open gap).
+      {
+        type: "line",
+        id: "bandBase",
+        data: bandBaseData,
+        stack: "band",
+        area: false,
+        showMark: false,
+        connectNulls: true,
+        curve: "monotoneX",
+        color: "transparent",
+        valueFormatter: () => null,
+      },
+      {
+        type: "line",
+        id: "bandFill",
+        data: bandFillData,
+        stack: "band",
+        area: true,
+        showMark: false,
+        connectNulls: true,
+        curve: "monotoneX",
+        color: "transparent",
+        valueFormatter: () => null,
+      },
+      // Order matters for the legend: Opening, Opening trend, Closing, Closing trend.
+      // Raw points (rendered as marks only — the connecting line is hidden via sx).
+      {
+        type: "line",
+        id: "openPts",
+        label: "Opening",
+        color: OPEN_COLOR,
+        data: openRaw,
+        showMark: true,
+        connectNulls: false,
+        valueFormatter: (v) => (v == null ? "" : dosToLabel(v)),
+      },
+      {
+        type: "line",
+        id: "openTrend",
+        label: "Opening trend",
+        color: OPEN_COLOR,
+        data: openLowess,
+        showMark: false,
+        connectNulls: true,
+        curve: "monotoneX",
+        valueFormatter: (v) => (v == null ? "" : dosToLabel(v)),
+      },
+      {
+        type: "line",
+        id: "closePts",
+        label: "Closing",
+        color: CLOSE_COLOR,
+        data: closeRaw,
+        showMark: true,
+        connectNulls: false,
+        valueFormatter: (v) => (v == null ? "" : dosToLabel(v)),
+      },
+      {
+        type: "line",
+        id: "closeTrend",
+        label: "Closing trend",
+        color: CLOSE_COLOR,
+        data: closeLowess,
+        showMark: false,
+        connectNulls: true,
+        curve: "monotoneX",
+        valueFormatter: (v) => (v == null ? "" : dosToLabel(v)),
+      },
+    ]
+
+    return (
+      <div style={{ width: "100%" }}>
+        <LineChart
+          height={height}
+          series={series}
+          xAxis={[
+            {
+              data: years,
+              scaleType: "point",
+              label: "Season (start year)",
+              valueFormatter: (v) => String(v),
+            },
+          ]}
+          yAxis={[
+            {
+              label: "Date",
+              min: yMin,
+              max: yMax,
+              valueFormatter: (v) => dosToLabel(v),
+            },
+          ]}
+          margin={{ left: 78, right: 18, top: 48, bottom: 50 }}
+          grid={{ horizontal: true }}
+          slotProps={{
+            legend: {
+              direction: "row",
+              position: { vertical: "top", horizontal: "middle" },
+              padding: 0,
+              itemMarkWidth: 14,
+              itemMarkHeight: 3,
+              markGap: 5,
+              itemGap: 18,
+              labelStyle: { fontSize: 12 },
+            },
+            // The chart's hover tooltip renders in a Popper. Its default
+            // z-index sits below the road-closure popup (5000/6000), so lift
+            // it above the popup to keep the datapoint tooltip on top.
+            popper: {
+              sx: { zIndex: 7000 },
+            },
+          }}
+          sx={{
+            // The y-axis label sits at a fixed offset that ignores tick-label
+            // width, so wide date labels (e.g. "Jan 15") overlap it. Nudge the
+            // label group further left to clear them.
+            "& .MuiChartsAxis-left .MuiChartsAxis-label": { transform: "translateX(-28px)" },
+            // Hide the connecting lines for the raw-point series; keep only marks.
+            "& .MuiLineElement-series-openPts": { display: "none" },
+            "& .MuiLineElement-series-closePts": { display: "none" },
+            // Hide the line strokes of the shading helper series (only fills show).
+            "& .MuiLineElement-series-redBg": { display: "none" },
+            "& .MuiLineElement-series-bandBase": { display: "none" },
+            "& .MuiLineElement-series-bandFill": { display: "none" },
+            // Solid red "closed" background and solid green "open" band.
+            "& .MuiAreaElement-series-redBg": { fill: CLOSE_COLOR, fillOpacity: 0.18 },
+            "& .MuiAreaElement-series-bandFill": { fill: OPEN_COLOR, fillOpacity: 0.32 },
+            // Dash the trend lines so they read distinctly from the points.
+            "& .MuiLineElement-series-openTrend": { strokeDasharray: "6 4" },
+            "& .MuiLineElement-series-closeTrend": { strokeDasharray: "6 4" },
+          }}
+        />
+        <Typography variant="caption" color="text.secondary" sx={{ display: "block", mt: 0.5, textAlign: "center" }}>
+          Points are recorded open/close dates per season; lines are LOWESS trends.
+        </Typography>
+      </div>
+    )
+  }
+
+  // Render a bar chart of the open duration (days the road was open) per season.
+  // Duration = closing day-of-season − opening day-of-season for each year that
+  // has both an open and a close record.
+  const renderRoadDurationChart = (height = 320) => {
+    if (roadTrendLoading) {
+      return (
+        <Typography variant="body2" color="text.secondary" sx={{ py: 3, textAlign: "center" }}>
+          Loading duration data…
+        </Typography>
+      )
+    }
+
+    const openScatter = roadTrend?.open_scatter || []
+    const closeScatter = roadTrend?.close_scatter || []
+    const openByYear = Object.fromEntries(openScatter.map((p) => [p.x, p.y]))
+    const closeByYear = Object.fromEntries(closeScatter.map((p) => [p.x, p.y]))
+
+    // Only seasons with both an opening and a closing date yield a duration.
+    const durationYears = []
+    const durationDays = []
+    Object.keys(openByYear)
+      .map(Number)
+      .sort((a, b) => a - b)
+      .forEach((y) => {
+        if (closeByYear[y] != null && openByYear[y] != null) {
+          const days = closeByYear[y] - openByYear[y]
+          if (days >= 0) {
+            durationYears.push(y)
+            durationDays.push(days)
+          }
+        }
+      })
+
+    if (!roadTrend?.matched || durationYears.length === 0) {
+      return (
+        <Typography variant="body2" color="text.secondary" sx={{ py: 3, textAlign: "center" }}>
+          No seasons with both an open and close date are available for this road.
+        </Typography>
+      )
+    }
+
+    const avgDuration =
+      durationDays.reduce((sum, d) => sum + d, 0) / durationDays.length
+
+    return (
+      <div style={{ width: "100%" }}>
+        <DurationHeatGauge durationDays={durationDays} />
+        <BarChart
+          height={height}
+          series={[
+            {
+              type: "bar",
+              id: "openDuration",
+              label: "Days open",
+              color: "#2563eb",
+              data: durationDays,
+              valueFormatter: (v) => (v == null ? "" : `${v} days`),
+            },
+          ]}
+          xAxis={[
+            {
+              data: durationYears,
+              scaleType: "band",
+              label: "Season (start year)",
+              valueFormatter: (v) => String(v),
+            },
+          ]}
+          yAxis={[
+            {
+              label: "Days open",
+              min: 0,
+            },
+          ]}
+          margin={{ left: 64, right: 18, top: 24, bottom: 50 }}
+          grid={{ horizontal: true }}
+          slotProps={{ legend: { hidden: true } }}
+        />
+        <Typography variant="caption" color="text.secondary" sx={{ display: "block", mt: 0.5, textAlign: "center" }}>
+          Number of days the road stayed open each season (close date − open date). Average:{" "}
+          {Math.round(avgDuration)} days.
+        </Typography>
+      </div>
+    )
+  }
 
   // Fetch available stations for this city when modal opens
   useEffect(() => {
@@ -677,11 +1204,20 @@ function WeatherMap() {
       <div id="layer-list-container"></div>
 
       {/* Custom feature popup (replaces ArcGIS native popup) */}
-      {featurePopup && (
+      {featurePopup && (() => {
+        const isRoadPopup = ROAD_CLOSURE_LAYERS.includes(featurePopup.layerTitle)
+        const enlarged = isRoadPopup && roadPopupEnlarged
+        const containerWidth = MapElement.current?.clientWidth || 600
+        // Popup is centered on `left` via translateX(-50%), so keep its half
+        // width inside the map bounds.
+        const popupWidth = isRoadPopup ? Math.min(560, containerWidth - 32) : 280
+        const half = popupWidth / 2
+        const clampedLeft = Math.max(half + 8, Math.min(featurePopup.screenX, containerWidth - half - 8))
+        return (
         <div
-          className="wrtdip-feature-popup"
-          style={{
-            left: Math.min(featurePopup.screenX, (MapElement.current?.clientWidth || 600) - 300),
+          className={`wrtdip-feature-popup${isRoadPopup ? " wrtdip-feature-popup--wide" : ""}${enlarged ? " wrtdip-feature-popup--enlarged" : ""}`}
+          style={enlarged ? {} : {
+            left: clampedLeft,
             top: Math.max(featurePopup.screenY - 10, 10),
           }}
         >
@@ -692,23 +1228,86 @@ function WeatherMap() {
               )}
               <span className="wrtdip-feature-popup__title">{featurePopup.title || "Feature"}</span>
             </div>
+            {isRoadPopup && (
+              <button
+                className="wrtdip-feature-popup__close"
+                onClick={() => setRoadPopupEnlarged((e) => !e)}
+                aria-label={enlarged ? "Shrink" : "Enlarge"}
+                title={enlarged ? "Shrink" : "Enlarge"}
+              >
+                {enlarged ? <CloseFullscreenIcon style={{ fontSize: 14 }} /> : <OpenInFullIcon style={{ fontSize: 14 }} />}
+              </button>
+            )}
             <button
               className="wrtdip-feature-popup__close"
-              onClick={() => setFeaturePopup(null)}
+              onClick={() => { setFeaturePopup(null); setRoadPopupEnlarged(false) }}
               aria-label="Close"
             >
               ×
             </button>
           </div>
-          {featurePopup.content && (
-            <div
-              className="wrtdip-feature-popup__body"
-              dangerouslySetInnerHTML={{ __html: featurePopup.content }}
-            />
+          {isRoadPopup ? (
+            <div className="wrtdip-feature-popup__body">
+              <div className="wrtdip-popup-section">
+                <div className="wrtdip-popup-section__header wrtdip-popup-section__header--static">
+                  <span className="wrtdip-popup-section__title">Details</span>
+                </div>
+                {featurePopup.content && (
+                  <div
+                    className="wrtdip-popup-section__content"
+                    dangerouslySetInnerHTML={{ __html: featurePopup.content }}
+                  />
+                )}
+              </div>
+              <div className="wrtdip-popup-section">
+                <button
+                  type="button"
+                  className="wrtdip-popup-section__header"
+                  onClick={() => setRoadTrendCollapsed((c) => !c)}
+                  aria-expanded={!roadTrendCollapsed}
+                >
+                  <span className="wrtdip-popup-section__title">Open/Close Trend</span>
+                  <span className={`wrtdip-popup-section__caret${roadTrendCollapsed ? "" : " wrtdip-popup-section__caret--open"}`}>
+                    ▾
+                  </span>
+                </button>
+                {!roadTrendCollapsed && (
+                  <div className="wrtdip-popup-section__content">
+                    {renderRoadTrendChart(enlarged ? 420 : 320)}
+                  </div>
+                )}
+              </div>
+              <div className="wrtdip-popup-section">
+                <button
+                  type="button"
+                  className="wrtdip-popup-section__header"
+                  onClick={() => setRoadDurationCollapsed((c) => !c)}
+                  aria-expanded={!roadDurationCollapsed}
+                >
+                  <span className="wrtdip-popup-section__title">Open Duration per Year</span>
+                  <span className={`wrtdip-popup-section__caret${roadDurationCollapsed ? "" : " wrtdip-popup-section__caret--open"}`}>
+                    ▾
+                  </span>
+                </button>
+                {!roadDurationCollapsed && (
+                  <div className="wrtdip-popup-section__content">
+                    {renderRoadDurationChart(enlarged ? 420 : 320)}
+                  </div>
+                )}
+              </div>
+            </div>
+          ) : (
+            featurePopup.content && (
+              <div
+                className="wrtdip-feature-popup__body"
+                dangerouslySetInnerHTML={{ __html: featurePopup.content }}
+              />
+            )
           )}
           <div className="wrtdip-feature-popup__arrow" />
         </div>
-      )}
+        )
+      })()}
       <Modal
         show={modalIsOpen}
         onHide={closeModal}
