@@ -84,7 +84,7 @@ model RoadClosure {
   month      Int?
   day        Int?
 
-  @@unique([year, road_name, status], name: "road_closures_year_road_status_uniq")
+  @@unique([dataset_id, year, road_name, status], name: "road_closures_dataset_year_road_status_uniq")
   @@index([year])
   @@index([road_name])
   @@index([road_type])

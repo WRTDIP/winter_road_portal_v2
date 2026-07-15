@@ -393,6 +393,27 @@ async def lowess_curve(fromyear: int, toyear: int, stationid: int, dataset_id: i
 
 ## Road Closures
 
+# Road open/close data can exist in two datasets: 8 = legacy combined CSV,
+# 9 = GNWT Open/Close XLSX workbooks (longer record, through 2025-26). When
+# the caller doesn't request a specific dataset, prefer the GNWT XLSX data
+# for roads that have it and fall back to whatever else exists otherwise.
+DATASET_GNWT_ROAD_XLSX = 9
+
+
+def _preferred_road_dataset(cur, road_name: str):
+    """Dataset_id to use for a road when the caller didn't specify one.
+
+    Returns DATASET_GNWT_ROAD_XLSX if that dataset has records for the road,
+    otherwise None (no dataset filter, i.e. use whatever data exists).
+    """
+    cur.execute(
+        "SELECT 1 FROM public.road_closures "
+        "WHERE road_name = %s AND dataset_id = %s LIMIT 1;",
+        (road_name, DATASET_GNWT_ROAD_XLSX),
+    )
+    return DATASET_GNWT_ROAD_XLSX if cur.fetchone() else None
+
+
 def _resolve_road_name(cur, road_name: str):
     """Resolve a (possibly partial) road name to a canonical DB road_name.
 
@@ -504,6 +525,9 @@ async def road_closure_forecast(road_name: str, year: int = None,
             }
         }
 
+    if dataset_id is None:
+        dataset_id = _preferred_road_dataset(cur, resolved)
+
     filters = ["road_name = %s", "month IS NOT NULL", "day IS NOT NULL"]
     params = [resolved]
     if dataset_id is not None:
@@ -585,6 +609,7 @@ async def road_closure_forecast(road_name: str, year: int = None,
             "close_predicted": close_predicted,
             "open_samples": len(opens),
             "close_samples": len(closes),
+            "dataset_id": dataset_id,
         }
     }
 
@@ -616,6 +641,9 @@ async def road_closure_trend(road_name: str, dataset_id: int = None,
                 "close_lowess": [],
             }
         }
+
+    if dataset_id is None:
+        dataset_id = _preferred_road_dataset(cur, resolved)
 
     filters = ["road_name = %s", "month IS NOT NULL", "day IS NOT NULL"]
     params = [resolved]
@@ -678,6 +706,7 @@ async def road_closure_trend(road_name: str, dataset_id: int = None,
             "close_scatter": [{"x": y, "y": close_pts[y]} for y in sorted(close_pts)],
             "open_lowess": [open_low.get(y) for y in years],
             "close_lowess": [close_low.get(y) for y in years],
+            "dataset_id": dataset_id,
         }
     }
 
@@ -702,11 +731,20 @@ async def road_closure_duration_range(dataset_id: int = None):
     where = " AND ".join(filters)
 
     cur.execute(
-        f"SELECT road_name, year, status, month, day FROM public.road_closures WHERE {where};",
+        f"SELECT road_name, year, status, month, day, dataset_id "
+        f"FROM public.road_closures WHERE {where};",
         params,
     )
     rows = cur.fetchall()
     cur.close()
+
+    # Without an explicit dataset filter, use only the preferred (GNWT XLSX)
+    # dataset for roads that have it so the same season isn't counted twice;
+    # roads without XLSX data keep their legacy rows.
+    if dataset_id is None:
+        xlsx_roads = {r[0] for r in rows if r[5] == DATASET_GNWT_ROAD_XLSX}
+        rows = [r for r in rows
+                if r[0] not in xlsx_roads or r[5] == DATASET_GNWT_ROAD_XLSX]
 
     def day_of_season(season_start, m, d):
         date_year = season_start if m >= 8 else season_start + 1
@@ -717,7 +755,7 @@ async def road_closure_duration_range(dataset_id: int = None):
 
     # Build {road_name: {season_start: {"open": dos, "close": dos}}}.
     seasons = {}
-    for road_name, y, s, m, d in rows:
+    for road_name, y, s, m, d, _ds in rows:
         if s == "Open":
             dos = day_of_season(y, m, d)
             if dos is not None:
@@ -745,5 +783,144 @@ async def road_closure_duration_range(dataset_id: int = None):
             "max": max(durations),
             "avg": round(sum(durations) / len(durations), 2),
             "count": len(durations),
+        }
+    }
+
+
+@app.get("/road-closure-stats")
+async def road_closure_stats(road_name: str, dataset_id: int = None):
+    """Summary statistics of a road's open / close dates across all seasons.
+
+    For each of the Open and Closed series (as "day of season" — days since
+    Aug 1 of the season's starting year) returns: average / earliest / latest
+    date, standard deviation, Pearson correlation with year, a Mann-Kendall
+    trend test, and the Sen's (Theil-Sen) slope in days per year.
+    """
+    from datetime import date, timedelta
+    from scipy.stats import pearsonr, kendalltau, norm, theilslopes
+
+    cur = conn.cursor()
+    resolved = _resolve_road_name(cur, road_name)
+    if resolved is None:
+        cur.close()
+        return {"data": {"road_name": road_name, "matched": None,
+                         "open": None, "close": None}}
+
+    if dataset_id is None:
+        dataset_id = _preferred_road_dataset(cur, resolved)
+
+    filters = ["road_name = %s", "month IS NOT NULL", "day IS NOT NULL"]
+    params = [resolved]
+    if dataset_id is not None:
+        filters.append("dataset_id = %s")
+        params.append(dataset_id)
+    where = " AND ".join(filters)
+
+    cur.execute(
+        f"SELECT year, status, month, day FROM public.road_closures WHERE {where};",
+        params,
+    )
+    rows = cur.fetchall()
+    cur.close()
+
+    def day_of_season(season_start, m, d):
+        date_year = season_start if m >= 8 else season_start + 1
+        try:
+            return date(date_year, m, d).toordinal() - date(season_start, 8, 1).toordinal()
+        except ValueError:
+            return None
+
+    open_pts = {}
+    close_pts = {}
+    for y, s, m, d in rows:
+        if s == "Open":
+            dos = day_of_season(y, m, d)
+            if dos is not None:
+                open_pts[y] = dos
+        elif s == "Closed":
+            season_start = y - 1
+            dos = day_of_season(season_start, m, d)
+            if dos is not None:
+                close_pts[season_start] = dos
+
+    def dos_label(dos):
+        """Format a day-of-season back into a 'Dec 20' style label."""
+        d = date(2001, 8, 1) + timedelta(days=round(dos))
+        return d.strftime("%b %-d")
+
+    def mann_kendall(values):
+        """Mann-Kendall trend test: returns (tau, p, trend-label)."""
+        x = np.asarray(values, dtype=float)
+        n = len(x)
+        s = 0
+        for i in range(n - 1):
+            s += np.sign(x[i + 1:] - x[i]).sum()
+
+        _, counts = np.unique(x, return_counts=True)
+        tie_term = np.sum(counts * (counts - 1) * (2 * counts + 5))
+        var_s = (n * (n - 1) * (2 * n + 5) - tie_term) / 18.0
+        if var_s <= 0:
+            return 0.0, 1.0, "No trend"
+
+        if s > 0:
+            z = (s - 1) / np.sqrt(var_s)
+        elif s < 0:
+            z = (s + 1) / np.sqrt(var_s)
+        else:
+            z = 0.0
+
+        p = 2 * (1 - norm.cdf(abs(z)))
+        tau, _ = kendalltau(np.arange(n), x)
+
+        if p < 0.05 and z > 0:
+            trend = "Later over time"
+        elif p < 0.05 and z < 0:
+            trend = "Earlier over time"
+        else:
+            trend = "No significant trend"
+        return float(tau), float(p), trend
+
+    def series_stats(points):
+        """Compute the summary-stat block for a {season_year: dos} series."""
+        if len(points) < 3:
+            return None
+        years = sorted(points.keys())
+        dos = [points[y] for y in years]
+        arr = np.asarray(dos, dtype=float)
+
+        r, r_p = pearsonr(years, arr)
+        tau, mk_p, trend = mann_kendall(arr)
+        slope, _, slope_lo, slope_hi = theilslopes(arr, years, 0.95)
+
+        return {
+            "n": len(years),
+            "first_year": years[0],
+            "last_year": years[-1],
+            "avg_date": dos_label(float(arr.mean())),
+            "earliest_date": dos_label(float(arr.min())),
+            "latest_date": dos_label(float(arr.max())),
+            # Raw day-of-season values (days since Aug 1) so the UI can place
+            # the dates on a timeline.
+            "avg_dos": round(float(arr.mean()), 1),
+            "earliest_dos": int(arr.min()),
+            "latest_dos": int(arr.max()),
+            "sd_days": round(float(arr.std(ddof=1)), 2),
+            "pearson_r": round(float(r), 4),
+            "pearson_p": round(float(r_p), 6),
+            "mk_tau": round(tau, 4),
+            "mk_p": round(mk_p, 6),
+            "mk_trend": trend,
+            "sens_slope": round(float(slope), 4),
+            "sens_slope_lo": round(float(slope_lo), 4),
+            "sens_slope_hi": round(float(slope_hi), 4),
+        }
+
+    return {
+        "data": {
+            "road_name": road_name,
+            "matched": resolved,
+            "open": series_stats(open_pts),
+            "close": series_stats(close_pts),
+            "dataset_id": dataset_id,
         }
     }

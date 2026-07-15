@@ -291,6 +291,12 @@ function WeatherMap() {
   // Whether the inline open-duration chart is collapsed. Same persistence
   // behaviour as the trend chart; defaults to expanded.
   const [roadDurationCollapsed, setRoadDurationCollapsed] = useState(false)
+  // Climate trend statistics (bottom section of the road popup).
+  const [roadStats, setRoadStats] = useState(null) // backend payload
+  const [roadStatsLoading, setRoadStatsLoading] = useState(false)
+  const [roadStatsCollapsed, setRoadStatsCollapsed] = useState(false)
+  // Whether the full numbers table inside the stats section is shown.
+  const [roadStatsDetail, setRoadStatsDetail] = useState(false)
   // FDD chart state
   const [fddSeries, setFddSeries] = useState([]) // [{stationId, stationName, years, fdds}]
   const [fddLoading, setFddLoading] = useState(false)
@@ -371,8 +377,8 @@ function WeatherMap() {
         if (!d.matched || (!open && !close)) {
           html = `<div data-road-forecast><em>No historical closure data available.</em></div>`
         } else {
-          const openLabel = d.open_predicted ? "Predicted Opening" : "Opening"
-          const closeLabel = d.close_predicted ? "Predicted Closure" : "Closure"
+          const openLabel = d.open_predicted ? "Average Opening" : "Opening"
+          const closeLabel = d.close_predicted ? "Average Closure" : "Closure"
           html =
             `<div data-road-forecast>` +
             `<b>${openLabel} (${d.season}):</b> ${open || "N/A"}<br>` +
@@ -441,6 +447,21 @@ function WeatherMap() {
       })
       .finally(() => {
         if (!cancelled) setRoadTrendLoading(false)
+      })
+
+    // Summary trend statistics for the bottom "Climate Trend Statistics" section.
+    setRoadStats(null)
+    setRoadStatsLoading(true)
+    fetch(`${API_BASE}/road-closure-stats?road_name=${encodeURIComponent(popupRoadName)}`)
+      .then((r) => r.json())
+      .then((res) => {
+        if (!cancelled) setRoadStats(res?.data || null)
+      })
+      .catch(() => {
+        if (!cancelled) setRoadStats(null)
+      })
+      .finally(() => {
+        if (!cancelled) setRoadStatsLoading(false)
       })
 
     return () => {
@@ -613,7 +634,7 @@ function WeatherMap() {
             {
               data: years,
               scaleType: "point",
-              label: "Season (start year)",
+              label: "Year",
               valueFormatter: (v) => String(v),
             },
           ]}
@@ -735,7 +756,7 @@ function WeatherMap() {
             {
               data: durationYears,
               scaleType: "band",
-              label: "Season (start year)",
+              label: "Year",
               valueFormatter: (v) => String(v),
             },
           ]}
@@ -747,12 +768,326 @@ function WeatherMap() {
           ]}
           margin={{ left: 64, right: 18, top: 24, bottom: 50 }}
           grid={{ horizontal: true }}
-          slotProps={{ legend: { hidden: true } }}
+          slotProps={{
+            legend: { hidden: true },
+            // The chart's hover tooltip renders in a Popper. Its default
+            // z-index sits below the road-closure popup (5000/6000), so lift
+            // it above the popup to keep the datapoint tooltip on top.
+            popper: {
+              sx: { zIndex: 7000 },
+            },
+          }}
         />
         <Typography variant="caption" color="text.secondary" sx={{ display: "block", mt: 0.5, textAlign: "center" }}>
           Number of days the road stayed open each season (close date − open date). Average:{" "}
           {Math.round(avgDuration)} days.
         </Typography>
+      </div>
+    )
+  }
+
+  // Format a p-value as a significance level, matching the analysis notebook.
+  const fmtP = (p) => {
+    if (p == null) return "—"
+    if (p < 0.001) return "p < 0.001"
+    if (p < 0.01) return "p < 0.01"
+    if (p < 0.05) return "p < 0.05"
+    return `p = ${p.toFixed(3)}`
+  }
+
+  // Render the climate-trend statistics as stat tiles + a season timeline,
+  // with the full numbers table behind a toggle (bottom section of the popup).
+  const renderRoadStatsSection = () => {
+    if (roadStatsLoading) {
+      return (
+        <Typography variant="body2" color="text.secondary" sx={{ py: 3, textAlign: "center" }}>
+          Loading statistics…
+        </Typography>
+      )
+    }
+
+    const open = roadStats?.open
+    const close = roadStats?.close
+    if (!roadStats?.matched || (!open && !close)) {
+      return (
+        <Typography variant="body2" color="text.secondary" sx={{ py: 3, textAlign: "center" }}>
+          Not enough historical data to compute trend statistics for this road.
+        </Typography>
+      )
+    }
+
+    const OPEN_COLOR = "#16a34a"
+    const CLOSE_COLOR = "#dc2626"
+    const INK = "#1e293b"
+    const MUTED = "#64748b"
+
+    const isSig = (s) => s && s.mk_p < 0.05
+    // Long-term shift in days per decade, as a friendly rounded string.
+    const perDecade = (slope) => {
+      const v = Math.abs(slope * 10)
+      return v >= 3 ? String(Math.round(v)) : v.toFixed(1)
+    }
+
+    // One headline tile: label + colored series dot, big value, small context
+    // line, and an evidence chip. Text stays in ink; the dot carries identity.
+    const Tile = ({ label, color, value, sub, chip, chipStrong }) => (
+      <div
+        style={{
+          flex: "1 1 130px",
+          minWidth: 130,
+          background: "#f8fafc",
+          border: "1px solid #e2e8f0",
+          borderRadius: 10,
+          padding: "10px 12px",
+        }}
+      >
+        <div style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 11, color: MUTED }}>
+          {color && (
+            <span style={{ width: 8, height: 8, borderRadius: 4, background: color, flex: "0 0 auto" }} />
+          )}
+          {label}
+        </div>
+        <div style={{ fontSize: 19, fontWeight: 600, color: INK, lineHeight: 1.25, marginTop: 2 }}>
+          {value}
+        </div>
+        {sub && <div style={{ fontSize: 11, color: MUTED, marginTop: 1 }}>{sub}</div>}
+        {chip && (
+          <span
+            style={{
+              display: "inline-block",
+              marginTop: 6,
+              padding: "1px 8px",
+              borderRadius: 999,
+              fontSize: 10,
+              fontWeight: 600,
+              color: chipStrong ? "#1e3a8a" : MUTED,
+              background: chipStrong ? "#dbeafe" : "#f1f5f9",
+              border: `1px solid ${chipStrong ? "#bfdbfe" : "#e2e8f0"}`,
+            }}
+          >
+            {chip}
+          </span>
+        )}
+      </div>
+    )
+
+    // Headline for a date series: the per-decade shift if the trend is real,
+    // otherwise "no clear shift".
+    const seriesTile = (label, color, s) => {
+      if (!s) return <Tile label={label} color={color} value="No data" />
+      if (!isSig(s)) {
+        return (
+          <Tile
+            label={label}
+            color={color}
+            value="No clear shift"
+            sub={`typically around ${s.avg_date}`}
+            chip="steady so far"
+          />
+        )
+      }
+      const later = s.sens_slope > 0
+      return (
+        <Tile
+          label={label}
+          color={color}
+          value={`${later ? "→" : "←"} ${perDecade(s.sens_slope)} days ${later ? "later" : "earlier"}`}
+          sub={`per decade since ${s.first_year}`}
+          chip={`strong evidence (${fmtP(s.mk_p)})`}
+          chipStrong
+        />
+      )
+    }
+
+    // Derived season-length tile from the two slopes.
+    const seasonTile = () => {
+      if (!open || !close) return null
+      const changePerDecade = (close.sens_slope - open.sens_slope) * 10
+      const avgLen = Math.round(close.avg_dos - open.avg_dos)
+      if (Math.abs(changePerDecade) < 1) {
+        return <Tile label="Season length" value="Holding steady" sub={`≈ ${avgLen} days on average`} />
+      }
+      const shrinking = changePerDecade < 0
+      return (
+        <Tile
+          label="Season length"
+          value={`${Math.round(Math.abs(changePerDecade))} days ${shrinking ? "shorter" : "longer"}`}
+          sub={`per decade · ≈ ${avgLen} days on average`}
+          chip={shrinking ? "season is shrinking" : "season is growing"}
+          chipStrong={isSig(open) || isSig(close)}
+        />
+      )
+    }
+
+    // Season timeline: opening and closing windows (earliest → latest, with an
+    // average marker) on a shared Aug-to-July day-of-season scale, joined by a
+    // band showing the typical open season.
+    const seasonStrip = () => {
+      if (!open || !close) return null
+      const lo = open.earliest_dos - 10
+      const hi = close.latest_dos + 10
+      const pct = (v) => ((v - lo) / (hi - lo)) * 100
+      const band = (s, color) => (
+        <div
+          style={{
+            position: "absolute",
+            top: 12,
+            left: `${pct(s.earliest_dos)}%`,
+            width: `${Math.max(pct(s.latest_dos) - pct(s.earliest_dos), 1)}%`,
+            height: 8,
+            borderRadius: 4,
+            background: color,
+            opacity: 0.3,
+          }}
+        />
+      )
+      const avgDot = (s, color) => (
+        <div
+          style={{
+            position: "absolute",
+            top: 11,
+            left: `${pct(s.avg_dos)}%`,
+            width: 10,
+            height: 10,
+            borderRadius: 5,
+            background: color,
+            border: "2px solid #fff",
+            transform: "translateX(-50%)",
+            boxShadow: "0 0 0 1px rgba(15,23,42,0.15)",
+          }}
+        />
+      )
+      return (
+        <div style={{ marginTop: 12 }}>
+          <div style={{ position: "relative", height: 40 }}>
+            {/* typical open season between the two average dates */}
+            <div
+              style={{
+                position: "absolute",
+                top: 14,
+                left: `${pct(open.avg_dos)}%`,
+                width: `${pct(close.avg_dos) - pct(open.avg_dos)}%`,
+                height: 4,
+                background: "#cbd5e1",
+              }}
+            />
+            {band(open, OPEN_COLOR)}
+            {band(close, CLOSE_COLOR)}
+            {avgDot(open, OPEN_COLOR)}
+            {avgDot(close, CLOSE_COLOR)}
+            <span
+              style={{
+                position: "absolute",
+                top: 26,
+                left: `${(pct(open.avg_dos) + pct(close.avg_dos)) / 2}%`,
+                transform: "translateX(-50%)",
+                fontSize: 10,
+                color: MUTED,
+                whiteSpace: "nowrap",
+              }}
+            >
+              ≈ {Math.round(close.avg_dos - open.avg_dos)} days open
+            </span>
+          </div>
+          <div style={{ display: "flex", flexWrap: "wrap", gap: "4px 16px", marginTop: 4 }}>
+            <span style={{ fontSize: 11, color: MUTED, display: "flex", alignItems: "center", gap: 5 }}>
+              <span style={{ width: 8, height: 8, borderRadius: 4, background: OPEN_COLOR }} />
+              Opens {open.earliest_date} – {open.latest_date} (usually {open.avg_date})
+            </span>
+            <span style={{ fontSize: 11, color: MUTED, display: "flex", alignItems: "center", gap: 5 }}>
+              <span style={{ width: 8, height: 8, borderRadius: 4, background: CLOSE_COLOR }} />
+              Closes {close.earliest_date} – {close.latest_date} (usually {close.avg_date})
+            </span>
+          </div>
+        </div>
+      )
+    }
+
+    // One short plain-language takeaway built from the numbers.
+    let takeaway
+    if (isSig(open) && open.sens_slope > 0 && close && !isSig(close)) {
+      takeaway = `The season is being squeezed at the freeze-up end: the road now opens about ${perDecade(open.sens_slope)} days later each decade, while spring closing dates have barely moved. That points to warmer early winters — the ice takes longer to get thick enough for traffic.`
+    } else if (isSig(open) && isSig(close) && open.sens_slope > 0 && close.sens_slope < 0) {
+      takeaway = `The season is shrinking from both ends — opening about ${perDecade(open.sens_slope)} days later and closing about ${perDecade(close.sens_slope)} days earlier each decade — consistent with warmer winters overall.`
+    } else if (!isSig(open) && (!close || !isSig(close))) {
+      takeaway = "So far, neither the opening nor the closing dates show a clear long-term shift for this road — the year-to-year swings are bigger than any steady trend."
+    } else {
+      const parts = []
+      if (isSig(open)) parts.push(`openings have shifted about ${perDecade(open.sens_slope)} days ${open.sens_slope > 0 ? "later" : "earlier"} per decade`)
+      if (isSig(close)) parts.push(`closings about ${perDecade(close.sens_slope)} days ${close.sens_slope > 0 ? "later" : "earlier"} per decade`)
+      takeaway = `Over this record, ${parts.join(" and ")} — a signal of changing winter conditions.`
+    }
+
+    const detailRows = [
+      ["Seasons on record", (s) => `${s.n} (${s.first_year}–${s.last_year})`],
+      ["Average date", (s) => s.avg_date],
+      ["Earliest date", (s) => s.earliest_date],
+      ["Latest date", (s) => s.latest_date],
+      ["Year-to-year variability (SD)", (s) => `± ${s.sd_days} days`],
+      ["Sen's slope", (s) => `${s.sens_slope > 0 ? "+" : ""}${s.sens_slope.toFixed(2)} days/year`],
+      ["Mann-Kendall trend", (s) => `${s.mk_trend} (${fmtP(s.mk_p)})`],
+      ["Pearson's r vs year", (s) => `${s.pearson_r.toFixed(2)} (${fmtP(s.pearson_p)})`],
+    ]
+    const cellStyle = { padding: "4px 8px", borderBottom: "1px solid #e2e8f0", fontSize: 12 }
+
+    return (
+      <div style={{ width: "100%" }}>
+        <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
+          {seriesTile("Opening date", OPEN_COLOR, open)}
+          {seriesTile("Closing date", CLOSE_COLOR, close)}
+          {seasonTile()}
+        </div>
+        {seasonStrip()}
+        <Typography variant="body2" sx={{ fontSize: 12, color: "#334155", mt: 1.5 }}>
+          {takeaway}
+        </Typography>
+        <Typography variant="caption" color="text.secondary" sx={{ display: "block", mt: 0.75, lineHeight: 1.5 }}>
+          Dates naturally bounce around from year to year — the “per decade” numbers are the slow,
+          steady shift underneath that. “Strong evidence” means the shift is too consistent to be
+          chance.
+        </Typography>
+        <button
+          type="button"
+          onClick={() => setRoadStatsDetail((d) => !d)}
+          style={{
+            marginTop: 8,
+            padding: 0,
+            border: "none",
+            background: "none",
+            fontSize: 11.5,
+            fontWeight: 600,
+            color: "#2563eb",
+            cursor: "pointer",
+          }}
+        >
+          {roadStatsDetail ? "Hide detailed statistics ▴" : "Show detailed statistics ▾"}
+        </button>
+        {roadStatsDetail && (
+          <div style={{ overflowX: "auto", marginTop: 6 }}>
+            <table style={{ width: "100%", borderCollapse: "collapse" }}>
+              <thead>
+                <tr>
+                  <th style={{ ...cellStyle, textAlign: "left", color: "#475569" }}>Statistic</th>
+                  <th style={{ ...cellStyle, textAlign: "right", color: "#475569" }}>Opening</th>
+                  <th style={{ ...cellStyle, textAlign: "right", color: "#475569" }}>Closing</th>
+                </tr>
+              </thead>
+              <tbody>
+                {detailRows.map(([label, fmt]) => (
+                  <tr key={label}>
+                    <td style={{ ...cellStyle, color: "#475569" }}>{label}</td>
+                    <td style={{ ...cellStyle, textAlign: "right", fontWeight: 600 }}>
+                      {open ? fmt(open) : "—"}
+                    </td>
+                    <td style={{ ...cellStyle, textAlign: "right", fontWeight: 600 }}>
+                      {close ? fmt(close) : "—"}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
       </div>
     )
   }
@@ -1127,7 +1462,15 @@ function WeatherMap() {
                 height={chartHeight}
                 margin={{ left: 95, right: 20, top: 10, bottom: 50 }}
                 grid={{ horizontal: true }}
-                slotProps={{ legend: { hidden: true } }}
+                slotProps={{
+                  legend: { hidden: true },
+                  // The chart's hover tooltip renders in a Popper. Its default
+                  // z-index sits below the road-closure popup (5000/6000), so lift
+                  // it above the popup to keep the datapoint tooltip on top.
+                  popper: {
+                    sx: { zIndex: 7000 },
+                  },
+                }}
                 sx={chartSx}
               />
             ) : (
@@ -1292,6 +1635,24 @@ function WeatherMap() {
                 {!roadDurationCollapsed && (
                   <div className="wrtdip-popup-section__content">
                     {renderRoadDurationChart(enlarged ? 420 : 320)}
+                  </div>
+                )}
+              </div>
+              <div className="wrtdip-popup-section">
+                <button
+                  type="button"
+                  className="wrtdip-popup-section__header"
+                  onClick={() => setRoadStatsCollapsed((c) => !c)}
+                  aria-expanded={!roadStatsCollapsed}
+                >
+                  <span className="wrtdip-popup-section__title">Climate Trend Statistics</span>
+                  <span className={`wrtdip-popup-section__caret${roadStatsCollapsed ? "" : " wrtdip-popup-section__caret--open"}`}>
+                    ▾
+                  </span>
+                </button>
+                {!roadStatsCollapsed && (
+                  <div className="wrtdip-popup-section__content">
+                    {renderRoadStatsSection()}
                   </div>
                 )}
               </div>
