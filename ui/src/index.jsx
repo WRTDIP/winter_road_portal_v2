@@ -19,6 +19,7 @@ import ResendEmailValidation from "./pages/ResendEmailValidation/ResendEmailVali
 import EmailValidationFormPage from "./pages/ValidateEmail/EmailValidationFormPage.jsx";
 import Dashboard from "./pages/Dashboard/Dashboard.jsx";
 import FDDTest from "./pages/FDDTest/FDDTest.jsx";
+import Api from "./pages/Api/index.jsx";
 import { Auth0Provider } from "@auth0/auth0-react";
 
 
@@ -52,6 +53,7 @@ ReactDOM.render(
         <Route path="/validate-email" element={<EmailValidationFormPage />} exact />
         <Route path="/dashboard" element={<Dashboard />} exact />
         <Route path="/fdd-test" element={<FDDTest />} exact />
+        <Route path="/api" element={<Api />} exact />
       </Routes>
 
       {/* Render global footer */}

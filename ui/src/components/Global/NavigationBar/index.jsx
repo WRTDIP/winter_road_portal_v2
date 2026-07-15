@@ -13,6 +13,7 @@ const rightItems = [
   { name: "Projects", link: "/projects" },
   { name: "Observation", link: "/observation" },
   { name: "Transportation", link: "/transportation" },
+  { name: "API", link: "/api" },
   { name: "About", link: "/about" },
 
   { name: "", link: "/login", icon: <UserOutlined style={{ fontSize: 20 }} /> },
