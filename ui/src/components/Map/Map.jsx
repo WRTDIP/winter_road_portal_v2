@@ -29,6 +29,16 @@ import usePinchZoomYears from "../../hooks/usePinchZoomYears.js"
 
 const API_BASE = "https://dev-moh.wramp.ca/python-api";
 
+// A station needs at least this many usable seasons before its FDD graph is
+// drawn — one or two dots read as a trend when they aren't one. Stations below
+// the threshold get a "not enough data" message instead.
+const MIN_GRAPH_POINTS = 6
+
+// Stations with fewer than this many seasons of data get a persistent warning
+// banner: the record is too short to reliably assess long-term climate trends
+// (30 years is the standard climate-normal period).
+const SHORT_RECORD_YEARS = 30
+
 // Map city names (as they appear in Data.js) to weather station IDs
 // Uses station IDs that have both ECCC and AHCCD data where possible
 const CITY_STATION_MAP = {
@@ -377,12 +387,14 @@ function WeatherMap() {
         if (!d.matched || (!open && !close)) {
           html = `<div data-road-forecast><em>No historical closure data available.</em></div>`
         } else {
+          // No season in brackets — averages are computed across the full
+          // historical record, so a single season label is misleading.
           const openLabel = d.open_predicted ? "Average Opening" : "Opening"
           const closeLabel = d.close_predicted ? "Average Closure" : "Closure"
           html =
             `<div data-road-forecast>` +
-            `<b>${openLabel} (${d.season}):</b> ${open || "N/A"}<br>` +
-            `<b>${closeLabel} (${d.season}):</b> ${close || "N/A"}<br>` +
+            `<b>${openLabel}:</b> ${open || "N/A"}<br>` +
+            `<b>${closeLabel}:</b> ${close || "N/A"}<br>` +
             `</div>`
         }
 
@@ -1345,9 +1357,23 @@ function WeatherMap() {
         </Typography>
       )
     }
-    if (fddSeries.length > 0) {
+    // Only stations with enough seasons of data get plotted; the rest would
+    // render as one or two floating dots.
+    const chartSeries = fddSeries.filter((s) => s.years.length >= MIN_GRAPH_POINTS)
+    if (fddSeries.length > 0 && chartSeries.length === 0) {
+      return (
+        <Typography variant="body2" color="text.secondary" sx={{ py: 2, textAlign: "center" }}>
+          Not enough data points.
+        </Typography>
+      )
+    }
+    if (chartSeries.length > 0) {
+      // Only keep LOWESS curves for stations that are actually plotted.
+      const chartLowess = lowessSeries.filter((ls) =>
+        chartSeries.some((s) => s.stationId === ls.stationId)
+      )
       // Combine all years from all series for the x-axis
-      const allYears = [...new Set(fddSeries.flatMap((s) => s.years))].sort((a, b) => a - b)
+      const allYears = [...new Set(chartSeries.flatMap((s) => s.years))].sort((a, b) => a - b)
 
       // Filter by view range
       const filteredYears = allYears.filter((y) => y >= fddViewRange[0] && y <= fddViewRange[1])
@@ -1358,8 +1384,8 @@ function WeatherMap() {
       const lowessColors = ["#f59e0b", "#9333ea", "#0d9488", "#e11d48", "#1d4ed8", "#78716c"]
       const cityName = getCityName()
       // Use an area fill only when a single station is shown (cleaner with one line)
-      const singleSeries = fddSeries.length === 1
-      const series = fddSeries.map((s, idx) => {
+      const singleSeries = chartSeries.length === 1
+      const series = chartSeries.map((s, idx) => {
         // Align data to the filtered x-axis (null for missing years)
         const yearMap = {}
         s.years.forEach((y, i) => { yearMap[y] = s.fdds[i] })
@@ -1380,12 +1406,12 @@ function WeatherMap() {
       })
 
       // Add LOWESS trend lines if enabled
-      if (showLowess && lowessSeries.length > 0) {
-        lowessSeries.forEach((ls, idx) => {
+      if (showLowess && chartLowess.length > 0) {
+        chartLowess.forEach((ls, idx) => {
           const yearMap = {}
           ls.years.forEach((y, i) => { yearMap[y] = ls.fdds[i] })
           const alignedData = filteredYears.map((y) => yearMap[y] ?? null)
-          const matchingStation = fddSeries.find((s) => s.stationId === ls.stationId)
+          const matchingStation = chartSeries.find((s) => s.stationId === ls.stationId)
           const baseName = showAdvanced ? (matchingStation?.stationName || `Station ${ls.stationId}`) : (cityName || matchingStation?.stationName || `Station ${ls.stationId}`)
           const label = `${baseName} (LOWESS)`
           series.push({
@@ -1412,8 +1438,8 @@ function WeatherMap() {
           fillOpacity: 0.12,
         },
       }
-      if (showLowess && lowessSeries.length > 0) {
-        lowessSeries.forEach((ls) => {
+      if (showLowess && chartLowess.length > 0) {
+        chartLowess.forEach((ls) => {
           chartSx[`.MuiLineElement-series-lowess-${ls.stationId}`] = {
             strokeWidth: 2,
             strokeDasharray: "6 5",
@@ -1421,7 +1447,7 @@ function WeatherMap() {
         })
       }
 
-      const chartHeight = fddSeries.length > 1 ? 300 : 260
+      const chartHeight = chartSeries.length > 1 ? 300 : 260
 
 
       return (
@@ -1484,9 +1510,9 @@ function WeatherMap() {
               Pinch to zoom · Swipe to pan
             </p>
           )}
-          {(fddSeries.length > 1 || (showLowess && lowessSeries.length > 0)) && (
+          {(chartSeries.length > 1 || (showLowess && chartLowess.length > 0)) && (
             <div style={{ display: "flex", flexWrap: "wrap", gap: "12px", justifyContent: "center", padding: "8px 0" }}>
-              {fddSeries.map((s, idx) => {
+              {chartSeries.map((s, idx) => {
                 const displayLabel = showAdvanced ? s.stationName : (cityName || s.stationName)
                 return (
                   <div key={s.stationId} style={{ display: "flex", alignItems: "center", gap: "6px", fontSize: "0.75rem" }}>
@@ -1495,8 +1521,8 @@ function WeatherMap() {
                   </div>
                 )
               })}
-              {showLowess && lowessSeries.map((ls, idx) => {
-                const matchingStation = fddSeries.find((s) => s.stationId === ls.stationId)
+              {showLowess && chartLowess.map((ls, idx) => {
+                const matchingStation = chartSeries.find((s) => s.stationId === ls.stationId)
                 const baseName = showAdvanced ? (matchingStation?.stationName || `Station ${ls.stationId}`) : (cityName || matchingStation?.stationName || `Station ${ls.stationId}`)
                 const label = `${baseName} (LOWESS)`
                 return (
@@ -1523,6 +1549,21 @@ function WeatherMap() {
   // user can clearly see where the numbers for this place come from.
   const activeStationName =
     cityStations.find((s) => s[0] === selectedStations[0])?.[1] || null
+
+  // Longest record (usable seasons) among the stations currently shown, used
+  // to decide whether the short-record warning banner applies. Derived from
+  // the fetched FDD data so it automatically applies to every station.
+  const fddRecordYears = useMemo(
+    () => (fddSeries.length ? Math.max(...fddSeries.map((s) => s.years.length)) : 0),
+    [fddSeries]
+  )
+  // Only warn when a graph is actually drawn — below MIN_GRAPH_POINTS the
+  // chart is replaced by a "not enough data points" message, so there is
+  // nothing to caution the user about.
+  const showShortRecordBanner =
+    !fddLoading &&
+    fddRecordYears >= MIN_GRAPH_POINTS &&
+    fddRecordYears < SHORT_RECORD_YEARS
 
   // Name of the dataset currently providing the FDD data.
   const activeDatasetName =
@@ -1712,6 +1753,20 @@ function WeatherMap() {
           </div>
         </Modal.Header>
         <Modal.Body className="wrtdip-map-modal__body">
+          {/* Sticky short-record warning: stays pinned while the user scrolls
+              so it can't be missed when reading the graphs. Wording is a
+              placeholder — final text to be confirmed with Yukari. */}
+          {showShortRecordBanner && (
+            <div className="wrtdip-short-record-banner" role="alert">
+              <span className="wrtdip-short-record-banner__icon" aria-hidden="true">⚠️</span>
+              <span>
+                <strong>Limited data:</strong> this station has only{" "}
+                {fddRecordYears} usable {fddRecordYears === 1 ? "season" : "seasons"} of
+                records — fewer than the {SHORT_RECORD_YEARS} years needed to reliably
+                assess long-term climate trends. Interpret these graphs with caution.
+              </span>
+            </div>
+          )}
           <div className="wrtdip-map-modal__data-badge">
             <Typography variant="caption" sx={{ display: "block", lineHeight: 1.4 }}>
               Datasource from <strong>CanHomT V4</strong>, Canada's gold-standard climate record. It's carefully corrected for station moves and equipment changes, so you get the most accurate picture of how the climate is changing.
@@ -2069,6 +2124,14 @@ function WeatherMap() {
           zoom: 4.5,
           popupEnabled: true,
         })
+
+        // Hovered road features get a bright glow (see the pointer-move
+        // handler below) so users can tell they're clickable.
+        view.highlightOptions = {
+          color: "#ffc400",
+          haloOpacity: 0.9,
+          fillOpacity: 0.2,
+        }
 
         // //Map Image Layer
         // let mapImageLayer = new MapImageLayer({
@@ -2723,6 +2786,18 @@ function WeatherMap() {
         const NORMAL_SIZE = "15px"
         const HOVER_SIZE = "22px"
 
+        // Road-feature hover state: the ArcGIS highlight handle producing the
+        // glow, and a key identifying which feature is currently glowing.
+        let roadHighlightHandle = null
+        let roadHighlightKey = null
+        const clearRoadHighlight = () => {
+          if (roadHighlightHandle) {
+            roadHighlightHandle.remove()
+            roadHighlightHandle = null
+          }
+          roadHighlightKey = null
+        }
+
         view.on("pointer-move", (event) => {
           view.hitTest(event).then((response) => {
             const hit = response.results.find(
@@ -2745,6 +2820,7 @@ function WeatherMap() {
                 graphic.symbol = newSymbol
                 highlightedGraphic = graphic
               }
+              clearRoadHighlight()
               view.container.style.cursor = "pointer"
             } else {
               // Reset if we moved off all markers
@@ -2754,7 +2830,35 @@ function WeatherMap() {
                 highlightedGraphic.symbol = prevSymbol
                 highlightedGraphic = null
               }
-              view.container.style.cursor = "default"
+
+              // Glow winter roads / ice crossings on hover so users can tell
+              // they're clickable.
+              const roadHit = response.results.find(
+                (r) =>
+                  r.graphic &&
+                  r.graphic.layer &&
+                  ROAD_LAYER_TITLES.includes(r.graphic.layer.title)
+              )
+              if (roadHit) {
+                const graphic = roadHit.graphic
+                const oid = graphic.attributes?.[graphic.layer.objectIdField]
+                const key = `${graphic.layer.title}:${oid}`
+                if (roadHighlightKey !== key) {
+                  clearRoadHighlight()
+                  roadHighlightKey = key
+                  view.whenLayerView(graphic.layer).then((layerView) => {
+                    // A later hover may have superseded this one while the
+                    // layer view was resolving.
+                    if (roadHighlightKey === key) {
+                      roadHighlightHandle = layerView.highlight(graphic)
+                    }
+                  })
+                }
+                view.container.style.cursor = "pointer"
+              } else {
+                clearRoadHighlight()
+                view.container.style.cursor = "default"
+              }
             }
           })
         })
