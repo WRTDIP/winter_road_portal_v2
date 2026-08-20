@@ -12,7 +12,7 @@ const WelcomeBanner = () => {
       <Row>
         <Col xs lg="4" className="text-center my-auto">
           <h2 className="welcomeTitle">
-            Welcome to WRaMP Test <br />
+            Welcome to WRaMP <br />
             Winter Road and Mobility Portal
           </h2>
           <p className="welcomeText">
