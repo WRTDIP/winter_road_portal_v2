@@ -6,12 +6,17 @@ into PostgreSQL.
 
 ## What It Does
 
-The tool handles two data sources and writes both into the same `daily_data`
-table (each row tagged with a `dataset_id`):
+The tool handles three data sources. ECCC daily data and CanHomT V4 temperature
+both write into `daily_data`; CanHomP V2 precipitation writes into
+`precip_daily_data` / `precip_monthly_data` (each row tagged with a
+`dataset_id`):
 
 1. **ECCC daily data** – one CSV per station containing every available year.
 2. **CanHomT V4 homogenized daily temperature** – a single `.tar.gz` archive of
    per-station CSVs (max/min/mean temperature), downloaded, extracted, and
+   loaded directly.
+3. **CanHomP V2 homogenized precipitation** – two zip archives (daily and
+   monthly) of fixed-width per-station text files, downloaded, extracted, and
    loaded directly.
 
 Commands:
@@ -23,6 +28,7 @@ Commands:
 | `download` | Bulk-download ECCC daily CSVs (one file per station). |
 | `dbload` | Create tables, upsert station metadata, and load ECCC CSVs. |
 | `ahccd` | Download + load CanHomT V4 daily temperature. |
+| `canhomp` | Download + load CanHomP V2 daily and monthly precipitation. |
 | `populate` | One-shot: download ECCC data and load everything into the DB. |
 
 > Database backup/restore lives in the separate `db_backup.py` utility.
@@ -32,11 +38,12 @@ Commands:
 - Station inventory: `https://collaboration.cmc.ec.gc.ca/cmc/climate/Get_More_Data_Plus_de_donnees/Station%20Inventory%20EN.csv`
 - ECCC bulk download: `https://climate.weather.gc.ca/climate_data/bulk_data_e.html`
 - CanHomT V4 daily temperature: `https://crd-data-donnees-rdc.ec.gc.ca/CDAS/products/CanHomTV4/CanHomT_dlyV4.tar.gz`
+- CanHomP V2 precipitation (`CanHomPv2_Dly.zip`, `CanHomPv2_Mly.zip`):
+  `https://data-donnees.az.ec.gc.ca/api/file?path=/climate/scientificknowledge/adjusted-and-homogenized-canadian-climate-data-ahccd/canadian-homogenized-precipitation/`
 
 > Note: ECCC retired the old per-variable AHCCD daily `.dm`/zip downloads. Daily
-> temperature is now published as CanHomT V4, and bulk *daily* precipitation
-> (rain/snow/total precip) is no longer offered — only monthly precipitation
-> remains — so only temperature is imported here.
+> temperature is now published as CanHomT V4 and homogenized precipitation as
+> CanHomP V2.
 
 ## Installation
 
@@ -63,6 +70,10 @@ python climate_importer.py populate -p NT YT NU \
 
 # Include CanHomT V4 daily temperature as well:
 python climate_importer.py populate -p NT YT NU --ahccd \
+    --dbname wramp --user postgres --password password --drop
+
+# Include CanHomP V2 daily + monthly precipitation as well:
+python climate_importer.py populate -p NT YT NU --ahccd --canhomp \
     --dbname wramp --user postgres --password password --drop
 ```
 
@@ -147,6 +158,40 @@ The loaded columns map to dataset id `2` (CanHomT V4):
 | `tmin` | min_temp_c (+ min_temp_flag) |
 | `tmean` | mean_temp_c (+ mean_temp_flag) |
 
+### 6. Download and load CanHomP V2 precipitation
+
+The `canhomp` command downloads the CanHomP V2 daily and monthly zip archives,
+extracts the per-station fixed-width text files, and loads them into
+`precip_daily_data` and `precip_monthly_data`. Files are named
+`AdjTo_<climate_id>_dly.txt` / `AdjTo_<climate_id>_mly.txt`, so stations are
+matched to `weather_stations` by Climate ID. Any Climate ID not yet in the
+table is looked up in the ECCC station inventory and inserted automatically
+(pass `--skip-new-stations` to skip those files instead).
+
+```bash
+# Download and load both daily and monthly precipitation
+python climate_importer.py canhomp --dbname wramp --user postgres --password password
+
+# Only one frequency
+python climate_importer.py canhomp --kind monthly \
+    --dbname wramp --user postgres --password password
+
+# Reuse already-extracted files in ./canhomp instead of fetching
+python climate_importer.py canhomp --no-download --out ./canhomp \
+    --dbname wramp --user postgres --password password
+```
+
+Source values are stored in tenths of a millimetre with `-9999` for missing;
+the importer converts them to millimetres and `NULL`. Dataset id `10` is the
+daily archive, id `11` the monthly one.
+
+| Source column | Table column |
+|---------------|--------------|
+| `HomP` / `flg` | homog_precip_mm (+ homog_precip_flag) |
+| `GFQCdP` / `flg` | gapfill_precip_mm (+ gapfill_precip_flag) |
+| `AdjP` | adj_precip_mm |
+| `SourceClimID` | source_climate_id |
+
 ## Province Codes
 
 Standard two-letter codes and common aliases are accepted:
@@ -172,12 +217,17 @@ Standard two-letter codes and common aliases are accepted:
 See `documentation/db_schema.sql` for the full schema. Summary:
 
 - **`datasets`** – one row per data source (id 1 = ECCC daily, id 2 = CanHomT V4
-  daily temperature; pre-seeded by the tool).
+  daily temperature, id 10 = CanHomP V2 daily precipitation, id 11 = CanHomP V2
+  monthly precipitation; pre-seeded by the tool).
 - **`weather_stations`** – one row per station (`station_id` primary key, plus
   Climate/WMO/TC IDs, location, and per-frequency year ranges).
 - **`daily_data`** – one row per station per day. Each measurement column has a
   matching `_flag` column. A unique constraint on `(station_id, obs_date)`
   makes re-imports idempotent.
+- **`precip_daily_data`** – CanHomP V2 daily precipitation, unique on
+  `(station_id, obs_date, dataset_id)`.
+- **`precip_monthly_data`** – CanHomP V2 monthly precipitation, unique on
+  `(station_id, year, month, dataset_id)`.
 
 ## Backup & Restore
 

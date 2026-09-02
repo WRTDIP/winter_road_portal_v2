@@ -13,6 +13,7 @@ const rightItems = [
   { name: "Projects", link: "/projects" },
   { name: "Observation", link: "/observation" },
   { name: "Transportation", link: "/transportation" },
+  { name: "Download", link: "/download" },
   { name: "API", link: "/api" },
   { name: "About", link: "/about" },
 

@@ -1,5 +1,8 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
+# yukari files
+yukari_files
+
 # build
 ui/build
 
@@ -27,3 +30,7 @@ yarn-error.log*
 
 #testing
 testingtypescript/
+climatedataimporter/canhomp/
+climatedataimporter/ahccd/
+climatedataimporter/__pycache__/
+ui/build/index.html

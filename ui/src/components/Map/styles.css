@@ -83,6 +83,16 @@
   height: 20px;
 }
 
+.custom-basemap-icon {
+  /* Folded-map icon drawn as an inline SVG (matches layer-list icon blue) */
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%232563eb'%3E%3Cpath d='M20.5 3l-.16.03L15 5.1 9 3 3.36 4.9c-.21.07-.36.25-.36.48V20.5c0 .28.22.5.5.5l.16-.03L9 18.9l6 2.1 5.64-1.9c.21-.07.36-.25.36-.48V3.5c0-.28-.22-.5-.5-.5zM15 19l-6-2.11V5l6 2.11V19z'/%3E%3C/svg%3E");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  width: 18px;
+  height: 18px;
+}
+
 #legend-container .esri-legend__service {
   display: flex;
   flex-direction: row; 
@@ -1150,4 +1160,696 @@
   flex: 1;
   line-height: 1.3;
   user-select: none;
+}
+
+/* --- Basemap switcher panel (shares wrtdip-layer-panel shell) ----------- */
+.wrtdip-basemap-panel {
+  width: 220px;
+}
+
+.wrtdip-basemap-panel__list {
+  list-style: none;
+  margin: 0;
+  padding: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.wrtdip-basemap-panel__option {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 8px 10px;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  cursor: pointer;
+  text-align: left;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.wrtdip-basemap-panel__option:hover {
+  background: #eff6ff;
+}
+
+.wrtdip-basemap-panel__option.is-active {
+  background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+  border-color: #bfdbfe;
+}
+
+.wrtdip-basemap-panel__icon {
+  font-size: 20px;
+  line-height: 1;
+  filter: drop-shadow(0 1px 2px rgba(15, 23, 42, 0.15));
+}
+
+.wrtdip-basemap-panel__text {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  flex: 1;
+  min-width: 0;
+}
+
+.wrtdip-basemap-panel__name {
+  font-size: 13px;
+  font-weight: 600;
+  color: #0f172a;
+  line-height: 1.2;
+}
+
+.wrtdip-basemap-panel__option.is-active .wrtdip-basemap-panel__name {
+  color: #1e3a8a;
+}
+
+.wrtdip-basemap-panel__sub {
+  font-size: 11px;
+  color: #475569;
+  line-height: 1.2;
+}
+
+.wrtdip-basemap-panel__check {
+  font-size: 13px;
+  font-weight: 700;
+  color: #2563eb;
+  visibility: hidden;
+}
+
+.wrtdip-basemap-panel__option.is-active .wrtdip-basemap-panel__check {
+  visibility: visible;
+}
+
+/* --- Precipitation / Snowfall section switch --------------------------- */
+.wrtdip-section-switch {
+  display: inline-flex;
+  gap: 4px;
+  padding: 4px;
+  margin-bottom: 0.85rem;
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+  border-radius: 10px;
+}
+
+.wrtdip-section-switch__btn {
+  padding: 6px 18px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: #1e40af;
+  background: transparent;
+  border: 0;
+  border-radius: 7px;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.wrtdip-section-switch__btn:hover:not(.wrtdip-section-switch__btn--active) {
+  background: rgba(37, 99, 235, 0.1);
+}
+
+.wrtdip-section-switch__btn--active {
+  background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+  color: #fff;
+  box-shadow: 0 2px 6px rgba(37, 99, 235, 0.28);
+}
+
+/* --- Precipitation dataset / resolution controls ----------------------- */
+.wrtdip-precip-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin-bottom: 0.85rem;
+}
+
+.wrtdip-precip-control {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 150px;
+}
+
+.wrtdip-precip-control__label {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #64748b;
+}
+
+.wrtdip-precip-select {
+  padding: 7px 10px;
+  font-size: 0.82rem;
+  color: #1e293b;
+  background: #fff;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.wrtdip-precip-select:disabled {
+  color: #94a3b8;
+  background: #f1f5f9;
+  cursor: not-allowed;
+}
+
+.wrtdip-precip-resolution {
+  display: inline-flex;
+  gap: 6px;
+}
+
+.wrtdip-precip-resolution__btn {
+  flex: 1 1 0;
+  padding: 7px 16px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #1e40af;
+  background: #fff;
+  border: 1px solid #bfdbfe;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+}
+
+.wrtdip-precip-resolution__btn:hover:not(:disabled):not(.wrtdip-precip-resolution__btn--active) {
+  background: #eff6ff;
+  border-color: #93c5fd;
+}
+
+.wrtdip-precip-resolution__btn--active {
+  background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+  border-color: #1d4ed8;
+  color: #fff;
+  box-shadow: 0 2px 6px rgba(37, 99, 235, 0.28);
+}
+
+.wrtdip-precip-resolution__btn:disabled {
+  color: #94a3b8;
+  background: #f1f5f9;
+  border-color: #e2e8f0;
+  cursor: not-allowed;
+}
+
+/* --- Chart series toggles (Max / Avg / Min) ---------------------------- */
+.wrtdip-series-toggles {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+  margin-bottom: 0.65rem;
+}
+
+.wrtdip-series-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0;
+  padding: 4px 12px 4px 10px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: #94a3b8;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 999px;
+  cursor: pointer;
+  user-select: none;
+  transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+.wrtdip-series-toggle:hover {
+  border-color: #cbd5e1;
+  background: #f1f5f9;
+}
+
+.wrtdip-series-toggle--on {
+  color: #1e293b;
+  background: #fff;
+  border-color: #cbd5e1;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.08);
+}
+
+/* The native box is hidden; the coloured dot carries the on/off state. */
+.wrtdip-series-toggle__input {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.wrtdip-series-toggle__dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  flex: 0 0 auto;
+  opacity: 0.28;
+  transition: opacity 0.15s ease, box-shadow 0.15s ease;
+}
+
+.wrtdip-series-toggle--on .wrtdip-series-toggle__dot {
+  opacity: 1;
+  box-shadow: 0 0 0 3px rgba(15, 23, 42, 0.06);
+}
+
+.wrtdip-series-toggle__input:focus-visible + .wrtdip-series-toggle__dot {
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.35);
+}
+
+/* --- Monthly precipitation trend panel (Sen's slope table) ------------- */
+.wrtdip-trend-panel {
+  margin-top: 16px;
+  padding: 14px 14px 12px;
+  background: linear-gradient(180deg, #f8fafc 0%, #ffffff 60%);
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+}
+
+.wrtdip-trend-panel__head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 10px;
+}
+
+.wrtdip-trend-panel__title {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #0f172a;
+  letter-spacing: -0.01em;
+}
+
+.wrtdip-trend-panel__sub {
+  margin-top: 2px;
+  font-size: 0.72rem;
+  line-height: 1.45;
+  color: #64748b;
+  max-width: 46ch;
+}
+
+.wrtdip-trend-panel__range {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  padding: 4px 10px;
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+  border-radius: 8px;
+  white-space: nowrap;
+}
+
+.wrtdip-trend-panel__range-years {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #1e40af;
+  font-variant-numeric: tabular-nums;
+}
+
+.wrtdip-trend-panel__range-label {
+  font-size: 0.64rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #60a5fa;
+}
+
+.wrtdip-trend-panel__aside {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 6px;
+  flex: 0 0 auto;
+}
+
+/* Compact sibling of .wrtdip-toggle-btn, sized to sit beside the year badge. */
+.wrtdip-trend-adv-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: #1e40af;
+  background: #fff;
+  border: 1px solid #bfdbfe;
+  border-radius: 999px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+.wrtdip-trend-adv-btn:hover {
+  background: #eff6ff;
+  border-color: #93c5fd;
+}
+
+.wrtdip-trend-adv-btn--active {
+  background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+  border-color: #1d4ed8;
+  color: #fff;
+  box-shadow: 0 2px 6px rgba(37, 99, 235, 0.28);
+}
+
+.wrtdip-trend-adv-btn--active:hover {
+  background: linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%);
+  border-color: #1e40af;
+  color: #fff;
+}
+
+.wrtdip-trend-adv-btn__icon {
+  font-size: 0.6rem;
+  line-height: 1;
+}
+
+.wrtdip-trend-panel__headline {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 2px;
+  margin-bottom: 10px;
+  padding: 7px 11px;
+  font-size: 0.78rem;
+  color: #334155;
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-left: 3px solid #2563eb;
+  border-radius: 8px;
+  font-variant-numeric: tabular-nums;
+}
+
+.wrtdip-trend-panel__headline strong {
+  color: #0f172a;
+}
+
+.wrtdip-trend-panel__headline-note {
+  margin-left: 6px;
+  color: #94a3b8;
+  font-size: 0.72rem;
+}
+
+.wrtdip-trend-table-wrap {
+  overflow-x: auto;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  background: #fff;
+}
+
+.wrtdip-trend-table {
+  width: 100%;
+  min-width: 460px;
+  border-collapse: collapse;
+  font-size: 0.78rem;
+}
+
+.wrtdip-trend-table__th {
+  position: sticky;
+  top: 0;
+  padding: 8px 12px;
+  font-size: 0.64rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  text-align: left;
+  color: #64748b;
+  background: #f8fafc;
+  border-bottom: 1px solid #e2e8f0;
+  white-space: nowrap;
+}
+
+.wrtdip-trend-table__th--num {
+  text-align: right;
+}
+
+.wrtdip-trend-table__row {
+  transition: background 0.12s ease;
+}
+
+.wrtdip-trend-table__row + .wrtdip-trend-table__row td {
+  border-top: 1px solid #f1f5f9;
+}
+
+.wrtdip-trend-table__row:hover {
+  background: #f8fafc;
+}
+
+/* Months currently drawn in the chart above. */
+.wrtdip-trend-table__row--active {
+  background: #f5f9ff;
+}
+
+.wrtdip-trend-table__row--active td:first-child {
+  box-shadow: inset 3px 0 0 #93c5fd;
+}
+
+.wrtdip-trend-table__row--active:hover {
+  background: #eff6ff;
+}
+
+.wrtdip-trend-table__row--active .wrtdip-trend-table__month-name {
+  font-weight: 700;
+  color: #1e3a8a;
+}
+
+.wrtdip-trend-table td {
+  padding: 7px 12px;
+  vertical-align: middle;
+}
+
+.wrtdip-trend-table__month {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  white-space: nowrap;
+  color: #1e293b;
+  font-weight: 600;
+}
+
+/* Direction arrows: green up for wetter, red down for drier. Faded when the
+   trend is not statistically significant so a noisy month cannot read as a
+   real signal. */
+.wrtdip-trend-arrow {
+  font-size: 0.72rem;
+  line-height: 1;
+  flex: 0 0 auto;
+  width: 0.85em;
+  text-align: center;
+}
+
+.wrtdip-trend-arrow--increasing {
+  color: #16a34a;
+}
+
+.wrtdip-trend-arrow--decreasing {
+  color: #dc2626;
+}
+
+.wrtdip-trend-arrow--none {
+  color: #cbd5e1;
+}
+
+.wrtdip-trend-arrow--weak {
+  opacity: 0.35;
+}
+
+.wrtdip-trend-table__slope {
+  text-align: right;
+  white-space: nowrap;
+}
+
+/* Diverging magnitude bar: zero sits at the centre line, positive slopes grow
+   right and negative slopes grow left, scaled to the largest month. */
+.wrtdip-trend-bar {
+  position: relative;
+  display: inline-block;
+  vertical-align: middle;
+  width: 96px;
+  height: 12px;
+  margin-right: 10px;
+}
+
+.wrtdip-trend-bar__axis {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: #e2e8f0;
+}
+
+.wrtdip-trend-bar__fill {
+  position: absolute;
+  top: 3px;
+  height: 6px;
+  border-radius: 3px;
+  background: #94a3b8;
+  min-width: 2px;
+}
+
+/* Wetter grows right in green, drier grows left in red. */
+.wrtdip-trend-bar__fill--increasing {
+  background: linear-gradient(90deg, #4ade80 0%, #16a34a 100%);
+}
+
+.wrtdip-trend-bar__fill--decreasing {
+  background: linear-gradient(270deg, #f87171 0%, #dc2626 100%);
+}
+
+.wrtdip-trend-bar__fill--weak {
+  opacity: 0.3;
+}
+
+.wrtdip-trend-table__value {
+  display: inline-block;
+  min-width: 4.5em;
+  text-align: right;
+  color: #64748b;
+  font-variant-numeric: tabular-nums;
+}
+
+.wrtdip-trend-table__value--strong {
+  color: #0f172a;
+  font-weight: 700;
+}
+
+/* Only slopes that passed the significance test get tinted, so colour always
+   means "this direction is real". */
+.wrtdip-trend-table__value--increasing {
+  color: #15803d;
+}
+
+.wrtdip-trend-table__value--decreasing {
+  color: #b91c1c;
+}
+
+.wrtdip-trend-table__p {
+  text-align: right;
+  color: #64748b;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+/* Significance ramp: grey (no evidence) -> pale blue -> blue -> deep navy. */
+.wrtdip-sig-pill {
+  display: inline-block;
+  padding: 2px 9px;
+  font-size: 0.68rem;
+  font-weight: 700;
+  line-height: 1.5;
+  border-radius: 999px;
+  white-space: nowrap;
+  border: 1px solid transparent;
+}
+
+.wrtdip-sig-pill--very {
+  color: #fff;
+  background: #1e3a8a;
+  border-color: #1e3a8a;
+}
+
+.wrtdip-sig-pill--significant {
+  color: #fff;
+  background: #3b82f6;
+  border-color: #3b82f6;
+}
+
+.wrtdip-sig-pill--somewhat {
+  color: #1d4ed8;
+  background: #dbeafe;
+  border-color: #bfdbfe;
+}
+
+.wrtdip-sig-pill--none {
+  color: #64748b;
+  background: #f1f5f9;
+  border-color: #e2e8f0;
+}
+
+.wrtdip-sig-pill--insufficient {
+  color: #94a3b8;
+  background: #f8fafc;
+  border-color: #e2e8f0;
+  font-style: italic;
+}
+
+.wrtdip-sig-dot {
+  display: inline-block;
+  width: 9px;
+  height: 9px;
+  border-radius: 3px;
+  margin-right: 5px;
+  vertical-align: -1px;
+  border: 1px solid transparent;
+}
+
+.wrtdip-sig-dot--very {
+  background: #1e3a8a;
+}
+
+.wrtdip-sig-dot--significant {
+  background: #3b82f6;
+}
+
+.wrtdip-sig-dot--somewhat {
+  background: #dbeafe;
+  border-color: #bfdbfe;
+}
+
+.wrtdip-sig-dot--none {
+  background: #f1f5f9;
+  border-color: #e2e8f0;
+}
+
+.wrtdip-trend-legend {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 14px;
+  margin-top: 10px;
+  font-size: 0.7rem;
+  color: #64748b;
+}
+
+.wrtdip-trend-legend__item {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  white-space: nowrap;
+}
+
+.wrtdip-trend-legend__item em {
+  font-style: normal;
+  color: #94a3b8;
+}
+
+.wrtdip-trend-legend__sep {
+  width: 1px;
+  height: 12px;
+  background: #e2e8f0;
+}
+
+.wrtdip-trend-legend__note {
+  margin-top: 6px;
+  font-size: 0.68rem;
+  line-height: 1.5;
+  color: #94a3b8;
+}
+
+@media (max-width: 640px) {
+  .wrtdip-trend-bar {
+    width: 56px;
+    margin-right: 6px;
+  }
+
+  .wrtdip-trend-table {
+    min-width: 400px;
+  }
+
+  .wrtdip-trend-table td,
+  .wrtdip-trend-table__th {
+    padding-left: 8px;
+    padding-right: 8px;
+  }
 }
