@@ -74,7 +74,8 @@ CREATE INDEX daily_data_date_idx ON public.daily_data (obs_date);
 CREATE INDEX daily_data_dataset_idx ON public.daily_data (dataset_id);
 
 
--- road_closures: one row per road per status (Open/Closed) for a season.
+-- road_closures: one row per road per status (Open/Closed) for a season,
+-- per dataset (8 = legacy CSV, 9 = GNWT XLSX workbooks).
 -- The season year (e.g. "2024/25") is split: the lower year (2024) is stored
 -- for the Open row, the higher year (2025) for the Closed row.
 CREATE TABLE public.road_closures (
@@ -87,7 +88,8 @@ CREATE TABLE public.road_closures (
     month         INTEGER,
     day           INTEGER,
 
-    CONSTRAINT road_closures_year_road_status_uniq UNIQUE (year, road_name, status)
+    CONSTRAINT road_closures_dataset_year_road_status_uniq
+        UNIQUE (dataset_id, year, road_name, status)
 );
 
 CREATE INDEX road_closures_year_idx ON public.road_closures (year);

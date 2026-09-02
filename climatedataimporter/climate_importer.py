@@ -25,6 +25,7 @@ Individual steps:
     python climate_importer.py download  -p NT YT NU      # ECCC daily -> ./data
     python climate_importer.py dbload    -p NT YT NU      # create tables + load
     python climate_importer.py ahccd                      # download + load AHCCD
+    python climate_importer.py canhomp                    # CanHomP V2 precipitation
 """
 
 from __future__ import annotations
@@ -37,8 +38,11 @@ import re
 import sys
 import time
 import tarfile
+import unicodedata
+import zipfile
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from dataclasses import dataclass
+from datetime import date
 from pathlib import Path
 from typing import Iterable
 
@@ -85,11 +89,25 @@ DATASETS = {
         "https://crd-data-donnees-rdc.ec.gc.ca/CDAS/products/CanHomTV4/CanHomT_dlyV4.tar.gz"),
     8: ("NWT Road Closures",
         "NWT_Roads_Combined_Full.csv"),
+    9: ("GNWT Road Open/Close Dates (to 2025-26)",
+        "GNWT Winter Road Open Closed_until 2025-26.xlsx; "
+        "GNWT River Crossing TCWR Open Close_until 2025-26.xlsx"),
+    10: ("CanHomP V2 Homogenized Daily Precipitation",
+         "https://data-donnees.az.ec.gc.ca/api/file?path=%2Fclimate%2Fscientificknowledge"
+         "%2Fadjusted-and-homogenized-canadian-climate-data-ahccd"
+         "%2Fcanadian-homogenized-precipitation%2FCanHomPv2_Dly.zip"),
+    11: ("CanHomP V2 Homogenized Monthly Precipitation",
+         "https://data-donnees.az.ec.gc.ca/api/file?path=%2Fclimate%2Fscientificknowledge"
+         "%2Fadjusted-and-homogenized-canadian-climate-data-ahccd"
+         "%2Fcanadian-homogenized-precipitation%2FCanHomPv2_Mly.zip"),
 }
 
 DATASET_ECCC_DAILY = 1
 DATASET_CANHOMT_TEMP = 2
 DATASET_NWT_ROAD_CLOSURES = 8
+DATASET_GNWT_ROAD_XLSX = 9
+DATASET_CANHOMP_DAILY = 10
+DATASET_CANHOMP_MONTHLY = 11
 
 # CanHomT V4 homogenized daily temperature archive. It contains one CSV per
 # station named "<climate_id>.csv" with columns:
@@ -102,6 +120,28 @@ DATASET_NWT_ROAD_CLOSURES = 8
 CANHOMT_DAILY_URL = (
     "https://crd-data-donnees-rdc.ec.gc.ca/CDAS/products/CanHomTV4/CanHomT_dlyV4.tar.gz"
 )
+
+# CanHomP V2 homogenized precipitation. Two zip archives (daily and monthly),
+# each holding one fixed-width "AdjTo_<climate_id>_dly.txt" / "_mly.txt" file
+# per station inside a "CanHomPv2_{Dly,Mly}_Pub" folder.
+CANHOMP_URLS = {
+    "daily": DATASETS[DATASET_CANHOMP_DAILY][1],
+    "monthly": DATASETS[DATASET_CANHOMP_MONTHLY][1],
+}
+CANHOMP_ARCHIVES = {"daily": "CanHomPv2_Dly.zip", "monthly": "CanHomPv2_Mly.zip"}
+CANHOMP_SUBDIRS = {"daily": "CanHomPv2_Dly_Pub", "monthly": "CanHomPv2_Mly_Pub"}
+CANHOMP_GLOBS = {"daily": "AdjTo_*_dly.txt", "monthly": "AdjTo_*_mly.txt"}
+CANHOMP_DATASETS = {"daily": DATASET_CANHOMP_DAILY, "monthly": DATASET_CANHOMP_MONTHLY}
+
+# Fixed-width column slices for the CanHomP V2 station files. Values are stored
+# in tenths of a millimetre; -9999 marks a missing observation.
+CANHOMP_SLICES = {
+    "year": (0, 5), "month": (5, 9), "day": (9, 13),
+    "homp": (13, 23), "homp_flag": (23, 27),
+    "gfqcdp": (27, 37), "gfqcdp_flag": (37, 41),
+    "adjp": (41, 51), "source_climate_id": (51, None),
+}
+CANHOMP_MISSING = -9999
 
 # ECCC daily CSV header -> (db column, type). Order matters for the COPY.
 _INT, _NUM, _TXT, _DATE = "int", "num", "txt", "date"
@@ -422,6 +462,102 @@ def parse_canhomt_csv(path: Path) -> list[tuple]:
 
 
 # ---------------------------------------------------------------------------
+# CanHomP V2 homogenized precipitation
+# ---------------------------------------------------------------------------
+
+def download_canhomp(kind: str, out_dir: Path, session: requests.Session,
+                     overwrite: bool = False) -> Path:
+    """Download and extract a CanHomP V2 archive ("daily" or "monthly").
+
+    Returns the directory holding the per-station "AdjTo_<climate_id>_*.txt"
+    files. Re-uses an existing extraction unless ``overwrite`` is set.
+    """
+    out_dir.mkdir(parents=True, exist_ok=True)
+    txt_dir = out_dir / CANHOMP_SUBDIRS[kind]
+    if txt_dir.is_dir() and any(txt_dir.glob(CANHOMP_GLOBS[kind])) and not overwrite:
+        return txt_dir
+
+    url = CANHOMP_URLS[kind]
+    archive = out_dir / CANHOMP_ARCHIVES[kind]
+    print(f"Downloading CanHomP V2 {kind} precipitation: {CANHOMP_ARCHIVES[kind]}")
+    r = _get(session, url, timeout=600, stream=True)
+    with archive.open("wb") as f:
+        for chunk in r.iter_content(chunk_size=1 << 16):
+            f.write(chunk)
+
+    txt_dir.mkdir(parents=True, exist_ok=True)
+    print(f"  Extracting to {txt_dir}/")
+    with zipfile.ZipFile(archive) as zf:
+        for member in zf.infolist():
+            if member.is_dir() or not member.filename.lower().endswith(".txt"):
+                continue
+            name = os.path.basename(member.filename)
+            if not name.startswith("AdjTo_"):
+                continue
+            with zf.open(member) as src, (txt_dir / name).open("wb") as dst:
+                dst.write(src.read())
+    archive.unlink(missing_ok=True)
+    return txt_dir
+
+
+def _canhomp_field(line: str, key: str) -> str:
+    start, end = CANHOMP_SLICES[key]
+    return line[start:end if end is not None else len(line)].strip()
+
+
+def _canhomp_mm(raw: str) -> str | None:
+    """Convert a CanHomP value in tenths of a mm to millimetres."""
+    if not raw:
+        return None
+    try:
+        value = int(raw)
+    except ValueError:
+        return None
+    return None if value == CANHOMP_MISSING else f"{value / 10:.1f}"
+
+
+def parse_canhomp_file(path: Path, monthly: bool = False) -> list[tuple]:
+    """Parse one fixed-width CanHomP V2 station file.
+
+    Returns rows of (year, month, day, homog_mm, homog_flag, gapfill_mm,
+    gapfill_flag, adj_mm, source_climate_id). ``day`` is always 0 for monthly
+    files. Rows with no precipitation value at all are skipped.
+    """
+    rows: list[tuple] = []
+    with path.open("r", encoding="utf-8", errors="replace") as fh:
+        for line in fh:
+            line = line.rstrip("\n").rstrip("\r")
+            if not line.strip() or line.startswith("#"):
+                continue
+            year = _opt_int(_canhomp_field(line, "year"))
+            month = _opt_int(_canhomp_field(line, "month"))
+            day = _opt_int(_canhomp_field(line, "day"))
+            if year is None or month is None or not 1 <= month <= 12:
+                continue
+            if monthly:
+                day = 0
+            else:
+                if not day:
+                    continue
+                try:
+                    date(year, month, day)
+                except ValueError:
+                    continue
+            homog = _canhomp_mm(_canhomp_field(line, "homp"))
+            gapfill = _canhomp_mm(_canhomp_field(line, "gfqcdp"))
+            adj = _canhomp_mm(_canhomp_field(line, "adjp"))
+            if homog is None and gapfill is None and adj is None:
+                continue
+            rows.append((
+                year, month, day,
+                homog, _opt_txt(_canhomp_field(line, "homp_flag")),
+                gapfill, _opt_txt(_canhomp_field(line, "gfqcdp_flag")),
+                adj, _opt_txt(_canhomp_field(line, "source_climate_id")),
+            ))
+    return rows
+
+
+# ---------------------------------------------------------------------------
 # Database
 # ---------------------------------------------------------------------------
 
@@ -505,12 +641,61 @@ CREATE TABLE IF NOT EXISTS {s}.road_closures (
     status        TEXT NOT NULL,
     month         INTEGER,
     day           INTEGER,
-    CONSTRAINT road_closures_year_road_status_uniq UNIQUE (year, road_name, status)
+    CONSTRAINT road_closures_dataset_year_road_status_uniq
+        UNIQUE (dataset_id, year, road_name, status)
 );
 CREATE INDEX IF NOT EXISTS road_closures_year_idx ON {s}.road_closures (year);
 CREATE INDEX IF NOT EXISTS road_closures_road_name_idx ON {s}.road_closures (road_name);
 CREATE INDEX IF NOT EXISTS road_closures_road_type_idx ON {s}.road_closures (road_type);
 CREATE INDEX IF NOT EXISTS road_closures_dataset_idx ON {s}.road_closures (dataset_id);
+
+CREATE TABLE IF NOT EXISTS {s}.precip_daily_data (
+    id                    BIGSERIAL PRIMARY KEY,
+    station_id            INTEGER NOT NULL
+        REFERENCES {s}.weather_stations(station_id) ON DELETE CASCADE,
+    obs_date              DATE NOT NULL,
+    year                  INTEGER,
+    month                 INTEGER,
+    day                   INTEGER,
+    homog_precip_mm       NUMERIC(8, 2),
+    homog_precip_flag     TEXT,
+    gapfill_precip_mm     NUMERIC(8, 2),
+    gapfill_precip_flag   TEXT,
+    adj_precip_mm         NUMERIC(8, 2),
+    source_climate_id     TEXT,
+    dataset_id            INTEGER REFERENCES {s}.datasets(id) ON DELETE SET NULL,
+    CONSTRAINT precip_daily_data_station_date_dataset_uniq
+        UNIQUE (station_id, obs_date, dataset_id)
+);
+CREATE INDEX IF NOT EXISTS precip_daily_data_station_idx
+    ON {s}.precip_daily_data (station_id);
+CREATE INDEX IF NOT EXISTS precip_daily_data_date_idx
+    ON {s}.precip_daily_data (obs_date);
+CREATE INDEX IF NOT EXISTS precip_daily_data_dataset_idx
+    ON {s}.precip_daily_data (dataset_id);
+
+CREATE TABLE IF NOT EXISTS {s}.precip_monthly_data (
+    id                    BIGSERIAL PRIMARY KEY,
+    station_id            INTEGER NOT NULL
+        REFERENCES {s}.weather_stations(station_id) ON DELETE CASCADE,
+    year                  INTEGER NOT NULL,
+    month                 INTEGER NOT NULL,
+    homog_precip_mm       NUMERIC(9, 2),
+    homog_precip_flag     TEXT,
+    gapfill_precip_mm     NUMERIC(9, 2),
+    gapfill_precip_flag   TEXT,
+    adj_precip_mm         NUMERIC(9, 2),
+    source_climate_id     TEXT,
+    dataset_id            INTEGER REFERENCES {s}.datasets(id) ON DELETE SET NULL,
+    CONSTRAINT precip_monthly_data_station_ym_dataset_uniq
+        UNIQUE (station_id, year, month, dataset_id)
+);
+CREATE INDEX IF NOT EXISTS precip_monthly_data_station_idx
+    ON {s}.precip_monthly_data (station_id);
+CREATE INDEX IF NOT EXISTS precip_monthly_data_year_idx
+    ON {s}.precip_monthly_data (year);
+CREATE INDEX IF NOT EXISTS precip_monthly_data_dataset_idx
+    ON {s}.precip_monthly_data (dataset_id);
 """
 
 # Mapping of CSV column headers to (road_name, road_type).
@@ -559,6 +744,54 @@ ROAD_COLUMNS: dict[str, tuple[str, str]] = {
         ("Tibbitt-Contwoyto Winter Road", "PRIVATE MINING ROAD"),
 }
 
+# Column headers in the GNWT XLSX workbooks -> (canonical road_name, road_type).
+# Canonical names match the ones already used by the CSV importer so the API
+# can fall back between datasets per road. Headers are matched after
+# strip() + NFC normalization (the workbooks have trailing spaces and a few
+# spelling differences, e.g. "Tsiighetchic").
+XLSX_ROAD_COLUMNS: dict[str, tuple[str, str]] = {
+    # GNWT Winter Road Open Closed workbook
+    "Ft. Simpson - Wrigley":
+        ("Ft. Simpson - Wrigley (Highway #1)", "WINTER ROAD"),
+    "Wrigley to Tulita Winter Road":
+        ("Wrigley to Tulita Winter Road (Highway #1)", "WINTER ROAD"),
+    "Tulita to Norman Wells Winter Road":
+        ("Tulita to Norman Wells Winter Road (Highway #1)", "WINTER ROAD"),
+    "Norman Wells to Fort Good Hope Winter Road":
+        ("Norman Wells to Fort Good Hope Winter Road (Highway #1)", "WINTER ROAD"),
+    "Colville Lake Winter Road":
+        ("Colville Lake Winter Road", "WINTER ROAD"),
+    "Délįne Winter Road":
+        ("Délįne Winter Road", "WINTER ROAD"),
+    "Sambaa K'e Winter Road":
+        ("Sambaa K’e Winter Road", "WINTER ROAD"),
+    "Nahanni Butte Winter Road":
+        ("Nahanni Butte Winter Road", "WINTER ROAD"),
+    "Wekweètì Winter Road":
+        ("Wekweètì Winter Road", "WINTER ROAD"),
+    "Whatì Winter Road":
+        ("Whatì Winter Road", "WINTER ROAD"),
+    "Gamètì Winter Road":
+        ("Gamètì Winter Road", "WINTER ROAD"),
+    "Dettah Ice Road":
+        ("Dettah Ice Road", "ICE ROAD"),
+    "Aklavik Ice Road":
+        ("Aklavik Ice Road", "ICE ROAD"),
+    # GNWT River Crossing TCWR workbook
+    "Mackenzie River Crossing at Fort Providence":
+        ("Mackenzie River Crossing at Fort Providence", "ICE CROSSING"),
+    "Liard River Crossing at Fort Simpson":
+        ("Liard River Crossing at Fort Simpson", "ICE CROSSING"),
+    "Mackenzie River Crossing at Tsiighetchic":
+        ("Mackenzie River Crossing at Tsiigehtchic", "ICE CROSSING"),
+    "Peel River Crossing":
+        ("Peel River Crossing", "ICE CROSSING"),
+    "Mackenzie River Crossing at Camsell Bend":
+        ("Mackenzie River Crossing at Camsell Bend", "ICE CROSSING"),
+    "Tibbitt-Contwoyto Winter Road":
+        ("Tibbitt-Contwoyto Winter Road", "PRIVATE MINING ROAD"),
+}
+
 
 def _import_psycopg():
     try:
@@ -574,6 +807,29 @@ def _conninfo(args: argparse.Namespace) -> str:
             f"user={args.user} password={args.password}")
 
 
+def _migrate_road_closures(cur, sql, schema: str) -> None:
+    """Widen the road_closures unique key to include dataset_id.
+
+    Older databases used UNIQUE (year, road_name, status), which prevents a
+    second data source from storing the same road/season. Replace it with
+    UNIQUE (dataset_id, year, road_name, status) when the old constraint is
+    still present.
+    """
+    cur.execute(sql.SQL(
+        "ALTER TABLE {s}.road_closures "
+        "DROP CONSTRAINT IF EXISTS road_closures_year_road_status_uniq"
+    ).format(s=sql.Identifier(schema)))
+    cur.execute(
+        "SELECT 1 FROM pg_constraint "
+        "WHERE conname = 'road_closures_dataset_year_road_status_uniq'")
+    if cur.fetchone() is None:
+        cur.execute(sql.SQL(
+            "ALTER TABLE {s}.road_closures "
+            "ADD CONSTRAINT road_closures_dataset_year_road_status_uniq "
+            "UNIQUE (dataset_id, year, road_name, status)"
+        ).format(s=sql.Identifier(schema)))
+
+
 def ensure_schema(conn, sql, schema: str, drop: bool = False) -> None:
     """Create the schema, tables and dataset registry rows."""
     with conn.cursor() as cur:
@@ -581,10 +837,12 @@ def ensure_schema(conn, sql, schema: str, drop: bool = False) -> None:
             sql.Identifier(schema)))
         if drop:
             print("Dropping existing tables...")
-            for table in ("road_closures", "daily_data", "weather_stations", "datasets"):
+            for table in ("road_closures", "precip_daily_data", "precip_monthly_data",
+                          "daily_data", "weather_stations", "datasets"):
                 cur.execute(sql.SQL("DROP TABLE IF EXISTS {}.{} CASCADE").format(
                     sql.Identifier(schema), sql.Identifier(table)))
         cur.execute(DDL.format(s=schema))
+        _migrate_road_closures(cur, sql, schema)
 
         now = int(time.time())
         for ds_id, (ds_name, ds_link) in DATASETS.items():
@@ -766,6 +1024,115 @@ def load_canhomt(conn, sql, schema: str, csv_dir: Path) -> None:
           f"({skipped} file(s) skipped).")
 
 
+def _add_stations_by_climate_id(conn, sql, schema: str,
+                                climate_ids: set[str]) -> dict[str, int]:
+    """Insert weather_stations rows for climate IDs missing from the database.
+
+    Station metadata comes from the ECCC master inventory. When several
+    inventory entries share a Climate ID the one with the widest daily record
+    is used. Returns the newly added {climate_id: station_id} mappings.
+    """
+    if not climate_ids:
+        return {}
+    print(f"Looking up {len(climate_ids)} unknown Climate ID(s) in the ECCC inventory...")
+    best: dict[str, Station] = {}
+    for s in fetch_stations():
+        cid = (s.climate_id or "").strip()
+        if cid not in climate_ids or not s.station_id:
+            continue
+        current = best.get(cid)
+        if current is None or _coverage_span(s) > _coverage_span(current):
+            best[cid] = s
+    if not best:
+        print("  No matching inventory entries found.")
+        return {}
+    upsert_stations(conn, sql, schema, list(best.values()))
+    return {cid: int(s.station_id) for cid, s in best.items()}
+
+
+def _coverage_span(s: Station) -> int:
+    first = _opt_int(s.first_year) or 0
+    last = _opt_int(s.last_year) or 0
+    return max(last - first, 0)
+
+
+def load_canhomp(conn, sql, schema: str, txt_dir: Path, kind: str,
+                 add_missing_stations: bool = True) -> None:
+    """Load CanHomP V2 precipitation files into precip_daily/monthly_data.
+
+    ``kind`` is "daily" or "monthly". Files are matched to weather_stations by
+    Climate ID; unknown stations are pulled from the ECCC inventory first when
+    ``add_missing_stations`` is set.
+    """
+    monthly = kind == "monthly"
+    files = sorted(txt_dir.glob(CANHOMP_GLOBS[kind]))
+    if not files:
+        print(f"No CanHomP {kind} files found in {txt_dir}.")
+        return
+    print(f"Loading {len(files)} CanHomP V2 {kind} precipitation file(s) from {txt_dir}")
+
+    suffix = "_mly.txt" if monthly else "_dly.txt"
+    by_file = {p: p.name[len("AdjTo_"):-len(suffix)] for p in files}
+    by_climate, _ = _station_lookup(conn, sql, schema)
+    if add_missing_stations:
+        missing = {cid for cid in by_file.values() if cid not in by_climate}
+        by_climate.update(_add_stations_by_climate_id(conn, sql, schema, missing))
+
+    table = "precip_monthly_data" if monthly else "precip_daily_data"
+    key_cols = ["station_id", "year", "month"] if monthly else ["station_id", "obs_date"]
+    columns = (["station_id", "year", "month"] if monthly else
+               ["station_id", "obs_date", "year", "month", "day"])
+    columns += ["homog_precip_mm", "homog_precip_flag",
+                "gapfill_precip_mm", "gapfill_precip_flag",
+                "adj_precip_mm", "source_climate_id", "dataset_id"]
+    update_cols = columns[len(key_cols) if monthly else 2:]
+
+    copy_sql = sql.SQL("COPY precip_stage ({cols}) FROM STDIN").format(
+        cols=sql.SQL(", ").join(map(sql.Identifier, columns)))
+    merge_sql = sql.SQL("""
+        INSERT INTO {s}.{t} ({cols})
+        SELECT {cols} FROM precip_stage
+        ON CONFLICT ({keys}, dataset_id) DO UPDATE SET {updates}
+    """).format(
+        s=sql.Identifier(schema), t=sql.Identifier(table),
+        cols=sql.SQL(", ").join(map(sql.Identifier, columns)),
+        keys=sql.SQL(", ").join(map(sql.Identifier, key_cols)),
+        updates=sql.SQL(", ").join(
+            sql.SQL("{c} = EXCLUDED.{c}").format(c=sql.Identifier(c))
+            for c in update_cols if c != "dataset_id"),
+    )
+
+    dataset_id = CANHOMP_DATASETS[kind]
+    total, skipped = 0, 0
+    pbar = tqdm(files, desc=f"CanHomP {kind}", unit="file")
+    for path in pbar:
+        station_id = by_climate.get(by_file[path])
+        rows = parse_canhomp_file(path, monthly=monthly)
+        if station_id is None or not rows:
+            skipped += 1
+            continue
+        with conn.cursor() as cur:
+            cur.execute("DROP TABLE IF EXISTS precip_stage")
+            cur.execute(sql.SQL(
+                "CREATE TEMP TABLE precip_stage (LIKE {}.{} INCLUDING DEFAULTS)"
+            ).format(sql.Identifier(schema), sql.Identifier(table)))
+            with cur.copy(copy_sql) as copy:
+                for (year, month, day, homog, homog_f,
+                     gapfill, gapfill_f, adj, src) in rows:
+                    lead = ((station_id, year, month) if monthly else
+                            (station_id, f"{year:04d}-{month:02d}-{day:02d}",
+                             year, month, day))
+                    copy.write_row((*lead, homog, homog_f, gapfill, gapfill_f,
+                                    adj, src, dataset_id))
+                    total += 1
+            cur.execute(merge_sql)
+            conn.commit()
+        pbar.set_postfix(rows=total, skipped=skipped)
+    pbar.close()
+    print(f"Done. Inserted/updated {total:,} CanHomP {kind} row(s) "
+          f"({skipped} file(s) skipped).")
+
+
 # ---------------------------------------------------------------------------
 # CLI commands
 # ---------------------------------------------------------------------------
@@ -841,6 +1208,33 @@ def cmd_ahccd(args: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_canhomp(args: argparse.Namespace) -> int:
+    """Download and load CanHomP V2 homogenized precipitation (daily/monthly)."""
+    psycopg, sql = _import_psycopg()
+    out_dir = Path(args.out)
+    kinds = ["daily", "monthly"] if args.kind == "both" else [args.kind]
+    session = _session()
+
+    dirs: dict[str, Path] = {}
+    for kind in kinds:
+        if args.no_download:
+            txt_dir = out_dir / CANHOMP_SUBDIRS[kind]
+            if not txt_dir.is_dir():
+                print(f"No cached data in {txt_dir}; omit --no-download to fetch it.",
+                      file=sys.stderr)
+                return 1
+        else:
+            txt_dir = download_canhomp(kind, out_dir, session, overwrite=args.overwrite)
+        dirs[kind] = txt_dir
+
+    with psycopg.connect(_conninfo(args)) as conn:
+        ensure_schema(conn, sql, args.schema)
+        for kind in kinds:
+            load_canhomp(conn, sql, args.schema, dirs[kind], kind,
+                         add_missing_stations=not args.skip_new_stations)
+    return 0
+
+
 def cmd_populate(args: argparse.Namespace) -> int:
     """One-shot: download ECCC daily data, then load everything into the DB."""
     psycopg, sql = _import_psycopg()
@@ -864,6 +1258,13 @@ def cmd_populate(args: argparse.Namespace) -> int:
             csv_dir = download_canhomt(Path(args.ahccd_dir), session,
                                        overwrite=args.overwrite)
             load_canhomt(conn, sql, args.schema, csv_dir)
+
+        if args.canhomp:
+            session = _session()
+            for kind in ("daily", "monthly"):
+                txt_dir = download_canhomp(kind, Path(args.canhomp_dir), session,
+                                           overwrite=args.overwrite)
+                load_canhomp(conn, sql, args.schema, txt_dir, kind)
     print("\nPopulate complete.")
     return 0
 
@@ -989,6 +1390,7 @@ def cmd_roadload(args: argparse.Namespace) -> int:
                     "DROP TABLE IF EXISTS {}.road_closures CASCADE"
                 ).format(sql.Identifier(schema)))
             cur.execute(DDL.format(s=schema))
+            _migrate_road_closures(cur, sql, schema)
 
             # Ensure dataset entries exist
             now = int(time.time())
@@ -1006,8 +1408,7 @@ def cmd_roadload(args: argparse.Namespace) -> int:
             INSERT INTO {s}.road_closures
                 (dataset_id, year, road_name, road_type, status, month, day)
             VALUES (%s, %s, %s, %s, %s, %s, %s)
-            ON CONFLICT (year, road_name, status) DO UPDATE SET
-                dataset_id = EXCLUDED.dataset_id,
+            ON CONFLICT (dataset_id, year, road_name, status) DO UPDATE SET
                 road_type  = EXCLUDED.road_type,
                 month      = EXCLUDED.month,
                 day        = EXCLUDED.day
@@ -1061,6 +1462,161 @@ def cmd_roadload(args: argparse.Namespace) -> int:
 
     print(f"\nDone. Upserted {total_rows} road closure records "
           f"({skipped} skipped due to N/A).")
+    return 0
+
+
+# Non-road header cells in the GNWT XLSX sheets.
+_XLSX_SKIP_HEADERS = {
+    "Open Operation Year",
+    "Leap year as red",
+    "Close Year - Leap year as red",
+}
+
+
+def _norm_header(value) -> str | None:
+    if not isinstance(value, str):
+        return None
+    return unicodedata.normalize("NFC", value.strip())
+
+
+def _xlsx_cell_md(value) -> tuple[int, int] | None:
+    """Extract (month, day) from an XLSX cell holding a date, else None."""
+    import datetime as _dt
+
+    if isinstance(value, (_dt.datetime, _dt.date)):
+        return value.month, value.day
+    return None
+
+
+def cmd_roadload_xlsx(args: argparse.Namespace) -> int:
+    """Load GNWT road open/close dates from XLSX workbooks into road_closures.
+
+    Each workbook has an "Open" sheet (column A is the season, e.g.
+    "1983/1984") and a "Close" sheet (column A is the closing calendar year).
+    Open records are stored under the season's first year and Closed records
+    under the second year, matching the CSV importer's convention. Rows are
+    tagged with DATASET_GNWT_ROAD_XLSX so they coexist with the older CSV
+    dataset.
+    """
+    psycopg, sql = _import_psycopg()
+    try:
+        import openpyxl
+    except ImportError:
+        sys.exit("openpyxl is required. Install it with: pip install openpyxl")
+
+    lookup = {_norm_header(k): v for k, v in XLSX_ROAD_COLUMNS.items()}
+    skip = {_norm_header(h) for h in _XLSX_SKIP_HEADERS}
+
+    # (year, road_name, road_type, status, month, day)
+    records: list[tuple[int, str, str, str, int, int]] = []
+    skipped = 0
+
+    for path_str in args.xlsx:
+        path = Path(path_str)
+        if not path.is_file():
+            print(f"XLSX file not found: {path}", file=sys.stderr)
+            return 1
+
+        print(f"Reading {path.name}")
+        wb = openpyxl.load_workbook(path, data_only=True)
+
+        for sheet_name, status in (("Open", "Open"), ("Close", "Closed")):
+            if sheet_name not in wb.sheetnames:
+                print(f"  No '{sheet_name}' sheet found, skipping.",
+                      file=sys.stderr)
+                continue
+            ws = wb[sheet_name]
+            rows = ws.iter_rows(values_only=True)
+            headers = next(rows, None) or ()
+
+            road_cols: list[tuple[int, str, str]] = []  # (idx, name, type)
+            for idx, hdr in enumerate(headers):
+                key = _norm_header(hdr)
+                if key is None or key in skip:
+                    continue
+                if key in lookup:
+                    road_name, road_type = lookup[key]
+                    road_cols.append((idx, road_name, road_type))
+                else:
+                    print(f"  Warning: unrecognized column {hdr!r} ignored.",
+                          file=sys.stderr)
+
+            count = 0
+            for row in rows:
+                if not row or row[0] is None:
+                    continue
+                if status == "Open":
+                    season = _parse_season_years(str(row[0]).strip())
+                    if season is None:
+                        continue
+                    year = season[0]
+                else:
+                    try:
+                        year = int(row[0])
+                    except (TypeError, ValueError):
+                        continue
+
+                for idx, road_name, road_type in road_cols:
+                    md = _xlsx_cell_md(row[idx]) if idx < len(row) else None
+                    if md is None:
+                        skipped += 1
+                        continue
+                    records.append(
+                        (year, road_name, road_type, status, md[0], md[1]))
+                    count += 1
+            print(f"  {sheet_name}: {count} {status} records "
+                  f"across {len(road_cols)} roads.")
+
+    if not records:
+        print("Error: no records parsed from the given XLSX files.",
+              file=sys.stderr)
+        return 1
+
+    schema = args.schema
+    with psycopg.connect(_conninfo(args)) as conn:
+        with conn.cursor() as cur:
+            cur.execute(sql.SQL("CREATE SCHEMA IF NOT EXISTS {}").format(
+                sql.Identifier(schema)))
+            cur.execute(DDL.format(s=schema))
+            _migrate_road_closures(cur, sql, schema)
+
+            now = int(time.time())
+            for ds_id, (ds_name, ds_link) in DATASETS.items():
+                cur.execute(sql.SQL("""
+                    INSERT INTO {s}.datasets (id, name, timecreated, timeupdated, resourcelink)
+                    VALUES (%s, %s, %s, %s, %s)
+                    ON CONFLICT (id) DO NOTHING
+                """).format(s=sql.Identifier(schema)),
+                    (ds_id, ds_name, now, now, ds_link))
+
+            if args.replace:
+                print("Deleting existing GNWT XLSX road records...")
+                cur.execute(sql.SQL(
+                    "DELETE FROM {s}.road_closures WHERE dataset_id = %s"
+                ).format(s=sql.Identifier(schema)),
+                    (DATASET_GNWT_ROAD_XLSX,))
+        conn.commit()
+
+        upsert_sql = sql.SQL("""
+            INSERT INTO {s}.road_closures
+                (dataset_id, year, road_name, road_type, status, month, day)
+            VALUES (%s, %s, %s, %s, %s, %s, %s)
+            ON CONFLICT (dataset_id, year, road_name, status) DO UPDATE SET
+                road_type  = EXCLUDED.road_type,
+                month      = EXCLUDED.month,
+                day        = EXCLUDED.day
+        """).format(s=sql.Identifier(schema))
+
+        with conn.cursor() as cur:
+            for year, road_name, road_type, status, month, day in records:
+                cur.execute(upsert_sql, (
+                    DATASET_GNWT_ROAD_XLSX, year, road_name, road_type,
+                    status, month, day,
+                ))
+        conn.commit()
+
+    print(f"\nDone. Upserted {len(records)} road records from XLSX "
+          f"({skipped} empty/N-A cells skipped).")
     return 0
 
 
@@ -1120,6 +1676,21 @@ def build_parser() -> argparse.ArgumentParser:
     _add_db_args(p_ah)
     p_ah.set_defaults(func=cmd_ahccd)
 
+    p_cp = sub.add_parser(
+        "canhomp",
+        help="Download and load CanHomP V2 homogenized daily/monthly precipitation.")
+    p_cp.add_argument("--kind", choices=("daily", "monthly", "both"), default="both",
+                      help="Which CanHomP V2 archive(s) to import (default: both).")
+    p_cp.add_argument("--out", "-o", default="./canhomp", help="Download/cache dir.")
+    p_cp.add_argument("--no-download", action="store_true",
+                      help="Use already-extracted files in --out instead of fetching.")
+    p_cp.add_argument("--overwrite", action="store_true",
+                      help="Re-download even if cached files already exist.")
+    p_cp.add_argument("--skip-new-stations", action="store_true",
+                      help="Do not add stations missing from weather_stations.")
+    _add_db_args(p_cp)
+    p_cp.set_defaults(func=cmd_canhomp)
+
     p_pop = sub.add_parser("populate",
                            help="One-shot: download ECCC data and load everything.")
     p_pop.add_argument("--province", "-p", nargs="+",
@@ -1133,6 +1704,10 @@ def build_parser() -> argparse.ArgumentParser:
     p_pop.add_argument("--ahccd", action="store_true",
                        help="Also download and load CanHomT V4 daily temperature.")
     p_pop.add_argument("--ahccd-dir", default="./ahccd", help="AHCCD download/cache dir.")
+    p_pop.add_argument("--canhomp", action="store_true",
+                       help="Also download and load CanHomP V2 daily+monthly precipitation.")
+    p_pop.add_argument("--canhomp-dir", default="./canhomp",
+                       help="CanHomP download/cache dir.")
     _add_db_args(p_pop)
     p_pop.set_defaults(func=cmd_populate)
 
@@ -1148,6 +1723,22 @@ def build_parser() -> argparse.ArgumentParser:
                         help="Drop road_closures table before creating it.")
     _add_db_args(p_road)
     p_road.set_defaults(func=cmd_roadload)
+
+    # GNWT XLSX road open/close load
+    p_roadx = sub.add_parser(
+        "roadload-xlsx",
+        help="Load GNWT road open/close dates from XLSX workbooks "
+             "(dataset 9, coexists with the CSV dataset).",
+    )
+    p_roadx.add_argument(
+        "--xlsx", nargs="+",
+        default=["./GNWT Winter Road Open Closed_until 2025-26.xlsx",
+                 "./GNWT River Crossing TCWR Open Close_until 2025-26.xlsx"],
+        help="Path(s) to the GNWT Open/Close XLSX workbooks.")
+    p_roadx.add_argument("--replace", action="store_true",
+                         help="Delete existing GNWT XLSX dataset rows first.")
+    _add_db_args(p_roadx)
+    p_roadx.set_defaults(func=cmd_roadload_xlsx)
 
     return p
 

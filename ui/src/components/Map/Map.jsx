@@ -34,6 +34,17 @@ const API_BASE = "https://dev-moh.wramp.ca/python-api";
 // the threshold get a "not enough data" message instead.
 const MIN_GRAPH_POINTS = 6
 
+// Short month names for chart labels.
+const MONTH_ABBR = ["", "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+
+// Bar geometry for the precipitation chart. A monthly range is at most 12 bars,
+// so they can be wide; a daily range is up to ~90, so they have to be thin.
+// (categoryGapRatio: gap between categories, barGapRatio: gap between bars.)
+const PRECIP_BAR_GAPS = {
+  monthly: { categoryGapRatio: 0.15, barGapRatio: 0.05 },
+  daily: { categoryGapRatio: 0.55, barGapRatio: 0.2 },
+}
+
 // Stations with fewer than this many seasons of data get a persistent warning
 // banner: the record is too short to reliably assess long-term climate trends
 // (30 years is the standard climate-normal period).
@@ -331,6 +342,23 @@ function WeatherMap() {
   const [snowShowMax, setSnowShowMax] = useState(true)
   const [snowShowAvg, setSnowShowAvg] = useState(true)
   const [snowShowMin, setSnowShowMin] = useState(true)
+  // Precipitation / snowfall share one section; this picks which panel shows.
+  const [precipSnowView, setPrecipSnowView] = useState("precipitation")
+  const [precipData, setPrecipData] = useState(null) // {labels: [], avgs: [], maxs: [], mins: []}
+  const [precipLoading, setPrecipLoading] = useState(false)
+  // CanHomP V2 resolutions this station has data for, from /precip-datasets.
+  const [precipSources, setPrecipSources] = useState([])
+  const [precipResolution, setPrecipResolution] = useState("daily")
+  const [precipMonthRange, setPrecipMonthRange] = useState([defaultMonthStart, defaultMonthEnd])
+  const [precipShowMax, setPrecipShowMax] = useState(true)
+  const [precipShowAvg, setPrecipShowAvg] = useState(true)
+  const [precipShowMin, setPrecipShowMin] = useState(true)
+  // Per-month Mann-Kendall / Sen's slope trends for the precipitation table.
+  const [precipTrend, setPrecipTrend] = useState(null)
+  const [precipTrendLoading, setPrecipTrendLoading] = useState(false)
+  // "Advanced" reveals the statistical detail (p-values). Off by default so the
+  // table reads as plain mm/yr for a non-technical visitor.
+  const [precipTrendAdvanced, setPrecipTrendAdvanced] = useState(false)
   const [tempData, setTempData] = useState(null) // {labels: [], avgs: [], maxs: [], mins: []}
   const [tempLoading, setTempLoading] = useState(false)
   const [tempMonthRange, setTempMonthRange] = useState([defaultMonthStart, defaultMonthEnd])
@@ -807,6 +835,227 @@ function WeatherMap() {
     return `p = ${p.toFixed(3)}`
   }
 
+  // Evidence ramp for a Mann-Kendall p-value: grey (no evidence) through pale
+  // blue to deep navy (strongest). Ordered by intensity so the column reads as
+  // a scale rather than four unrelated colours.
+  const PRECIP_SIG_STYLES = {
+    very: { label: "Very significant", short: "p < 0.001" },
+    significant: { label: "Significant", short: "p < 0.01" },
+    somewhat: { label: "Somewhat significant", short: "p < 0.05" },
+    none: { label: "Not significant", short: "p ≥ 0.05" },
+    insufficient: { label: "Insufficient data", short: "< 3 years" },
+  }
+
+  // Compact p-value for the table's own column.
+  const fmtPValue = (p) => {
+    if (p == null) return "—"
+    if (p < 0.001) return "<0.001"
+    return p.toFixed(3)
+  }
+
+  // Per-month Sen's slope table shown under the precipitation chart. Each row
+  // carries a red direction arrow, a diverging magnitude bar, and a colour-coded
+  // significance pill.
+  const renderPrecipTrendTable = () => {
+    if (precipTrendLoading) {
+      return (
+        <div className="wrtdip-trend-panel">
+          <Typography variant="body2" color="text.secondary" sx={{ py: 2, textAlign: "center" }}>
+            Calculating monthly trends…
+          </Typography>
+        </div>
+      )
+    }
+
+    const months = precipTrend?.months || []
+    const usable = months.filter((m) => m.sens_slope != null)
+    if (usable.length === 0) return null
+
+    // Scale the magnitude bars against the largest absolute slope so the
+    // strongest month fills the half-width and the rest read relative to it.
+    const maxAbs = Math.max(...usable.map((m) => Math.abs(m.sens_slope)), 0.0001)
+
+    const isSignificant = (m) => m.p != null && m.p < 0.05
+    // Months in the chart's current window get a subtle highlight so the table
+    // and the bars above stay visually linked.
+    const [ms, me] = precipMonthRange
+    const inWindow = (m) => (ms <= me ? m >= ms && m <= me : m >= ms || m <= me)
+
+    const strongest = usable.filter(isSignificant)
+      .sort((a, b) => Math.abs(b.sens_slope) - Math.abs(a.sens_slope))[0]
+
+    return (
+      <div className="wrtdip-trend-panel">
+        <div className="wrtdip-trend-panel__head">
+          <div>
+            <div className="wrtdip-trend-panel__title">Monthly Precipitation Trends</div>
+            <div className="wrtdip-trend-panel__sub">
+              {precipTrendAdvanced ? (
+                <>
+                  Sen&rsquo;s slope (Theil&ndash;Sen) of monthly totals against year, with a
+                  Mann&ndash;Kendall test for significance.
+                </>
+              ) : (
+                <>
+                  How much precipitation each month has gained or lost per year across this
+                  station&rsquo;s record.
+                </>
+              )}
+            </div>
+          </div>
+          <div className="wrtdip-trend-panel__aside">
+            {precipTrend?.first_year != null && (
+              <div className="wrtdip-trend-panel__range">
+                <span className="wrtdip-trend-panel__range-years">
+                  {precipTrend.first_year}&ndash;{precipTrend.last_year}
+                </span>
+                <span className="wrtdip-trend-panel__range-label">
+                  {precipTrend.n_years} yrs
+                  {precipTrend.source === "daily" ? " · from daily" : ""}
+                </span>
+              </div>
+            )}
+            <button
+              type="button"
+              aria-pressed={precipTrendAdvanced}
+              title={
+                precipTrendAdvanced
+                  ? "Hide the statistical detail"
+                  : "Show p-values and the statistical detail behind each trend"
+              }
+              className={`wrtdip-trend-adv-btn${precipTrendAdvanced ? " wrtdip-trend-adv-btn--active" : ""}`}
+              onClick={() => setPrecipTrendAdvanced((v) => !v)}
+            >
+              <span className="wrtdip-trend-adv-btn__icon">{precipTrendAdvanced ? "▾" : "▸"}</span>
+              Advanced
+            </button>
+          </div>
+        </div>
+
+        {strongest && (
+          <div className="wrtdip-trend-panel__headline">
+            Strongest signal:&nbsp;
+            <strong>{strongest.name}</strong>
+            <span className={`wrtdip-trend-arrow wrtdip-trend-arrow--${strongest.direction}`}>
+              {strongest.direction === "increasing" ? "▲" : "▼"}
+            </span>
+            {strongest.sens_slope > 0 ? "+" : "−"}
+            {Math.abs(strongest.sens_slope).toFixed(2)} mm/yr
+            <span className="wrtdip-trend-panel__headline-note">
+              ({(Math.abs(strongest.sens_slope) * 10).toFixed(1)} mm per decade)
+            </span>
+          </div>
+        )}
+
+        <div className="wrtdip-trend-table-wrap">
+          <table className="wrtdip-trend-table">
+            <thead>
+              <tr>
+                <th className="wrtdip-trend-table__th">Month</th>
+                <th className="wrtdip-trend-table__th wrtdip-trend-table__th--num">
+                  Sen&rsquo;s Slope (mm/yr)
+                </th>
+                <th className="wrtdip-trend-table__th">Significance</th>
+                {precipTrendAdvanced && (
+                  <th className="wrtdip-trend-table__th wrtdip-trend-table__th--num">p&#8209;value</th>
+                )}
+              </tr>
+            </thead>
+            <tbody>
+              {months.map((m) => {
+                const sig = PRECIP_SIG_STYLES[m.significance] || PRECIP_SIG_STYLES.none
+                const slope = m.sens_slope
+                const sigTrend = isSignificant(m)
+                const pctW = slope == null ? 0 : (Math.abs(slope) / maxAbs) * 50
+                return (
+                  <tr
+                    key={m.month}
+                    className={`wrtdip-trend-table__row${inWindow(m.month) ? " wrtdip-trend-table__row--active" : ""}`}
+                  >
+                    <td className="wrtdip-trend-table__month">
+                      <span
+                        className={
+                          `wrtdip-trend-arrow wrtdip-trend-arrow--${m.direction}` +
+                          (sigTrend ? "" : " wrtdip-trend-arrow--weak")
+                        }
+                        title={
+                          m.direction === "none"
+                            ? "No change"
+                            : `${m.direction === "increasing" ? "Increasing" : "Decreasing"} precipitation` +
+                              (sigTrend ? "" : " (not statistically significant)")
+                        }
+                      >
+                        {m.direction === "increasing" ? "▲" : m.direction === "decreasing" ? "▼" : "–"}
+                      </span>
+                      <span className="wrtdip-trend-table__month-name">{m.name}</span>
+                    </td>
+                    <td className="wrtdip-trend-table__slope">
+                      <div className="wrtdip-trend-bar">
+                        <span className="wrtdip-trend-bar__axis" />
+                        {slope != null && (
+                          <span
+                            className={`wrtdip-trend-bar__fill wrtdip-trend-bar__fill--${m.direction}${sigTrend ? "" : " wrtdip-trend-bar__fill--weak"}`}
+                            style={
+                              slope >= 0
+                                ? { left: "50%", width: `${pctW}%` }
+                                : { right: "50%", width: `${pctW}%` }
+                            }
+                          />
+                        )}
+                      </div>
+                      <span
+                        className={
+                          "wrtdip-trend-table__value" +
+                          (sigTrend ? ` wrtdip-trend-table__value--strong wrtdip-trend-table__value--${m.direction}` : "")
+                        }
+                      >
+                        {slope == null
+                          ? "—"
+                          : `${slope > 0 ? "+" : slope < 0 ? "−" : ""}${Math.abs(slope).toFixed(3)}`}
+                      </span>
+                    </td>
+                    <td>
+                      <span
+                        className={`wrtdip-sig-pill wrtdip-sig-pill--${m.significance}`}
+                        title={`${sig.label} (${sig.short})`}
+                      >
+                        {sig.label}
+                      </span>
+                    </td>
+                    {precipTrendAdvanced && (
+                      <td className="wrtdip-trend-table__p">{fmtPValue(m.p)}</td>
+                    )}
+                  </tr>
+                )
+              })}
+            </tbody>
+          </table>
+        </div>
+
+        <div className="wrtdip-trend-legend">
+          <span className="wrtdip-trend-legend__item">
+            <span className="wrtdip-trend-arrow wrtdip-trend-arrow--increasing">▲</span> getting wetter
+          </span>
+          <span className="wrtdip-trend-legend__item">
+            <span className="wrtdip-trend-arrow wrtdip-trend-arrow--decreasing">▼</span> getting drier
+          </span>
+          <span className="wrtdip-trend-legend__sep" />
+          {["very", "significant", "somewhat", "none"].map((k) => (
+            <span key={k} className="wrtdip-trend-legend__item">
+              <span className={`wrtdip-sig-dot wrtdip-sig-dot--${k}`} />
+              {PRECIP_SIG_STYLES[k].label}
+              {precipTrendAdvanced && <em>{PRECIP_SIG_STYLES[k].short}</em>}
+            </span>
+          ))}
+        </div>
+        <div className="wrtdip-trend-legend__note">
+          Faded arrows mark months whose direction is not statistically significant.
+          Highlighted rows are the months currently shown in the chart above.
+        </div>
+      </div>
+    )
+  }
+
   // Render the climate-trend statistics as stat tiles + a season timeline,
   // with the full numbers table behind a toggle (bottom section of the popup).
   const renderRoadStatsSection = () => {
@@ -1210,6 +1459,93 @@ function WeatherMap() {
       .then((results) => setLowessSeries(results.filter((r) => r.years.length > 0)))
   }, [showLowess, modalIsOpen, selectedStations, fddDatasetId])
 
+  // Which CanHomP V2 resolutions (daily / monthly) this station actually has.
+  useEffect(() => {
+    if (!modalIsOpen || selectedStations.length === 0) {
+      setPrecipSources([])
+      return
+    }
+    fetch(`${API_BASE}/precip-datasets?stationid=${selectedStations[0]}`)
+      .then((r) => r.json())
+      .then((json) => {
+        const sources = json.data || []
+        setPrecipSources(sources)
+        // Keep the current resolution if the station has it, else fall back to
+        // whatever it does have (some stations are monthly-only).
+        setPrecipResolution((prev) =>
+          sources.some((s) => s.resolution === prev)
+            ? prev
+            : sources.length > 0
+              ? sources[0].resolution
+              : prev
+        )
+      })
+      .catch(() => setPrecipSources([]))
+  }, [modalIsOpen, selectedStations])
+
+  // Fetch average precipitation for the selected month range and resolution
+  useEffect(() => {
+    if (!modalIsOpen || selectedStations.length === 0) {
+      setPrecipData(null)
+      return
+    }
+    const source = precipSources.find((s) => s.resolution === precipResolution)
+    if (!source) {
+      setPrecipData(null)
+      return
+    }
+    const stationId = selectedStations[0]
+    const url =
+      `${API_BASE}/avg-precipitation?stationid=${stationId}` +
+      `&month_start=${precipMonthRange[0]}&month_end=${precipMonthRange[1]}` +
+      `&resolution=${precipResolution}&dataset_id=${source.dataset_id}`
+
+    setPrecipLoading(true)
+    fetch(url)
+      .then((r) => r.json())
+      .then((json) => {
+        const rows = json.data || []
+        setPrecipData({
+          // Monthly rows carry a null day, so they label as "Jan" not "Jan 1".
+          labels: rows.map((r) =>
+            r[1] === null ? MONTH_ABBR[r[0]] : `${MONTH_ABBR[r[0]]} ${r[1]}`
+          ),
+          avgs: rows.map((r) => r[2]),
+          maxs: rows.map((r) => r[3]),
+          mins: rows.map((r) => r[4]),
+        })
+      })
+      .catch(() => setPrecipData(null))
+      .finally(() => setPrecipLoading(false))
+  }, [modalIsOpen, selectedStations, precipSources, precipResolution, precipMonthRange])
+
+  // Per-month precipitation trends (Mann-Kendall + Sen's slope). Computed over
+  // the station's whole record, so this is independent of the month slider and
+  // only needs to refetch when the station changes.
+  useEffect(() => {
+    if (!modalIsOpen || selectedStations.length === 0 || precipSources.length === 0) {
+      setPrecipTrend(null)
+      return
+    }
+    let cancelled = false
+    const stationId = selectedStations[0]
+    setPrecipTrendLoading(true)
+    fetch(`${API_BASE}/precip-trend?stationid=${stationId}`)
+      .then((r) => r.json())
+      .then((json) => {
+        if (!cancelled) setPrecipTrend(json.data || null)
+      })
+      .catch(() => {
+        if (!cancelled) setPrecipTrend(null)
+      })
+      .finally(() => {
+        if (!cancelled) setPrecipTrendLoading(false)
+      })
+    return () => {
+      cancelled = true
+    }
+  }, [modalIsOpen, selectedStations, precipSources])
+
   // Fetch average snowfall for selected month range when modal opens
   useEffect(() => {
     if (!modalIsOpen || selectedStations.length === 0) {
@@ -1324,6 +1660,13 @@ function WeatherMap() {
     setLowessSeries([])
     setSnowfallData(null)
     setSnowMonthRange([defaultMonthStart, defaultMonthEnd])
+    setPrecipSnowView("precipitation")
+    setPrecipData(null)
+    setPrecipSources([])
+    setPrecipResolution("daily")
+    setPrecipMonthRange([defaultMonthStart, defaultMonthEnd])
+    setPrecipTrend(null)
+    setPrecipTrendAdvanced(false)
     setTempData(null)
     setTempMonthRange([defaultMonthStart, defaultMonthEnd])
   }
@@ -1912,65 +2255,236 @@ function WeatherMap() {
           </section>
 
           <section className="wrtdip-map-modal__section">
-            <Typography variant="subtitle1" className="wrtdip-map-modal__section-title">
-              Average Daily Snowfall
-            </Typography>
-            <Typography variant="caption" color="text.secondary" sx={{ display: "block", mb: 1 }}>
-              Historical snowfall (cm) for each day in the selected month(s)
-            </Typography>
-            <div style={{ marginBottom: "0.5rem" }}>
-              <YearRangeSlider
-                value={snowMonthRange}
-                onChange={setSnowMonthRange}
-                min={1}
-                max={12}
-                label="Months"
-              />
-              <Typography variant="caption" sx={{ display: "block", textAlign: "center", mt: -0.5 }}>
-                {new Date(2000, snowMonthRange[0] - 1).toLocaleString("default", { month: "long" })}
-                {snowMonthRange[0] !== snowMonthRange[1] && ` – ${new Date(2000, snowMonthRange[1] - 1).toLocaleString("default", { month: "long" })}`}
-              </Typography>
+            <div className="wrtdip-section-switch" role="tablist" aria-label="Precipitation or snowfall">
+              <button
+                type="button"
+                role="tab"
+                aria-selected={precipSnowView === "precipitation"}
+                className={`wrtdip-section-switch__btn${precipSnowView === "precipitation" ? " wrtdip-section-switch__btn--active" : ""}`}
+                onClick={() => setPrecipSnowView("precipitation")}
+              >
+                Precipitation
+              </button>
+              <button
+                type="button"
+                role="tab"
+                aria-selected={precipSnowView === "snowfall"}
+                className={`wrtdip-section-switch__btn${precipSnowView === "snowfall" ? " wrtdip-section-switch__btn--active" : ""}`}
+                onClick={() => setPrecipSnowView("snowfall")}
+              >
+                Snowfall
+              </button>
             </div>
-            <div className="wrtdip-map-modal__chart">
-              {snowfallLoading ? (
-                <Typography variant="body2" color="text.secondary" sx={{ py: 2, textAlign: "center" }}>
-                  Loading snowfall data...
+
+            {precipSnowView === "precipitation" ? (
+              <>
+                <Typography variant="subtitle1" className="wrtdip-map-modal__section-title">
+                  Average {precipResolution === "monthly" ? "Monthly" : "Daily"} Precipitation
                 </Typography>
-              ) : snowfallData && snowfallData.labels.length > 0 ? (
-                <div>
-                  <div style={{ display: "flex", gap: "12px", marginBottom: "0.5rem", justifyContent: "center" }}>
-                    <label style={{ fontSize: "0.8rem", display: "flex", alignItems: "center", gap: "4px", cursor: "pointer" }}>
-                      <input type="checkbox" checked={snowShowMax} onChange={(e) => setSnowShowMax(e.target.checked)} />
-                      <span style={{ color: "#e53935" }}>Max</span>
-                    </label>
-                    <label style={{ fontSize: "0.8rem", display: "flex", alignItems: "center", gap: "4px", cursor: "pointer" }}>
-                      <input type="checkbox" checked={snowShowAvg} onChange={(e) => setSnowShowAvg(e.target.checked)} />
-                      <span style={{ color: "#42a5f5" }}>Avg</span>
-                    </label>
-                    <label style={{ fontSize: "0.8rem", display: "flex", alignItems: "center", gap: "4px", cursor: "pointer" }}>
-                      <input type="checkbox" checked={snowShowMin} onChange={(e) => setSnowShowMin(e.target.checked)} />
-                      <span style={{ color: "#66bb6a" }}>Min</span>
-                    </label>
+                <Typography variant="caption" color="text.secondary" sx={{ display: "block", mb: 1 }}>
+                  Homogenized precipitation (mm) for each{" "}
+                  {precipResolution === "monthly" ? "month" : "day"} in the selected month(s)
+                </Typography>
+
+                <div className="wrtdip-precip-controls">
+                  <label className="wrtdip-precip-control">
+                    <span className="wrtdip-precip-control__label">Dataset</span>
+                    <select
+                      className="wrtdip-precip-select"
+                      value={precipSources.length > 0 ? "canhomp-v2" : ""}
+                      onChange={() => {}}
+                      disabled={precipSources.length === 0}
+                    >
+                      {precipSources.length > 0 ? (
+                        <option value="canhomp-v2">CanHomP V2 (Homogenized Precipitation)</option>
+                      ) : (
+                        <option value="">No dataset for this station</option>
+                      )}
+                    </select>
+                  </label>
+                  <div className="wrtdip-precip-control">
+                    <span className="wrtdip-precip-control__label">Resolution</span>
+                    <div className="wrtdip-precip-resolution">
+                      {["daily", "monthly"].map((res) => {
+                        const available = precipSources.some((s) => s.resolution === res)
+                        return (
+                          <button
+                            key={res}
+                            type="button"
+                            disabled={!available}
+                            title={available ? undefined : `No ${res} CanHomP V2 data for this station`}
+                            className={`wrtdip-precip-resolution__btn${precipResolution === res ? " wrtdip-precip-resolution__btn--active" : ""}`}
+                            onClick={() => setPrecipResolution(res)}
+                          >
+                            {res === "daily" ? "Daily" : "Monthly"}
+                          </button>
+                        )
+                      })}
+                    </div>
                   </div>
-                  <BarChart
-                    xAxis={[{ data: snowfallData.labels, label: "Date", scaleType: "band" }]}
-                    yAxis={[{ label: "Snowfall (cm)" }]}
-                    series={[
-                      ...(snowShowMax ? [{ data: snowfallData.maxs, label: "Max", color: "#e53935" }] : []),
-                      ...(snowShowAvg ? [{ data: snowfallData.avgs, label: "Avg", color: "#42a5f5" }] : []),
-                      ...(snowShowMin ? [{ data: snowfallData.mins, label: "Min", color: "#66bb6a" }] : []),
-                    ]}
-                    height={240}
-                    margin={{ left: 50, right: 10, top: 10, bottom: 40 }}
-                    grid={{ horizontal: true }}
-                  />
                 </div>
-              ) : (
-                <Typography variant="body2" color="text.secondary" sx={{ py: 2, textAlign: "center" }}>
-                  No snowfall data available for this location.
+
+                <div style={{ marginBottom: "0.5rem" }}>
+                  <YearRangeSlider
+                    value={precipMonthRange}
+                    onChange={setPrecipMonthRange}
+                    min={1}
+                    max={12}
+                    label="Months"
+                  />
+                  <Typography variant="caption" sx={{ display: "block", textAlign: "center", mt: -0.5 }}>
+                    {new Date(2000, precipMonthRange[0] - 1).toLocaleString("default", { month: "long" })}
+                    {precipMonthRange[0] !== precipMonthRange[1] && ` – ${new Date(2000, precipMonthRange[1] - 1).toLocaleString("default", { month: "long" })}`}
+                  </Typography>
+                </div>
+
+                <div className="wrtdip-map-modal__chart">
+                  {precipLoading ? (
+                    <Typography variant="body2" color="text.secondary" sx={{ py: 2, textAlign: "center" }}>
+                      Loading precipitation data...
+                    </Typography>
+                  ) : precipData && precipData.labels.length > 0 ? (
+                    <div>
+                      <div className="wrtdip-series-toggles">
+                        <label className={`wrtdip-series-toggle${precipShowMax ? " wrtdip-series-toggle--on" : ""}`}>
+                          <input
+                            type="checkbox"
+                            className="wrtdip-series-toggle__input"
+                            checked={precipShowMax}
+                            onChange={(e) => setPrecipShowMax(e.target.checked)}
+                          />
+                          <span className="wrtdip-series-toggle__dot" style={{ background: "#e53935" }} />
+                          Max
+                        </label>
+                        <label className={`wrtdip-series-toggle${precipShowAvg ? " wrtdip-series-toggle--on" : ""}`}>
+                          <input
+                            type="checkbox"
+                            className="wrtdip-series-toggle__input"
+                            checked={precipShowAvg}
+                            onChange={(e) => setPrecipShowAvg(e.target.checked)}
+                          />
+                          <span className="wrtdip-series-toggle__dot" style={{ background: "#42a5f5" }} />
+                          Avg
+                        </label>
+                        <label className={`wrtdip-series-toggle${precipShowMin ? " wrtdip-series-toggle--on" : ""}`}>
+                          <input
+                            type="checkbox"
+                            className="wrtdip-series-toggle__input"
+                            checked={precipShowMin}
+                            onChange={(e) => setPrecipShowMin(e.target.checked)}
+                          />
+                          <span className="wrtdip-series-toggle__dot" style={{ background: "#66bb6a" }} />
+                          Min
+                        </label>
+                      </div>
+                      <BarChart
+                        xAxis={[{
+                          data: precipData.labels,
+                          label: precipResolution === "monthly" ? "Month" : "Date",
+                          scaleType: "band",
+                          ...PRECIP_BAR_GAPS[precipResolution],
+                        }]}
+                        yAxis={[{ label: "Precipitation (mm)" }]}
+                        series={[
+                          ...(precipShowMax ? [{ data: precipData.maxs, label: "Max", color: "#e53935" }] : []),
+                          ...(precipShowAvg ? [{ data: precipData.avgs, label: "Avg", color: "#42a5f5" }] : []),
+                          ...(precipShowMin ? [{ data: precipData.mins, label: "Min", color: "#66bb6a" }] : []),
+                        ]}
+                        height={240}
+                        margin={{ left: 50, right: 10, top: 10, bottom: 40 }}
+                        grid={{ horizontal: true }}
+                      />
+                    </div>
+                  ) : (
+                    <Typography variant="body2" color="text.secondary" sx={{ py: 2, textAlign: "center" }}>
+                      No CanHomP V2 precipitation data available for this location.
+                    </Typography>
+                  )}
+                </div>
+
+                {renderPrecipTrendTable()}
+              </>
+            ) : (
+              <>
+                <Typography variant="subtitle1" className="wrtdip-map-modal__section-title">
+                  Average Daily Snowfall
                 </Typography>
-              )}
-            </div>
+                <Typography variant="caption" color="text.secondary" sx={{ display: "block", mb: 1 }}>
+                  Historical snowfall (cm) for each day in the selected month(s)
+                </Typography>
+                <div style={{ marginBottom: "0.5rem" }}>
+                  <YearRangeSlider
+                    value={snowMonthRange}
+                    onChange={setSnowMonthRange}
+                    min={1}
+                    max={12}
+                    label="Months"
+                  />
+                  <Typography variant="caption" sx={{ display: "block", textAlign: "center", mt: -0.5 }}>
+                    {new Date(2000, snowMonthRange[0] - 1).toLocaleString("default", { month: "long" })}
+                    {snowMonthRange[0] !== snowMonthRange[1] && ` – ${new Date(2000, snowMonthRange[1] - 1).toLocaleString("default", { month: "long" })}`}
+                  </Typography>
+                </div>
+                <div className="wrtdip-map-modal__chart">
+                  {snowfallLoading ? (
+                    <Typography variant="body2" color="text.secondary" sx={{ py: 2, textAlign: "center" }}>
+                      Loading snowfall data...
+                    </Typography>
+                  ) : snowfallData && snowfallData.labels.length > 0 ? (
+                    <div>
+                      <div className="wrtdip-series-toggles">
+                        <label className={`wrtdip-series-toggle${snowShowMax ? " wrtdip-series-toggle--on" : ""}`}>
+                          <input
+                            type="checkbox"
+                            className="wrtdip-series-toggle__input"
+                            checked={snowShowMax}
+                            onChange={(e) => setSnowShowMax(e.target.checked)}
+                          />
+                          <span className="wrtdip-series-toggle__dot" style={{ background: "#e53935" }} />
+                          Max
+                        </label>
+                        <label className={`wrtdip-series-toggle${snowShowAvg ? " wrtdip-series-toggle--on" : ""}`}>
+                          <input
+                            type="checkbox"
+                            className="wrtdip-series-toggle__input"
+                            checked={snowShowAvg}
+                            onChange={(e) => setSnowShowAvg(e.target.checked)}
+                          />
+                          <span className="wrtdip-series-toggle__dot" style={{ background: "#42a5f5" }} />
+                          Avg
+                        </label>
+                        <label className={`wrtdip-series-toggle${snowShowMin ? " wrtdip-series-toggle--on" : ""}`}>
+                          <input
+                            type="checkbox"
+                            className="wrtdip-series-toggle__input"
+                            checked={snowShowMin}
+                            onChange={(e) => setSnowShowMin(e.target.checked)}
+                          />
+                          <span className="wrtdip-series-toggle__dot" style={{ background: "#66bb6a" }} />
+                          Min
+                        </label>
+                      </div>
+                      <BarChart
+                        xAxis={[{ data: snowfallData.labels, label: "Date", scaleType: "band" }]}
+                        yAxis={[{ label: "Snowfall (cm)" }]}
+                        series={[
+                          ...(snowShowMax ? [{ data: snowfallData.maxs, label: "Max", color: "#e53935" }] : []),
+                          ...(snowShowAvg ? [{ data: snowfallData.avgs, label: "Avg", color: "#42a5f5" }] : []),
+                          ...(snowShowMin ? [{ data: snowfallData.mins, label: "Min", color: "#66bb6a" }] : []),
+                        ]}
+                        height={240}
+                        margin={{ left: 50, right: 10, top: 10, bottom: 40 }}
+                        grid={{ horizontal: true }}
+                      />
+                    </div>
+                  ) : (
+                    <Typography variant="body2" color="text.secondary" sx={{ py: 2, textAlign: "center" }}>
+                      No snowfall data available for this location.
+                    </Typography>
+                  )}
+                </div>
+              </>
+            )}
           </section>
 
           <section className="wrtdip-map-modal__section">
@@ -2000,18 +2514,36 @@ function WeatherMap() {
                 </Typography>
               ) : tempData && tempData.labels.length > 0 ? (
                 <div>
-                  <div style={{ display: "flex", gap: "12px", marginBottom: "0.5rem", justifyContent: "center" }}>
-                    <label style={{ fontSize: "0.8rem", display: "flex", alignItems: "center", gap: "4px", cursor: "pointer" }}>
-                      <input type="checkbox" checked={tempShowMax} onChange={(e) => setTempShowMax(e.target.checked)} />
-                      <span style={{ color: "#e53935" }}>Max</span>
+                  <div className="wrtdip-series-toggles">
+                    <label className={`wrtdip-series-toggle${tempShowMax ? " wrtdip-series-toggle--on" : ""}`}>
+                      <input
+                        type="checkbox"
+                        className="wrtdip-series-toggle__input"
+                        checked={tempShowMax}
+                        onChange={(e) => setTempShowMax(e.target.checked)}
+                      />
+                      <span className="wrtdip-series-toggle__dot" style={{ background: "#e53935" }} />
+                      Max
                     </label>
-                    <label style={{ fontSize: "0.8rem", display: "flex", alignItems: "center", gap: "4px", cursor: "pointer" }}>
-                      <input type="checkbox" checked={tempShowAvg} onChange={(e) => setTempShowAvg(e.target.checked)} />
-                      <span style={{ color: "#42a5f5" }}>Avg</span>
+                    <label className={`wrtdip-series-toggle${tempShowAvg ? " wrtdip-series-toggle--on" : ""}`}>
+                      <input
+                        type="checkbox"
+                        className="wrtdip-series-toggle__input"
+                        checked={tempShowAvg}
+                        onChange={(e) => setTempShowAvg(e.target.checked)}
+                      />
+                      <span className="wrtdip-series-toggle__dot" style={{ background: "#42a5f5" }} />
+                      Avg
                     </label>
-                    <label style={{ fontSize: "0.8rem", display: "flex", alignItems: "center", gap: "4px", cursor: "pointer" }}>
-                      <input type="checkbox" checked={tempShowMin} onChange={(e) => setTempShowMin(e.target.checked)} />
-                      <span style={{ color: "#66bb6a" }}>Min</span>
+                    <label className={`wrtdip-series-toggle${tempShowMin ? " wrtdip-series-toggle--on" : ""}`}>
+                      <input
+                        type="checkbox"
+                        className="wrtdip-series-toggle__input"
+                        checked={tempShowMin}
+                        onChange={(e) => setTempShowMin(e.target.checked)}
+                      />
+                      <span className="wrtdip-series-toggle__dot" style={{ background: "#66bb6a" }} />
+                      Min
                     </label>
                   </div>
                   <BarChart
@@ -2067,6 +2599,9 @@ function WeatherMap() {
         "esri/layers/ImageryLayer",
         "esri/layers/ImageryTileLayer",
         "esri/layers/GraphicsLayer",
+        "esri/layers/VectorTileLayer",
+        "esri/layers/TileLayer",
+        "esri/Basemap",
         "esri/Map",
         "esri/config",
         "esri/identity/IdentityManager",
@@ -2092,6 +2627,9 @@ function WeatherMap() {
         ImageryLayer,
         ImageryTileLayer,
         GraphicsLayer,
+        VectorTileLayer,
+        TileLayer,
+        Basemap,
         Map,
         esriConfig,
         esriId,
@@ -2116,7 +2654,55 @@ function WeatherMap() {
           navigator.serviceWorker.register("service-worker.js")
         }
 
-        const map = new Map({ basemap: "streets-vector" })
+        // Esri Canada "Canada Basemap" (topographic) — includes niche and
+        // First Nations roads missing from the default streets basemap.
+        // Replicates webmap 98652eb8458a464fa95feb9bd812b29a.
+        const canadaTopoBasemap = new Basemap({
+          title: "Canada Topographic",
+          baseLayers: [
+            new TileLayer({
+              url: "https://services.arcgisonline.com/arcgis/rest/services/Elevation/World_Hillshade/MapServer",
+              opacity: 0.74,
+            }),
+            new VectorTileLayer({
+              url: "https://www.arcgis.com/sharing/rest/content/items/6d0ed88458c6429d99331260fb7bf2b0/resources/styles/root.json",
+            }),
+            new TileLayer({
+              url: "https://tiles.arcgis.com/tiles/B6yKvIZqzuOr0jBR/arcgis/rest/services/Canada_Hillshade/MapServer",
+            }),
+            new VectorTileLayer({
+              url: "https://tiles.arcgis.com/tiles/B6yKvIZqzuOr0jBR/arcgis/rest/services/Canada_Topographic/VectorTileServer",
+            }),
+          ],
+        })
+
+        const map = new Map({ basemap: canadaTopoBasemap })
+
+        // Basemap options for the switcher panel. Street and Hybrid use
+        // Esri's well-known ArcGIS Online basemaps.
+        const BASEMAP_OPTIONS = [
+          {
+            id: "topographic",
+            title: "Topographic",
+            sub: "Canada Topographic",
+            icon: "\u{1F5FA}\uFE0F",
+            basemap: canadaTopoBasemap,
+          },
+          {
+            id: "street",
+            title: "Street",
+            sub: "Esri Streets",
+            icon: "\u{1F6E3}\uFE0F",
+            basemap: "streets-vector",
+          },
+          {
+            id: "hybrid",
+            title: "Hybrid",
+            sub: "Imagery with labels",
+            icon: "\u{1F6F0}\uFE0F",
+            basemap: "hybrid",
+          },
+        ]
         const view = new MapView({
           container: MapElement.current,
           map: map,
@@ -2433,6 +3019,60 @@ function WeatherMap() {
           view,
           expanded: window.innerWidth > 768,
           expandIconClass: "custom-legend-icon",
+        })
+
+        // --- Basemap switcher panel (same styling as the layer panel) ---
+        const basemapPanel = document.createElement("div")
+        basemapPanel.className = "wrtdip-layer-panel wrtdip-basemap-panel"
+        basemapPanel.innerHTML = `
+          <div class="wrtdip-layer-panel__header">
+            <span class="wrtdip-layer-panel__title">Base Map</span>
+          </div>
+          <ul class="wrtdip-basemap-panel__list" role="list"></ul>
+        `
+        const basemapList = basemapPanel.querySelector(
+          ".wrtdip-basemap-panel__list"
+        )
+        let activeBasemapId = "topographic"
+        BASEMAP_OPTIONS.forEach((opt) => {
+          const li = document.createElement("li")
+          li.className = "wrtdip-basemap-panel__item"
+          const btn = document.createElement("button")
+          btn.type = "button"
+          btn.className = "wrtdip-basemap-panel__option"
+          if (opt.id === activeBasemapId) btn.classList.add("is-active")
+          btn.dataset.basemapId = opt.id
+          btn.innerHTML = `
+            <span class="wrtdip-basemap-panel__icon" aria-hidden="true">${opt.icon}</span>
+            <span class="wrtdip-basemap-panel__text">
+              <span class="wrtdip-basemap-panel__name">${opt.title}</span>
+              <span class="wrtdip-basemap-panel__sub">${opt.sub}</span>
+            </span>
+            <span class="wrtdip-basemap-panel__check" aria-hidden="true">\u2713</span>
+          `
+          btn.addEventListener("click", () => {
+            if (activeBasemapId === opt.id) return
+            activeBasemapId = opt.id
+            map.basemap = opt.basemap
+            basemapList
+              .querySelectorAll(".wrtdip-basemap-panel__option")
+              .forEach((b) =>
+                b.classList.toggle(
+                  "is-active",
+                  b.dataset.basemapId === activeBasemapId
+                )
+              )
+          })
+          li.appendChild(btn)
+          basemapList.appendChild(li)
+        })
+
+        const basemapExpand = new Expand({
+          content: basemapPanel,
+          view,
+          expanded: false,
+          expandIconClass: "custom-basemap-icon",
+          expandTooltip: "Base Map",
         })
 
         // Add custom zoom button
@@ -3003,6 +3643,7 @@ function WeatherMap() {
       //  })
 
         view.ui.add(layerListExpand, "top-left")
+        view.ui.add(basemapExpand, "top-left")
         view.ui.add(legendExpand, "top-right")
 
         //adds the live weather data from the GeoMet API for towns in the three territories

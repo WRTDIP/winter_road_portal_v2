@@ -1,0 +1,148 @@
+.downloadPage {
+  color: #0E2959;
+  padding: 2rem 1.5rem 4rem;
+}
+
+.downloadInner {
+  max-width: 980px;
+  margin: 0 auto;
+}
+
+.downloadIntro {
+  font-size: 1.05rem;
+  line-height: 1.7;
+  margin-bottom: 2rem;
+}
+
+/* --- step shell --- */
+.downloadStep {
+  border: 1px solid #d9e2f0;
+  border-radius: 8px;
+  background: #f7f9fc;
+  padding: 1.25rem 1.5rem;
+  margin-bottom: 1rem;
+  transition: opacity 0.2s ease;
+}
+
+.downloadStep.isLocked {
+  opacity: 0.5;
+}
+
+.downloadStepHeader {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.85rem;
+}
+
+.downloadStepNumber {
+  flex: 0 0 auto;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: #38507E;
+  color: #fff;
+  font-weight: 600;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.downloadStep.isComplete .downloadStepNumber {
+  background: #2e7d4f;
+}
+
+.downloadStepTitle {
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: #38507E;
+  margin: 0;
+}
+
+.downloadStepHint {
+  font-size: 0.9rem;
+  color: #5a6b8c;
+  margin: 0 0 0.85rem;
+}
+
+.downloadStepSummary {
+  margin-left: auto;
+  font-size: 0.9rem;
+  color: #2e7d4f;
+  font-weight: 600;
+  text-align: right;
+}
+
+/* --- variable / dataset choice cards --- */
+.downloadChoices {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.downloadChoice {
+  flex: 1 1 200px;
+  border: 1px solid #d9e2f0;
+  border-radius: 6px;
+  background: #fff;
+  padding: 0.85rem 1rem;
+  text-align: left;
+  cursor: pointer;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.downloadChoice:hover:not(:disabled) {
+  border-color: #38507E;
+}
+
+.downloadChoice.isSelected {
+  border-color: #38507E;
+  box-shadow: 0 0 0 2px rgba(56, 80, 126, 0.25);
+}
+
+.downloadChoice:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+.downloadChoiceLabel {
+  font-weight: 600;
+  color: #38507E;
+  display: block;
+}
+
+.downloadChoiceMeta {
+  font-size: 0.85rem;
+  color: #5a6b8c;
+}
+
+/* --- preview --- */
+.downloadPreviewWrapper {
+  max-height: 340px;
+  overflow: auto;
+  border: 1px solid #d9e2f0;
+  border-radius: 6px;
+  background: #fff;
+}
+
+.downloadPreviewWrapper table {
+  margin-bottom: 0;
+  font-size: 0.85rem;
+  white-space: nowrap;
+}
+
+.downloadPreviewWrapper thead th {
+  position: sticky;
+  top: 0;
+  background: #eef2f8;
+  color: #38507E;
+  z-index: 1;
+}
+
+.downloadFileName {
+  font-family: monospace;
+  font-size: 0.9rem;
+  color: #5a6b8c;
+  word-break: break-all;
+}

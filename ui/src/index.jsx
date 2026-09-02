@@ -20,6 +20,7 @@ import EmailValidationFormPage from "./pages/ValidateEmail/EmailValidationFormPa
 import Dashboard from "./pages/Dashboard/Dashboard.jsx";
 import FDDTest from "./pages/FDDTest/FDDTest.jsx";
 import Api from "./pages/Api/index.jsx";
+import Download from "./pages/Download/index.jsx";
 import { Auth0Provider } from "@auth0/auth0-react";
 
 
@@ -54,6 +55,7 @@ ReactDOM.render(
         <Route path="/dashboard" element={<Dashboard />} exact />
         <Route path="/fdd-test" element={<FDDTest />} exact />
         <Route path="/api" element={<Api />} exact />
+        <Route path="/download" element={<Download />} exact />
       </Routes>
 
       {/* Render global footer */}

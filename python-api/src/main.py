@@ -1,5 +1,6 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
+import decimal
 import psycopg2
 import pandas as pd
 import numpy as np
@@ -922,5 +923,542 @@ async def road_closure_stats(road_name: str, dataset_id: int = None):
             "open": series_stats(open_pts),
             "close": series_stats(close_pts),
             "dataset_id": dataset_id,
+        }
+    }
+
+# ---------------------------------------------------------------------------
+# Download page: guided station / year / month / variable / dataset selection
+# ---------------------------------------------------------------------------
+
+# Each downloadable variable maps to the daily_data columns that carry it.
+# "presence" says when a row actually holds that variable; {p} is the table
+# alias prefix so the same clause works with or without a join alias.
+DOWNLOAD_VARIABLES = {
+    "temperature": {
+        "label": "Temperature",
+        "columns": [
+            ("max_temp_c", "Max Temp (C)"),
+            ("max_temp_flag", "Max Temp Flag"),
+            ("min_temp_c", "Min Temp (C)"),
+            ("min_temp_flag", "Min Temp Flag"),
+            ("mean_temp_c", "Mean Temp (C)"),
+            ("mean_temp_flag", "Mean Temp Flag"),
+        ],
+        "presence": "({p}mean_temp_c IS NOT NULL OR {p}max_temp_c IS NOT NULL "
+                    "OR {p}min_temp_c IS NOT NULL)",
+    },
+    "precipitation": {
+        "label": "Precipitation",
+        "columns": [
+            ("total_precip_mm", "Total Precip (mm)"),
+            ("total_precip_flag", "Total Precip Flag"),
+            ("total_rain_mm", "Total Rain (mm)"),
+            ("total_rain_flag", "Total Rain Flag"),
+        ],
+        "presence": "({p}total_precip_mm IS NOT NULL OR {p}total_rain_mm IS NOT NULL)",
+    },
+    "snowfall": {
+        "label": "Snowfall",
+        "columns": [
+            ("total_snow_cm", "Total Snow (cm)"),
+            ("total_snow_flag", "Total Snow Flag"),
+            ("snow_on_grnd_cm", "Snow on Ground (cm)"),
+            ("snow_on_grnd_flag", "Snow on Ground Flag"),
+        ],
+        "presence": "({p}total_snow_cm IS NOT NULL OR {p}snow_on_grnd_cm IS NOT NULL)",
+    },
+}
+
+
+def _variable_spec(variable: str):
+    spec = DOWNLOAD_VARIABLES.get((variable or "").strip().lower())
+    if spec is None:
+        raise HTTPException(
+            status_code=400,
+            detail="Unknown variable '%s'. Expected one of: %s"
+                   % (variable, ", ".join(sorted(DOWNLOAD_VARIABLES))),
+        )
+    return spec
+
+
+def _presence(spec, prefix=""):
+    return spec["presence"].format(p=prefix)
+
+
+def _clean(v):
+    """Render a DB value for CSV: NULL as blank, numerics as plain numbers."""
+    if v is None:
+        return ""
+    if isinstance(v, decimal.Decimal):
+        return float(v)
+    if isinstance(v, (int, float)):
+        return v
+    return str(v)
+
+
+@app.get("/download-variables")
+async def download_variables():
+    """Return the variables the download page can export."""
+    return {"data": [{"id": k, "label": v["label"]} for k, v in DOWNLOAD_VARIABLES.items()]}
+
+
+@app.get("/station-months")
+async def station_months(stationid: int):
+    """Return every year/month a station has data for, with a per-variable row count.
+
+    Months where all three variables are empty are dropped, so the download page
+    never offers a period with nothing behind it.
+    """
+    temp = _presence(DOWNLOAD_VARIABLES["temperature"])
+    precip = _presence(DOWNLOAD_VARIABLES["precipitation"])
+    snow = _presence(DOWNLOAD_VARIABLES["snowfall"])
+
+    cur = conn.cursor()
+    cur.execute(
+        f"""
+        SELECT "year", "month",
+               COUNT(*) FILTER (WHERE {temp})   AS temperature,
+               COUNT(*) FILTER (WHERE {precip}) AS precipitation,
+               COUNT(*) FILTER (WHERE {snow})   AS snowfall
+        FROM public.daily_data
+        WHERE station_id = %s
+        GROUP BY "year", "month"
+        HAVING COUNT(*) FILTER (WHERE {temp}) > 0
+            OR COUNT(*) FILTER (WHERE {precip}) > 0
+            OR COUNT(*) FILTER (WHERE {snow}) > 0
+        ORDER BY "year", "month";
+        """,
+        (stationid,),
+    )
+    rows = cur.fetchall()
+    cur.close()
+
+    return {
+        "data": [
+            {
+                "year": int(r[0]),
+                "month": int(r[1]),
+                "counts": {
+                    "temperature": int(r[2]),
+                    "precipitation": int(r[3]),
+                    "snowfall": int(r[4]),
+                },
+            }
+            for r in rows
+        ]
+    }
+
+
+@app.get("/monthly-datasets")
+async def monthly_datasets(stationid: int, year: int, month: int, variable: str):
+    """Return the datasets that actually hold `variable` for this station/year/month."""
+    spec = _variable_spec(variable)
+
+    cur = conn.cursor()
+    cur.execute(
+        f"""
+        SELECT d.id, d.name, d.resourcelink, COUNT(dd.id) AS row_count
+        FROM public.daily_data dd
+        JOIN public.datasets d ON d.id = dd.dataset_id
+        WHERE dd.station_id = %s
+          AND dd."year" = %s
+          AND dd."month" = %s
+          AND {_presence(spec, "dd.")}
+        GROUP BY d.id, d.name, d.resourcelink
+        ORDER BY d.id;
+        """,
+        (stationid, year, month),
+    )
+    rows = cur.fetchall()
+    cur.close()
+
+    return {
+        "data": [
+            {"id": int(r[0]), "name": r[1], "resourcelink": r[2], "row_count": int(r[3])}
+            for r in rows
+        ]
+    }
+
+
+@app.get("/monthly-data")
+async def monthly_data(stationid: int, year: int, month: int, variable: str,
+                       dataset_id: int = None):
+    """Return the daily observations of one variable for a station in one month.
+
+    Shaped as {columns, rows} so the download page can turn it straight into a CSV
+    without needing to know which columns belong to which variable.
+    """
+    spec = _variable_spec(variable)
+
+    cur = conn.cursor()
+    cur.execute(
+        """
+        SELECT name, province, climate_id, latitude, longitude, elevation_m
+        FROM public.weather_stations
+        WHERE station_id = %s;
+        """,
+        (stationid,),
+    )
+    station_row = cur.fetchone()
+    if station_row is None:
+        cur.close()
+        raise HTTPException(status_code=404, detail=f"Unknown station {stationid}")
+
+    select_list = ", ".join(f"dd.{c}" for c, _ in spec["columns"])
+
+    dataset_filter = ""
+    params = [stationid, year, month]
+    if dataset_id is not None:
+        dataset_filter = "AND dd.dataset_id = %s"
+        params.append(dataset_id)
+
+    cur.execute(
+        f"""
+        SELECT dd.obs_date, dd."year", dd."month", dd."day", dd.data_quality,
+               {select_list},
+               d.name AS dataset_name
+        FROM public.daily_data dd
+        LEFT JOIN public.datasets d ON d.id = dd.dataset_id
+        WHERE dd.station_id = %s
+          AND dd."year" = %s
+          AND dd."month" = %s
+          AND {_presence(spec, "dd.")}
+          {dataset_filter}
+        ORDER BY dd.obs_date;
+        """,
+        params,
+    )
+    rows = cur.fetchall()
+    cur.close()
+
+    columns = (
+        ["Station ID", "Station Name", "Province", "Climate ID",
+         "Latitude", "Longitude", "Elevation (m)",
+         "Date", "Year", "Month", "Day", "Data Quality"]
+        + [label for _, label in spec["columns"]]
+        + ["Dataset"]
+    )
+
+    st_name, province, climate_id, lat, lon, elev = station_row
+    station_prefix = [stationid, _clean(st_name), _clean(province), _clean(climate_id),
+                      _clean(lat), _clean(lon), _clean(elev)]
+
+    data = []
+    for r in rows:
+        obs_date = r[0].isoformat() if r[0] is not None else ""
+        data.append(station_prefix + [obs_date] + [_clean(v) for v in r[1:]])
+
+    return {
+        "variable": (variable or "").strip().lower(),
+        "station_id": stationid,
+        "station_name": _clean(st_name),
+        "year": year,
+        "month": month,
+        "dataset_id": dataset_id,
+        "columns": columns,
+        "rows": data,
+    }
+
+
+# ---------------------------------------------------------------------------
+# CanHomP V2 homogenized precipitation (map popup precipitation section)
+# ---------------------------------------------------------------------------
+
+# CanHomP V2 ships as two archives, imported into two tables. "resolution"
+# picks which one a request reads from.
+PRECIP_SOURCES = {
+    "daily": {
+        "table": "public.precip_daily_data",
+        "dataset_id": 10,
+        "label": "CanHomP V2 Homogenized Daily Precipitation",
+    },
+    "monthly": {
+        "table": "public.precip_monthly_data",
+        "dataset_id": 11,
+        "label": "CanHomP V2 Homogenized Monthly Precipitation",
+    },
+}
+
+
+def _precip_source(resolution: str):
+    src = PRECIP_SOURCES.get((resolution or "").strip().lower())
+    if src is None:
+        raise HTTPException(
+            status_code=400,
+            detail="Unknown resolution '%s'. Expected one of: %s"
+                   % (resolution, ", ".join(sorted(PRECIP_SOURCES))),
+        )
+    return src
+
+
+def _month_window(month_start: int, month_end: int):
+    """Build the WHERE clause for a month range that may wrap over December.
+
+    Returns (sql, params). A range like 12-2 means Dec, Jan, Feb - not "nothing",
+    which is what a plain BETWEEN would yield.
+    """
+    if month_start <= month_end:
+        return '"month" >= %s AND "month" <= %s', [month_start, month_end]
+    return '("month" >= %s OR "month" <= %s)', [month_start, month_end]
+
+
+@app.get("/precip-datasets")
+async def precip_datasets(stationid: int):
+    """Report which CanHomP V2 resolutions this station actually has data for."""
+    out = []
+    cur = conn.cursor()
+    for resolution, src in PRECIP_SOURCES.items():
+        cur.execute(
+            f"""
+            SELECT COUNT(*), MIN("year"), MAX("year")
+            FROM {src['table']}
+            WHERE station_id = %s AND homog_precip_mm IS NOT NULL;
+            """,
+            (stationid,),
+        )
+        count, first_year, last_year = cur.fetchone()
+        if count:
+            out.append({
+                "resolution": resolution,
+                "dataset_id": src["dataset_id"],
+                "name": src["label"],
+                "row_count": int(count),
+                "first_year": int(first_year),
+                "last_year": int(last_year),
+            })
+    cur.close()
+    return {"data": out}
+
+
+@app.get("/avg-precipitation")
+async def avg_precipitation(stationid: int, month_start: int, month_end: int = None,
+                            resolution: str = "daily", dataset_id: int = None):
+    """Return avg, max, and min homogenized precipitation (mm) over a month range.
+
+    At daily resolution one point per calendar day, at monthly resolution one
+    point per calendar month - so the caller can widen the bars accordingly.
+    Points are ordered from month_start onward so a wrapped range (e.g. Dec-Feb)
+    reads in calendar order rather than starting at January.
+    """
+    src = _precip_source(resolution)
+    if month_end is None:
+        month_end = month_start
+
+    month_sql, month_params = _month_window(month_start, month_end)
+
+    dataset_filter = ""
+    params = [stationid] + month_params
+    if dataset_id is not None:
+        dataset_filter = "AND dataset_id = %s"
+        params.append(dataset_id)
+    # Rotate the ordering so the first bar is month_start.
+    params.append(month_start)
+
+    day_select = '"day",' if resolution == "daily" else "NULL::int AS \"day\","
+    day_group = ', "day"' if resolution == "daily" else ""
+    day_order = ', "day"' if resolution == "daily" else ""
+
+    cur = conn.cursor()
+    cur.execute(
+        f"""
+        SELECT "month",
+               {day_select}
+               AVG(homog_precip_mm) AS avg_precip_mm,
+               MAX(homog_precip_mm) AS max_precip_mm,
+               MIN(homog_precip_mm) AS min_precip_mm,
+               COUNT(*) AS n_years
+        FROM {src['table']}
+        WHERE station_id = %s
+          AND {month_sql}
+          AND homog_precip_mm IS NOT NULL
+          {dataset_filter}
+        GROUP BY "month"{day_group}
+        ORDER BY (("month" - %s) + 12) %% 12{day_order};
+        """,
+        params,
+    )
+    rows = cur.fetchall()
+    cur.close()
+
+    data = []
+    for r in rows:
+        data.append([
+            int(r[0]),
+            int(r[1]) if r[1] is not None else None,
+            round(float(r[2]), 2),
+            round(float(r[3]), 2),
+            round(float(r[4]), 2),
+            int(r[5]),
+        ])
+
+    return {
+        "resolution": resolution,
+        "dataset_id": dataset_id if dataset_id is not None else src["dataset_id"],
+        "data": data,
+    }
+
+
+# Significance buckets for a Mann-Kendall p-value. Four levels so the UI can
+# colour-code how much evidence there is for a trend, rather than the usual
+# binary significant / not-significant split.
+def _significance_bucket(p):
+    if p is None or not np.isfinite(p):
+        return "insufficient"
+    if p < 0.001:
+        return "very"
+    if p < 0.01:
+        return "significant"
+    if p < 0.05:
+        return "somewhat"
+    return "none"
+
+
+# A month needs at least this many years before a Sen's slope means anything.
+PRECIP_TREND_MIN_YEARS = 3
+
+# When monthly totals are derived from the daily table, a month needs at least
+# this many days of data before its total is trustworthy — otherwise a month
+# missing half its days would read as a dry year.
+PRECIP_TREND_MIN_DAYS = 25
+
+
+@app.get("/precip-trend")
+async def precip_trend(stationid: int, dataset_id: int = None,
+                       year_start: int = None, year_end: int = None):
+    """Per-month precipitation trend: Mann-Kendall test + Sen's slope in mm/year.
+
+    For each calendar month, the station's monthly precipitation totals are
+    regressed against year using the Theil-Sen (Sen's) robust slope, and tested
+    for monotonic trend with Kendall's tau. Mirrors the CanHomP V2 analysis
+    notebooks.
+
+    Prefers the homogenized monthly table; falls back to summing the daily
+    table for stations that only have daily records.
+    """
+    from scipy.stats import kendalltau, theilslopes
+
+    month_names = ["January", "February", "March", "April", "May", "June",
+                   "July", "August", "September", "October", "November", "December"]
+
+    year_filter = ""
+    year_params = []
+    if year_start is not None:
+        year_filter += ' AND "year" >= %s'
+        year_params.append(year_start)
+    if year_end is not None:
+        year_filter += ' AND "year" <= %s'
+        year_params.append(year_end)
+
+    cur = conn.cursor()
+
+    def load(source):
+        """Return [(year, month, total_mm)] from the monthly or daily table."""
+        src = PRECIP_SOURCES[source]
+        # Always pin a dataset: the totals are summed per month, so rows from a
+        # second dataset covering the same month would double-count.
+        ds = dataset_id if dataset_id is not None else src["dataset_id"]
+        params = [stationid, ds]
+        dataset_sql = "AND dataset_id = %s"
+        params += year_params
+
+        if source == "monthly":
+            having = ""
+        else:
+            # Daily rows have to be summed into monthly totals, and only months
+            # with near-complete coverage are kept.
+            having = f"HAVING COUNT(*) >= {PRECIP_TREND_MIN_DAYS}"
+
+        cur.execute(
+            f"""
+            SELECT "year", "month", SUM(homog_precip_mm) AS total_mm
+            FROM {src['table']}
+            WHERE station_id = %s
+              AND homog_precip_mm IS NOT NULL
+              AND "year" IS NOT NULL AND "month" IS NOT NULL
+              {dataset_sql}
+              {year_filter}
+            GROUP BY "year", "month"
+            {having}
+            ORDER BY "year", "month";
+            """,
+            params,
+        )
+        return cur.fetchall()
+
+    rows = load("monthly")
+    source = "monthly"
+    if not rows:
+        rows = load("daily")
+        source = "daily"
+    cur.close()
+
+    if not rows:
+        return {"data": {"station_id": stationid, "source": None, "months": [],
+                         "first_year": None, "last_year": None, "n_years": 0}}
+
+    # Bucket the totals by calendar month: {month: {year: total_mm}}
+    by_month = {m: {} for m in range(1, 13)}
+    for y, m, total in rows:
+        if total is None:
+            continue
+        by_month[int(m)][int(y)] = float(total)
+
+    out = []
+    for m in range(1, 13):
+        points = by_month[m]
+        years = sorted(points)
+        entry = {
+            "month": m,
+            "name": month_names[m - 1],
+            "n": len(years),
+            "first_year": years[0] if years else None,
+            "last_year": years[-1] if years else None,
+        }
+
+        if len(years) < PRECIP_TREND_MIN_YEARS:
+            entry.update({
+                "avg_mm": round(float(np.mean([points[y] for y in years])), 1) if years else None,
+                "sens_slope": None, "slope_lo": None, "slope_hi": None,
+                "tau": None, "p": None,
+                "significance": "insufficient", "direction": "none",
+            })
+            out.append(entry)
+            continue
+
+        x = np.asarray(years, dtype=float)
+        y = np.asarray([points[yr] for yr in years], dtype=float)
+
+        tau, p = kendalltau(x, y)
+        slope, _, slope_lo, slope_hi = theilslopes(y, x, 0.95)
+
+        if slope > 0:
+            direction = "increasing"
+        elif slope < 0:
+            direction = "decreasing"
+        else:
+            direction = "none"
+
+        entry.update({
+            "avg_mm": round(float(y.mean()), 1),
+            "sens_slope": round(float(slope), 3),
+            "slope_lo": round(float(slope_lo), 3),
+            "slope_hi": round(float(slope_hi), 3),
+            "tau": None if not np.isfinite(tau) else round(float(tau), 3),
+            "p": None if not np.isfinite(p) else round(float(p), 6),
+            "significance": _significance_bucket(p),
+            "direction": direction,
+        })
+        out.append(entry)
+
+    all_years = sorted({int(r[0]) for r in rows})
+    return {
+        "data": {
+            "station_id": stationid,
+            "source": source,
+            "dataset_id": dataset_id if dataset_id is not None else PRECIP_SOURCES[source]["dataset_id"],
+            "first_year": all_years[0],
+            "last_year": all_years[-1],
+            "n_years": len(all_years),
+            "months": out,
         }
     }
