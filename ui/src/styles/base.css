@@ -96,3 +96,15 @@
 .u-safe-b {
   padding-bottom: max(1rem, env(safe-area-inset-bottom));
 }
+
+/* --- the Bootstrap column guard ----------------------------------------- */
+
+/* Bootstrap columns default to min-width:auto, which refuses to shrink below
+   their content. That is why the marketing components stack correctly but
+   break *inside* the columns. This is the single highest-leverage rule in the
+   file. Matches `col`, `col-6`, `col-md-6` and mid-list occurrences. */
+.row > .col,
+.row > [class^="col-"],
+.row > [class*=" col-"] {
+  min-width: 0;
+}
