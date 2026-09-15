@@ -9,7 +9,7 @@
 }
 .subSectionBannerTitle {
   font-family: 'Roboto', sans-serif;
-  font-size: 7vh;
+  font-size: var(--fs-hero);
   color: rgb(56, 80, 126);
 }
 

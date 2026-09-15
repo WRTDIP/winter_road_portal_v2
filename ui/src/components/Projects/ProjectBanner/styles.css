@@ -10,13 +10,13 @@
 .projectItemTitle{
   font-family: 'Roboto', sans-serif;
   color: rgb(56, 80, 126);
-  font-size: 5vh;
+  font-size: var(--fs-h2);
 }
 
 .projectItemText{
   margin-top: 1.4vh;
   font-family: 'Roboto', sans-serif;
-  font-size: 2.5vh;
+  font-size: var(--fs-lead);
 }
 
 .projectLineBreak{
