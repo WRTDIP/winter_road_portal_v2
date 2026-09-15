@@ -13,12 +13,11 @@ import {
   nunavutCoordinates,
   yukonCoordinates,
 } from "./Data.js"
-import { width } from "@fortawesome/free-regular-svg-icons/faAddressBook"
 import { getClimateCity } from "../../services/meteo.service.js"
 import { cities } from "../../utils/constants.js"
 import { LineChart, lineElementClasses, areaElementClasses } from "@mui/x-charts/LineChart"
 import { BarChart } from "@mui/x-charts/BarChart"
-import { Icon, Typography } from "@mui/material"
+import { FormControlLabel, Icon, Switch, Typography } from "@mui/material"
 import useMediaQuery from "@mui/material/useMediaQuery"
 import OpenInFullIcon from "@mui/icons-material/OpenInFull"
 import CloseFullscreenIcon from "@mui/icons-material/CloseFullscreen"
@@ -408,9 +407,6 @@ function WeatherMap() {
   // Per-month Mann-Kendall / Sen's slope trends for the precipitation table.
   const [precipTrend, setPrecipTrend] = useState(null)
   const [precipTrendLoading, setPrecipTrendLoading] = useState(false)
-  // "Advanced" reveals the statistical detail (p-values). Off by default so the
-  // table reads as plain mm/yr for a non-technical visitor.
-  const [precipTrendAdvanced, setPrecipTrendAdvanced] = useState(false)
   const [tempData, setTempData] = useState(null) // {labels: [], avgs: [], maxs: [], mins: []}
   const [tempLoading, setTempLoading] = useState(false)
   const [tempMonthRange, setTempMonthRange] = useState([defaultMonthStart, defaultMonthEnd])
@@ -929,19 +925,6 @@ function WeatherMap() {
     return p.toFixed(3)
   }
 
-  // Direction glyph for the precipitation table: water drop = wetter, fire = drier.
-  const PrecipGlyph = ({ direction }) =>
-    direction === "increasing" ? (
-      <WaterDropIcon sx={{ fontSize: 14 }} />
-    ) : direction === "decreasing" ? (
-      <LocalFireDepartmentIcon sx={{ fontSize: 14 }} />
-    ) : (
-      "–"
-    )
-
-  // Per-month Sen's slope table shown under the precipitation chart. Each row
-  // carries a direction glyph, a diverging magnitude bar, and a colour-coded
-  // significance pill.
   const renderPrecipTrendTable = () => {
     if (precipTrendLoading) {
       return (
@@ -960,6 +943,13 @@ function WeatherMap() {
     // Scale the magnitude bars against the largest absolute slope so the
     // strongest month fills the half-width and the rest read relative to it.
     const maxAbs = Math.max(...usable.map((m) => Math.abs(m.sens_slope)), 0.0001)
+    const trendColor = (slope) => {
+      if (slope == null) return "#94a3b8"
+      const amount = (slope / maxAbs + 1) / 2
+      const dry = [247, 251, 255]
+      const wet = [30, 58, 138]
+      return `rgb(${dry.map((channel, index) => Math.round(channel + (wet[index] - channel) * amount)).join(", ")})`
+    }
 
     const isSignificant = (m) => m.p != null && m.p < 0.05
     // Months in the chart's current window get a subtle highlight so the table
@@ -976,7 +966,7 @@ function WeatherMap() {
           <div>
             <div className="wrtdip-trend-panel__title">Monthly Precipitation Trends</div>
             <div className="wrtdip-trend-panel__sub">
-              {precipTrendAdvanced ? (
+              {showAdvanced ? (
                 <>
                   Sen&rsquo;s slope (Theil&ndash;Sen) of monthly totals against year, with a
                   Mann&ndash;Kendall test for significance.
@@ -1001,29 +991,15 @@ function WeatherMap() {
                 </span>
               </div>
             )}
-            <button
-              type="button"
-              aria-pressed={precipTrendAdvanced}
-              title={
-                precipTrendAdvanced
-                  ? "Hide the statistical detail"
-                  : "Show p-values and the statistical detail behind each trend"
-              }
-              className={`wrtdip-trend-adv-btn${precipTrendAdvanced ? " wrtdip-trend-adv-btn--active" : ""}`}
-              onClick={() => setPrecipTrendAdvanced((v) => !v)}
-            >
-              <span className="wrtdip-trend-adv-btn__icon">{precipTrendAdvanced ? "▾" : "▸"}</span>
-              Advanced
-            </button>
           </div>
         </div>
 
-        {strongest && (
+        {showAdvanced && strongest && (
           <div className="wrtdip-trend-panel__headline">
             Strongest signal:&nbsp;
             <strong>{strongest.name}</strong>
-            <span className={`wrtdip-trend-arrow wrtdip-trend-arrow--${strongest.direction}`}>
-              <PrecipGlyph direction={strongest.direction} />
+            <span className="wrtdip-trend-drop" style={{ color: trendColor(strongest.sens_slope) }}>
+              <WaterDropIcon fontSize="inherit" />
             </span>
             {strongest.sens_slope > 0 ? "+" : "−"}
             {Math.abs(strongest.sens_slope).toFixed(2)} mm/yr
@@ -1034,16 +1010,18 @@ function WeatherMap() {
         )}
 
         <div className="wrtdip-trend-table-wrap">
-          <table className="wrtdip-trend-table">
+          <table className={`wrtdip-trend-table${showAdvanced ? " wrtdip-trend-table--advanced" : ""}`}>
             <thead>
               <tr>
                 <th className="wrtdip-trend-table__th">Month</th>
                 <th className="wrtdip-trend-table__th wrtdip-trend-table__th--num">
-                  Sen&rsquo;s Slope (mm/yr)
+                  {showAdvanced ? "Sen's Slope (mm/yr)" : "Change (mm/yr)"}
                 </th>
-                <th className="wrtdip-trend-table__th">Significance</th>
-                {precipTrendAdvanced && (
-                  <th className="wrtdip-trend-table__th wrtdip-trend-table__th--num">p&#8209;value</th>
+                {showAdvanced && (
+                  <>
+                    <th className="wrtdip-trend-table__th">Significance</th>
+                    <th className="wrtdip-trend-table__th wrtdip-trend-table__th--num">p&#8209;value</th>
+                  </>
                 )}
               </tr>
             </thead>
@@ -1051,7 +1029,6 @@ function WeatherMap() {
               {months.map((m) => {
                 const sig = PRECIP_SIG_STYLES[m.significance] || PRECIP_SIG_STYLES.none
                 const slope = m.sens_slope
-                const sigTrend = isSignificant(m)
                 const pctW = slope == null ? 0 : (Math.abs(slope) / maxAbs) * 50
                 return (
                   <tr
@@ -1060,18 +1037,16 @@ function WeatherMap() {
                   >
                     <td className="wrtdip-trend-table__month">
                       <span
-                        className={
-                          `wrtdip-trend-arrow wrtdip-trend-arrow--${m.direction}` +
-                          (sigTrend ? "" : " wrtdip-trend-arrow--weak")
-                        }
-                        title={
-                          m.direction === "none"
-                            ? "No change"
-                            : `${m.direction === "increasing" ? "Getting wetter" : "Getting drier"}` +
-                              (sigTrend ? "" : " (not statistically significant)")
+                        className="wrtdip-trend-drop"
+                        style={{ color: trendColor(slope) }}
+                        role="img"
+                        aria-label={
+                          slope == null ? "Insufficient data" :
+                          slope === 0 ? "No change" :
+                          slope > 0 ? "Getting wetter" : "Getting drier"
                         }
                       >
-                        <PrecipGlyph direction={m.direction} />
+                        {slope == null ? "\u2014" : <WaterDropIcon fontSize="inherit" />}
                       </span>
                       <span className="wrtdip-trend-table__month-name">{m.name}</span>
                     </td>
@@ -1080,36 +1055,33 @@ function WeatherMap() {
                         <span className="wrtdip-trend-bar__axis" />
                         {slope != null && (
                           <span
-                            className={`wrtdip-trend-bar__fill wrtdip-trend-bar__fill--${m.direction}${sigTrend ? "" : " wrtdip-trend-bar__fill--weak"}`}
-                            style={
-                              slope >= 0
-                                ? { left: "50%", width: `${pctW}%` }
-                                : { right: "50%", width: `${pctW}%` }
-                            }
+                            className="wrtdip-trend-bar__fill"
+                            style={{
+                              [slope >= 0 ? "left" : "right"]: "50%",
+                              width: `${pctW}%`,
+                              backgroundColor: trendColor(slope),
+                            }}
                           />
                         )}
                       </div>
-                      <span
-                        className={
-                          "wrtdip-trend-table__value" +
-                          (sigTrend ? ` wrtdip-trend-table__value--strong wrtdip-trend-table__value--${m.direction}` : "")
-                        }
-                      >
+                      <span className="wrtdip-trend-table__value">
                         {slope == null
                           ? "—"
                           : `${slope > 0 ? "+" : slope < 0 ? "−" : ""}${Math.abs(slope).toFixed(3)}`}
                       </span>
                     </td>
-                    <td>
-                      <span
-                        className={`wrtdip-sig-pill wrtdip-sig-pill--${m.significance}`}
-                        title={`${sig.label} (${sig.short})`}
-                      >
-                        {sig.label}
-                      </span>
-                    </td>
-                    {precipTrendAdvanced && (
-                      <td className="wrtdip-trend-table__p">{fmtPValue(m.p)}</td>
+                    {showAdvanced && (
+                      <>
+                        <td>
+                          <span
+                            className={`wrtdip-sig-pill wrtdip-sig-pill--${m.significance}`}
+                            title={`${sig.label} (${sig.short})`}
+                          >
+                            {sig.label}
+                          </span>
+                        </td>
+                        <td className="wrtdip-trend-table__p">{fmtPValue(m.p)}</td>
+                      </>
                     )}
                   </tr>
                 )
@@ -1118,32 +1090,27 @@ function WeatherMap() {
           </table>
         </div>
 
-        <div className="wrtdip-trend-legend">
-          <span className="wrtdip-trend-legend__item">
-            <span className="wrtdip-trend-arrow wrtdip-trend-arrow--increasing">
-              <PrecipGlyph direction="increasing" />
-            </span>{" "}
-            getting wetter
-          </span>
-          <span className="wrtdip-trend-legend__item">
-            <span className="wrtdip-trend-arrow wrtdip-trend-arrow--decreasing">
-              <PrecipGlyph direction="decreasing" />
-            </span>{" "}
-            getting drier
-          </span>
-          <span className="wrtdip-trend-legend__sep" />
-          {["very", "significant", "somewhat", "none"].map((k) => (
-            <span key={k} className="wrtdip-trend-legend__item">
-              <span className={`wrtdip-sig-dot wrtdip-sig-dot--${k}`} />
-              {PRECIP_SIG_STYLES[k].label}
-              {precipTrendAdvanced && <em>{PRECIP_SIG_STYLES[k].short}</em>}
-            </span>
-          ))}
+        <div className="wrtdip-precip-scale">
+          <WaterDropIcon className="wrtdip-precip-scale__icon" />
+          <div className="wrtdip-precip-scale__body">
+            <div className="wrtdip-precip-scale__gradient" aria-hidden="true" />
+            <div className="wrtdip-precip-scale__labels">
+              <span>Getting drier</span>
+              <span>Getting wetter</span>
+            </div>
+          </div>
         </div>
-        <div className="wrtdip-trend-legend__note">
-          Faded arrows mark months whose direction is not statistically significant.
-          Highlighted rows are the months currently shown in the chart above.
-        </div>
+        {showAdvanced && (
+          <div className="wrtdip-trend-legend">
+            {["very", "significant", "somewhat", "none"].map((level) => (
+              <span key={level} className="wrtdip-trend-legend__item">
+                <span className={`wrtdip-sig-dot wrtdip-sig-dot--${level}`} />
+                {PRECIP_SIG_STYLES[level].label}
+                <em>{PRECIP_SIG_STYLES[level].short}</em>
+              </span>
+            ))}
+          </div>
+        )}
       </div>
     )
   }
@@ -1973,7 +1940,6 @@ function WeatherMap() {
     setPrecipResolution("daily")
     setPrecipMonthRange([defaultMonthStart, defaultMonthEnd])
     setPrecipTrend(null)
-    setPrecipTrendAdvanced(false)
     setTempData(null)
     setTempMonthRange([defaultMonthStart, defaultMonthEnd])
   }
@@ -2371,19 +2337,31 @@ function WeatherMap() {
         backdropClassName="wrtdip-map-modal__backdrop"
       >
         <Modal.Header className="wrtdip-map-modal__header">
-          <div style={{ display: "flex", flexDirection: "column", flex: 1, minWidth: 0 }}>
+          <div className="wrtdip-map-modal__heading">
             <Typography variant="overline" sx={{ color: "rgba(255,255,255,0.85)", lineHeight: 1, letterSpacing: 1 }}>
               Climate &amp; Weather
             </Typography>
             <Typography
               variant="h5"
               component="h2"
-              sx={{ color: "#fff", fontWeight: 600, lineHeight: 1.2, mt: 0.5, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}
+              sx={{ color: "#fff", fontWeight: 600, lineHeight: 1.2, mt: 0.5, overflowWrap: "anywhere" }}
             >
               {getCityName() || "Selected Location"}
             </Typography>
           </div>
-          <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
+          <div className="wrtdip-map-modal__actions">
+            <FormControlLabel
+              className="wrtdip-map-modal__advanced"
+              sx={{ m: 0, minHeight: 44, color: "#fff", "& .MuiFormControlLabel-label": { fontSize: "0.75rem" } }}
+              control={
+                <Switch
+                  checked={showAdvanced}
+                  onChange={(event) => setShowAdvanced(event.target.checked)}
+                  color="default"
+                />
+              }
+              label="Advanced"
+            />
             <IconButton
               onClick={() => setModalEnlarge(!modalEnlarge)}
               size="small"
@@ -2439,13 +2417,6 @@ function WeatherMap() {
             )}
             <div className="wrtdip-map-modal__chart">{generateChart()}</div>
             <div className="wrtdip-toggle-row">
-              <button
-                onClick={() => setShowAdvanced(!showAdvanced)}
-                className={`wrtdip-toggle-btn${showAdvanced ? " wrtdip-toggle-btn--active" : ""}`}
-              >
-                <span className="wrtdip-toggle-btn__icon">{showAdvanced ? "▾" : "▸"}</span>
-                Advanced Options
-              </button>
               <button
                 onClick={() => setShowCalcInfo(!showCalcInfo)}
                 className={`wrtdip-toggle-btn${showCalcInfo ? " wrtdip-toggle-btn--active" : ""}`}
@@ -2882,6 +2853,18 @@ function WeatherMap() {
               Current conditions and outlook for the next 3 days
             </Typography>
             <ForecastPanel lat={lat} lon={lon} />
+            <div className="wrtdip-forecast-links">
+              <span>Displayed forecast: Open-Meteo</span>
+              {lat != null && lon != null && (
+                <a
+                  href={`https://weather.gc.ca/en/location/index.html?coords=${lat},${lon}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  3-day weather forecast from Environment Canada
+                </a>
+              )}
+            </div>
           </section>
         </Modal.Body>
       </Modal>

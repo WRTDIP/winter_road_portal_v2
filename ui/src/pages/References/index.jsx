@@ -9,16 +9,26 @@ function References() {
         <div style={{ maxWidth: "900px", margin: "0 auto" }}>
           <div
             style={{
+              position: "relative",
+              width: "100%",
               border: "1px solid #d9e2f0",
               borderRadius: "8px",
-              padding: "1.5rem",
-              background: "#f7f9fc",
+              overflow: "hidden",
+              background: "#fff",
             }}
           >
-            <h3 style={{ color: "#38507E", marginBottom: "0.5rem" }}>Under construction</h3>
-            <p style={{ margin: 0 }}>
-              This page is currently under construction and will be available soon.
-            </p>
+            <iframe
+              title="Winter Road Travel Data Integration Portal story map collection"
+              src="https://storymaps.arcgis.com/collections/6f533a8170a84785a48d5d6810115c58"
+              style={{
+                display: "block",
+                width: "100%",
+                height: "clamp(500px, 70vh, 780px)",
+                border: 0,
+              }}
+              allowFullScreen
+              allow="geolocation"
+            />
           </div>
         </div>
       </div>

@@ -371,7 +371,29 @@
   border-bottom: none;
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
   gap: 12px;
+}
+
+.wrtdip-map-modal__heading {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 12rem;
+  min-width: 0;
+}
+
+.wrtdip-map-modal__actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-left: auto;
+}
+
+.wrtdip-map-modal__actions button {
+  width: 44px;
+  height: 44px;
+  flex-shrink: 0;
 }
 
 .wrtdip-map-modal__header .btn-close {
@@ -1559,9 +1581,12 @@
 
 .wrtdip-trend-table {
   width: 100%;
-  min-width: 460px;
   border-collapse: collapse;
   font-size: 0.78rem;
+}
+
+.wrtdip-trend-table--advanced {
+  min-width: 460px;
 }
 
 .wrtdip-trend-table__th {
@@ -1627,34 +1652,20 @@
   font-weight: 600;
 }
 
-/* Direction glyphs: icy-blue water drop for wetter, red fire for drier (no
-   green so nothing reads as "good"/"bad" status). Faded when the trend is not
-   statistically significant so a noisy month cannot read as a real signal. */
-.wrtdip-trend-arrow {
+.wrtdip-trend-drop {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  font-size: 0.72rem;
+  font-size: 0.9rem;
   line-height: 1;
   flex: 0 0 auto;
-  width: 14px;
+  width: 1rem;
   text-align: center;
 }
 
-.wrtdip-trend-arrow--increasing {
-  color: #0ea5e9;
-}
-
-.wrtdip-trend-arrow--decreasing {
-  color: #dc2626;
-}
-
-.wrtdip-trend-arrow--none {
-  color: #cbd5e1;
-}
-
-.wrtdip-trend-arrow--weak {
-  opacity: 0.35;
+.wrtdip-trend-drop svg {
+  stroke: #64748b;
+  stroke-width: 0.7;
 }
 
 .wrtdip-trend-table__slope {
@@ -1689,19 +1700,7 @@
   border-radius: 3px;
   background: #94a3b8;
   min-width: 2px;
-}
-
-/* Wetter grows right in icy blue, drier grows left in red. */
-.wrtdip-trend-bar__fill--increasing {
-  background: linear-gradient(90deg, #7dd3fc 0%, #0ea5e9 100%);
-}
-
-.wrtdip-trend-bar__fill--decreasing {
-  background: linear-gradient(270deg, #f87171 0%, #dc2626 100%);
-}
-
-.wrtdip-trend-bar__fill--weak {
-  opacity: 0.3;
+  box-shadow: inset 0 0 0 1px rgba(100, 116, 139, 0.3);
 }
 
 .wrtdip-trend-table__value {
@@ -1710,21 +1709,6 @@
   text-align: right;
   color: #64748b;
   font-variant-numeric: tabular-nums;
-}
-
-.wrtdip-trend-table__value--strong {
-  color: #0f172a;
-  font-weight: 700;
-}
-
-/* Only slopes that passed the significance test get tinted, so colour always
-   means "this direction is real". */
-.wrtdip-trend-table__value--increasing {
-  color: #0369a1;
-}
-
-.wrtdip-trend-table__value--decreasing {
-  color: #b91c1c;
 }
 
 .wrtdip-trend-table__p {
@@ -1815,6 +1799,67 @@
   color: #64748b;
 }
 
+.wrtdip-precip-scale {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  width: 20rem;
+  max-width: 100%;
+  margin: 14px auto 0;
+  color: #1e3a8a;
+}
+
+.wrtdip-precip-scale__icon {
+  flex: 0 0 auto;
+}
+
+.wrtdip-precip-scale__body {
+  flex: 1;
+  min-width: 0;
+}
+
+.wrtdip-precip-scale__gradient {
+  height: 12px;
+  border: 1px solid #94a3b8;
+  border-radius: 3px;
+  background: linear-gradient(90deg, #f7fbff, #1e3a8a);
+}
+
+.wrtdip-precip-scale__labels {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  margin-top: 4px;
+  font-size: 0.7rem;
+  color: #475569;
+}
+
+.wrtdip-forecast-links {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+  margin-top: 12px;
+  font-size: 0.7rem;
+  color: #64748b;
+  text-align: right;
+}
+
+.wrtdip-forecast-links a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-end;
+  min-height: 44px;
+  color: #1e40af;
+  text-decoration: underline;
+}
+
+.wrtdip-forecast-links a:hover,
+.wrtdip-forecast-links a:focus-visible {
+  color: #1e3a8a;
+  text-decoration-thickness: 2px;
+}
+
 .wrtdip-trend-legend__item {
   display: inline-flex;
   align-items: center;
@@ -1846,7 +1891,7 @@
     margin-right: 6px;
   }
 
-  .wrtdip-trend-table {
+  .wrtdip-trend-table--advanced {
     min-width: 400px;
   }
 
