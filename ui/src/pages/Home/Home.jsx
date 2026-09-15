@@ -23,7 +23,6 @@ import seventhPartners from "../../assets/CIRNAC.png"
 
 import Partner from "../../components/Home/Partner"
 import Footer from "../../components/Global/Footer"
-import FDDChart from "../../components/Chart/FDDChart"
 import * as React from "react"
 import { LineChart } from "@mui/x-charts/LineChart"
 
