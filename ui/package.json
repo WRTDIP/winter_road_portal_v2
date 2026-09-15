@@ -4,22 +4,15 @@
   "private": true,
   "dependencies": {
     "@ant-design/icons": "^4.7.0",
-    "@arcgis/core": "^4.27.1",
     "@auth0/auth0-react": "^2.16.1",
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.1",
-    "@fortawesome/fontawesome-free": "^6.5.1",
-    "@fortawesome/fontawesome-svg-core": "^6.4.0",
-    "@fortawesome/free-regular-svg-icons": "^6.4.0",
-    "@fortawesome/free-solid-svg-icons": "^6.4.0",
-    "@fortawesome/react-fontawesome": "^0.2.0",
     "@mui/icons-material": "^6.5.0",
     "@mui/material": "^6.5.0",
     "@mui/styled-engine-sc": "^6.0.2",
     "@mui/x-charts": "^7.16.0",
     "antd": "^4.21.7",
     "bootstrap": "^5.2.3",
-    "chart.js": "^4.4.4",
     "dompurify": "^3.3.3",
     "eslint": "^8.22.0",
     "esri-loader": "^3.7.0",
@@ -27,13 +20,10 @@
     "prettier": "^2.7.1",
     "react": "^17.0.2",
     "react-bootstrap": "^2.7.4",
-    "react-chartjs-2": "^5.2.0",
     "react-dom": "^17.0.2",
     "react-router-dom": "^6.3.0",
     "react-scripts": "5.0.1",
-    "serve": "^14.2.6",
-    "styled-components": "^6.1.13",
-    "web-vitals": "^2.1.4"
+    "serve": "^14.2.6"
   },
   "scripts": {
     "start": "vite",
@@ -42,7 +32,11 @@
     "preview": "vite preview",
     "build:watch": "vite build --watch",
     "serve:build": "serve -s build -l 3000",
-    "dev:simultaneous": "concurrently \"npm run build:watch\" \"npm run serve:build\""
+    "dev:simultaneous": "concurrently \"npm run build:watch\" \"npm run serve:build\"",
+    "audit": "node scripts/responsive-audit.mjs",
+    "audit:baseline": "OUT=audit/baseline SHOTS=1 node scripts/responsive-audit.mjs",
+    "audit:boundary": "MODE=boundary OUT=audit/boundary node scripts/responsive-audit.mjs",
+    "audit:diff": "node scripts/audit-compare.mjs"
   },
   "eslintConfig": {
     "extends": [
@@ -66,7 +60,7 @@
     "@types/node": "^25.5.0",
     "@vitejs/plugin-react": "^6.0.1",
     "concurrently": "^9.2.1",
-    "html-loader": "^5.0.0",
+    "playwright": "^1.63.0",
     "vite": "^8.0.1",
     "vite-plugin-full-reload": "^1.2.0",
     "vite-plugin-svgr": "^4.5.0",
