@@ -6,10 +6,10 @@ const TeamMember = ({ props }) => {
   const { image, name, title, email } = props;
   return (
     <Row className="teamRow">
-      <Col xs lg="5">
-        <Card.Img variant="top" src={image}></Card.Img>
+      <Col xs={12} sm={5}>
+        <Card.Img variant="top" src={image} alt={name}></Card.Img>
       </Col>
-      <Col xs lg="7">
+      <Col xs={12} sm={7}>
         <Card.Body>
           <Card.Title className="teamMemberTitle p-1 ">{name}</Card.Title>
           <Card.Text className="teamMemberText p-1">{title}</Card.Text>

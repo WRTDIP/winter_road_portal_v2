@@ -1,11 +1,11 @@
-import React from "react";
-import { Grid, Layout, Menu } from "antd";
+import React, { useEffect, useState } from "react";
+import { Button, Drawer } from "antd";
 import { MenuOutlined, UserOutlined } from "@ant-design/icons";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
+import { useBreakpoint } from "../../../hooks/useBreakpoint";
 import NavbarLogo from "../../../assets/navbarLogo.png";
 import "./styles.css";
 
-const leftItems = [];
 const rightItems = [
   { name: "Home", link: "/" },
   //{ name: "Map", link: "https://climatechange.utsc.utoronto.ca/esri_leaflet/map.html", newTab: true },
@@ -19,75 +19,60 @@ const rightItems = [
   { name: "Blog", link: "/blog" },
   { name: "About", link: "/about" },
 
-  { name: "", link: "/login", icon: <UserOutlined style={{ fontSize: 20 }} /> },
+  { name: "Account", link: "/login", icon: <UserOutlined /> },
 ];
 
-const menuItem = (i) => (
-  <Menu.Item key={i.name}>
-    {i.newTab ? (
-      <a
-        href={i.link}
-        target={"_blank"}
-        rel={"noreferrer"}
-        className="menuLink"
-      >
-        {i.name}
-      </a>
-    ) : (
-      <Link to={i.link} className="menuLink">
-        {i.icon} {i.name}
-      </Link>
-    )}
-  </Menu.Item>
-);
-
 const NavigationBar = () => {
-  const mobile = !Grid.useBreakpoint()["lg"];
-  const menuItems = (
-    <>
-      {leftItems.map(menuItem)}
-      <Menu.SubMenu
-        key={"navbar-divider"}
-        style={{ flexGrow: 1, visibility: "hidden"}}
-      />
-      {rightItems.map(menuItem)}
-    </>
-  );
+  const compact = !useBreakpoint().xxl;
+  const [open, setOpen] = useState(false);
+  const { pathname } = useLocation();
+
+  useEffect(() => {
+    setOpen(false);
+  }, [pathname, compact]);
+
+  const links = rightItems.map((item) => (
+    <Link
+      key={item.link}
+      to={item.link}
+      className="menuLink"
+      aria-current={pathname === item.link ? "page" : undefined}
+      onClick={() => setOpen(false)}
+    >
+      {item.icon}
+      <span>{item.name}</span>
+    </Link>
+  ));
 
   return (
-    <Layout style={{ background: "rgb(54, 76, 119)" }}>
-      <Layout.Header style={{ background: "rgb(54, 76, 119)" }}>
-        <Menu
-          mode={"horizontal"}
-          theme={"dark"}
-          disabledOverflow={true}
-          style={{ display: "flex", background: "rgb(54, 76, 119)" }}
-        >
-          <Menu.Item
-            style={{ flexGrow: mobile && 1, background: "rgb(54, 76, 119)" }}
-            key={"Home"}
-          >
-            <Link to={"/"}>
-              <div id={"navbar-item-elcano-container"}>
-                <img width={110} src={NavbarLogo} alt="logo" />
-                <div id="navbar-item-elcano-text">Climate Lab @ UTSC</div>
-              </div>
-            </Link>
-          </Menu.Item>
-          {mobile ? (
-            <Menu.SubMenu
-              key={"MobileMenu"}
-              title={""}
-              icon={<MenuOutlined />}
-              children={menuItems}
-            />
-          ) : (
-            menuItems
-          )}
-        </Menu>
-      </Layout.Header>
-      <Layout.Content></Layout.Content>
-    </Layout>
+    <header className="portal-header" id="top">
+      <Link to="/" className="portal-brand" aria-label="Climate Lab at UTSC home">
+        <img width={110} src={NavbarLogo} alt="" />
+        <span>Climate Lab @ UTSC</span>
+      </Link>
+      {compact ? (
+        <Button
+          className="portal-menu-toggle"
+          icon={<MenuOutlined />}
+          aria-label="Open navigation"
+          aria-expanded={open}
+          aria-controls={open ? "portal-mobile-navigation" : undefined}
+          onClick={() => setOpen(true)}
+        />
+      ) : (
+        <nav className="portal-desktop-navigation" aria-label="Main navigation">{links}</nav>
+      )}
+      <Drawer
+        className="portal-navigation-drawer"
+        title="Navigation"
+        placement="right"
+        width="min(340px, 100%)"
+        visible={compact && open}
+        onClose={() => setOpen(false)}
+      >
+        <nav id="portal-mobile-navigation" aria-label="Main navigation">{links}</nav>
+      </Drawer>
+    </header>
   );
 };
 

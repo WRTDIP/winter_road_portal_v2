@@ -10,7 +10,7 @@ const WelcomeBanner = () => {
   return (
     <Container className="welcomeContainer" fluid>
       <Row>
-        <Col xs lg="4" className="text-center my-auto">
+        <Col xs={12} lg="4" className="text-center my-auto">
           <h2 className="welcomeTitle">
             Welcome to WRaMP <br />
             Winter Road and Mobility Portal
@@ -24,7 +24,7 @@ const WelcomeBanner = () => {
             winter roads impacted by climate change.
           </p>
         </Col>
-        <Col xs lg="8" className="vertical-center welcomeCarousel">
+        <Col xs={12} lg="8" className="vertical-center welcomeCarousel">
           <CarouselHome />
         </Col>
       </Row>

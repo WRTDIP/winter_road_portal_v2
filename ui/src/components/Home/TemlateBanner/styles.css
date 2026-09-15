@@ -1,7 +1,8 @@
 .templateBannerContainer {
   display: flex;
   background-color: white;
-  height: 80vh;
+  min-height: calc(80 * var(--dvh));
+  padding: 32px 16px;
   flex-direction: column;
   justify-content: center;
   align-items: center;
@@ -17,7 +18,8 @@
 }
 
 .templateBannerTitle {
-  font-size: 2rem;
+  font-size: var(--fs-h2);
+  text-align: center;
   font-family: 'Roboto', sans-serif;
   font-weight: 600;
   margin-top: 20px;
@@ -26,9 +28,10 @@
 
 .templateBannerText {
   font-family: 'Roboto', sans-serif;
-  width: 40%;
+  width: 100%;
+  max-width: 65ch;
   text-align: center;
-  font-size: 1rem;
+  font-size: var(--fs-body);
   padding-top: 20px;
   padding-bottom: 30px;
 }

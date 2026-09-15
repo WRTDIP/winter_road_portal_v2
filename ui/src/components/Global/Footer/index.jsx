@@ -1,16 +1,14 @@
 import React from "react";
-import { Grid, Layout, Menu, Typography } from "antd";
-import { Link } from "react-router-dom";
+import { Typography } from "antd";
 import NavbarLogo from "../../../assets/navbarLogo.png";
-import { MenuOutlined } from "@ant-design/icons";
 import facebook from "../../../assets/facebook.png";
 // import twitter from "../../../assets/twitter.png";
 import "./styles.css";
 
 const UTSCLogo = () => {
   return (
-    <div id={"footer-brand-container"} style = {{marginLeft: "2%"}}>
-      <img width={110} src={NavbarLogo} alt="logo" />
+    <div id={"footer-brand-container"}>
+      <img width={110} src={NavbarLogo} alt="Climate Lab at UTSC" />
       <div id="footer-brand-text">
         CL@UT
       </div>
@@ -21,7 +19,7 @@ const UTSCLogo = () => {
 const CopyRight = () => {
   const year = new Date().getFullYear(); // returns the current year
   return (
-    <div style={{ margin: "auto", textAlign: "center" }}>
+    <div className="footer-copyright">
       <Typography className="copyRightText">
         Copyright © {year} CL@UT
       </Typography>
@@ -33,13 +31,13 @@ const CopyRight = () => {
 const MediaBox = () => {
   return (
     <>
-      <div className="mediaBox" style={{ marginRight: "1%" }}>
+      <div className="mediaBox">
         <Typography className="mediaBoxText">Follow us</Typography>
         {/*<a href="http://twitter.com" target="_blank">
           <img style={{ width: "30px" }} src={twitter}></img>
         </a>*/}
-        <a href="http://facebook.com" target="_blank">
-          <img style={{ width: "30px" }} src={facebook}></img>
+        <a href="https://facebook.com" target="_blank" rel="noreferrer" aria-label="Facebook (opens in new tab)">
+          <img width={30} height={30} src={facebook} alt="" />
         </a>
       </div>
     </>
@@ -47,14 +45,12 @@ const MediaBox = () => {
 };
 
 const Footer = () => {
-  const mobile = !Grid.useBreakpoint()["lg"];
-
   return (
-    <div className="footerContainer">
+    <footer className="footerContainer">
       <UTSCLogo />
       <CopyRight />
       <MediaBox />
-    </div>
+    </footer>
   );
 };
 

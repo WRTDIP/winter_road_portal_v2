@@ -10,7 +10,7 @@ const Feature = ({ props }) => {
       <Row className="d-flex justify-content-center featureRow">
         <Typography className="featurePageTitleText ">Features</Typography>
         {props.map((content) => (
-          <Col xs lg="3" className="d-flex justify-content-center">
+          <Col xs={12} md={6} lg="3" className="d-flex justify-content-center">
             <FeatureItem key={content.id} props={content} />
           </Col>
         ))}

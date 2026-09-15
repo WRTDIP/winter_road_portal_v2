@@ -25,7 +25,8 @@
   --fs-display: clamp(2.5rem, 1.6rem + 4.2vw, 6.25rem);
 
   /* Chrome heights, needed by fixed shells that subtract them. */
-  --nav-h: 56px;
+  /* antd Layout.Header, measured: constant across widths. */
+  --nav-h: 64px;
 
   /* Breakpoint canon, for reference only -- CSS cannot use a var in a media
      query. These are Bootstrap 5's grid values, which antd 4 already matches

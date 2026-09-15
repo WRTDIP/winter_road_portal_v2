@@ -1,6 +1,6 @@
 .welcomeContainer{
     background-color: rgb(54, 77, 119);
-    height: 94vh;
+    min-height: calc(94 * var(--dvh));
     padding: 6%;
 }
 
@@ -10,11 +10,42 @@
     font-size: var(--fs-h1);
 }
 .welcomeText{
-    font-size: 20px;
+    font-size: var(--fs-lead);
     color: white;
     font-family: 'Roboto', sans-serif;
 }
 
 .welcomeCarousel{
     height: 80%;
+}
+
+@media (max-width: 991.98px) { /* --bp-lg */
+    .welcomeContainer {
+        min-height: 0;
+        padding: 32px 16px;
+    }
+
+    .welcomeContainer > .row {
+        row-gap: 24px;
+    }
+
+    .welcomeCarousel {
+        min-width: 0;
+        height: auto;
+    }
+
+    .welcomeCarousel > .carousel {
+        width: 100%;
+        max-width: 100%;
+        margin: 0;
+        padding: 0;
+        height: auto !important;
+    }
+
+    .welcomeCarousel .carousel-image {
+        width: 100%;
+        height: auto;
+        aspect-ratio: 4 / 3;
+        object-fit: cover;
+    }
 }

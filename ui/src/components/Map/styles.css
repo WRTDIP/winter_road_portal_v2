@@ -1,3 +1,11 @@
+.wrtdip-map {
+  position: relative;
+  width: 100%;
+  min-width: 0;
+  height: calc(84 * var(--svh));
+  border: none;
+}
+
 .right-half-modal {
   /* position: fixed;
   top: 0;
@@ -167,8 +175,8 @@
 
 .wrtdip-feature-popup__close {
   flex-shrink: 0;
-  width: 22px;
-  height: 22px;
+  width: 44px;
+  height: 44px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -182,7 +190,9 @@
   transition: background 0.15s ease;
 }
 
-.wrtdip-feature-popup__close:hover {
+.wrtdip-feature-popup__close:hover,
+.wrtdip-feature-popup__close:focus-visible,
+.wrtdip-feature-popup__close:active {
   background: rgba(255, 255, 255, 0.3);
 }
 
@@ -349,6 +359,8 @@
   max-width: 560px;
   width: calc(100% - 32px);
   margin: 1.75rem auto;
+  height: auto;
+  min-height: 0;
 }
 
 .wrtdip-map-modal--enlarged {
@@ -357,6 +369,8 @@
 
 .wrtdip-map-modal .modal-content,
 .wrtdip-map-modal__content {
+  height: auto;
+  max-height: calc(100 * var(--dvh) - 3.5rem);
   border: none;
   border-radius: 14px;
   overflow: hidden;
@@ -396,6 +410,103 @@
   flex-shrink: 0;
 }
 
+.wrtdip-map-modal__advanced.MuiFormControlLabel-root {
+  min-height: 44px;
+  max-width: 100%;
+  margin: 0;
+  padding: 8px 10px;
+  gap: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.65);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.14);
+  color: #fff;
+  box-shadow: 0 2px 6px rgba(15, 23, 42, 0.12);
+  touch-action: manipulation;
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+
+.wrtdip-map-modal__advanced.MuiFormControlLabel-root:hover,
+.wrtdip-map-modal__advanced.MuiFormControlLabel-root:active {
+  background: rgba(255, 255, 255, 0.24);
+  border-color: #fff;
+}
+
+.wrtdip-map-modal__advanced.MuiFormControlLabel-root:focus-within {
+  outline: 2px solid #fff;
+  outline-offset: 3px;
+}
+
+.wrtdip-map-modal__advanced--active.MuiFormControlLabel-root {
+  background: #e0f2fe;
+  border-color: #e0f2fe;
+  color: #1e3a8a;
+}
+
+.wrtdip-map-modal__advanced--active.MuiFormControlLabel-root:hover,
+.wrtdip-map-modal__advanced--active.MuiFormControlLabel-root:active {
+  background: #fff;
+  border-color: #fff;
+}
+
+.wrtdip-map-modal__advanced-label {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: var(--fs-body-sm, 0.8125rem);
+  font-weight: 700;
+  line-height: 1.25;
+  letter-spacing: 0;
+}
+
+.wrtdip-map-modal__advanced-label .MuiSvgIcon-root {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+}
+
+.wrtdip-map-modal__advanced-state {
+  width: 3ch;
+  font-size: var(--fs-caption, 0.6875rem);
+  text-align: center;
+}
+
+.wrtdip-map-modal__advanced .MuiSwitch-root {
+  width: 40px;
+  height: 24px;
+  padding: 0;
+  flex-shrink: 0;
+  overflow: visible;
+}
+
+.wrtdip-map-modal__advanced .MuiSwitch-switchBase {
+  padding: 3px;
+  color: #fff;
+}
+
+.wrtdip-map-modal__advanced .MuiSwitch-thumb {
+  width: 18px;
+  height: 18px;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.3);
+}
+
+.wrtdip-map-modal__advanced .MuiSwitch-track {
+  border: 1px solid #bfdbfe;
+  border-radius: 12px;
+  background: #1e3a8a;
+  opacity: 1;
+}
+
+.wrtdip-map-modal__advanced .MuiSwitch-switchBase.Mui-checked {
+  transform: translateX(16px);
+  color: #fff;
+}
+
+.wrtdip-map-modal__advanced .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track {
+  border-color: #2563eb;
+  background: #2563eb;
+  opacity: 1;
+}
+
 .wrtdip-map-modal__header .btn-close {
   display: none;
 }
@@ -403,7 +514,8 @@
 .wrtdip-map-modal__body {
   padding: 18px 20px 20px;
   background: #f8fafc;
-  max-height: 75vh;
+  min-height: 0;
+  max-height: calc(75 * var(--dvh));
   overflow-y: auto;
 }
 
@@ -1885,7 +1997,7 @@
   color: #94a3b8;
 }
 
-@media (max-width: 640px) {
+@media (max-width: 575.98px) { /* --bp-sm */
   .wrtdip-trend-bar {
     width: 56px;
     margin-right: 6px;
@@ -1899,5 +2011,87 @@
   .wrtdip-trend-table__th {
     padding-left: 8px;
     padding-right: 8px;
+  }
+}
+
+@media (max-width: 767.98px) { /* --bp-md */
+  .wrtdip-map {
+    height: calc(100 * var(--svh) - var(--nav-h) - 5rem);
+    min-height: 320px;
+  }
+
+  .wrtdip-map .esri-widget--button {
+    width: 44px;
+    height: 44px;
+  }
+
+  .wrtdip-map .esri-zoom {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    background: transparent;
+    box-shadow: none;
+  }
+
+  .wrtdip-map .esri-ui-corner {
+    gap: 8px;
+  }
+
+  .wrtdip-map .wrtdip-feature-popup {
+    position: fixed;
+    inset: auto 16px 16px !important;
+    width: auto;
+    max-width: none;
+    max-height: calc(72 * var(--dvh));
+    display: flex;
+    flex-direction: column;
+    transform: none;
+    animation: none;
+  }
+
+  .wrtdip-map .wrtdip-feature-popup__body {
+    min-height: 0;
+    overflow-y: auto;
+    font-size: var(--fs-body-sm);
+  }
+
+  .wrtdip-map .wrtdip-feature-popup__title {
+    white-space: normal;
+    overflow-wrap: anywhere;
+    font-size: var(--fs-body);
+  }
+
+  .wrtdip-map .wrtdip-feature-popup__arrow {
+    display: none;
+  }
+
+  .wrtdip-map-modal {
+    margin: 12px auto;
+  }
+
+  .wrtdip-map-modal .modal-content {
+    max-height: calc(100 * var(--dvh) - 24px);
+  }
+
+  .wrtdip-map-modal__header,
+  .wrtdip-map-modal__body {
+    padding: 12px;
+  }
+
+  .wrtdip-map-modal__section {
+    padding: 12px 8px;
+    min-width: 0;
+  }
+
+  .wrtdip-map-modal__chart > div {
+    min-width: 420px;
+  }
+
+  .wrtdip-map-modal__chart .MuiChartsAxis-tickLabel {
+    font-size: var(--fs-caption);
+  }
+
+  .wrtdip-popup-section__header {
+    min-height: 44px;
   }
 }

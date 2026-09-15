@@ -12,9 +12,10 @@
 }
 
 .featureRow{
-  width: 90%;
+  width: 100%;
   margin: auto;
-  padding: 3vh;
+  padding: 24px 0;
+  row-gap: 24px;
 }
 
 

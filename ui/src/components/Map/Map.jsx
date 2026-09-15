@@ -21,6 +21,7 @@ import { FormControlLabel, Icon, Switch, Typography } from "@mui/material"
 import useMediaQuery from "@mui/material/useMediaQuery"
 import OpenInFullIcon from "@mui/icons-material/OpenInFull"
 import CloseFullscreenIcon from "@mui/icons-material/CloseFullscreen"
+import TuneIcon from "@mui/icons-material/Tune"
 import AcUnitIcon from "@mui/icons-material/AcUnit"
 import LocalFireDepartmentIcon from "@mui/icons-material/LocalFireDepartment"
 import WaterDropIcon from "@mui/icons-material/WaterDrop"
@@ -2199,7 +2200,7 @@ function WeatherMap() {
   }
 
   return (
-    <div style={{ height: "84vh", border: "none" }} ref={MapElement}>
+    <div className="wrtdip-map" ref={MapElement}>
       <div id="legend-container"></div>
       <div id="layer-list-container"></div>
 
@@ -2351,16 +2352,24 @@ function WeatherMap() {
           </div>
           <div className="wrtdip-map-modal__actions">
             <FormControlLabel
-              className="wrtdip-map-modal__advanced"
-              sx={{ m: 0, minHeight: 44, color: "#fff", "& .MuiFormControlLabel-label": { fontSize: "0.75rem" } }}
+              className={`wrtdip-map-modal__advanced${showAdvanced ? " wrtdip-map-modal__advanced--active" : ""}`}
+              labelPlacement="start"
               control={
                 <Switch
                   checked={showAdvanced}
                   onChange={(event) => setShowAdvanced(event.target.checked)}
-                  color="default"
+                  inputProps={{ role: "switch", "aria-label": "Advanced" }}
                 />
               }
-              label="Advanced"
+              label={
+                <span className="wrtdip-map-modal__advanced-label">
+                  <TuneIcon aria-hidden="true" />
+                  <span>Advanced</span>
+                  <span className="wrtdip-map-modal__advanced-state" aria-hidden="true">
+                    {showAdvanced ? "ON" : "OFF"}
+                  </span>
+                </span>
+              }
             />
             <IconButton
               onClick={() => setModalEnlarge(!modalEnlarge)}

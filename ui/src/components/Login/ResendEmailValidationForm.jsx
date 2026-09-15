@@ -85,25 +85,32 @@ function ResendEmailValidationForm() {
   };
   
     return (
-        <Form className="registerForm" onSubmit={handleSubmit}>
+        <div className="authShell">
+        <Form className="registerForm" onSubmit={handleSubmit} noValidate>
 
-            <Form.Group className="mb-3">
-                <Form.Label className="h5 pb-1">Email address</Form.Label>
-                <Typography variant="p" className="mb-2">
+            <Form.Group className="mb-3" controlId="resendEmailAddress">
+                <Form.Label>Email address</Form.Label>
+                <Typography variant="p" className="authHint mb-2">
                 Please enter your email address to resend the validation email.
                 </Typography>
                 <Form.Control
                     type="email"
-                    placeholder="Enter email"
+                    placeholder="name@example.com"
+                    autoComplete="email"
+                    inputMode="email"
+                    autoCapitalize="none"
+                    spellCheck="false"
                     onChange={(e) => {
                         setEmail(e.target.value);
                     }}
                 />
             </Form.Group>
 
-            <Button className="mt-3" variant="primary" type="submit" onClick={handleSubmit}>
-                Resend
-            </Button>
+            <div className="authActions">
+                <Button variant="primary" type="submit">
+                    Resend
+                </Button>
+            </div>
 
             <AlertDismissible
                 className="mt-3"
@@ -114,6 +121,7 @@ function ResendEmailValidationForm() {
                 dialogMessage={dialogMessage}
             />
         </Form>
+        </div>
     );
 }
 

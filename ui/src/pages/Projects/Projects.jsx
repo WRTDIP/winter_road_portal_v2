@@ -1,4 +1,5 @@
-import { Container, Row, Col } from "react-bootstrap";
+import { Container } from "react-bootstrap";
+import { DownloadOutlined } from "@ant-design/icons";
 import ProjectFirst from "../../assets/smartphone_icon_colour.png";
 import ProjectSecond from "../../assets/online_survey_icon.png";
 import ProjectThird from "../../assets/ice_road_icon.png";
@@ -16,36 +17,35 @@ function Projects() {
       title: "Winter Road Watch",
       content: (
         <>
-          The Winter Road Watch project is a citizen science research initiative for monitoring the impacts of climate change on winter roads in the Northwest Territories. 
-          We invite all the citizen scientists in the North to contribute to our real-time science research toward climate change adaptation.
-          <br />
-          <br />
-          <span style={{ fontSize: "1.5rem", fontWeight: "bold" }}>Getting Started</span>
-          <br />
-          To participate, please read the step-by-step instructions for the Winter Road Watch Survey123 App on how to set up and contribute your observations.
-          <br />
-          <a href={WRWatchInstruction} target="_blank" rel="noopener noreferrer">
-            Download the Winter Road Watch Survey123 App Instruction
+          <p>
+            The Winter Road Watch project is a citizen science research initiative for monitoring the impacts of climate change on winter roads in the Northwest Territories.
+            We invite all the citizen scientists in the North to contribute to our real-time science research toward climate change adaptation.
+          </p>
+          <h3 className="projectGettingStarted">Getting Started</h3>
+          <p>
+            To participate, please read the step-by-step instructions for the Winter Road Watch Survey123 App on how to set up and contribute your observations.
+          </p>
+          <a className="projectResourceLink" href={WRWatchInstruction} target="_blank" rel="noopener noreferrer">
+            <DownloadOutlined aria-hidden="true" />
+            <span>Survey123 app instructions</span>
           </a>
-          <br />
-          <br />
-          To view the workflows for the Winter Road Watch, please download the Winter Road Watch Data Collection Workflows document.
-          <br />
-          <a href={WRWatchWorkflows} target="_blank" rel="noopener noreferrer">
-            Download the Winter Road Watch Data Collection Workflows
+          <p>
+            To view the workflows for the Winter Road Watch, please download the Winter Road Watch Data Collection Workflows document.
+          </p>
+          <a className="projectResourceLink" href={WRWatchWorkflows} target="_blank" rel="noopener noreferrer">
+            <DownloadOutlined aria-hidden="true" />
+            <span>Data collection workflows</span>
           </a>
-          <br />
-          <br />
-          To download the Winter Road Watch survey on your mobile device, please scan the QR code. Also, scan the code to view observations from others on the mobile version of the interactive web map.
-          <br />
-          <span>
-          <strong>Note: We recommend viewing the interactive web map on a larger screen (e.g., computer or tablet). 
+          <p>
+            To download the Winter Road Watch survey on your mobile device, please scan the QR code. Also, scan the code to view observations from others on the mobile version of the interactive web map.
+          </p>
+          <p className="projectNote">
+            <strong>Note:</strong> We recommend viewing the interactive web map on a larger screen (e.g., computer or tablet).
             For a more user-friendly experience, please go to the 'Observation' tab on the web browser screen.
-            </strong>
-          </span>
-          <br />
-          <a href={WRWatchQR} target="_blank" rel="noopener noreferrer">
-            Download the Winter Road Watch QR code
+          </p>
+          <a className="projectResourceLink" href={WRWatchQR} target="_blank" rel="noopener noreferrer">
+            <DownloadOutlined aria-hidden="true" />
+            <span>Survey and map QR codes</span>
           </a>
         </>
       ),        
