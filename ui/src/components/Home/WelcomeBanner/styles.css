@@ -7,7 +7,7 @@
 .welcomeTitle{
     color:  white;
     font-family: 'Roboto', sans-serif;
-    font-size: 5.2vh;
+    font-size: var(--fs-h1);
 }
 .welcomeText{
     font-size: 20px;

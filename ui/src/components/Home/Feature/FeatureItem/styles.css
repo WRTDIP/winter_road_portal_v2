@@ -5,14 +5,14 @@
 }
 
 .featureBannerTitle {
-  font-size: 3vh;
+  font-size: var(--fs-h4);
   padding: 1vh;
   font-family: 'Roboto', sans-serif;
 
 }
 
 .featureBannerText {
-  font-size: 2vh;
+  font-size: var(--fs-body);
   font-family: 'Roboto', sans-serif;
 }
 
