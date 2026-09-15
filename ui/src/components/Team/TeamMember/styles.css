@@ -15,4 +15,7 @@
 .teamMemberText{
   font-family: 'Roboto', sans-serif;
   font-size: 2vh;
+  /* The email address is rendered as its own link text, so it is a single
+     unbreakable token with nowhere to wrap once the column can shrink. */
+  overflow-wrap: break-word;
 }

@@ -82,7 +82,8 @@
 /* Kills sticky hover on touch, where :hover latches after a tap and leaves the
    element transformed. Apply to anything whose hover moves or resizes it. */
 @media (hover: none) {
-  .u-nohover-move:hover {
+  .u-nohover-move:hover,
+  .u-nohover-move:active {
     transform: none;
   }
 }
