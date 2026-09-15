@@ -9,9 +9,9 @@ import "./styles.css";
 
 const UTSCLogo = () => {
   return (
-    <div id={"navbar-item-elcano-container"} style = {{marginLeft: "2%"}}>
+    <div id={"footer-brand-container"} style = {{marginLeft: "2%"}}>
       <img width={110} src={NavbarLogo} alt="logo" />
-      <div id="navbar-item-elcano-text">
+      <div id="footer-brand-text">
         CL@UT
       </div>
     </div>
