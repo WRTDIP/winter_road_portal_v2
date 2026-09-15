@@ -9,12 +9,12 @@
 .teamMemberTitle{
   font-family: 'Roboto', sans-serif;
   color: rgb(56, 80, 126);
-  font-size: 3.5vh;
+  font-size: var(--fs-h3);
 }
 
 .teamMemberText{
   font-family: 'Roboto', sans-serif;
-  font-size: 2vh;
+  font-size: var(--fs-body);
   /* The email address is rendered as its own link text, so it is a single
      unbreakable token with nowhere to wrap once the column can shrink. */
   overflow-wrap: break-word;
