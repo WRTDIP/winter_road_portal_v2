@@ -108,3 +108,20 @@
 .row > [class*=" col-"] {
   min-width: 0;
 }
+
+/* --- media guard --------------------------------------------------------- */
+
+/* An unconstrained image is the other classic overflow source. height:auto is
+   part of the same rule, not a separate concern: capping width without it
+   distorts any image carrying intrinsic width/height attributes. */
+img,
+svg,
+video,
+canvas {
+  max-width: 100%;
+}
+
+img,
+video {
+  height: auto;
+}
