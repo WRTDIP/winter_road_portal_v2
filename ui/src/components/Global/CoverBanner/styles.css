@@ -12,17 +12,10 @@
 }
 .coverTitle{
     color: white;
-    font-size: 100px;
-}
-
-.coverImage{
-    width: 100%;
-    height: 15vw;
-    object-fit: cover;
-    opacity: 0;
+    font-size: var(--fs-display);
 }
 
 .coverImageBanner{
     width: 100%;
-    height: 15vw;
+    min-height: clamp(96px, 15vw, 220px);
 }
