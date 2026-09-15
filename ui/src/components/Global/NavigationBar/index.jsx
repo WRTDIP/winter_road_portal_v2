@@ -15,6 +15,8 @@ const rightItems = [
   { name: "Transportation", link: "/transportation" },
   { name: "Download", link: "/download" },
   { name: "API", link: "/api" },
+  { name: "References", link: "/references" },
+  { name: "Blog", link: "/blog" },
   { name: "About", link: "/about" },
 
   { name: "", link: "/login", icon: <UserOutlined style={{ fontSize: 20 }} /> },

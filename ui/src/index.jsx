@@ -21,6 +21,8 @@ import Dashboard from "./pages/Dashboard/Dashboard.jsx";
 import FDDTest from "./pages/FDDTest/FDDTest.jsx";
 import Api from "./pages/Api/index.jsx";
 import Download from "./pages/Download/index.jsx";
+import References from "./pages/References/index.jsx";
+import Blog from "./pages/Blog/index.jsx";
 import { Auth0Provider } from "@auth0/auth0-react";
 
 
@@ -56,6 +58,8 @@ ReactDOM.render(
         <Route path="/fdd-test" element={<FDDTest />} exact />
         <Route path="/api" element={<Api />} exact />
         <Route path="/download" element={<Download />} exact />
+        <Route path="/references" element={<References />} exact />
+        <Route path="/blog" element={<Blog />} exact />
       </Routes>
 
       {/* Render global footer */}

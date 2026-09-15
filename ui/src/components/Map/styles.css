@@ -1627,19 +1627,22 @@
   font-weight: 600;
 }
 
-/* Direction arrows: green up for wetter, red down for drier. Faded when the
-   trend is not statistically significant so a noisy month cannot read as a
-   real signal. */
+/* Direction glyphs: icy-blue water drop for wetter, red fire for drier (no
+   green so nothing reads as "good"/"bad" status). Faded when the trend is not
+   statistically significant so a noisy month cannot read as a real signal. */
 .wrtdip-trend-arrow {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   font-size: 0.72rem;
   line-height: 1;
   flex: 0 0 auto;
-  width: 0.85em;
+  width: 14px;
   text-align: center;
 }
 
 .wrtdip-trend-arrow--increasing {
-  color: #16a34a;
+  color: #0ea5e9;
 }
 
 .wrtdip-trend-arrow--decreasing {
@@ -1688,9 +1691,9 @@
   min-width: 2px;
 }
 
-/* Wetter grows right in green, drier grows left in red. */
+/* Wetter grows right in icy blue, drier grows left in red. */
 .wrtdip-trend-bar__fill--increasing {
-  background: linear-gradient(90deg, #4ade80 0%, #16a34a 100%);
+  background: linear-gradient(90deg, #7dd3fc 0%, #0ea5e9 100%);
 }
 
 .wrtdip-trend-bar__fill--decreasing {
@@ -1717,7 +1720,7 @@
 /* Only slopes that passed the significance test get tinted, so colour always
    means "this direction is real". */
 .wrtdip-trend-table__value--increasing {
-  color: #15803d;
+  color: #0369a1;
 }
 
 .wrtdip-trend-table__value--decreasing {
