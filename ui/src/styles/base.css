@@ -1,0 +1,142 @@
+/* Global guards and utilities. Loads LAST, after antd, so these out-specify the
+   kits. Component stylesheets still win over this file -- it is a floor, not a
+   theme. */
+
+/* --- overflow guards ------------------------------------------------------ */
+
+/* min-width:0 -- the flex/grid overflow guard. A flex item defaults to
+   min-width:auto, which refuses to shrink below its content and is the root
+   cause of most horizontal overflow in this app. */
+.u-minw0 { min-width: 0; }
+
+/* Wide tables go in here rather than being made narrow. */
+.u-scroll-x {
+  max-width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Card/tile rows that collapse with zero media queries. */
+.u-autogrid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+.u-autogrid > * {
+  flex: 1 1 200px;
+  min-width: 0;
+}
+
+/* --- touch targets -------------------------------------------------------- */
+
+/* Preferred: a real 44px box. */
+.u-tap-real {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 44px;
+  min-height: 44px;
+  touch-action: manipulation;
+}
+
+/* Pseudo-element hit expansion. Use ONLY for isolated, well-spaced controls:
+   two of these 8px apart overlap by 14px each and steal each other's taps.
+   Does not work on input[type=checkbox|radio] -- replaced elements render no
+   pseudo-elements. Wrap the label in .u-tap-row instead. */
+.u-tap {
+  position: relative;
+  touch-action: manipulation;
+}
+.u-tap::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 100%;
+  height: 100%;
+  min-width: 44px;
+  min-height: 44px;
+  transform: translate(-50%, -50%);
+}
+
+/* For a checkbox/radio plus its label: the row itself becomes the target. */
+.u-tap-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 44px;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+/* --- gestures ------------------------------------------------------------- */
+
+/* The gesture contract. pan-y permits vertical panning only and excludes
+   pinch-zoom, so the browser owns page scroll and preventDefault() becomes
+   unnecessary -- which is what lets gesture listeners stay passive. A gesture
+   surface without this class is broken on touch. */
+.u-gesture-x { touch-action: pan-y; }
+
+/* --- hover hygiene ------------------------------------------------------- */
+
+/* Kills sticky hover on touch, where :hover latches after a tap and leaves the
+   element transformed. Apply to anything whose hover moves or resizes it. */
+@media (hover: none) {
+  .u-nohover-move:hover,
+  .u-nohover-move:active {
+    transform: none;
+  }
+}
+
+/* --- safe areas ---------------------------------------------------------- */
+
+.u-safe-x {
+  padding-left: max(1rem, env(safe-area-inset-left));
+  padding-right: max(1rem, env(safe-area-inset-right));
+}
+.u-safe-b {
+  padding-bottom: max(1rem, env(safe-area-inset-bottom));
+}
+
+/* --- the Bootstrap column guard ----------------------------------------- */
+
+/* Bootstrap columns default to min-width:auto, which refuses to shrink below
+   their content. That is why the marketing components stack correctly but
+   break *inside* the columns. This is the single highest-leverage rule in the
+   file. Matches `col`, `col-6`, `col-md-6` and mid-list occurrences. */
+.row > .col,
+.row > [class^="col-"],
+.row > [class*=" col-"] {
+  min-width: 0;
+}
+
+/* --- media guard --------------------------------------------------------- */
+
+/* An unconstrained image is the other classic overflow source. height:auto is
+   part of the same rule, not a separate concern: capping width without it
+   distorts any image carrying intrinsic width/height attributes. */
+img,
+svg,
+video,
+canvas {
+  max-width: 100%;
+}
+
+img,
+video {
+  height: auto;
+}
+
+/* --- coarse-pointer form fields ----------------------------------------- */
+
+/* iOS Safari zooms the whole page when a focused field computes under 16px,
+   and never zooms back out. 16px is the literal threshold the engine tests, so
+   this is the one place a raw px belongs; max() keeps honouring a larger user
+   font setting rather than pinning the size. */
+@media (pointer: coarse) {
+  input,
+  select,
+  textarea {
+    font-size: max(16px, 1rem);
+  }
+}

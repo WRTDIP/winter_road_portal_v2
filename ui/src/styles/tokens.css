@@ -1,0 +1,44 @@
+/* Design tokens. Loads FIRST, before Bootstrap, so kits can override nothing here
+   by accident and every later sheet can consume these values. */
+
+:root {
+  /* Viewport scalars. Multiply, never write a raw vh: calc(62 * var(--dvh)).
+     --dvh tracks browser chrome (content that may reflow).
+     --svh is the stable small-viewport height (fixed boxes that must not
+     resize mid-scroll -- a dvh-sized ArcGIS container refires its internal
+     ResizeObserver on every scroll frame as the iOS URL bar animates). */
+  --dvh: 1vh;
+  --svh: 1vh;
+
+  /* Type scale. Every preferred term is `rem + vw`, never vw alone, so browser
+     font-size settings still scale the text (WCAG 1.4.4). */
+  --fs-caption: clamp(0.6875rem, 0.66rem + 0.15vw, 0.75rem);
+  --fs-body-sm: clamp(0.8125rem, 0.78rem + 0.18vw, 0.875rem);
+  --fs-body: clamp(0.9375rem, 0.9rem + 0.2vw, 1rem);
+  --fs-lead: clamp(1.0625rem, 1rem + 0.3vw, 1.1875rem);
+  --fs-h4: clamp(1.125rem, 1.05rem + 0.4vw, 1.375rem);
+  --fs-h3: clamp(1.375rem, 1.2rem + 0.7vw, 1.75rem);
+  --fs-h2: clamp(1.625rem, 1.35rem + 1.1vw, 2.25rem);
+  --fs-h1: clamp(2rem, 1.6rem + 1.8vw, 3rem);
+  --fs-hero: clamp(2.25rem, 1.7rem + 2.6vw, 3.75rem);
+  /* Reserved for CoverBanner. Reaches the original 100px only past ~1800px. */
+  --fs-display: clamp(2.5rem, 1.6rem + 4.2vw, 6.25rem);
+
+  /* Chrome heights, needed by fixed shells that subtract them. */
+  /* antd Layout.Header, measured: constant across widths. */
+  --nav-h: 64px;
+
+  /* Breakpoint canon, for reference only -- CSS cannot use a var in a media
+     query. These are Bootstrap 5's grid values, which antd 4 already matches
+     below xxl. Write max-width one hundredth below the next step up, and tag
+     the rule with its name in a comment.
+     sm 576  md 768  lg 992  xl 1200  xxl 1400 */
+}
+
+@supports (height: 1dvh) {
+  :root { --dvh: 1dvh; }
+}
+
+@supports (height: 1svh) {
+  :root { --svh: 1svh; }
+}

@@ -1,5 +1,6 @@
-import { Button, Form, Alert } from 'react-bootstrap';
+import { Button, Form, Alert, Spinner } from 'react-bootstrap';
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import "./styles.css"
 import DOMPurify from 'dompurify';
 
@@ -8,11 +9,9 @@ import DOMPurify from 'dompurify';
 function AlertDismissible(props) {
     if (props.show) {
         return (
-            <Alert className="mt-3" variant={props.variant} onClose={() => props.setShow(false)} dismissible>
+            <Alert className="authAlert" variant={props.variant} onClose={() => props.setShow(false)} dismissible>
                 <Alert.Heading>{props.dialogHeading}</Alert.Heading>
-                <p>
-                    <div dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(props.dialogMessage) }} />
-                </p>
+                <div dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(props.dialogMessage) }} />
             </Alert>
         );
     }
@@ -30,6 +29,7 @@ function RegisterForm() {
   const [dialogMessage, setDialogMessage] = useState("");
   const [variant, setvariant] = useState("danger");
   const [buttonTimeout, setButtonTimeout] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
 
   const validateFullName = (name) => {
@@ -126,71 +126,102 @@ function RegisterForm() {
   };
   
     return (
-        <Form className="registerForm" onSubmit={handleSubmit}>
-           <Form.Group className="mb-3">
-                <Form.Label className="h5 pb-3">Full Name</Form.Label>
+        <div className="authShell">
+        <Form className="registerForm" onSubmit={handleSubmit} noValidate>
+            <div className="authHeader">
+                <h2 className="authTitle">Create your account</h2>
+                <p className="authSubtitle">We will email you a verification code to finish setting up.</p>
+            </div>
+
+            <Form.Group className="mb-3" controlId="registerFullName">
+                <Form.Label>Full name</Form.Label>
                 <Form.Control
                     type="text"
-                    placeholder="Enter full name"
+                    placeholder="First and last name"
+                    value={fullName}
+                    autoComplete="name"
+                    required
                     onChange={(e) => {
                         setFullName(e.target.value);
                     }}
                 />
             </Form.Group>
 
-            <Form.Group className="mb-3">
-                <Form.Label className="h5 pb-3">Email address</Form.Label>
+            <Form.Group className="mb-3" controlId="registerEmail">
+                <Form.Label>Email address</Form.Label>
                 <Form.Control
                     type="email"
-                    placeholder="Enter email"
+                    placeholder="name@example.com"
+                    value={username}
+                    autoComplete="email"
+                    inputMode="email"
+                    autoCapitalize="none"
+                    spellCheck="false"
+                    required
                     onChange={(e) => {
                         setUsername(e.target.value);
                     }}
                 />
             </Form.Group>
 
-            <Form.Group className="mb-3">
-                <Form.Label className="h5 pb-3">Password</Form.Label>
-                <Form.Control
-                    type="password"
-                    placeholder="Enter password"
-                    onChange={(e) => {
-                        setPassword(e.target.value);
-                    }}
-                />
+            <Form.Group className="mb-3" controlId="registerPassword">
+                <Form.Label>Password</Form.Label>
+                <div className="authPasswordField">
+                    <Form.Control
+                        type={showPassword ? "text" : "password"}
+                        placeholder="Create a password"
+                        value={password}
+                        autoComplete="new-password"
+                        required
+                        onChange={(e) => {
+                            setPassword(e.target.value);
+                        }}
+                    />
+                    <button
+                        type="button"
+                        className="authToggle"
+                        aria-pressed={showPassword}
+                        aria-label={showPassword ? "Hide password" : "Show password"}
+                        onClick={() => setShowPassword((prev) => !prev)}
+                    >
+                        {showPassword ? "Hide" : "Show"}
+                    </button>
+                </div>
+                <span className="authHint">At least 8 characters, including letters and numbers.</span>
             </Form.Group>
 
-            <Form.Group className="mb-3">
-                <Form.Label className="h5 pb-3">Confirm Password</Form.Label>
+            <Form.Group className="mb-3" controlId="registerConfirmPassword">
+                <Form.Label>Confirm password</Form.Label>
                 <Form.Control
-                    type="password"
-                    placeholder="Confirm password"
+                    type={showPassword ? "text" : "password"}
+                    placeholder="Re-enter your password"
+                    value={confirmPassword}
+                    autoComplete="new-password"
+                    required
                     onChange={(e) => {
                         setConfirmPassword(e.target.value);
                     }}
                 />
             </Form.Group>
 
-            <Button
-                variant="outline-primary"
-                className="mt-3 w-100 rounded-pill shadow-sm"
-                style={{ textTransform: 'none', fontWeight: 600 }}
-                type="submit"
-            >
-                Submit
-            </Button>
+            <div className="authActions">
+                <Button variant="primary" type="submit" disabled={buttonTimeout}>
+                    {buttonTimeout && <Spinner animation="border" size="sm" role="status" aria-hidden="true" />}
+                    {buttonTimeout ? "Creating account\u2026" : "Create account"}
+                </Button>
 
-            <Button
-                variant="outline-primary"
-                className="mt-3 w-100 rounded-pill shadow-sm"
-                style={{ textTransform: 'none', fontWeight: 600 }}
-                onClick={() => window.location.href = '/login'}
-            >
-                Back to Login
-            </Button>
+                <div className="authDivider">or</div>
+
+                <Button variant="outline-primary" as={Link} to="/login">
+                    Back to sign in
+                </Button>
+            </div>
+
+            <div className="authFooterLinks">
+                <Link to="/resend-email-validation">Resend verification email</Link>
+            </div>
 
             <AlertDismissible
-                className="mt-3"
                 show={showAlert}
                 setShow={setShowAlert}
                 variant={variant}
@@ -198,6 +229,7 @@ function RegisterForm() {
                 dialogMessage={dialogMessage}
             />
         </Form>
+        </div>
     );
 }
 

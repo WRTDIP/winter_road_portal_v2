@@ -1,0 +1,180 @@
+.blogPage {
+  padding: 2rem 1.5rem 4rem;
+  color: #0e2959;
+}
+
+.blogContainer {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.blogNotice {
+  border: 1px solid #d9e2f0;
+  border-radius: 8px;
+  padding: 1.5rem;
+  background: #f7f9fc;
+  margin-bottom: 2rem;
+}
+
+.blogNotice h3 {
+  color: #38507e;
+  margin-bottom: 0.5rem;
+}
+
+.blogLayout {
+  display: flex;
+  gap: 2rem;
+  align-items: flex-start;
+}
+
+.blogMain {
+  flex: 1;
+  min-width: 0;
+}
+
+.blogSidebar {
+  width: 300px;
+  flex-shrink: 0;
+}
+
+.blogSectionTitle {
+  color: #38507e;
+  font-size: 1.25rem;
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid #d9e2f0;
+}
+
+.blogCard {
+  display: flex;
+  gap: 1rem;
+  border: 1px solid #d9e2f0;
+  border-radius: 8px;
+  background: #fff;
+  overflow: hidden;
+  margin-bottom: 1.25rem;
+  cursor: pointer;
+  transition: box-shadow 0.15s ease, transform 0.15s ease;
+}
+
+.blogCard:hover {
+  box-shadow: 0 4px 14px rgba(14, 41, 89, 0.12);
+  transform: translateY(-2px);
+}
+
+.blogCardImage {
+  width: 220px;
+  height: 150px;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.blogCardBody {
+  padding: 1rem 1rem 1rem 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.blogCardTitle {
+  color: #0e2959;
+  font-size: 1.15rem;
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+}
+
+.blogMeta {
+  color: #6b7a99;
+  font-size: 0.85rem;
+  margin-bottom: 0.5rem;
+}
+
+.blogCardSummary {
+  margin: 0;
+  color: #33405c;
+}
+
+.blogSidebarBox {
+  border: 1px solid #d9e2f0;
+  border-radius: 8px;
+  background: #f7f9fc;
+  padding: 1rem 1.25rem;
+  margin-bottom: 1.5rem;
+}
+
+.blogSidebarBox h4 {
+  color: #38507e;
+  font-size: 1.05rem;
+  margin-bottom: 0.75rem;
+}
+
+.blogSidebarList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.blogSidebarItem {
+  padding: 0.5rem 0;
+  border-bottom: 1px solid #e3eaf5;
+  cursor: pointer;
+}
+
+.blogSidebarItem:last-child {
+  border-bottom: none;
+}
+
+.blogSidebarItem:hover .blogSidebarItemTitle {
+  text-decoration: underline;
+}
+
+.blogSidebarItemTitle {
+  color: #0e2959;
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+.blogSidebarItemMeta {
+  color: #6b7a99;
+  font-size: 0.8rem;
+}
+
+.blogPreviewImage {
+  width: 100%;
+  max-height: 320px;
+  object-fit: cover;
+  border-radius: 6px;
+  margin: 1rem 0 1.25rem;
+}
+
+.blogPreviewTitle {
+  color: #0e2959;
+  margin-bottom: 0.25rem;
+}
+
+.blogPreviewContent p {
+  color: #33405c;
+  line-height: 1.6;
+}
+
+@media (max-width: 900px) {
+  .blogLayout {
+    flex-direction: column;
+  }
+
+  .blogSidebar {
+    width: 100%;
+  }
+
+  .blogCard {
+    flex-direction: column;
+  }
+
+  .blogCardImage {
+    width: 100%;
+    height: 180px;
+  }
+
+  .blogCardBody {
+    padding: 1rem;
+  }
+}

@@ -13,15 +13,23 @@ import {
   nunavutCoordinates,
   yukonCoordinates,
 } from "./Data.js"
-import { width } from "@fortawesome/free-regular-svg-icons/faAddressBook"
 import { getClimateCity } from "../../services/meteo.service.js"
 import { cities } from "../../utils/constants.js"
 import { LineChart, lineElementClasses, areaElementClasses } from "@mui/x-charts/LineChart"
 import { BarChart } from "@mui/x-charts/BarChart"
-import { Icon, Typography } from "@mui/material"
+import { FormControlLabel, Icon, Switch, Typography } from "@mui/material"
 import useMediaQuery from "@mui/material/useMediaQuery"
 import OpenInFullIcon from "@mui/icons-material/OpenInFull"
 import CloseFullscreenIcon from "@mui/icons-material/CloseFullscreen"
+import TuneIcon from "@mui/icons-material/Tune"
+import AcUnitIcon from "@mui/icons-material/AcUnit"
+import LocalFireDepartmentIcon from "@mui/icons-material/LocalFireDepartment"
+import WaterDropIcon from "@mui/icons-material/WaterDrop"
+import CompressIcon from "@mui/icons-material/Compress"
+import UnfoldMoreIcon from "@mui/icons-material/UnfoldMore"
+import StraightenIcon from "@mui/icons-material/Straighten"
+import KeyboardDoubleArrowLeftIcon from "@mui/icons-material/KeyboardDoubleArrowLeft"
+import KeyboardDoubleArrowRightIcon from "@mui/icons-material/KeyboardDoubleArrowRight"
 import IconButton from "@mui/material/IconButton"
 import ForecastPanel from "./ForecastPanel.jsx"
 import YearRangeSlider from "../YearRangeSlider/YearRangeSlider.jsx"
@@ -109,11 +117,35 @@ const CITY_STATION_MAP = {
   "Taloyoak": 54219,
 };
 
-// Interactive gauge summarising the min / average / max days a road is open.
-// The track is coloured by distance from the average: green within one standard
-// deviation, yellow out to two, red out to three, then white beyond. The colour
-// boundaries are hard-edged. Hovering the track shows the day count at the
-// cursor and which standard-deviation band (1σ / 2σ / 3σ) it falls in.
+// Thermal palette shared by the road-season charts. Icy blue = colder / ice is
+// solid / earlier openings; orange → red = warmer / thaw / delayed openings and
+// earlier closures. Orange is the everyday "thaw / closed" tone; red is reserved
+// for strong warming shifts. Green is deliberately absent so "warmer" never
+// reads as OK.
+const THERMAL = {
+  cold: "#0ea5e9",
+  coldDeep: "#0369a1",
+  coldSoft: "#bae6fd",
+  warm: "#dc2626",
+  warmDeep: "#9a3412",
+  warmMid: "#f97316",
+  warmSoft: "#fdba74",
+  warmTint: "#fff7ed",
+  warmEdge: "#fed7aa",
+  ink: "#1e293b",
+  muted: "#64748b",
+}
+
+// Small thermal markers: fire where things are getting hotter, a snowflake
+// where they are getting colder.
+const FireIcon = (props) => <LocalFireDepartmentIcon {...props} />
+const SnowIcon = (props) => <AcUnitIcon {...props} />
+
+// Interactive gauge summarising the shortest / average / longest season a road
+// has had. The track is a thermal scale centred on the average: seasons shorter
+// than usual sit on the warm (amber → red) side, longer ones on the cold (blue)
+// side, with hard-edged bands at one, two and three standard deviations and
+// white beyond that. Hovering shows the day count and how unusual it is.
 function DurationHeatGauge({ durationDays }) {
   const trackRef = useRef(null)
   const [hover, setHover] = useState(null) // { pct, days, label, color }
@@ -128,9 +160,7 @@ function DurationHeatGauge({ durationDays }) {
     durationDays.reduce((s, d) => s + (d - avg) ** 2, 0) / durationDays.length
   )
 
-  const GREEN = "#66bb6a"
-  const YELLOW = "#fdd835"
-  const RED = "#ef5350"
+  const { cold, coldDeep, coldSoft, warm, warmMid, warmSoft, ink } = THERMAL
   const WHITE = "#ffffff"
   const GREY = "#94a3b8"
 
@@ -158,26 +188,31 @@ function DurationHeatGauge({ durationDays }) {
   const sd3Hi = pos(avg + 3 * unit)
 
   // Hard-edged bands (coincident stops at each boundary so colours don't
-  // blend): white | red (3σ) | yellow (2σ) | green (1σ) | yellow | red | white.
+  // blend). Shorter-than-average seasons run amber → red, longer ones run
+  // light → deep blue: white | red | amber | pale amber ‖ pale blue | blue | navy | white.
   const gradient =
     `linear-gradient(to right, ` +
     `${WHITE} 0%, ${WHITE} ${sd3Lo}%, ` +
-    `${RED} ${sd3Lo}%, ${RED} ${sd2Lo}%, ` +
-    `${YELLOW} ${sd2Lo}%, ${YELLOW} ${sd1Lo}%, ` +
-    `${GREEN} ${sd1Lo}%, ${GREEN} ${sd1Hi}%, ` +
-    `${YELLOW} ${sd1Hi}%, ${YELLOW} ${sd2Hi}%, ` +
-    `${RED} ${sd2Hi}%, ${RED} ${sd3Hi}%, ` +
+    `${warm} ${sd3Lo}%, ${warm} ${sd2Lo}%, ` +
+    `${warmMid} ${sd2Lo}%, ${warmMid} ${sd1Lo}%, ` +
+    `${warmSoft} ${sd1Lo}%, ${warmSoft} ${avgPct}%, ` +
+    `${coldSoft} ${avgPct}%, ${coldSoft} ${sd1Hi}%, ` +
+    `${cold} ${sd1Hi}%, ${cold} ${sd2Hi}%, ` +
+    `${coldDeep} ${sd2Hi}%, ${coldDeep} ${sd3Hi}%, ` +
     `${WHITE} ${sd3Hi}%, ${WHITE} 100%)`
 
-  // Classify a duration value into its σ band for the hover readout, expressed
-  // as the likelihood of a season falling in that band under a normal
-  // distribution (per-band probabilities: ≈68% / ≈27% / ≈4% / <1%).
+  // Classify a duration for the hover readout: how unusual it is (σ band,
+  // expressed as the share of seasons expected in that band under a normal
+  // distribution) and which way it leans — shorter seasons mean warmer winters.
   const classify = (value) => {
-    const z = Math.abs(value - avg) / unit
-    if (z <= 1) return { color: GREEN, label: "typical · ≈68% of seasons" }
-    if (z <= 2) return { color: YELLOW, label: "uncommon · ≈27% of seasons" }
-    if (z <= 3) return { color: RED, label: "rare · ≈4% of seasons" }
-    return { color: GREY, label: "very rare · <1% of seasons" }
+    const z = (value - avg) / unit
+    const az = Math.abs(z)
+    const shorter = z < 0
+    const lean = shorter ? "shorter — warmer-winter territory" : "longer — colder-winter territory"
+    if (az <= 1) return { color: shorter ? warmMid : cold, label: `typical · ≈68% of seasons · ${lean}` }
+    if (az <= 2) return { color: shorter ? warmMid : cold, label: `uncommon · ≈27% of seasons · ${lean}` }
+    if (az <= 3) return { color: shorter ? warm : coldDeep, label: `rare · ≈4% of seasons · ${lean}` }
+    return { color: GREY, label: `very rare · <1% of seasons · ${lean}` }
   }
 
   const handleMove = (e) => {
@@ -240,7 +275,7 @@ function DurationHeatGauge({ durationDays }) {
             <div style={{ width: 2, height: 8, background: hover.color, marginTop: 2 }} />
           </div>
         ) : (
-          <Marker pct={avgPct} color="#2e7d32" label="Avg" value={avg} />
+          <Marker pct={avgPct} color={ink} label="Average" value={avg} />
         )}
       </div>
       <div
@@ -273,8 +308,25 @@ function DurationHeatGauge({ durationDays }) {
         ) : null}
       </div>
       <div style={{ position: "relative", height: 36, marginTop: 2 }}>
-        <Marker pct={minPct} color="#c62828" label="Min" value={min} below />
-        <Marker pct={maxPct} color="#c62828" label="Max" value={max} below />
+        <Marker pct={minPct} color={warm} label="Shortest" value={min} below />
+        <Marker pct={maxPct} color={cold} label="Longest" value={max} below />
+      </div>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          gap: 8,
+          marginTop: 2,
+          fontSize: 10.5,
+          fontWeight: 600,
+        }}
+      >
+        <span style={{ display: "flex", alignItems: "center", gap: 3, color: warm }}>
+          <FireIcon sx={{ fontSize: 14 }} /> Shorter season · warmer winters
+        </span>
+        <span style={{ display: "flex", alignItems: "center", gap: 3, color: cold, textAlign: "right" }}>
+          Longer season · colder winters <SnowIcon sx={{ fontSize: 14 }} />
+        </span>
       </div>
     </div>
   )
@@ -356,9 +408,6 @@ function WeatherMap() {
   // Per-month Mann-Kendall / Sen's slope trends for the precipitation table.
   const [precipTrend, setPrecipTrend] = useState(null)
   const [precipTrendLoading, setPrecipTrendLoading] = useState(false)
-  // "Advanced" reveals the statistical detail (p-values). Off by default so the
-  // table reads as plain mm/yr for a non-technical visitor.
-  const [precipTrendAdvanced, setPrecipTrendAdvanced] = useState(false)
   const [tempData, setTempData] = useState(null) // {labels: [], avgs: [], maxs: [], mins: []}
   const [tempLoading, setTempLoading] = useState(false)
   const [tempMonthRange, setTempMonthRange] = useState([defaultMonthStart, defaultMonthEnd])
@@ -541,9 +590,9 @@ function WeatherMap() {
       )
     }
 
-    // Green = opening, Red = closing.
-    const OPEN_COLOR = "#16a34a"
-    const CLOSE_COLOR = "#dc2626"
+    // Blue = opening (freeze-up, cold), Orange = closing (thaw, warm).
+    const OPEN_COLOR = THERMAL.cold
+    const CLOSE_COLOR = THERMAL.warmMid
 
     // Align the raw points to the shared year axis (null where a year has no
     // record) so they can be drawn as marks on a LineChart.
@@ -563,13 +612,14 @@ function WeatherMap() {
     const yMin = allY.length ? Math.floor(Math.min(...allY) - 5) : undefined
     const yMax = allY.length ? Math.ceil(Math.max(...allY) + 5) : undefined
 
-    // Shade the chart by road status: solid green between the opening and
-    // closing trend lines (road open) and solid red everywhere else (road
-    // closed). The red is a full-height area covering the whole plot; the green
-    // band is two stacked areas — a transparent base on the opening trend and a
-    // fill carrying the (close − open) gap — so it spans exactly from the
-    // opening line up to the closing line. Both are null wherever either trend
-    // is missing so the shading only covers the range where both trends exist.
+    // Shade the chart by road status: blue between the opening and closing
+    // trend lines (road open — ice is solid) and a warm amber wash everywhere
+    // else (road closed — too warm for ice). The amber is a full-height area
+    // covering the whole plot; the blue band is two stacked areas — a
+    // transparent base on the opening trend and a fill carrying the
+    // (close − open) gap — so it spans exactly from the opening line up to the
+    // closing line. Both are null wherever either trend is missing so the
+    // shading only covers the range where both trends exist.
     const redBackgroundData = years.map(() => yMax)
     const bandFillData = years.map((_, i) => {
       const o = openLowess[i]
@@ -581,8 +631,8 @@ function WeatherMap() {
     )
 
     const series = [
-      // Red "closed" background: a full-height area filling the whole plot.
-      // Drawn first so the green band and the data sit on top of it.
+      // Warm "closed" background: a full-height area filling the whole plot.
+      // Drawn first so the blue band and the data sit on top of it.
       {
         type: "line",
         id: "redBg",
@@ -593,7 +643,7 @@ function WeatherMap() {
         color: "transparent",
         valueFormatter: () => null,
       },
-      // Green "open" band between the trend lines (transparent stacked base on
+      // Blue "open" band between the trend lines (transparent stacked base on
       // the opening trend + a fill carrying the close−open gap).
       {
         type: "line",
@@ -624,7 +674,7 @@ function WeatherMap() {
       {
         type: "line",
         id: "openPts",
-        label: "Opening",
+        label: "Opening (freeze-up)",
         color: OPEN_COLOR,
         data: openRaw,
         showMark: true,
@@ -645,7 +695,7 @@ function WeatherMap() {
       {
         type: "line",
         id: "closePts",
-        label: "Closing",
+        label: "Closing (thaw)",
         color: CLOSE_COLOR,
         data: closeRaw,
         showMark: true,
@@ -718,16 +768,39 @@ function WeatherMap() {
             "& .MuiLineElement-series-redBg": { display: "none" },
             "& .MuiLineElement-series-bandBase": { display: "none" },
             "& .MuiLineElement-series-bandFill": { display: "none" },
-            // Solid red "closed" background and solid green "open" band.
-            "& .MuiAreaElement-series-redBg": { fill: CLOSE_COLOR, fillOpacity: 0.18 },
-            "& .MuiAreaElement-series-bandFill": { fill: OPEN_COLOR, fillOpacity: 0.32 },
+            // Soft orange "closed" wash and solid blue "open" band.
+            "& .MuiAreaElement-series-redBg": { fill: THERMAL.warmMid, fillOpacity: 0.14 },
+            "& .MuiAreaElement-series-bandFill": { fill: OPEN_COLOR, fillOpacity: 0.3 },
             // Dash the trend lines so they read distinctly from the points.
             "& .MuiLineElement-series-openTrend": { strokeDasharray: "6 4" },
             "& .MuiLineElement-series-closeTrend": { strokeDasharray: "6 4" },
           }}
         />
+        <div
+          style={{
+            display: "flex",
+            flexWrap: "wrap",
+            justifyContent: "center",
+            gap: "4px 16px",
+            marginTop: 4,
+            fontSize: 11,
+            color: THERMAL.muted,
+          }}
+        >
+          <span style={{ display: "flex", alignItems: "center", gap: 5 }}>
+            <span style={{ width: 14, height: 10, borderRadius: 2, background: OPEN_COLOR, opacity: 0.3 }} />
+            <AcUnitIcon sx={{ fontSize: 13, color: THERMAL.cold }} />
+            Road open — ice is solid
+          </span>
+          <span style={{ display: "flex", alignItems: "center", gap: 5 }}>
+            <span style={{ width: 14, height: 10, borderRadius: 2, background: THERMAL.warmMid, opacity: 0.35 }} />
+            <FireIcon sx={{ fontSize: 13, color: THERMAL.warmMid }} />
+            Road closed — too warm for safe ice
+          </span>
+        </div>
         <Typography variant="caption" color="text.secondary" sx={{ display: "block", mt: 0.5, textAlign: "center" }}>
-          Points are recorded open/close dates per season; lines are LOWESS trends.
+          Points are recorded open/close dates per season; dashed lines are the long-term trends.
+          If the blue band gets narrower from left to right, the season is shrinking.
         </Typography>
       </div>
     )
@@ -853,9 +926,6 @@ function WeatherMap() {
     return p.toFixed(3)
   }
 
-  // Per-month Sen's slope table shown under the precipitation chart. Each row
-  // carries a red direction arrow, a diverging magnitude bar, and a colour-coded
-  // significance pill.
   const renderPrecipTrendTable = () => {
     if (precipTrendLoading) {
       return (
@@ -874,6 +944,13 @@ function WeatherMap() {
     // Scale the magnitude bars against the largest absolute slope so the
     // strongest month fills the half-width and the rest read relative to it.
     const maxAbs = Math.max(...usable.map((m) => Math.abs(m.sens_slope)), 0.0001)
+    const trendColor = (slope) => {
+      if (slope == null) return "#94a3b8"
+      const amount = (slope / maxAbs + 1) / 2
+      const dry = [247, 251, 255]
+      const wet = [30, 58, 138]
+      return `rgb(${dry.map((channel, index) => Math.round(channel + (wet[index] - channel) * amount)).join(", ")})`
+    }
 
     const isSignificant = (m) => m.p != null && m.p < 0.05
     // Months in the chart's current window get a subtle highlight so the table
@@ -890,7 +967,7 @@ function WeatherMap() {
           <div>
             <div className="wrtdip-trend-panel__title">Monthly Precipitation Trends</div>
             <div className="wrtdip-trend-panel__sub">
-              {precipTrendAdvanced ? (
+              {showAdvanced ? (
                 <>
                   Sen&rsquo;s slope (Theil&ndash;Sen) of monthly totals against year, with a
                   Mann&ndash;Kendall test for significance.
@@ -915,29 +992,15 @@ function WeatherMap() {
                 </span>
               </div>
             )}
-            <button
-              type="button"
-              aria-pressed={precipTrendAdvanced}
-              title={
-                precipTrendAdvanced
-                  ? "Hide the statistical detail"
-                  : "Show p-values and the statistical detail behind each trend"
-              }
-              className={`wrtdip-trend-adv-btn${precipTrendAdvanced ? " wrtdip-trend-adv-btn--active" : ""}`}
-              onClick={() => setPrecipTrendAdvanced((v) => !v)}
-            >
-              <span className="wrtdip-trend-adv-btn__icon">{precipTrendAdvanced ? "▾" : "▸"}</span>
-              Advanced
-            </button>
           </div>
         </div>
 
-        {strongest && (
+        {showAdvanced && strongest && (
           <div className="wrtdip-trend-panel__headline">
             Strongest signal:&nbsp;
             <strong>{strongest.name}</strong>
-            <span className={`wrtdip-trend-arrow wrtdip-trend-arrow--${strongest.direction}`}>
-              {strongest.direction === "increasing" ? "▲" : "▼"}
+            <span className="wrtdip-trend-drop" style={{ color: trendColor(strongest.sens_slope) }}>
+              <WaterDropIcon fontSize="inherit" />
             </span>
             {strongest.sens_slope > 0 ? "+" : "−"}
             {Math.abs(strongest.sens_slope).toFixed(2)} mm/yr
@@ -948,16 +1011,18 @@ function WeatherMap() {
         )}
 
         <div className="wrtdip-trend-table-wrap">
-          <table className="wrtdip-trend-table">
+          <table className={`wrtdip-trend-table${showAdvanced ? " wrtdip-trend-table--advanced" : ""}`}>
             <thead>
               <tr>
                 <th className="wrtdip-trend-table__th">Month</th>
                 <th className="wrtdip-trend-table__th wrtdip-trend-table__th--num">
-                  Sen&rsquo;s Slope (mm/yr)
+                  {showAdvanced ? "Sen's Slope (mm/yr)" : "Change (mm/yr)"}
                 </th>
-                <th className="wrtdip-trend-table__th">Significance</th>
-                {precipTrendAdvanced && (
-                  <th className="wrtdip-trend-table__th wrtdip-trend-table__th--num">p&#8209;value</th>
+                {showAdvanced && (
+                  <>
+                    <th className="wrtdip-trend-table__th">Significance</th>
+                    <th className="wrtdip-trend-table__th wrtdip-trend-table__th--num">p&#8209;value</th>
+                  </>
                 )}
               </tr>
             </thead>
@@ -965,7 +1030,6 @@ function WeatherMap() {
               {months.map((m) => {
                 const sig = PRECIP_SIG_STYLES[m.significance] || PRECIP_SIG_STYLES.none
                 const slope = m.sens_slope
-                const sigTrend = isSignificant(m)
                 const pctW = slope == null ? 0 : (Math.abs(slope) / maxAbs) * 50
                 return (
                   <tr
@@ -974,18 +1038,16 @@ function WeatherMap() {
                   >
                     <td className="wrtdip-trend-table__month">
                       <span
-                        className={
-                          `wrtdip-trend-arrow wrtdip-trend-arrow--${m.direction}` +
-                          (sigTrend ? "" : " wrtdip-trend-arrow--weak")
-                        }
-                        title={
-                          m.direction === "none"
-                            ? "No change"
-                            : `${m.direction === "increasing" ? "Increasing" : "Decreasing"} precipitation` +
-                              (sigTrend ? "" : " (not statistically significant)")
+                        className="wrtdip-trend-drop"
+                        style={{ color: trendColor(slope) }}
+                        role="img"
+                        aria-label={
+                          slope == null ? "Insufficient data" :
+                          slope === 0 ? "No change" :
+                          slope > 0 ? "Getting wetter" : "Getting drier"
                         }
                       >
-                        {m.direction === "increasing" ? "▲" : m.direction === "decreasing" ? "▼" : "–"}
+                        {slope == null ? "\u2014" : <WaterDropIcon fontSize="inherit" />}
                       </span>
                       <span className="wrtdip-trend-table__month-name">{m.name}</span>
                     </td>
@@ -994,36 +1056,33 @@ function WeatherMap() {
                         <span className="wrtdip-trend-bar__axis" />
                         {slope != null && (
                           <span
-                            className={`wrtdip-trend-bar__fill wrtdip-trend-bar__fill--${m.direction}${sigTrend ? "" : " wrtdip-trend-bar__fill--weak"}`}
-                            style={
-                              slope >= 0
-                                ? { left: "50%", width: `${pctW}%` }
-                                : { right: "50%", width: `${pctW}%` }
-                            }
+                            className="wrtdip-trend-bar__fill"
+                            style={{
+                              [slope >= 0 ? "left" : "right"]: "50%",
+                              width: `${pctW}%`,
+                              backgroundColor: trendColor(slope),
+                            }}
                           />
                         )}
                       </div>
-                      <span
-                        className={
-                          "wrtdip-trend-table__value" +
-                          (sigTrend ? ` wrtdip-trend-table__value--strong wrtdip-trend-table__value--${m.direction}` : "")
-                        }
-                      >
+                      <span className="wrtdip-trend-table__value">
                         {slope == null
                           ? "—"
                           : `${slope > 0 ? "+" : slope < 0 ? "−" : ""}${Math.abs(slope).toFixed(3)}`}
                       </span>
                     </td>
-                    <td>
-                      <span
-                        className={`wrtdip-sig-pill wrtdip-sig-pill--${m.significance}`}
-                        title={`${sig.label} (${sig.short})`}
-                      >
-                        {sig.label}
-                      </span>
-                    </td>
-                    {precipTrendAdvanced && (
-                      <td className="wrtdip-trend-table__p">{fmtPValue(m.p)}</td>
+                    {showAdvanced && (
+                      <>
+                        <td>
+                          <span
+                            className={`wrtdip-sig-pill wrtdip-sig-pill--${m.significance}`}
+                            title={`${sig.label} (${sig.short})`}
+                          >
+                            {sig.label}
+                          </span>
+                        </td>
+                        <td className="wrtdip-trend-table__p">{fmtPValue(m.p)}</td>
+                      </>
                     )}
                   </tr>
                 )
@@ -1032,26 +1091,27 @@ function WeatherMap() {
           </table>
         </div>
 
-        <div className="wrtdip-trend-legend">
-          <span className="wrtdip-trend-legend__item">
-            <span className="wrtdip-trend-arrow wrtdip-trend-arrow--increasing">▲</span> getting wetter
-          </span>
-          <span className="wrtdip-trend-legend__item">
-            <span className="wrtdip-trend-arrow wrtdip-trend-arrow--decreasing">▼</span> getting drier
-          </span>
-          <span className="wrtdip-trend-legend__sep" />
-          {["very", "significant", "somewhat", "none"].map((k) => (
-            <span key={k} className="wrtdip-trend-legend__item">
-              <span className={`wrtdip-sig-dot wrtdip-sig-dot--${k}`} />
-              {PRECIP_SIG_STYLES[k].label}
-              {precipTrendAdvanced && <em>{PRECIP_SIG_STYLES[k].short}</em>}
-            </span>
-          ))}
+        <div className="wrtdip-precip-scale">
+          <WaterDropIcon className="wrtdip-precip-scale__icon" />
+          <div className="wrtdip-precip-scale__body">
+            <div className="wrtdip-precip-scale__gradient" aria-hidden="true" />
+            <div className="wrtdip-precip-scale__labels">
+              <span>Getting drier</span>
+              <span>Getting wetter</span>
+            </div>
+          </div>
         </div>
-        <div className="wrtdip-trend-legend__note">
-          Faded arrows mark months whose direction is not statistically significant.
-          Highlighted rows are the months currently shown in the chart above.
-        </div>
+        {showAdvanced && (
+          <div className="wrtdip-trend-legend">
+            {["very", "significant", "somewhat", "none"].map((level) => (
+              <span key={level} className="wrtdip-trend-legend__item">
+                <span className={`wrtdip-sig-dot wrtdip-sig-dot--${level}`} />
+                {PRECIP_SIG_STYLES[level].label}
+                <em>{PRECIP_SIG_STYLES[level].short}</em>
+              </span>
+            ))}
+          </div>
+        )}
       </div>
     )
   }
@@ -1077,10 +1137,7 @@ function WeatherMap() {
       )
     }
 
-    const OPEN_COLOR = "#16a34a"
-    const CLOSE_COLOR = "#dc2626"
-    const INK = "#1e293b"
-    const MUTED = "#64748b"
+    const { cold, coldDeep, coldSoft, warm, warmDeep, warmMid, warmSoft, warmTint, warmEdge, ink: INK, muted: MUTED } = THERMAL
 
     const isSig = (s) => s && s.mk_p < 0.05
     // Long-term shift in days per decade, as a friendly rounded string.
@@ -1088,74 +1145,116 @@ function WeatherMap() {
       const v = Math.abs(slope * 10)
       return v >= 3 ? String(Math.round(v)) : v.toFixed(1)
     }
+    // A shift is "warming" when it shortens the season: openings drifting later
+    // or closings drifting earlier. Every colour in this section keys off this.
+    const isWarming = (s, kind) => (kind === "open" ? s.sens_slope > 0 : s.sens_slope < 0)
 
-    // One headline tile: label + colored series dot, big value, small context
-    // line, and an evidence chip. Text stays in ink; the dot carries identity.
-    const Tile = ({ label, color, value, sub, chip, chipStrong }) => (
-      <div
-        style={{
-          flex: "1 1 130px",
-          minWidth: 130,
-          background: "#f8fafc",
-          border: "1px solid #e2e8f0",
-          borderRadius: 10,
-          padding: "10px 12px",
-        }}
-      >
-        <div style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 11, color: MUTED }}>
-          {color && (
-            <span style={{ width: 8, height: 8, borderRadius: 4, background: color, flex: "0 0 auto" }} />
-          )}
-          {label}
-        </div>
-        <div style={{ fontSize: 19, fontWeight: 600, color: INK, lineHeight: 1.25, marginTop: 2 }}>
-          {value}
-        </div>
-        {sub && <div style={{ fontSize: 11, color: MUTED, marginTop: 1 }}>{sub}</div>}
-        {chip && (
-          <span
+    const CHIP_TONES = {
+      warm: { color: warmDeep, background: "#ffedd5", border: warmEdge },
+      cold: { color: coldDeep, background: "#e0f2fe", border: coldSoft },
+      neutral: { color: MUTED, background: "#f1f5f9", border: "#e2e8f0" },
+    }
+
+    // One headline tile: icon + label, big value (tinted warm or cold when it
+    // represents a real shift), small context line, and a plain-language chip.
+    const Tile = ({ icon, label, value, valueColor, sub, chip, tone = "neutral" }) => {
+      const t = CHIP_TONES[tone]
+      return (
+        <div
+          style={{
+            flex: "1 1 130px",
+            minWidth: 130,
+            background: "#f8fafc",
+            border: "1px solid #e2e8f0",
+            borderRadius: 10,
+            padding: "10px 12px",
+          }}
+        >
+          <div style={{ display: "flex", alignItems: "center", gap: 5, fontSize: 11, color: MUTED }}>
+            {icon}
+            {label}
+          </div>
+          <div
             style={{
-              display: "inline-block",
-              marginTop: 6,
-              padding: "1px 8px",
-              borderRadius: 999,
-              fontSize: 10,
+              display: "flex",
+              alignItems: "center",
+              gap: 2,
+              fontSize: 19,
               fontWeight: 600,
-              color: chipStrong ? "#1e3a8a" : MUTED,
-              background: chipStrong ? "#dbeafe" : "#f1f5f9",
-              border: `1px solid ${chipStrong ? "#bfdbfe" : "#e2e8f0"}`,
+              color: valueColor || INK,
+              lineHeight: 1.25,
+              marginTop: 2,
             }}
           >
-            {chip}
-          </span>
-        )}
-      </div>
-    )
+            {value}
+          </div>
+          {sub && <div style={{ fontSize: 11, color: MUTED, marginTop: 1 }}>{sub}</div>}
+          {chip && (
+            <span
+              style={{
+                display: "inline-block",
+                marginTop: 6,
+                padding: "1px 8px",
+                borderRadius: 999,
+                fontSize: 10,
+                fontWeight: 600,
+                color: t.color,
+                background: t.background,
+                border: `1px solid ${t.border}`,
+              }}
+            >
+              {chip}
+            </span>
+          )}
+        </div>
+      )
+    }
+
+    const openIcon = <SnowIcon sx={{ fontSize: 14, color: cold }} />
+    const closeIcon = <FireIcon sx={{ fontSize: 14, color: warmMid }} />
 
     // Headline for a date series: the per-decade shift if the trend is real,
-    // otherwise "no clear shift".
-    const seriesTile = (label, color, s) => {
-      if (!s) return <Tile label={label} color={color} value="No data" />
+    // otherwise "no clear shift". Shifts that shorten the season are warm/red,
+    // shifts that lengthen it are cold/blue.
+    const seriesTile = (kind, s) => {
+      const isOpen = kind === "open"
+      const label = isOpen ? "Opening date (freeze-up)" : "Closing date (thaw)"
+      const icon = isOpen ? openIcon : closeIcon
+      if (!s) return <Tile icon={icon} label={label} value="No data" />
       if (!isSig(s)) {
         return (
           <Tile
+            icon={icon}
             label={label}
-            color={color}
             value="No clear shift"
-            sub={`typically around ${s.avg_date}`}
+            sub={`usually around ${s.avg_date}`}
             chip="steady so far"
           />
         )
       }
       const later = s.sens_slope > 0
+      const warming = isWarming(s, kind)
+      const Arrow = later ? KeyboardDoubleArrowRightIcon : KeyboardDoubleArrowLeftIcon
+      const Thermo = warming ? FireIcon : SnowIcon
       return (
         <Tile
+          icon={icon}
           label={label}
-          color={color}
-          value={`${later ? "→" : "←"} ${perDecade(s.sens_slope)} days ${later ? "later" : "earlier"}`}
-          sub={`per decade since ${s.first_year}`}
-          chip={`strong evidence (${fmtP(s.mk_p)})`}
-          chipStrong
+          value={
+            <>
+              <Thermo sx={{ fontSize: 20, mr: 0.25 }} />
+              <Arrow sx={{ fontSize: 22, ml: -0.5 }} />
+              {perDecade(s.sens_slope)} days {later ? "later" : "earlier"}
+            </>
+          }
+          valueColor={warming ? warm : cold}
+          sub={`per decade since ${s.first_year} · strong evidence`}
+          chip={
+            warming
+              ? isOpen ? "warmer early winters" : "warmer springs"
+              : isOpen ? "colder early winters" : "colder springs"
+          }
+          tone={warming ? "warm" : "cold"}
         />
       )
     }
@@ -1165,98 +1264,223 @@ function WeatherMap() {
       if (!open || !close) return null
       const changePerDecade = (close.sens_slope - open.sens_slope) * 10
       const avgLen = Math.round(close.avg_dos - open.avg_dos)
+      const icon = <StraightenIcon sx={{ fontSize: 14, color: MUTED }} />
       if (Math.abs(changePerDecade) < 1) {
-        return <Tile label="Season length" value="Holding steady" sub={`≈ ${avgLen} days on average`} />
+        return <Tile icon={icon} label="Season length" value="Holding steady" sub={`≈ ${avgLen} days on average`} />
       }
       const shrinking = changePerDecade < 0
+      const evidence = isSig(open) || isSig(close)
       return (
         <Tile
+          icon={icon}
           label="Season length"
-          value={`${Math.round(Math.abs(changePerDecade))} days ${shrinking ? "shorter" : "longer"}`}
+          value={
+            <>
+              {shrinking ? (
+                <FireIcon sx={{ fontSize: 20, mr: 0.25 }} />
+              ) : (
+                <SnowIcon sx={{ fontSize: 20, mr: 0.25 }} />
+              )}
+              {shrinking ? (
+                <CompressIcon sx={{ fontSize: 22, ml: -0.5, transform: "rotate(90deg)" }} />
+              ) : (
+                <UnfoldMoreIcon sx={{ fontSize: 22, ml: -0.5, transform: "rotate(90deg)" }} />
+              )}
+              {Math.round(Math.abs(changePerDecade))} days {shrinking ? "shorter" : "longer"}
+            </>
+          }
+          valueColor={shrinking ? warm : cold}
           sub={`per decade · ≈ ${avgLen} days on average`}
-          chip={shrinking ? "season is shrinking" : "season is growing"}
-          chipStrong={isSig(open) || isSig(close)}
+          chip={shrinking ? "season squeezing inward" : "season stretching outward"}
+          tone={evidence ? (shrinking ? "warm" : "cold") : "neutral"}
         />
       )
     }
 
-    // Season timeline: opening and closing windows (earliest → latest, with an
-    // average marker) on a shared Aug-to-July day-of-season scale, joined by a
-    // band showing the typical open season.
+    // "Then vs now" season strip. Each end of the season is projected to the
+    // start and end of the record with its Sen's slope (only when that trend is
+    // significant — steady ends stay put), so the two bars show how far the
+    // season has been squeezed inward (red, lost days) or stretched outward
+    // (pale blue, gained days) over the record. Everything sits on a shared
+    // Aug-to-July day-of-season scale with a warm wash for "road closed".
     const seasonStrip = () => {
       if (!open || !close) return null
-      const lo = open.earliest_dos - 10
-      const hi = close.latest_dos + 10
+      const firstYear = Math.min(open.first_year, close.first_year)
+      const lastYear = Math.max(open.last_year, close.last_year)
+      const mid = (firstYear + lastYear) / 2
+      const project = (s, year) => s.avg_dos + (isSig(s) ? s.sens_slope * (year - mid) : 0)
+      const early = { open: project(open, firstYear), close: project(close, firstYear) }
+      const recent = { open: project(open, lastYear), close: project(close, lastYear) }
+      const openShift = recent.open - early.open // + = opens later (warming)
+      const closeShift = recent.close - early.close // − = closes earlier (warming)
+      const anyShift = Math.abs(openShift) >= 1 || Math.abs(closeShift) >= 1
+
+      const lo = Math.min(open.earliest_dos, early.open, recent.open) - 6
+      const hi = Math.max(close.latest_dos, early.close, recent.close) + 6
       const pct = (v) => ((v - lo) / (hi - lo)) * 100
-      const band = (s, color) => (
+
+      const Segment = ({ from, to, style }) =>
+        to - from > 0.01 ? (
+          <div
+            style={{
+              position: "absolute",
+              top: 3,
+              bottom: 3,
+              left: `${pct(from)}%`,
+              width: `${pct(to) - pct(from)}%`,
+              borderRadius: 3,
+              ...style,
+            }}
+          />
+        ) : null
+
+      // Fire + inward arrow over lost days, snowflake + outward arrow over gained days.
+      const ShiftArrow = ({ from, to, inward, side }) => {
+        if (Math.abs(to - from) < 1) return null
+        const pointsRight = side === "open" ? inward : !inward
+        const Arrow = pointsRight ? KeyboardDoubleArrowRightIcon : KeyboardDoubleArrowLeftIcon
+        const Thermo = inward ? FireIcon : SnowIcon
+        const days = Math.round(Math.abs(to - from))
+        const title =
+          side === "open"
+            ? `Opens ≈ ${days} days ${inward ? "later" : "earlier"} than at the start of the record`
+            : `Closes ≈ ${days} days ${inward ? "earlier" : "later"} than at the start of the record`
+        return (
+          <span
+            title={title}
+            style={{
+              position: "absolute",
+              top: "50%",
+              left: `${(pct(from) + pct(to)) / 2}%`,
+              transform: "translate(-50%, -50%)",
+              display: "flex",
+              alignItems: "center",
+              color: inward ? warm : cold,
+              filter: "drop-shadow(0 0 2px #fff)",
+            }}
+          >
+            {side === "open" && <Thermo sx={{ fontSize: 15 }} />}
+            <Arrow sx={{ fontSize: 18, mx: -0.25 }} />
+            {side === "close" && <Thermo sx={{ fontSize: 15 }} />}
+          </span>
+        )
+      }
+
+      const Row = ({ label, year, o, c, children }) => (
         <div
           style={{
-            position: "absolute",
-            top: 12,
-            left: `${pct(s.earliest_dos)}%`,
-            width: `${Math.max(pct(s.latest_dos) - pct(s.earliest_dos), 1)}%`,
-            height: 8,
-            borderRadius: 4,
-            background: color,
-            opacity: 0.3,
+            display: "grid",
+            gridTemplateColumns: "84px 1fr",
+            alignItems: "center",
+            gap: 8,
           }}
-        />
-      )
-      const avgDot = (s, color) => (
-        <div
-          style={{
-            position: "absolute",
-            top: 11,
-            left: `${pct(s.avg_dos)}%`,
-            width: 10,
-            height: 10,
-            borderRadius: 5,
-            background: color,
-            border: "2px solid #fff",
-            transform: "translateX(-50%)",
-            boxShadow: "0 0 0 1px rgba(15,23,42,0.15)",
-          }}
-        />
-      )
-      return (
-        <div style={{ marginTop: 12 }}>
-          <div style={{ position: "relative", height: 40 }}>
-            {/* typical open season between the two average dates */}
+        >
+          <div style={{ fontSize: 11, color: INK, fontWeight: 600, lineHeight: 1.2 }}>
+            {label}
+            {year != null && <div style={{ fontSize: 10, color: MUTED, fontWeight: 400 }}>around {year}</div>}
+          </div>
+          <div>
             <div
               style={{
-                position: "absolute",
-                top: 14,
-                left: `${pct(open.avg_dos)}%`,
-                width: `${pct(close.avg_dos) - pct(open.avg_dos)}%`,
-                height: 4,
-                background: "#cbd5e1",
-              }}
-            />
-            {band(open, OPEN_COLOR)}
-            {band(close, CLOSE_COLOR)}
-            {avgDot(open, OPEN_COLOR)}
-            {avgDot(close, CLOSE_COLOR)}
-            <span
-              style={{
-                position: "absolute",
-                top: 26,
-                left: `${(pct(open.avg_dos) + pct(close.avg_dos)) / 2}%`,
-                transform: "translateX(-50%)",
-                fontSize: 10,
-                color: MUTED,
-                whiteSpace: "nowrap",
+                position: "relative",
+                height: 24,
+                borderRadius: 6,
+                background: warmTint,
+                border: `1px solid ${warmEdge}`,
               }}
             >
-              ≈ {Math.round(close.avg_dos - open.avg_dos)} days open
-            </span>
+              <Segment
+                from={o}
+                to={c}
+                style={{ background: `linear-gradient(90deg, ${cold} 0%, ${coldDeep} 100%)` }}
+              />
+              <span
+                style={{
+                  position: "absolute",
+                  top: 0,
+                  bottom: 0,
+                  left: `${(pct(o) + pct(c)) / 2}%`,
+                  transform: "translateX(-50%)",
+                  display: "flex",
+                  alignItems: "center",
+                  color: "#fff",
+                  fontSize: 10.5,
+                  fontWeight: 700,
+                  whiteSpace: "nowrap",
+                  pointerEvents: "none",
+                }}
+              >
+                {Math.round(c - o)} days
+              </span>
+              {children}
+            </div>
+            <div style={{ position: "relative", height: 13, fontSize: 10, color: MUTED }}>
+              <span style={{ position: "absolute", left: `${pct(o)}%`, transform: "translateX(-50%)", whiteSpace: "nowrap" }}>
+                {dosToLabel(o)}
+              </span>
+              <span style={{ position: "absolute", left: `${pct(c)}%`, transform: "translateX(-50%)", whiteSpace: "nowrap" }}>
+                {dosToLabel(c)}
+              </span>
+            </div>
           </div>
-          <div style={{ display: "flex", flexWrap: "wrap", gap: "4px 16px", marginTop: 4 }}>
+        </div>
+      )
+
+      const lostStyle = { background: warmSoft, border: `1px dashed ${warmMid}` }
+      const gainedStyle = { background: coldSoft, border: `1px dashed ${cold}` }
+
+      return (
+        <div style={{ marginTop: 12 }}>
+          {anyShift ? (
+            <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
+              <Row label="Early record" year={firstYear} o={early.open} c={early.close} />
+              <Row label="Recent" year={lastYear} o={recent.open} c={recent.close}>
+                {openShift > 0 && <Segment from={early.open} to={recent.open} style={lostStyle} />}
+                {openShift < 0 && <Segment from={recent.open} to={early.open} style={gainedStyle} />}
+                {closeShift < 0 && <Segment from={recent.close} to={early.close} style={lostStyle} />}
+                {closeShift > 0 && <Segment from={early.close} to={recent.close} style={gainedStyle} />}
+                <ShiftArrow from={early.open} to={recent.open} inward={openShift > 0} side="open" />
+                <ShiftArrow from={early.close} to={recent.close} inward={closeShift < 0} side="close" />
+              </Row>
+            </div>
+          ) : (
+            <Row label="Typical season" o={early.open} c={early.close} />
+          )}
+          <div style={{ display: "flex", flexWrap: "wrap", gap: "4px 14px", marginTop: 6, fontSize: 11, color: MUTED }}>
+            <span style={{ display: "flex", alignItems: "center", gap: 5 }}>
+              <span style={{ width: 14, height: 10, borderRadius: 2, background: cold }} />
+              <SnowIcon sx={{ fontSize: 13, color: cold }} />
+              Road open — ice is solid
+            </span>
+            <span style={{ display: "flex", alignItems: "center", gap: 5 }}>
+              <span style={{ width: 14, height: 10, borderRadius: 2, background: warmTint, border: `1px solid ${warmEdge}` }} />
+              <FireIcon sx={{ fontSize: 13, color: warmMid }} />
+              Road closed — too warm for safe ice
+            </span>
+            {anyShift && (openShift > 0 || closeShift < 0) && (
+              <span style={{ display: "flex", alignItems: "center", gap: 5 }}>
+                <span style={{ width: 14, height: 10, borderRadius: 2, ...lostStyle }} />
+                <FireIcon sx={{ fontSize: 13, color: warm }} />
+                <CompressIcon sx={{ fontSize: 13, color: warm, transform: "rotate(90deg)", ml: -0.5 }} />
+                Days lost to warming
+              </span>
+            )}
+            {anyShift && (openShift < 0 || closeShift > 0) && (
+              <span style={{ display: "flex", alignItems: "center", gap: 5 }}>
+                <span style={{ width: 14, height: 10, borderRadius: 2, ...gainedStyle }} />
+                <SnowIcon sx={{ fontSize: 13, color: cold }} />
+                <UnfoldMoreIcon sx={{ fontSize: 13, color: cold, transform: "rotate(90deg)", ml: -0.5 }} />
+                Days gained from colder winters
+              </span>
+            )}
+          </div>
+          <div style={{ display: "flex", flexWrap: "wrap", gap: "4px 16px", marginTop: 6 }}>
             <span style={{ fontSize: 11, color: MUTED, display: "flex", alignItems: "center", gap: 5 }}>
-              <span style={{ width: 8, height: 8, borderRadius: 4, background: OPEN_COLOR }} />
+              {openIcon}
               Opens {open.earliest_date} – {open.latest_date} (usually {open.avg_date})
             </span>
             <span style={{ fontSize: 11, color: MUTED, display: "flex", alignItems: "center", gap: 5 }}>
-              <span style={{ width: 8, height: 8, borderRadius: 4, background: CLOSE_COLOR }} />
+              {closeIcon}
               Closes {close.earliest_date} – {close.latest_date} (usually {close.avg_date})
             </span>
           </div>
@@ -1279,6 +1503,13 @@ function WeatherMap() {
       takeaway = `Over this record, ${parts.join(" and ")} — a signal of changing winter conditions.`
     }
 
+    // Whether the overall story is a warming squeeze, used to tint the takeaway.
+    const warmingStory =
+      (isSig(open) && open.sens_slope > 0) || (isSig(close) && close.sens_slope < 0)
+    const coolingStory =
+      !warmingStory && ((isSig(open) && open.sens_slope < 0) || (isSig(close) && close.sens_slope > 0))
+    const takeawayColor = warmingStory ? warm : coolingStory ? cold : MUTED
+
     const detailRows = [
       ["Seasons on record", (s) => `${s.n} (${s.first_year}–${s.last_year})`],
       ["Average date", (s) => s.avg_date],
@@ -1293,15 +1524,59 @@ function WeatherMap() {
 
     return (
       <div style={{ width: "100%" }}>
+        <div
+          style={{
+            display: "flex",
+            flexWrap: "wrap",
+            alignItems: "center",
+            gap: "4px 14px",
+            marginBottom: 8,
+            padding: "6px 10px",
+            fontSize: 11,
+            color: MUTED,
+            background: "#f8fafc",
+            border: "1px solid #e2e8f0",
+            borderRadius: 8,
+          }}
+        >
+          <span style={{ fontWeight: 700, color: INK }}>How to read this:</span>
+          <span style={{ display: "flex", alignItems: "center", gap: 4, color: coldDeep }}>
+            <SnowIcon sx={{ fontSize: 14, color: cold }} />
+            Icy blue = getting colder · earlier openings, later closings, longer season
+          </span>
+          <span style={{ display: "flex", alignItems: "center", gap: 4, color: warmDeep }}>
+            <FireIcon sx={{ fontSize: 14, color: warmMid }} />
+            Orange → red = getting warmer · later openings, earlier closings, shorter season
+          </span>
+        </div>
         <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
-          {seriesTile("Opening date", OPEN_COLOR, open)}
-          {seriesTile("Closing date", CLOSE_COLOR, close)}
+          {seriesTile("open", open)}
+          {seriesTile("close", close)}
           {seasonTile()}
         </div>
         {seasonStrip()}
-        <Typography variant="body2" sx={{ fontSize: 12, color: "#334155", mt: 1.5 }}>
-          {takeaway}
-        </Typography>
+        <div
+          style={{
+            display: "flex",
+            alignItems: "flex-start",
+            gap: 8,
+            marginTop: 12,
+            padding: "8px 10px",
+            background: "#fff",
+            border: "1px solid #e2e8f0",
+            borderLeft: `3px solid ${takeawayColor}`,
+            borderRadius: 8,
+          }}
+        >
+          {warmingStory ? (
+            <FireIcon sx={{ fontSize: 18, color: takeawayColor, mt: "1px", flex: "0 0 auto" }} />
+          ) : (
+            <SnowIcon sx={{ fontSize: 18, color: takeawayColor, mt: "1px", flex: "0 0 auto" }} />
+          )}
+          <Typography variant="body2" sx={{ fontSize: 12, color: "#334155" }}>
+            {takeaway}
+          </Typography>
+        </div>
         <Typography variant="caption" color="text.secondary" sx={{ display: "block", mt: 0.75, lineHeight: 1.5 }}>
           Dates naturally bounce around from year to year — the “per decade” numbers are the slow,
           steady shift underneath that. “Strong evidence” means the shift is too consistent to be
@@ -1666,7 +1941,6 @@ function WeatherMap() {
     setPrecipResolution("daily")
     setPrecipMonthRange([defaultMonthStart, defaultMonthEnd])
     setPrecipTrend(null)
-    setPrecipTrendAdvanced(false)
     setTempData(null)
     setTempMonthRange([defaultMonthStart, defaultMonthEnd])
   }
@@ -1926,7 +2200,7 @@ function WeatherMap() {
   }
 
   return (
-    <div style={{ height: "84vh", border: "none" }} ref={MapElement}>
+    <div className="wrtdip-map" ref={MapElement}>
       <div id="legend-container"></div>
       <div id="layer-list-container"></div>
 
@@ -2064,19 +2338,39 @@ function WeatherMap() {
         backdropClassName="wrtdip-map-modal__backdrop"
       >
         <Modal.Header className="wrtdip-map-modal__header">
-          <div style={{ display: "flex", flexDirection: "column", flex: 1, minWidth: 0 }}>
+          <div className="wrtdip-map-modal__heading">
             <Typography variant="overline" sx={{ color: "rgba(255,255,255,0.85)", lineHeight: 1, letterSpacing: 1 }}>
               Climate &amp; Weather
             </Typography>
             <Typography
               variant="h5"
               component="h2"
-              sx={{ color: "#fff", fontWeight: 600, lineHeight: 1.2, mt: 0.5, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}
+              sx={{ color: "#fff", fontWeight: 600, lineHeight: 1.2, mt: 0.5, overflowWrap: "anywhere" }}
             >
               {getCityName() || "Selected Location"}
             </Typography>
           </div>
-          <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
+          <div className="wrtdip-map-modal__actions">
+            <FormControlLabel
+              className={`wrtdip-map-modal__advanced${showAdvanced ? " wrtdip-map-modal__advanced--active" : ""}`}
+              labelPlacement="start"
+              control={
+                <Switch
+                  checked={showAdvanced}
+                  onChange={(event) => setShowAdvanced(event.target.checked)}
+                  inputProps={{ role: "switch", "aria-label": "Advanced" }}
+                />
+              }
+              label={
+                <span className="wrtdip-map-modal__advanced-label">
+                  <TuneIcon aria-hidden="true" />
+                  <span>Advanced</span>
+                  <span className="wrtdip-map-modal__advanced-state" aria-hidden="true">
+                    {showAdvanced ? "ON" : "OFF"}
+                  </span>
+                </span>
+              }
+            />
             <IconButton
               onClick={() => setModalEnlarge(!modalEnlarge)}
               size="small"
@@ -2132,13 +2426,6 @@ function WeatherMap() {
             )}
             <div className="wrtdip-map-modal__chart">{generateChart()}</div>
             <div className="wrtdip-toggle-row">
-              <button
-                onClick={() => setShowAdvanced(!showAdvanced)}
-                className={`wrtdip-toggle-btn${showAdvanced ? " wrtdip-toggle-btn--active" : ""}`}
-              >
-                <span className="wrtdip-toggle-btn__icon">{showAdvanced ? "▾" : "▸"}</span>
-                Advanced Options
-              </button>
               <button
                 onClick={() => setShowCalcInfo(!showCalcInfo)}
                 className={`wrtdip-toggle-btn${showCalcInfo ? " wrtdip-toggle-btn--active" : ""}`}
@@ -2575,6 +2862,18 @@ function WeatherMap() {
               Current conditions and outlook for the next 3 days
             </Typography>
             <ForecastPanel lat={lat} lon={lon} />
+            <div className="wrtdip-forecast-links">
+              <span>Displayed forecast: Open-Meteo</span>
+              {lat != null && lon != null && (
+                <a
+                  href={`https://weather.gc.ca/en/location/index.html?coords=${lat},${lon}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  3-day weather forecast from Environment Canada
+                </a>
+              )}
+            </div>
           </section>
         </Modal.Body>
       </Modal>
@@ -2656,9 +2955,30 @@ function WeatherMap() {
 
         // Esri Canada "Canada Basemap" (topographic) — includes niche and
         // First Nations roads missing from the default streets basemap.
-        // Replicates webmap 98652eb8458a464fa95feb9bd812b29a.
+        // From webmap 98652eb8458a464fa95feb9bd812b29a, minus its two raster
+        // hillshade layers: they double tile traffic and alpha-blending cost
+        // (noticeable lag) while adding only cosmetic terrain shading.
         const canadaTopoBasemap = new Basemap({
           title: "Canada Topographic",
+          baseLayers: [
+            // World fallback for areas outside Canada_Topographic coverage
+            new VectorTileLayer({
+              url: "https://www.arcgis.com/sharing/rest/content/items/6d0ed88458c6429d99331260fb7bf2b0/resources/styles/root.json",
+            }),
+            new VectorTileLayer({
+              url: "https://tiles.arcgis.com/tiles/B6yKvIZqzuOr0jBR/arcgis/rest/services/Canada_Topographic/VectorTileServer",
+            }),
+          ],
+        })
+
+        // Default basemap: Esri Streets (see BASEMAP_OPTIONS "street" below).
+        const map = new Map({ basemap: "streets-vector" })
+
+        // Full 4-layer version of webmap 98652eb8458a464fa95feb9bd812b29a
+        // (with both hillshades). Kept for performance comparison against
+        // the trimmed Topographic basemap. Layers only load when selected.
+        const oldCanadaTopoBasemap = new Basemap({
+          title: "Canada Topographic (Old)",
           baseLayers: [
             new TileLayer({
               url: "https://services.arcgisonline.com/arcgis/rest/services/Elevation/World_Hillshade/MapServer",
@@ -2675,8 +2995,6 @@ function WeatherMap() {
             }),
           ],
         })
-
-        const map = new Map({ basemap: canadaTopoBasemap })
 
         // Basemap options for the switcher panel. Street and Hybrid use
         // Esri's well-known ArcGIS Online basemaps.
@@ -2701,6 +3019,13 @@ function WeatherMap() {
             sub: "Imagery with labels",
             icon: "\u{1F6F0}\uFE0F",
             basemap: "hybrid",
+          },
+          {
+            id: "old-base",
+            title: "Old Base Layer",
+            sub: "Canada Topo + hillshades (perf test)",
+            icon: "\u{26F0}\uFE0F",
+            basemap: oldCanadaTopoBasemap,
           },
         ]
         const view = new MapView({
@@ -3033,7 +3358,7 @@ function WeatherMap() {
         const basemapList = basemapPanel.querySelector(
           ".wrtdip-basemap-panel__list"
         )
-        let activeBasemapId = "topographic"
+        let activeBasemapId = "street"
         BASEMAP_OPTIONS.forEach((opt) => {
           const li = document.createElement("li")
           li.className = "wrtdip-basemap-panel__item"

@@ -1,19 +1,115 @@
-/* Navbar */
-/* @import url("https://fonts.googleapis.com/css2?family=Cairo:wght@400&display=swap"); */
-
-#navbar-item-elcano-container {
+.portal-header {
   display: flex;
-  gap: 8px;
+  min-height: 64px;
+  padding: 8px max(16px, env(safe-area-inset-left));
+  gap: 24px;
   align-items: center;
-  justify-content: flex-start;
-  margin-left: -20px;
+  justify-content: space-between;
+  background: rgb(54, 76, 119);
+  color: white;
 }
 
-#navbar-item-elcano-text {
-  font-size: 20px;
-  font-weight: 400;
+.portal-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+  min-height: 44px;
+  font-size: var(--fs-body);
+  color: white;
 }
-.menuLink{
-  font-size: 1.8vh;
+
+.portal-brand img {
+  width: 94px;
+  height: auto;
+  flex-shrink: 0;
 }
-/* Navbar End */
+
+.portal-brand:hover,
+.portal-brand:focus-visible,
+.portal-brand:active {
+  color: white;
+  text-decoration: underline;
+}
+
+.portal-desktop-navigation {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.portal-header .menuLink,
+.portal-navigation-drawer .menuLink {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 44px;
+  min-width: 44px;
+  padding: 10px;
+  border-radius: 4px;
+  font-size: var(--fs-body-sm);
+  color: inherit;
+}
+
+.portal-header .menuLink:hover,
+.portal-header .menuLink:active,
+.portal-header .menuLink:focus-visible,
+.portal-header .menuLink[aria-current="page"] {
+  color: white;
+  background: rgba(255, 255, 255, 0.16);
+}
+
+.portal-header .portal-menu-toggle {
+  flex-shrink: 0;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  background: transparent;
+  color: white;
+  border-color: rgba(255, 255, 255, 0.5);
+  border-radius: 4px;
+  font-size: var(--fs-h4);
+}
+
+.portal-navigation-drawer .ant-drawer-body {
+  padding: 16px 16px max(16px, env(safe-area-inset-bottom));
+}
+
+.portal-navigation-drawer nav {
+  display: grid;
+  gap: 8px;
+}
+
+.portal-navigation-drawer .menuLink {
+  font-size: var(--fs-body);
+  padding: 10px 16px;
+  color: #26364d;
+}
+
+.portal-navigation-drawer .menuLink:hover,
+.portal-navigation-drawer .menuLink:active,
+.portal-navigation-drawer .menuLink:focus-visible,
+.portal-navigation-drawer .menuLink[aria-current="page"] {
+  background: #eaf2f4;
+  color: #145566;
+}
+
+.portal-navigation-drawer .ant-drawer-close {
+  min-width: 44px;
+  min-height: 44px;
+}
+
+@media (max-width: 575.98px) {
+  .portal-header {
+    gap: 12px;
+  }
+
+  .portal-brand {
+    gap: 8px;
+    font-size: var(--fs-body-sm);
+  }
+
+  .portal-brand img {
+    width: 78px;
+  }
+}

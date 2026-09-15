@@ -1,5 +1,3 @@
-@import url("https://fonts.googleapis.com/css2?family=Abel&display=swap");
-
 .partnerOverallContainer {
   display: flex;
 
@@ -20,7 +18,7 @@
 .partnerPageTitleText {
   font-family: 'Roboto', sans-serif;
   color: rgb(56, 80, 126);
-  font-size: 6.5vh;
+  font-size: var(--fs-h1);
   text-align: center;
 
   padding: 5%;

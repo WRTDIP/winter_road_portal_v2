@@ -1,0 +1,61 @@
+.infotip {
+  position: relative;
+  display: inline-flex;
+  vertical-align: middle;
+}
+
+.infotip__trigger {
+  padding: 0;
+  border: 1px solid #9fb2cc;
+  border-radius: 50%;
+  background: #fff;
+  color: #38507e;
+  font-size: var(--fs-caption);
+  font-style: italic;
+  font-weight: 700;
+  line-height: 1;
+  cursor: pointer;
+}
+
+/* The visible ring is small; .u-tap-real supplies the 44px hit box. */
+.infotip__trigger > span {
+  display: grid;
+  place-content: center;
+  width: 1.125rem;
+  height: 1.125rem;
+}
+
+.infotip__trigger:active,
+.infotip__trigger:focus-visible {
+  border-color: #38507e;
+  background: #eef2f8;
+}
+
+.infotip__bubble {
+  position: absolute;
+  z-index: 20;
+  width: max-content;
+  max-width: min(18rem, calc(100vw - 2rem));
+  padding: 0.5rem 0.625rem;
+  border-radius: 6px;
+  background: #1f2d45;
+  color: #fff;
+  font-size: var(--fs-body-sm);
+  font-style: normal;
+  font-weight: 400;
+  line-height: 1.4;
+  text-align: left;
+  white-space: normal;
+}
+
+.infotip__bubble--top {
+  bottom: calc(100% + 0.375rem);
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.infotip__bubble--bottom {
+  top: calc(100% + 0.375rem);
+  left: 50%;
+  transform: translateX(-50%);
+}

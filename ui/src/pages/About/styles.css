@@ -1,0 +1,30 @@
+@media (max-width: 767.98px) {
+  .aboutPage {
+    --about-heading-size: var(--fs-h1);
+  }
+
+  .aboutPage .teamContainer,
+  .aboutPage .aboutContact {
+    padding-inline: 1rem;
+    overflow-wrap: anywhere;
+  }
+
+  .aboutPage .teamTitle {
+    padding: 1rem 0;
+    font-size: var(--fs-h3);
+    line-height: 1.35;
+  }
+
+  .aboutPage .aboutContact a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 575.98px) {
+  .aboutPage .teamRow > * {
+    padding-inline: 0;
+  }
+}

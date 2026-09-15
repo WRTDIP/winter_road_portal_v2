@@ -1,5 +1,3 @@
-@import url("https://fonts.googleapis.com/css2?family=Abel&display=swap");
-
 .subSectionBannerContainer {
   display: flex;
   height: 40vh;
@@ -11,7 +9,7 @@
 }
 .subSectionBannerTitle {
   font-family: 'Roboto', sans-serif;
-  font-size: 7vh;
+  font-size: var(--fs-hero);
   color: rgb(56, 80, 126);
 }
 

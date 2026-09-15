@@ -1,19 +1,202 @@
+/* Account screens (login, register, email validation). Card on desktop,
+   full-bleed sheet on phones. */
+
+.authShell {
+    display: flex;
+    justify-content: center;
+    padding-block: clamp(1.5rem, 5vw, 3.5rem);
+    padding-left: max(1rem, env(safe-area-inset-left));
+    padding-right: max(1rem, env(safe-area-inset-right));
+    background-color: #f5f7fa;
+}
+
 .loginContainer{
     border: none;
 }
 
-.loginForm{
-    margin: auto;
-    width: 50%;
-    padding: 5vh;
+.loginForm,
+.registerForm {
+    width: 100%;
+    max-width: 460px;
+    margin-inline: auto;
+    padding: clamp(1.25rem, 5vw, 2.5rem);
+    background-color: #fff;
+    border: 1px solid #e3e8f0;
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(20, 35, 70, 0.08);
 }
 
-.registerForm{
-    margin: auto;
-    width: 50%;
-    padding: 5vh;
+/* sm: below 576px the card is the whole page, so the frame is dead weight. */
+@media (max-width: 575.98px) {
+    .loginForm,
+    .registerForm {
+        border-radius: 12px;
+        box-shadow: none;
+    }
 }
 
-.loginText{
-    
+.authHeader {
+    margin-bottom: clamp(1.25rem, 4vw, 1.75rem);
+    text-align: center;
+}
+
+.authTitle {
+    margin-bottom: 0.35rem;
+    font-size: var(--fs-h3);
+    font-weight: 700;
+    color: #1f2a44;
+}
+
+.authSubtitle {
+    margin-bottom: 0;
+    font-size: var(--fs-body-sm);
+    color: #5b6780;
+}
+
+.loginForm .form-label,
+.registerForm .form-label {
+    margin-bottom: 0.35rem;
+    font-size: var(--fs-body-sm);
+    font-weight: 600;
+    color: #1f2a44;
+}
+
+.authHint {
+    display: block;
+    margin-top: 0.4rem;
+    font-size: var(--fs-caption);
+    color: #6b7793;
+}
+
+.loginForm .form-control,
+.registerForm .form-control {
+    min-height: 48px;
+    border-radius: 10px;
+    border-color: #cfd6e4;
+    /* 16px floor keeps iOS Safari from zooming the page on focus. */
+    font-size: max(16px, var(--fs-body));
+}
+
+.loginForm .form-control:focus,
+.registerForm .form-control:focus {
+    border-color: #364c77;
+    box-shadow: 0 0 0 0.2rem rgba(54, 76, 119, 0.2);
+}
+
+.authPasswordField {
+    position: relative;
+}
+
+.authPasswordField .form-control {
+    padding-right: 3.5rem;
+}
+
+.authToggle {
+    position: absolute;
+    top: 0;
+    right: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 48px;
+    min-height: 48px;
+    padding: 0;
+    border: 0;
+    border-radius: 0 10px 10px 0;
+    background: transparent;
+    color: #5b6780;
+    font-size: var(--fs-body-sm);
+    font-weight: 600;
+    touch-action: manipulation;
+}
+
+.authToggle:hover,
+.authToggle:active,
+.authToggle:focus-visible {
+    color: #364c77;
+}
+
+.authToggle:focus-visible {
+    outline: 2px solid #364c77;
+    outline-offset: -2px;
+}
+
+.authActions {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin-top: 1.5rem;
+}
+
+.authActions .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    width: 100%;
+    min-height: 48px;
+    border-radius: 999px;
+    font-weight: 600;
+    text-transform: none;
+    touch-action: manipulation;
+}
+
+.authDivider {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-top: 1.5rem;
+    font-size: var(--fs-caption);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: #8792a8;
+}
+
+.authDivider::before,
+.authDivider::after {
+    content: "";
+    flex: 1 1 auto;
+    height: 1px;
+    background-color: #e3e8f0;
+}
+
+.authFooterLinks {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0 1.25rem;
+    margin-top: 0.5rem;
+    font-size: var(--fs-body-sm);
+}
+
+.authFooterLinks a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    color: #364c77;
+    text-decoration: none;
+    touch-action: manipulation;
+}
+
+.authFooterLinks a:hover,
+.authFooterLinks a:active,
+.authFooterLinks a:focus-visible {
+    text-decoration: underline;
+}
+
+.authAlert {
+    margin-top: 1.25rem;
+    margin-bottom: 0;
+    border-radius: 12px;
+    font-size: var(--fs-body-sm);
+    overflow-wrap: anywhere;
+}
+
+.authAlert .alert-heading {
+    font-size: var(--fs-body);
+    font-weight: 700;
+}
+
+.authAlert p:last-child {
+    margin-bottom: 0;
 }

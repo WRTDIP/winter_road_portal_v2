@@ -1,10 +1,11 @@
-@import url('https://fonts.googleapis.com/css2?family=Abel&display=swap');
-
 .footerContainer
 {
     display: flex;
     background-color: #001529;
-    height: 10vh;
+    min-height: 96px;
+    padding: 20px max(16px, env(safe-area-inset-left)) max(20px, env(safe-area-inset-bottom));
+    gap: 16px 32px;
+    flex-wrap: wrap;
     flex-direction: row;
     justify-content: space-around;
     align-items: center;
@@ -13,7 +14,7 @@
 
 .footerTitle{
     font-family: 'Abel', sans-serif;
-    font-size: 4vh;
+    font-size: var(--fs-h2);
     color: #F7FAEF;
     text-align: left;
     padding-bottom: 30px;
@@ -35,31 +36,51 @@
 {
     font-family: 'Abel', sans-serif;
     color: white;
-    font-size: 2vh;
+    font-size: var(--fs-body);
 }
 
 .mediaBox
 {
     display: flex;
-    width: 20vh;
+    gap: 12px;
+    align-items: center;
     flex-direction: row;
     justify-content: space-around;
 
 }
-/* Navbar */
-/* @import url("https://fonts.googleapis.com/css2?family=Cairo:wght@400&display=swap"); */
+/* The footer's own brand lockup. These rules previously used the navbar's IDs,
+   which collided with NavigationBar and silently overrode it. */
 
-#navbar-item-elcano-container {
+#footer-brand-container {
   display: flex;
   gap: 8px;
+  align-items: center;
   justify-content: flex-start;
-  margin-left: -20px;
 }
 
-#navbar-item-elcano-text {
-  font-size: 20px;
+#footer-brand-text {
+    font-size: var(--fs-body);
   font-weight: 400;
   color: white;
 }
 
-/* Navbar End */
+.footer-copyright {
+    text-align: center;
+}
+
+.footerContainer a {
+    display: inline-flex;
+    min-width: 44px;
+    min-height: 44px;
+    align-items: center;
+    justify-content: center;
+    color: #addde5;
+}
+
+@media (max-width: 575.98px) {
+    .footerContainer {
+        flex-direction: column;
+        gap: 16px;
+        padding-top: 24px;
+    }
+}

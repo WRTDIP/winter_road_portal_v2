@@ -1,2 +1,8 @@
 node_modules/
 build/
+
+# responsive audit: commit report.json, not the screenshots
+audit/**/shots/
+audit/current/
+audit/scratch/
+audit/boundary/

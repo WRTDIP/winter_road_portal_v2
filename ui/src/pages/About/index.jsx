@@ -11,6 +11,7 @@ import Person from "../../assets/Person.png";
 
 import CoverBanner from "../../components/Global/CoverBanner/CoverBanner";
 import Team from "../../components/Team";
+import "./styles.css";
 function About() {
   const TeamMemberInfo = [[
     {
@@ -116,9 +117,9 @@ function About() {
 
   ];
   return (
-    <div>
+    <div className="aboutPage">
       <CoverBanner title="About" />
-      <div style={{ textAlign: "center", margin: "2rem 0 1rem 0", color: "#38507E", fontSize: "4rem", fontWeight: "normal" }}>
+      <div style={{ textAlign: "center", margin: "2rem 0 1rem 0", color: "#38507E", fontSize: "var(--about-heading-size, 4rem)", fontWeight: "normal" }}>
       Our Team
       </div>
       <Team teamName={
@@ -156,8 +157,8 @@ function About() {
         }
         teamMemberInfo={TeamMemberInfo[1]}/>
              
-        <div style={{ margin: "3rem 0 2rem 0", color: "#38507E", textAlign: "center" }}>
-        <div style={{ fontSize: "4rem", fontWeight: "normal", marginBottom: "1rem" }}>
+        <div className="aboutContact" style={{ margin: "3rem 0 2rem 0", color: "#38507E", textAlign: "center" }}>
+        <div style={{ fontSize: "var(--about-heading-size, 4rem)", fontWeight: "normal", marginBottom: "1rem" }}>
           Contact Us</div>
         <div style={{ color: "#0E2959", fontSize: "1.1rem", marginBottom: "1.5rem" }}>
            We're here to help. Whether you have a question about our services, need support, or just want to connect, our team is ready to assist you.

@@ -1,20 +1,37 @@
-@import url("https://fonts.googleapis.com/css2?family=Abel&display=swap");
-
 .teamRow{
-  width: 80%;
+  width: 100%;
+  min-width: 0;
   margin: auto;
-  padding: 2vh;
-  margin-bottom: 3vh;
+  padding: 16px 0;
+  margin-bottom: 24px;
+  row-gap: 16px;
 }
 
+.teamRow .card-img-top {
+  width: 100%;
+  max-width: 180px;
+  height: auto;
+}
+
+.teamRow a {
+  display: inline-block;
+  min-height: 44px;
+  min-width: 44px;
+  max-width: 100%;
+  padding: 10px 0;
+  overflow-wrap: anywhere;
+}
 
 .teamMemberTitle{
   font-family: 'Roboto', sans-serif;
   color: rgb(56, 80, 126);
-  font-size: 3.5vh;
+  font-size: var(--fs-h3);
 }
 
 .teamMemberText{
   font-family: 'Roboto', sans-serif;
-  font-size: 2vh;
+  font-size: var(--fs-body);
+  /* The email address is rendered as its own link text, so it is a single
+     unbreakable token with nowhere to wrap once the column can shrink. */
+  overflow-wrap: break-word;
 }

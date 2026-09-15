@@ -10,8 +10,8 @@ function Team({teamName, description, teamMemberInfo}) {
       <div className="teamLineBreak"></div>
       <Row className="">
         {teamMemberInfo.map((content) => (
-          <Col xs lg="6">
-            <TeamMember key={content.id} props={content} />
+          <Col xs={12} lg={6} key={content.id}>
+            <TeamMember props={content} />
           </Col>
         ))}
       </Row>

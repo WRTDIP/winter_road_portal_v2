@@ -86,41 +86,50 @@ function EmailValidationForm({email, code}) {
   };
   
     return (
-        <Form className="registerForm" onSubmit={handleSubmit}>
+        <div className="authShell">
+        <Form className="registerForm" onSubmit={handleSubmit} noValidate>
 
-            <Form.Group className="mb-3">
-                <Form.Label className="h5 pb-1">Email address</Form.Label>
-                <Typography variant="p" className="mb-2">
+            <Form.Group className="mb-3" controlId="validateEmailAddress">
+                <Form.Label>Email address</Form.Label>
+                <Typography variant="p" className="authHint mb-2">
                 Please enter your email address to resend the validation email.
                 </Typography>
                 <Form.Control
-                    type="text"
-                    placeholder="Enter email"
+                    type="email"
+                    placeholder="name@example.com"
                     value={lemail}
+                    autoComplete="email"
+                    inputMode="email"
+                    autoCapitalize="none"
+                    spellCheck="false"
                     onChange={(e) => {
                         setEmail(e.target.value);
                     }}
                 />
             </Form.Group>
 
-            <Form.Group className="mb-3">
-                <Form.Label className="h5 pb-1">Code </Form.Label>
-                <Typography variant="p" className="mb-2">
+            <Form.Group className="mb-3" controlId="validateEmailCode">
+                <Form.Label>Code</Form.Label>
+                <Typography variant="p" className="authHint mb-2">
                 Please enter the validation code sent to your email.
                 </Typography>
                 <Form.Control
                     type="text"
                     placeholder="Enter code"
                     value={lcode}
+                    inputMode="numeric"
+                    autoComplete="one-time-code"
                     onChange={(e) => {
                         setCode(e.target.value);
                     }}
                 />
             </Form.Group>
 
-            <Button className="mt-3" variant="primary" type="submit" onClick={handleSubmit}>
-                Verify
-            </Button>
+            <div className="authActions">
+                <Button variant="primary" type="submit">
+                    Verify
+                </Button>
+            </div>
 
             <AlertDismissible
                 className="mt-3"
@@ -131,6 +140,7 @@ function EmailValidationForm({email, code}) {
                 dialogMessage={dialogMessage}
             />
         </Form>
+        </div>
     );
 }
 
