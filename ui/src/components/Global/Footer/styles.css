@@ -11,7 +11,7 @@
 
 .footerTitle{
     font-family: 'Abel', sans-serif;
-    font-size: 4vh;
+    font-size: var(--fs-h2);
     color: #F7FAEF;
     text-align: left;
     padding-bottom: 30px;
@@ -33,7 +33,7 @@
 {
     font-family: 'Abel', sans-serif;
     color: white;
-    font-size: 2vh;
+    font-size: var(--fs-body);
 }
 
 .mediaBox
