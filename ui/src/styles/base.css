@@ -2,6 +2,33 @@
    kits. Component stylesheets still win over this file -- it is a floor, not a
    theme. */
 
+/* --- app shell ------------------------------------------------------------ */
+
+/* The sticky-footer column. Every page is at least one viewport tall, so the
+   footer sits on the bottom edge of the screen instead of floating into the
+   middle of a short page. `--dvh` (not a raw vh) tracks mobile browser chrome,
+   and because every unit here is viewport- or content-relative, the shell
+   re-measures itself on ctrl+/- zoom, rotation and browser font scaling with
+   no JS and no fixed positioning. */
+.app-shell {
+  display: flex;
+  flex-direction: column;
+  min-height: calc(100 * var(--dvh));
+}
+
+/* The routed page absorbs the leftover height. flex-grow pushes the footer
+   down on short pages; flex-shrink:0 stops a tall page from being squeezed,
+   and min-width:0 is the usual flex overflow guard. */
+.app-main {
+  flex: 1 0 auto;
+  min-width: 0;
+}
+
+/* The footer keeps its intrinsic height in both directions. */
+.app-shell > .footerContainer {
+  flex-shrink: 0;
+}
+
 /* --- overflow guards ------------------------------------------------------ */
 
 /* min-width:0 -- the flex/grid overflow guard. A flex item defaults to

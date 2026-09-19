@@ -37,31 +37,36 @@ ReactDOM.render(
       clientId="qoVWsLJu8GfiJH4ZDlYZvh3eehrp4Ofa"
       authorizationParams={{ redirect_uri: window.location.origin }}
     >
-  <div>
+  {/* App shell: a flex column at least one viewport tall, so short pages still
+      push the footer to the bottom of the screen. See styles/base.css. */}
+  <div className="app-shell">
     {/* Set up router for client-side routing */}
     <Router>
       {/* Render global navigation bar */}
       <NavigationBar />
 
-      {/* Define routes of all the components */}
-      <Routes>
-        <Route path="/" element={<Home />} exact />
-        <Route path="/projects" element={<Projects />} exact />
-        <Route path="/about" element={<About />} exact />
-        <Route path="/map" element={<Map />} exact />
-        <Route path="/transportation" element={<Transportation />} exact />
-        <Route path="/observation" element={<Observation />} exact />
-        <Route path="/login" element={<Login />} exact />
-        <Route path="/register" element={<Register />} exact />
-        <Route path="/resend-email-validation" element={<ResendEmailValidation />} exact />
-        <Route path="/validate-email" element={<EmailValidationFormPage />} exact />
-        <Route path="/dashboard" element={<Dashboard />} exact />
-        <Route path="/fdd-test" element={<FDDTest />} exact />
-        <Route path="/api" element={<Api />} exact />
-        <Route path="/download" element={<Download />} exact />
-        <Route path="/references" element={<References />} exact />
-        <Route path="/blog" element={<Blog />} exact />
-      </Routes>
+      {/* Define routes of all the components. <main> takes the leftover
+          height so the footer never floats up into the middle of a short page. */}
+      <main className="app-main">
+        <Routes>
+          <Route path="/" element={<Home />} exact />
+          <Route path="/projects" element={<Projects />} exact />
+          <Route path="/about" element={<About />} exact />
+          <Route path="/map" element={<Map />} exact />
+          <Route path="/transportation" element={<Transportation />} exact />
+          <Route path="/observation" element={<Observation />} exact />
+          <Route path="/login" element={<Login />} exact />
+          <Route path="/register" element={<Register />} exact />
+          <Route path="/resend-email-validation" element={<ResendEmailValidation />} exact />
+          <Route path="/validate-email" element={<EmailValidationFormPage />} exact />
+          <Route path="/dashboard" element={<Dashboard />} exact />
+          <Route path="/fdd-test" element={<FDDTest />} exact />
+          <Route path="/api" element={<Api />} exact />
+          <Route path="/download" element={<Download />} exact />
+          <Route path="/references" element={<References />} exact />
+          <Route path="/blog" element={<Blog />} exact />
+        </Routes>
+      </main>
 
       {/* Render global footer */}
       <Footer />
