@@ -5,6 +5,7 @@ yukari_files
 
 # build
 ui/build
+ui/build/index.html
 
 # dependencies
 ui/node_modules
