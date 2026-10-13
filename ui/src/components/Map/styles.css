@@ -173,7 +173,9 @@
   text-overflow: ellipsis;
 }
 
-.wrtdip-feature-popup__close {
+/* Close / enlarge chips in a popup header. Shared by the road popup and the
+   city modal, whose headers carry the same gradient, so the two look alike. */
+.wrtdip-popup-icon-btn {
   flex-shrink: 0;
   width: 44px;
   height: 44px;
@@ -190,9 +192,9 @@
   transition: background 0.15s ease;
 }
 
-.wrtdip-feature-popup__close:hover,
-.wrtdip-feature-popup__close:focus-visible,
-.wrtdip-feature-popup__close:active {
+.wrtdip-popup-icon-btn:hover,
+.wrtdip-popup-icon-btn:focus-visible,
+.wrtdip-popup-icon-btn:active {
   background: rgba(255, 255, 255, 0.3);
 }
 
@@ -298,6 +300,86 @@
 .wrtdip-popup-section__content b {
   color: #0f172a;
   font-weight: 600;
+}
+
+/* Road-popup charts keep one legible slot per season, so on a phone they are
+   wider than the popup and scroll sideways inside this wrapper rather than
+   compressing the bars into a picket fence. Mirrors .wrtdip-map-modal__chart. */
+.wrtdip-popup-chart {
+  width: 100%;
+  overflow-x: auto;
+  /* A sideways swipe must not chain out to the page or pan the map behind. */
+  overscroll-behavior-x: contain;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+  scrollbar-color: #b6d4e8 transparent;
+}
+
+.wrtdip-popup-chart::-webkit-scrollbar {
+  height: 6px;
+}
+
+.wrtdip-popup-chart::-webkit-scrollbar-thumb {
+  background: #b6d4e8;
+  border-radius: 3px;
+}
+
+.wrtdip-popup-chart__inner {
+  min-width: 100%;
+}
+
+/* Legend for a popup chart. It sits outside .wrtdip-popup-chart so it stays put
+   while the plot scrolls sideways. */
+.wrtdip-popup-legend {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 4px 14px;
+  margin-bottom: 6px;
+  font-size: 11px;
+  line-height: 1.4;
+  color: #475569;
+}
+
+.wrtdip-popup-legend__item {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+/* Hollow circle — matches the raw season marks. */
+.wrtdip-popup-legend__swatch--mark {
+  width: 9px;
+  height: 9px;
+  border: 2.5px solid currentColor;
+  border-radius: 50%;
+  background: #ffffff;
+}
+
+/* Dashed rule — matches the LOWESS trend lines. */
+.wrtdip-popup-legend__swatch--dash {
+  width: 16px;
+  height: 0;
+  border-top: 2.5px dashed currentColor;
+}
+
+/* Solid rule — matches a plain data line (the FDD series). */
+.wrtdip-popup-legend__swatch--line {
+  width: 16px;
+  height: 3px;
+  border-radius: 2px;
+  background: currentColor;
+}
+
+.wrtdip-popup-chart__hint {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  margin-top: 2px;
+  font-size: 11px;
+  line-height: 1.3;
+  color: #94a3b8;
 }
 
 /* Road-closure popups carry an inline trend chart, so they need to be much
@@ -1911,6 +1993,31 @@
   color: #64748b;
 }
 
+.wrtdip-precip-legend-dev {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  margin-top: 14px;
+}
+
+.wrtdip-precip-legend-dev__label {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #64748b;
+}
+
+.wrtdip-precip-legend-dev .wrtdip-precip-resolution__btn {
+  flex: 0 0 auto;
+  min-height: 44px;
+  padding: 7px 10px;
+}
+
+.wrtdip-precip-legend-dev .wrtdip-precip-resolution__btn:focus-visible {
+  outline: 2px solid #1e40af;
+  outline-offset: 2px;
+}
+
 .wrtdip-precip-scale {
   display: flex;
   align-items: flex-start;
@@ -1935,6 +2042,30 @@
   border: 1px solid #94a3b8;
   border-radius: 3px;
   background: linear-gradient(90deg, #f7fbff, #1e3a8a);
+}
+
+.wrtdip-precip-scale--v2 .wrtdip-precip-scale__icon {
+  color: #dbeafe;
+  stroke: #94a3b8;
+  stroke-width: 0.5px;
+}
+
+.wrtdip-precip-scale--v3 .wrtdip-precip-scale__gradient {
+  background: linear-gradient(90deg, #1e3a8a, #f7fbff);
+}
+
+.wrtdip-precip-scale__droplets {
+  display: flex;
+  justify-content: space-between;
+  gap: 2px;
+}
+
+.wrtdip-precip-scale__droplets .MuiSvgIcon-root {
+  width: 24px;
+  height: 28px;
+  min-width: 0;
+  stroke: #94a3b8;
+  stroke-width: 0.5px;
 }
 
 .wrtdip-precip-scale__labels {
@@ -2049,6 +2180,16 @@
     animation: none;
   }
 
+  /* This block outranks the desktop .wrtdip-feature-popup--enlarged rule, so
+     without its own override the enlarge button only grew the charts and left
+     the sheet the same size. On a phone "enlarged" means near-full-screen. */
+  .wrtdip-map .wrtdip-feature-popup--enlarged {
+    inset: 12px 12px 12px !important;
+    width: auto;
+    max-width: none;
+    max-height: none;
+  }
+
   .wrtdip-map .wrtdip-feature-popup__body {
     min-height: 0;
     overflow-y: auto;
@@ -2083,7 +2224,11 @@
     min-width: 0;
   }
 
-  .wrtdip-map-modal__chart > div {
+  /* Desktop-shaped charts stay legible by keeping a floor width and scrolling
+     sideways inside the wrapper. A variant that has already laid itself out
+     for the viewport carries .u-fit-width and opts out -- it is not wider than
+     the screen, so a scroller would only hide part of it. */
+  .wrtdip-map-modal__chart > div:not(.u-fit-width) {
     min-width: 420px;
   }
 

@@ -1,0 +1,1378 @@
+{
+  "collection": {
+    "id": "6f533a8170a84785a48d5d6810115c58",
+    "root": "n-9yccFC",
+    "nodes": {
+      "n-In1y9T": {
+        "type": "collection-cover",
+        "data": {
+          "title": "Northern Transportation Network Study",
+          "summary": "Our collections showcase published academic research on transportation in the North. We provide summaries of the findings.",
+          "byline": "",
+          "type": "journal",
+          "shouldHideOverviewElements": false
+        }
+      },
+      "n-m7GvYt": {
+        "type": "collection-nav",
+        "data": {
+          "type": "compact"
+        }
+      },
+      "n-ZupXAT": {
+        "type": "collection-ui",
+        "data": {
+          "items": [
+            {
+              "resourceId": "r-PxXliN",
+              "customSummary": "Compares three remoteness indices for the NWT localities, highlighting how input variables shape definitions of remoteness",
+              "customThumbnail": "r-fUvdCV"
+            },
+            {
+              "resourceId": "r-17HnJT",
+              "customSummary": "Seasonal cost-based accessibility index for northern remote regions shows that limited road access increases travel costs versus year-round",
+              "customThumbnail": "r-kkz3TS"
+            },
+            {
+              "resourceId": "r-MwFWPs",
+              "customSummary": "A Multinomial Logistic Analysis of Environmental, Geographic, and Behavioral Influences on Collision Outcomes in Northern Canada",
+              "customThumbnail": "r-lizGIr"
+            }
+          ]
+        },
+        "children": [
+          "n-In1y9T",
+          "n-m7GvYt"
+        ]
+      },
+      "n-9yccFC": {
+        "type": "collection",
+        "data": {
+          "storyTheme": "r-bZiU9C",
+          "metaSettings": {
+            "title": "Northern Transportation Network Study",
+            "description": "Learn more about studies and projects related to Northern transportation.",
+            "imageResourceId": "r-6mkCAJ"
+          }
+        },
+        "config": {
+          "shouldPushMetaToAGOItemDetails": true,
+          "coverDate": "none",
+          "isSocialIconsHidden": false,
+          "storyLocale": "en",
+          "isScriptEmbedEnabled": false,
+          "scriptEmbedDomains": []
+        },
+        "children": [
+          "n-ZupXAT"
+        ]
+      }
+    },
+    "resources": {
+      "r-PxXliN": {
+        "type": "portal-item",
+        "data": {
+          "itemId": "7caa49d1cd844aa087c6832ca7d8dcfd",
+          "itemType": "StoryMap",
+          "itemSubtype": "story"
+        }
+      },
+      "r-fUvdCV": {
+        "type": "image",
+        "data": {
+          "resourceId": "O8922UB8vqZOTVqoW4ol4.jpeg",
+          "provider": "item-resource",
+          "height": 1350,
+          "width": 2400,
+          "localUrl": "/references/6f533a8170a84785a48d5d6810115c58-O8922UB8vqZOTVqoW4ol4.jpeg"
+        }
+      },
+      "r-17HnJT": {
+        "type": "portal-item",
+        "data": {
+          "itemId": "15eadce764a14e6093c055209131e10d",
+          "itemType": "StoryMap",
+          "itemSubtype": "story"
+        }
+      },
+      "r-kkz3TS": {
+        "type": "image",
+        "data": {
+          "resourceId": "OmCYrYZuQwDSqd6y4lKwU.jpeg",
+          "provider": "item-resource",
+          "height": 3888,
+          "width": 5184,
+          "localUrl": "/references/6f533a8170a84785a48d5d6810115c58-OmCYrYZuQwDSqd6y4lKwU.jpeg"
+        }
+      },
+      "r-MwFWPs": {
+        "type": "portal-item",
+        "data": {
+          "itemId": "98bb02cb7e514fb8a516932c703cab32",
+          "itemType": "StoryMap",
+          "itemSubtype": "story"
+        }
+      },
+      "r-lizGIr": {
+        "type": "image",
+        "data": {
+          "resourceId": "jwgArLVzCzC1uNpkeFhvR.jpeg",
+          "provider": "item-resource",
+          "height": 1600,
+          "width": 2400,
+          "localUrl": "/references/6f533a8170a84785a48d5d6810115c58-jwgArLVzCzC1uNpkeFhvR.jpeg"
+        }
+      },
+      "r-bZiU9C": {
+        "type": "story-theme",
+        "data": {
+          "themeId": "summit",
+          "themeBaseVariableOverrides": {}
+        }
+      },
+      "r-6mkCAJ": {
+        "type": "image",
+        "data": {
+          "resourceId": "bAzBzTpm_0IoHAzYNbFOI.jpeg",
+          "provider": "item-resource",
+          "height": 443,
+          "width": 443,
+          "localUrl": "/references/6f533a8170a84785a48d5d6810115c58-bAzBzTpm_0IoHAzYNbFOI.jpeg"
+        }
+      }
+    }
+  },
+  "stories": [
+    {
+      "id": "7caa49d1cd844aa087c6832ca7d8dcfd",
+      "root": "n-hDvWMj",
+      "nodes": {
+        "n-u2yQWN": {
+          "type": "storycover",
+          "data": {
+            "type": "minimal",
+            "title": "A Comparison of Remoteness Indices",
+            "summary": "Compares three remoteness indices for the NWT localities, highlighting how input variables shape definitions of remoteness",
+            "byline": "Keywords: Remoteness, accessibility, comparative analysis, transportation, Northern Canada",
+            "titlePanelVerticalPosition": "top",
+            "titlePanelHorizontalPosition": "start",
+            "titlePanelStyle": "gradient"
+          },
+          "config": {
+            "isHidden": false
+          }
+        },
+        "n-Ga91kU": {
+          "type": "navigation",
+          "data": {
+            "links": [
+              {
+                "nodeId": "n-R5KMOB",
+                "customText": "Study Summary"
+              },
+              {
+                "nodeId": "n-5s5kOX",
+                "customText": "Introduction"
+              },
+              {
+                "nodeId": "n-fIP0hV"
+              },
+              {
+                "nodeId": "n-fn0rYd"
+              },
+              {
+                "nodeId": "n-sEwK7K"
+              },
+              {
+                "nodeId": "n-voZyYY"
+              }
+            ]
+          },
+          "config": {
+            "isHidden": false
+          }
+        },
+        "n-4kD0PO": {
+          "type": "text",
+          "data": {
+            "type": "h3",
+            "text": "Article Information"
+          }
+        },
+        "n-YvPSRB": {
+          "type": "text",
+          "data": {
+            "type": "paragraph",
+            "text": "Published: POLAR GEOGRAPHY\nTitle: A comparison of remoteness indices\nAuthors: Thomas Stringer<sup>1,2</sup>, Hou Sang Cheng<sup>1</sup>, Amy M. Kim<sup>1</sup>\n<sup>1</sup>Department of Civil Engineering, University of British Columbia\n<sup>2</sup>Department of Industrial Engineering, Tecnológico de Monterrey\nLink to this article: <a href=\"https://www.tandfonline.com/doi/full/10.1080/1088937X.2023.2238792\" rel=\"noopener noreferrer\" target=\"_blank\">https://doi.org/10.1080/1088937X.2023.2238792</a>",
+            "textSize": "small"
+          }
+        },
+        "n-R5KMOB": {
+          "type": "text",
+          "data": {
+            "type": "h2",
+            "text": "Study Summary"
+          }
+        },
+        "n-gY9Cxx": {
+          "type": "text",
+          "data": {
+            "type": "paragraph",
+            "text": "The study examines how different remoteness indices define and measure remoteness, noting that no single index is universally applicable. It compares three well-known indices across 32 localities in Canada’s Northwest Territories using statistical tests and k-means clustering to create new remoteness categories. The study highlights that the choice of input variables strongly influences how remoteness is defined, and recommends selecting indices based on specific objectives. These findings aim to help researchers and policymakers choose or design appropriate methods for measuring remoteness."
+          }
+        },
+        "n-5s5kOX": {
+          "type": "text",
+          "data": {
+            "type": "h2",
+            "text": "Introduction"
+          }
+        },
+        "n-vf2W4j": {
+          "type": "text",
+          "data": {
+            "type": "paragraph",
+            "text": "No universal remoteness index exists. Attempts to define remoteness objectively have produced multiple indices, but there is no consensus on which is best. Remoteness is complex and politically, economically, and socially charged. Indices are widely used in healthcare, transportation, infrastructure, and food pricing research, making their design and application critical. Existing indices differ in input variables – population, distance, travel cost, accessibility to services, and geophysical factors – shaping how remoteness is defined. This study compares three well-known indices: Hamelin’s Polar Value (VAPO), the Accessibility/Remoteness Index of Australia (ARIA), and Statistics Canada’s Index of Remoteness (RI). It evaluates their methodologies, identifies vulnerabilities, and proposes a new categorization framework for remote localities."
+          }
+        },
+        "n-fIP0hV": {
+          "type": "text",
+          "data": {
+            "type": "h2",
+            "text": "Literature Review"
+          }
+        },
+        "n-5ZfRUY": {
+          "type": "text",
+          "data": {
+            "text": "Various indices quantify rurality, accessibility, and remoteness, including road distance-based indicators, population-based measures, service availability indices, GIS-based methods, and even satellite imagery. Remoteness, accessibility, and rurality are often used interchangeably, but rurality generally refers to population density and proximity to urban centers, while remoteness identifies physical isolation and accessibility denotes service availability. Definitions differ across countries, often relying on population thresholds, but these fail to capture differences among very small communities. Continuous indices were developed to address this limitation.",
+            "type": "paragraph"
+          }
+        },
+        "n-t1ecBo": {
+          "type": "text",
+          "data": {
+            "text": "<li><strong>VAPO (1968)</strong>: The first comprehensive index, integrating climate, geography, and socio-economic factors to measure Nordicity and isolation in northern regions.</li><li><strong>ARIA (1997)</strong>: Uses road distance to service centers as a proxy for access to services and is widely applied in Australia for health and infrastructure studies.</li><li><strong>RI (2017)</strong>: Incorporates travel costs to reflect economic isolation and is Canada’s official measure.</li>",
+            "type": "bullet-list"
+          }
+        },
+        "n-fJnJMn": {
+          "type": "text",
+          "data": {
+            "type": "paragraph",
+            "text": "Each index was designed to be broadly applicable but faces limitations in universality. Previous research has largely focused on developing new indices or refining existing ones, but no systematic comparison of VAPO, ARIA, and RI has been conducted. Although these indices were designed to be broadly applicable, the variables they rely on may limit their universal use. This study addresses that gap by comparing their methodologies, identifying vulnerabilities, and proposing a new categorization framework for remote localities. Our study is to demonstrate the flaws of existing approaches and provide guidance for integrating remoteness measures into research and policy."
+          }
+        },
+        "n-sRi3xv": {
+          "type": "text",
+          "data": {
+            "type": "h3",
+            "text": "Region of Study"
+          }
+        },
+        "n-TYU8FW": {
+          "type": "text",
+          "data": {
+            "type": "paragraph",
+            "text": "Canada’s territorial north has a sparse transportation network that spans vast distances and endures extreme cold climates. The Northwest Territories, the most populated of Canada’s three northern territories, contains 3,873 km of all-weather highways, winter roads, and access roads. This study focuses on 32 populated localities in the Northwest Territories, defined by the United Nations as distinct population clusters. Data on population, income, latitude, and road connectivity were sourced from Statistics Canada, Google Maps, and the Government of the Northwest Territories. Populations range from fewer than 100 in small hamlets to over 20,000 in Yellowknife, with a median of 410, indicating most communities are very small. Average incomes are generally below the Canadian average of 54,450 CAD. Accessibility varies: about half the localities have all-weather road access, a third rely on winter roads, and four are only accessible by plane. The region’s geography creates three main clusters – one in the southern part of the territory, one along the winter roads from Wrigley to Colville Lake, and another in the Mackenzie River Delta near Inuvik."
+          }
+        },
+        "n-fn0rYd": {
+          "type": "text",
+          "data": {
+            "type": "h2",
+            "text": "Methodology"
+          }
+        },
+        "n-HmAuMi": {
+          "type": "text",
+          "data": {
+            "type": "paragraph",
+            "text": "Three indices were applied to the 32 localities:"
+          }
+        },
+        "n-6oQDsd": {
+          "type": "text",
+          "data": {
+            "type": "bullet-list",
+            "text": "<li><strong>VAPO:</strong> Combines climatological, geospatial, and socio-economic criteria on a 1000-point scale</li><li><strong>ARIA:</strong> Calculates road distances to five categories of service centers, capped to limit extreme values.</li><li><strong>RI:</strong> Uses a gravity model combining population and travel costs within a 150-minute radius.</li>"
+          }
+        },
+        "n-ysYxPr": {
+          "type": "text",
+          "data": {
+            "text": "Scores were normalized (0–1) for comparison. K-means clustering grouped localities into four new categories: Remote, Very Remote, Extremely Remote, and Isolated. Statistical tests (Kolmogorov–Smirnov, Friedman, Pearson correlations) assessed distributions and relationships among indices.",
+            "type": "paragraph"
+          }
+        },
+        "n-sEwK7K": {
+          "type": "text",
+          "data": {
+            "type": "h2",
+            "text": "Results and Analysis"
+          }
+        },
+        "n-M3qh0p": {
+          "type": "text",
+          "data": {
+            "type": "h4",
+            "text": "Statistical tests"
+          }
+        },
+        "n-i8oeTD": {
+          "type": "text",
+          "data": {
+            "text": "VAPO values follow a normal distribution; ARIA values follow an exponential distribution; RI values show no clear pattern. \nCorrelation analysis: ARIA correlates most with VAPO (0.770) and RI (0.728); VAPO and RI correlate least (0.597). ",
+            "type": "paragraph"
+          }
+        },
+        "n-1dy2Pt": {
+          "type": "text",
+          "data": {
+            "text": "Vulnerabilities",
+            "type": "h4"
+          }
+        },
+        "n-QdD8w2": {
+          "type": "text",
+          "data": {
+            "text": "<li><strong>VAPO:</strong> Data-intensive, biased for small localities near larger centers, lacks proximity measures.</li><li><strong>ARIA:</strong> Overemphasizes distance, ignores road type and seasonality, produces extreme values.</li><li><strong>RI:</strong> Limited by 150-minute cutoff, ignores seasonality, sensitive to fuel and airfare costs. </li>",
+            "type": "bullet-list"
+          }
+        },
+        "n-3urDvC": {
+          "type": "text",
+          "data": {
+            "text": "Input variables determine applicability: ARIA suits travel time studies; RI suits economic isolation; VAPO suits polar research integrating climate and socio-economic factors.",
+            "type": "paragraph"
+          }
+        },
+        "n-rCEaAS": {
+          "type": "webmap",
+          "data": {
+            "map": "r-fc072a1bad6a4d558878446413ef3d67",
+            "caption": "NWT Remoteness Indices Map",
+            "isShowingLegend": true,
+            "timeSlider": false,
+            "viewPlacement": "extent",
+            "extent": {
+              "spatialReference": {
+                "latestWkid": 3857,
+                "wkid": 102100
+              },
+              "xmin": -15889548.523453282,
+              "ymin": 8403714.11602313,
+              "xmax": -10925227.09894639,
+              "ymax": 11197028.877675869
+            },
+            "center": {
+              "spatialReference": {
+                "latestWkid": 3857,
+                "wkid": 102100
+              },
+              "x": -13407387.811199836,
+              "y": 9800371.4968495
+            },
+            "zoom": 3.5544303797468357,
+            "viewpoint": {
+              "rotation": 0,
+              "scale": 26727567.108763933,
+              "targetGeometry": {
+                "spatialReference": {
+                  "latestWkid": 3857,
+                  "wkid": 102100
+                },
+                "x": -13407387.811199836,
+                "y": 9800371.4968495
+              }
+            }
+          }
+        },
+        "n-voZyYY": {
+          "type": "text",
+          "data": {
+            "type": "h2",
+            "text": "Conclusion"
+          }
+        },
+        "n-5Xuxno": {
+          "type": "text",
+          "data": {
+            "type": "paragraph",
+            "text": "This study compares three widely used remoteness indices – VAPO, ARIA, and RI – by calculating their values for 32 localities in Canada’s Northwest Territories. Through statistical analysis and clustering, we identify methodological vulnerabilities and propose a new categorization framework. Our findings show that no index is universally applicable; each defines remoteness differently and is suited to specific applications. VAPO is most appropriate for polar studies integrating climate and socio-economic factors, ARIA for analyses focused on physical isolation and travel time, and RI for studies emphasizing economic accessibility."
+          }
+        },
+        "n-ofeUma": {
+          "type": "text",
+          "data": {
+            "type": "paragraph",
+            "text": "The choice of index should depend on research objectives, region of study, and available data. Combining indices could improve precision but is resource-intensive. Future indices should address current limitations, incorporate climate change impacts, and consider transportation reliability. Simpler indices based on population and road network data may offer global applicability. Researchers and policymakers must clearly define how remoteness is understood before selecting or designing an index. Our comparison provides guidance for index selection and contributes to refining the concept of remoteness for future research."
+          }
+        },
+        "n-OPRRGr": {
+          "type": "text",
+          "data": {
+            "text": "",
+            "type": "paragraph"
+          }
+        },
+        "n-QYb63x": {
+          "type": "text",
+          "data": {
+            "type": "paragraph",
+            "text": ""
+          }
+        },
+        "n-KmNStI": {
+          "type": "text",
+          "data": {
+            "type": "paragraph",
+            "text": ""
+          }
+        },
+        "n-HZwjhN": {
+          "type": "text",
+          "data": {
+            "type": "paragraph",
+            "text": ""
+          }
+        },
+        "n-Y6wH4d": {
+          "type": "text",
+          "data": {
+            "type": "paragraph",
+            "text": ""
+          }
+        },
+        "n-WqVgdR": {
+          "type": "text",
+          "data": {
+            "type": "paragraph",
+            "text": ""
+          }
+        },
+        "n-QxQ3lH": {
+          "type": "text",
+          "data": {
+            "type": "paragraph",
+            "text": ""
+          }
+        },
+        "n-MTr8Hm": {
+          "type": "text",
+          "data": {
+            "text": "",
+            "type": "paragraph"
+          }
+        },
+        "n-3NsH0N": {
+          "type": "text",
+          "data": {
+            "type": "paragraph",
+            "text": ""
+          }
+        },
+        "n-A791s1": {
+          "type": "text",
+          "data": {
+            "text": "",
+            "type": "paragraph"
+          }
+        },
+        "n-aUhBgM": {
+          "type": "text",
+          "data": {
+            "type": "paragraph",
+            "text": ""
+          }
+        },
+        "n-bFVwwj": {
+          "type": "text",
+          "data": {
+            "text": "",
+            "type": "h4"
+          }
+        },
+        "n-zLEwGU": {
+          "type": "text",
+          "data": {
+            "text": "",
+            "type": "paragraph"
+          }
+        },
+        "n-3tg6nZ": {
+          "type": "attribution",
+          "data": {
+            "content": "",
+            "attribution": ""
+          }
+        },
+        "n-2PizwW": {
+          "type": "credits",
+          "children": [
+            "n-bFVwwj",
+            "n-zLEwGU",
+            "n-3tg6nZ"
+          ]
+        },
+        "n-hDvWMj": {
+          "type": "story",
+          "data": {
+            "storyTheme": "r-WqJgUw",
+            "aiMetadataResource": "r-HgMxSo"
+          },
+          "config": {
+            "coverDate": "none",
+            "isSocialIconsHidden": false,
+            "shouldHideSimilarItems": true,
+            "scriptEmbedDomains": [],
+            "isScriptEmbedEnabled": false,
+            "storyLocale": "en"
+          },
+          "children": [
+            "n-u2yQWN",
+            "n-Ga91kU",
+            "n-4kD0PO",
+            "n-YvPSRB",
+            "n-R5KMOB",
+            "n-gY9Cxx",
+            "n-5s5kOX",
+            "n-vf2W4j",
+            "n-fIP0hV",
+            "n-5ZfRUY",
+            "n-t1ecBo",
+            "n-fJnJMn",
+            "n-sRi3xv",
+            "n-TYU8FW",
+            "n-fn0rYd",
+            "n-HmAuMi",
+            "n-6oQDsd",
+            "n-ysYxPr",
+            "n-sEwK7K",
+            "n-M3qh0p",
+            "n-i8oeTD",
+            "n-1dy2Pt",
+            "n-QdD8w2",
+            "n-3urDvC",
+            "n-rCEaAS",
+            "n-voZyYY",
+            "n-5Xuxno",
+            "n-ofeUma",
+            "n-OPRRGr",
+            "n-QYb63x",
+            "n-KmNStI",
+            "n-HZwjhN",
+            "n-Y6wH4d",
+            "n-WqVgdR",
+            "n-QxQ3lH",
+            "n-MTr8Hm",
+            "n-3NsH0N",
+            "n-A791s1",
+            "n-aUhBgM",
+            "n-2PizwW"
+          ]
+        }
+      },
+      "resources": {
+        "r-fc072a1bad6a4d558878446413ef3d67": {
+          "type": "webmap",
+          "data": {
+            "extent": {
+              "spatialReference": {
+                "latestWkid": 3857,
+                "wkid": 102100
+              },
+              "xmin": -15936693.220266325,
+              "ymin": 8269352.140146166,
+              "xmax": -10972371.795759434,
+              "ymax": 11062666.901798904
+            },
+            "center": {
+              "spatialReference": {
+                "latestWkid": 3857,
+                "wkid": 102100
+              },
+              "x": -13454532.50801288,
+              "y": 9666009.520972535
+            },
+            "zoom": 3.5544303797468357,
+            "viewpoint": {
+              "rotation": 0,
+              "scale": 26727567.108763933,
+              "targetGeometry": {
+                "spatialReference": {
+                  "latestWkid": 3857,
+                  "wkid": 102100
+                },
+                "x": -13454532.50801288,
+                "y": 9666009.520972535
+              }
+            },
+            "mapLayers": [
+              {
+                "id": "4e05f7838f4542c98e01b6c96b59750d",
+                "title": "Remote",
+                "visible": true
+              },
+              {
+                "id": "02188d4885c24483a4836b04d26d9d2a",
+                "title": "Very Remote",
+                "visible": true
+              },
+              {
+                "id": "ff01ac222df4461397106d74c3c32291",
+                "title": "Extremely Remote",
+                "visible": true
+              },
+              {
+                "id": "0fb27328a55f41a1aec95a44fe96b03c",
+                "title": "Isolated",
+                "visible": true
+              },
+              {
+                "id": "edb4e612418e401ca9fa8295ed649a71",
+                "title": "Winter Roads",
+                "visible": true
+              }
+            ],
+            "itemId": "fc072a1bad6a4d558878446413ef3d67",
+            "itemType": "Web Map",
+            "type": "default"
+          }
+        },
+        "r-WqJgUw": {
+          "type": "story-theme",
+          "data": {
+            "themeId": "summit",
+            "themeBaseVariableOverrides": {}
+          }
+        },
+        "r-HgMxSo": {
+          "type": "ai-metadata",
+          "data": {
+            "provider": "item-resource",
+            "resourceId": "ai-uuY59F.json"
+          }
+        }
+      }
+    },
+    {
+      "id": "15eadce764a14e6093c055209131e10d",
+      "root": "n-3dgGNS",
+      "nodes": {
+        "n-5DdEdO": {
+          "type": "storycover",
+          "data": {
+            "type": "minimal",
+            "title": "Measuring Accessibility in Northern Remote Regions",
+            "summary": "Seasonal cost-based accessibility index for northern remote regions shows that limited road access increases travel costs versus year-round",
+            "byline": "Keywords: accessibility, seasonality, transportation, remote regions, Northern Canada",
+            "titlePanelVerticalPosition": "top",
+            "titlePanelHorizontalPosition": "start",
+            "titlePanelStyle": "gradient"
+          },
+          "config": {
+            "isHidden": false
+          }
+        },
+        "n-VJ8V7M": {
+          "type": "navigation",
+          "data": {
+            "links": [
+              {
+                "nodeId": "n-ZUlFyM"
+              },
+              {
+                "nodeId": "n-qZTL5j"
+              },
+              {
+                "nodeId": "n-PkJLbs"
+              },
+              {
+                "nodeId": "n-eilPog"
+              }
+            ]
+          },
+          "config": {
+            "isHidden": false
+          }
+        },
+        "n-rq3OnU": {
+          "type": "text",
+          "data": {
+            "type": "h3",
+            "text": "Article Information"
+          }
+        },
+        "n-82agqC": {
+          "type": "text",
+          "data": {
+            "type": "paragraph",
+            "text": "Published: RESILIENCE FINDINGS\nTitle: Transportation Access Index for Remote Communities That Considers Modal Seasonality\nAuthors: Thomas Stringer<sup>1,2</sup>, Amy M. Kim<sup>2</sup>\n<sup>1</sup>Industrial Engineering, Tecnológico de Monterrey, Civil Engineering, <sup>2</sup>University of British Columbia\nLink to this article: <a href=\"https://doi.org/10.32866/001c.84337\" rel=\"noopener noreferrer\" target=\"_blank\">https://doi.org/10.32866/001c.84337</a>",
+            "textSize": "small"
+          }
+        },
+        "n-ZUlFyM": {
+          "type": "text",
+          "data": {
+            "type": "h2",
+            "text": "Study Summary"
+          }
+        },
+        "n-91fwW4": {
+          "type": "text",
+          "data": {
+            "type": "paragraph",
+            "text": "The study introduces a cost-based transportation accessibility index that accounts for seasonal variations in transport modes in northern remote regions. Using data from the Northwest Territories, Canada, the research shows that communities with limited or seasonal road access, such as fly-in communities, face significantly higher travel costs to service centers compared to those connected year-round by all-weather roads."
+          }
+        },
+        "n-qZTL5j": {
+          "type": "text",
+          "data": {
+            "type": "h2",
+            "text": "Questions"
+          }
+        },
+        "n-GoP8d2": {
+          "type": "text",
+          "data": {
+            "type": "paragraph",
+            "text": "Accessibility involves proximity, availability, and affordability of transportation. In northern regions, seasonal changes affect both availability and cost – winter roads, ferries, and ice crossings are only usable during certain months, forcing reliance on expensive air travel when roads are closed. Existing accessibility indices for remote areas do not explicitly account for this seasonality. We therefore ask: How does modal seasonality influence transport accessibility? They propose a new index that incorporates seasonal variation and calculate scores for 31 communities in the Northwest Territories."
+          }
+        },
+        "n-PkJLbs": {
+          "type": "text",
+          "data": {
+            "type": "h2",
+            "text": "Methods"
+          }
+        },
+        "n-aBoZ2x": {
+          "type": "text",
+          "data": {
+            "type": "paragraph",
+            "text": "The study uses fare information from airlines operating in the Northwest Territories, road distances from Google Maps, and ferry/ice road/winter road data from the Government of the Northwest Territories. First, the number of months with and without road access for each community is determined based on average opening and closing dates for winter roads, ferries, and ice roads. Second, travel costs are compiled for road and air travel from each community to two service centers: one with a hospital and postsecondary institution, and another with a population ≥250,000. Road travel costs are calculated using distance and a per-kilometre rate (CAD 0.68/km), while air travel costs are obtained from airline websites. For communities without road access, only flight costs are used. Finally, seasonality is integrated into the index by weighting costs for months with and without road access, and a single-value index per community is computed as a weighted average of annual costs for both service center levels."
+          }
+        },
+        "n-WDru4x": {
+          "type": "table",
+          "data": {
+            "numRows": 5,
+            "numColumns": 2,
+            "cells": {
+              "0": {
+                "0": {
+                  "value": "Community access type"
+                },
+                "1": {
+                  "value": "Number of months of road access (M<sub>1</sub>)"
+                }
+              },
+              "1": {
+                "0": {
+                  "value": "Connected by all-weather road without ferry/ice road crossing<sup>1</sup>"
+                },
+                "1": {
+                  "value": "12"
+                }
+              },
+              "2": {
+                "0": {
+                  "value": "Connected by all-weather road with ferry crossing in the summer and ice road in the winter<sup>2</sup>"
+                },
+                "1": {
+                  "value": "9"
+                }
+              },
+              "3": {
+                "0": {
+                  "value": "Connected by winter road"
+                },
+                "1": {
+                  "value": "3"
+                }
+              },
+              "4": {
+                "0": {
+                  "value": "Disconnected from main road network"
+                },
+                "1": {
+                  "value": "0"
+                }
+              }
+            },
+            "caption": "Community access type and number of months with road access\n<sup><em>1</em></sup><em>Bridges across any and all water crossings\n</em><sup><em>2</em></sup><em>At least one water crossing does not have a bridge; crossings are made by ferry in the warmer, \nice-free months and by ice road in the winter months</em>",
+            "shouldShowHeaderRow": true,
+            "shouldShowHeaderColumn": true
+          },
+          "config": {
+            "size": "full"
+          }
+        },
+        "n-eilPog": {
+          "type": "text",
+          "data": {
+            "text": "Findings",
+            "type": "h2"
+          }
+        },
+        "n-apZocv": {
+          "type": "text",
+          "data": {
+            "type": "paragraph",
+            "text": "The index values calculated for 31 communities show that higher costs are strongly associated with fewer months of road access. A Pearson correlation of -0.656 confirms an inverse relationship between accessibility and road availability. Communities with limited or seasonal road connectivity rely more on costly air travel, which significantly raises average transportation costs. The study concludes that improving year-round road access can reduce dependence on air travel and lower overall costs. The proposed index offers policymakers and researchers a tool to evaluate accessibility in regions where transportation modes vary seasonally."
+          }
+        },
+        "n-M62bqk": {
+          "type": "image",
+          "data": {
+            "image": "r-bkP4uV",
+            "isExpandable": false,
+            "caption": "Communities classified by the number of months of road availability and index scores"
+          }
+        },
+        "n-aWeFyO": {
+          "type": "text",
+          "data": {
+            "type": "paragraph",
+            "text": ""
+          }
+        },
+        "n-0Umvgk": {
+          "type": "text",
+          "data": {
+            "text": "",
+            "type": "h4"
+          }
+        },
+        "n-HouTCa": {
+          "type": "text",
+          "data": {
+            "text": "",
+            "type": "paragraph"
+          }
+        },
+        "n-I1tjvW": {
+          "type": "attribution",
+          "data": {
+            "content": "",
+            "attribution": ""
+          }
+        },
+        "n-XMVHT2": {
+          "type": "credits",
+          "children": [
+            "n-0Umvgk",
+            "n-HouTCa",
+            "n-I1tjvW"
+          ]
+        },
+        "n-3dgGNS": {
+          "type": "story",
+          "data": {
+            "storyTheme": "r-RoP9oX"
+          },
+          "config": {
+            "coverDate": "none",
+            "isSocialIconsHidden": false,
+            "shouldHideSimilarItems": true,
+            "scriptEmbedDomains": [],
+            "isScriptEmbedEnabled": false,
+            "storyLocale": "en"
+          },
+          "children": [
+            "n-5DdEdO",
+            "n-VJ8V7M",
+            "n-rq3OnU",
+            "n-82agqC",
+            "n-ZUlFyM",
+            "n-91fwW4",
+            "n-qZTL5j",
+            "n-GoP8d2",
+            "n-PkJLbs",
+            "n-aBoZ2x",
+            "n-WDru4x",
+            "n-eilPog",
+            "n-apZocv",
+            "n-M62bqk",
+            "n-aWeFyO",
+            "n-XMVHT2"
+          ]
+        }
+      },
+      "resources": {
+        "r-bkP4uV": {
+          "type": "image",
+          "data": {
+            "resourceId": "twoyWLEU8FccXZ_uyQP33.png",
+            "provider": "item-resource",
+            "height": 1231,
+            "width": 1783,
+            "localUrl": "/references/15eadce764a14e6093c055209131e10d-twoyWLEU8FccXZ_uyQP33.png"
+          }
+        },
+        "r-RoP9oX": {
+          "type": "story-theme",
+          "data": {
+            "themeId": "summit",
+            "themeBaseVariableOverrides": {}
+          }
+        }
+      }
+    },
+    {
+      "id": "98bb02cb7e514fb8a516932c703cab32",
+      "root": "n-jljnFT",
+      "nodes": {
+        "n-XxBXOC": {
+          "type": "storycover",
+          "data": {
+            "type": "minimal",
+            "title": "Remoteness and Risk Factors Affecting Road Accident Severity",
+            "summary": "A Multinomial Logistic Analysis of Environmental, Geographic, and Behavioral Influences on Collision Outcomes in Northern Canada",
+            "byline": "Keywords: Accident severity, Road safety, Remoteness, Circumpolar North, Off-road vehicle ",
+            "titlePanelVerticalPosition": "top",
+            "titlePanelHorizontalPosition": "start",
+            "titlePanelStyle": "gradient"
+          },
+          "config": {
+            "isHidden": false
+          }
+        },
+        "n-PxwSqw": {
+          "type": "navigation",
+          "data": {
+            "links": [
+              {
+                "nodeId": "n-LR4pqH"
+              },
+              {
+                "nodeId": "n-AgTeJe"
+              },
+              {
+                "nodeId": "n-2j6H8H"
+              },
+              {
+                "nodeId": "n-PyvcFX"
+              },
+              {
+                "nodeId": "n-kwwcV2"
+              },
+              {
+                "nodeId": "n-fVt91i"
+              },
+              {
+                "nodeId": "n-JxNTRf"
+              },
+              {
+                "nodeId": "n-uthJcs"
+              }
+            ]
+          },
+          "config": {
+            "isHidden": false
+          }
+        },
+        "n-VaQDod": {
+          "type": "text",
+          "data": {
+            "type": "h3",
+            "text": "Article Information"
+          }
+        },
+        "n-Ou5yua": {
+          "type": "text",
+          "data": {
+            "type": "paragraph",
+            "text": "Published: Transportation Research Interdisciplinary Perspectives\nTitle: Remoteness and other risk factors in circumpolar road accident severity\nAuthors: Thomas Stringer<sup>1,2</sup>, Halley Suarez<sup>1</sup>, Amy M. Kim<sup>1</sup>\n<sup>1</sup>Department of Civil Engineering, University of British Columbia\n<sup>2</sup>Department of Industrial Engineering, Tecnológico de Monterrey\nLink to this article: <a href=\"https://doi.org/10.1016/j.trip.2023.100898\" rel=\"noopener noreferrer\" target=\"_blank\">https://doi.org/10.1016/j.trip.2023.100898</a>",
+            "textSize": "small"
+          }
+        },
+        "n-LR4pqH": {
+          "type": "text",
+          "data": {
+            "type": "h2",
+            "text": "Study Summary"
+          }
+        },
+        "n-FOEq8k": {
+          "type": "text",
+          "data": {
+            "type": "paragraph",
+            "text": "This study examines how remoteness and other factors influence road accident severity in Canada’s Northwest Territories. Using 31 years of police-reported data (1989–2019) and multinomial logistic regression, the analysis considers environmental, infrastructure, geographic, and accident-specific variables. Results show that remoteness, off-road vehicle involvement, and alcohol use significantly increase the likelihood of severe outcomes. These risk factors, more common in northern remote regions, contribute to higher injury and fatality rates compared to less remote areas."
+          }
+        },
+        "n-AgTeJe": {
+          "type": "text",
+          "data": {
+            "type": "h2",
+            "text": "Introduction"
+          }
+        },
+        "n-aELxzF": {
+          "type": "text",
+          "data": {
+            "type": "paragraph",
+            "text": "Experiencing a road accident in a remote region presents a more serious risk to health and safety than in less remote areas. In northern regions, infrastructure must endure harsh weather, immense distances, and poor maintenance. When accidents occur, delays in discovery, emergency response, and transport to healthcare facilities make injuries more severe. Literature shows factors such as weather, road conditions, alcohol involvement, and remoteness influence accident severity, but the impact of remoteness has not been well documented. No multivariate analysis has previously included remoteness as a variable. Delays in obtaining healthcare in this unique landscape may increase the likelihood of fatalities, especially with off-road vehicle use and impaired driving. This study aims to understand how weather, remoteness, and other risk factors affect accident severity in Canada’s Northwest Territories using a multinomial logistic regression model."
+          }
+        },
+        "n-2j6H8H": {
+          "type": "text",
+          "data": {
+            "type": "h2",
+            "text": "Literature Review"
+          }
+        },
+        "n-McWxM9": {
+          "type": "text",
+          "data": {
+            "type": "paragraph",
+            "text": "Road accidents are a major cause of preventable death and injury in Canada, with territorial regions facing unique challenges such as extreme remoteness, harsh winters, and seasonal roads. Existing studies show that accident severity is influenced by factors like driver demographics, behavior, vehicle type, road geometry, material, and weather conditions. In northern Canada, alcohol involvement and off-road vehicle use are particularly significant, with alcohol strongly correlated to severe injuries and fatalities. Off-road vehicles such as ATVs and snowmobiles pose higher risks due to limited protection and training. Remoteness is another critical factor; rural and remote areas experience higher rates of severe accidents, partly due to limited healthcare access. Indices like Canada’s Remoteness Index and Australia’s ARIA (Accessibility / Remoteness Index of Australia) have been used to measure isolation and its impact on health outcomes, including trauma deaths. However, previous studies have not isolated the direct effect of remoteness on accident severity using multivariate models. This study addresses that gap by applying a multinomial logistic regression approach to control for multiple risk factors simultaneously."
+          }
+        },
+        "n-PyvcFX": {
+          "type": "text",
+          "data": {
+            "type": "h2",
+            "text": "Data"
+          }
+        },
+        "n-epBSf3": {
+          "type": "text",
+          "data": {
+            "type": "paragraph",
+            "text": "The study uses 31 years of accident data (1989–2019) from the Northwest Territories, collected through the Traffic Accident Information System (TCIS) based on police reports. A long time span was necessary due to the low number of fatal accidents in remote areas. The dataset includes 20,724 observations after removing incomplete entries, categorized into three severity levels: property damage, injury, and fatality. Fifteen independent variables were grouped into four categories:"
+          }
+        },
+        "n-LSgrxX": {
+          "type": "text",
+          "data": {
+            "type": "bullet-list",
+            "text": "<li><strong>Environmental:</strong> Year, weather condition, light condition, weekday/weekend</li><li><strong>Geographical:</strong> Remoteness index (Statistics Canada), latitude, rural/urban</li><li><strong>Road characteristics:</strong> Speed limit, road surface, material, condition, type</li><li><strong>Other:</strong> Number of vehicles, alcohol involvement, off-road vehicle involvement</li>"
+          }
+        },
+        "n-eNlSOa": {
+          "type": "text",
+          "data": {
+            "type": "paragraph",
+            "text": "Most accidents occurred on community roads (77%), in urban areas (81%), under clear or cloudy weather (82%), and during daylight (62%). The median speed limit was 50 km/h, and most accidents involved two vehicles. Alcohol involvement was noted in 8% of cases, and off-road vehicles in 3%. Remoteness and latitude values indicate that many accidents occurred near population centers, though the study focuses on the effect of remoteness on accident severity."
+          }
+        },
+        "n-skv9TT": {
+          "type": "table",
+          "data": {
+            "numRows": 13,
+            "numColumns": 3,
+            "cells": {
+              "0": {
+                "0": {
+                  "value": "Factor"
+                },
+                "1": {
+                  "value": "Category"
+                },
+                "2": {
+                  "value": "% of Total Observations"
+                }
+              },
+              "1": {
+                "0": {
+                  "value": "Weather Conditions"
+                },
+                "1": {
+                  "value": "Clear and/or sunny"
+                },
+                "2": {
+                  "value": "63.9%"
+                }
+              },
+              "2": {
+                "1": {
+                  "value": "Cloudy, no precipitation"
+                },
+                "2": {
+                  "value": "17.9%"
+                }
+              },
+              "3": {
+                "0": {
+                  "value": "Light Condition"
+                },
+                "1": {
+                  "value": "Daylight"
+                },
+                "2": {
+                  "value": "62.1%"
+                }
+              },
+              "4": {
+                "1": {
+                  "value": "Dark"
+                },
+                "2": {
+                  "value": "26.2%"
+                }
+              },
+              "5": {
+                "0": {
+                  "value": "Road Type"
+                },
+                "1": {
+                  "value": "Community Roads"
+                },
+                "2": {
+                  "value": "76.8%"
+                }
+              },
+              "6": {
+                "1": {
+                  "value": "Highways"
+                },
+                "2": {
+                  "value": "18.8%"
+                }
+              },
+              "7": {
+                "0": {
+                  "value": "Rural/Urban"
+                },
+                "1": {
+                  "value": "Urban"
+                },
+                "2": {
+                  "value": "81.0%"
+                }
+              },
+              "8": {
+                "1": {
+                  "value": "Rural"
+                },
+                "2": {
+                  "value": "19.0%"
+                }
+              },
+              "9": {
+                "0": {
+                  "value": "Alcohol Involvement"
+                },
+                "1": {
+                  "value": "Yes"
+                },
+                "2": {
+                  "value": "7.7%"
+                }
+              },
+              "10": {
+                "1": {
+                  "value": "No"
+                },
+                "2": {
+                  "value": "92.3%"
+                }
+              },
+              "11": {
+                "0": {
+                  "value": "Off-Road Vehicle Involvement"
+                },
+                "1": {
+                  "value": "Yes"
+                },
+                "2": {
+                  "value": "2.5%"
+                }
+              },
+              "12": {
+                "1": {
+                  "value": "No"
+                },
+                "2": {
+                  "value": "97.5%"
+                }
+              }
+            },
+            "shouldShowHeaderRow": true,
+            "shouldShowHeaderColumn": true,
+            "caption": "Observation Count for Each of the Factors’ Categories (Short version)"
+          },
+          "config": {
+            "size": "full"
+          }
+        },
+        "n-kwwcV2": {
+          "type": "text",
+          "data": {
+            "type": "h2",
+            "text": "Empirical Model"
+          }
+        },
+        "n-ybkHcp": {
+          "type": "text",
+          "data": {
+            "type": "paragraph",
+            "text": "Accident severity in government records is measured in discrete categories: property damage only, injury, and fatality. Given this categorical nature, regression analyses of severity factors typically use discrete response models. The authors apply a multinomial logistic regression model, first proposed by Shankar and Mannering (1996), as it is widely used in accident severity studies and was cited by Zheng et al. (2021) as a main method in the literature. \n\nThe multinomial model was chosen over an ordinal model because the data do not satisfy the proportional odds assumption required for ordinal logistic regression. Likelihood and Brant tests confirmed that the relationship between independent variables and severity categories is not the same across categories. The multinomial model offers flexibility to compare more than two severity levels without imposing restrictive assumptions.\n\nThe model estimates the log odds of an accident being in a higher severity category (injury or fatality) compared to property damage only, based on explanatory variables. Odds ratios are calculated for each risk factor to interpret the effect on severity. This approach allows us to control for multiple environmental, geographical, road-specific, and accident-specific factors simultaneously."
+          }
+        },
+        "n-fVt91i": {
+          "type": "text",
+          "data": {
+            "type": "h2",
+            "text": "Results and Discussion"
+          }
+        },
+        "n-SDmu5y": {
+          "type": "text",
+          "data": {
+            "type": "paragraph",
+            "text": "The multinomial logistic regression results show that several factors significantly influence accident severity in the Northwest Territories:"
+          }
+        },
+        "n-fleeqY": {
+          "type": "text",
+          "data": {
+            "type": "bullet-list",
+            "text": "<li><strong>Remoteness:</strong> A higher remoteness index greatly increases severity. A 0.10 in StatCan’s remoteness index increase raises injury odds by 7.8% and fatality odds by 48%. Latitude also increases severity, suggesting harsher climates amplify risk.</li><li><strong>Alcohol involvement:</strong> Accidents involving alcohol are 2.6 times more likely to cause injury and 8.4 times more likely to be fatal.</li><li><strong>Off-road vehicle involvement:</strong> When an ATV or snowmobile is involved, injury odds increase 17 times and fatality odds 39 times, reflecting limited protection and training. </li><li><strong>Speed and road type:</strong> Higher speed limits raise severity; a 10 km/h increase boosts injury odds by 30% and fatality odds by 17%. Accidents on numbered highways are seven times more likely to be fatal compared to community roads.</li><li><strong>Weather and road conditions:</strong> Poor road conditions increase injury odds by 30%. Adverse weather modestly raises injury risk (13%) but does not significantly affect fatalities.</li><li><strong>Time factors:</strong> Weekend accidents have 47% higher fatality odds compared to a weekday. Nighttime and dawn conditions reduce injury odds compared to daylight, though results are mixed and may reflect data limitations.</li>"
+          }
+        },
+        "n-JxNTRf": {
+          "type": "text",
+          "data": {
+            "type": "h2",
+            "text": "Policy implications"
+          }
+        },
+        "n-vG6ENS": {
+          "type": "text",
+          "data": {
+            "type": "paragraph",
+            "text": "The findings show that remoteness, alcohol use, off-road vehicle involvement, speed limits, and road condition significantly influence accident severity. These results provide evidence for targeted actions to reduce severe outcomes in remote regions. Improving healthcare access and emergency response times is critical, as delays in remote areas can turn treatable injuries into fatalities. Suggested measures include:"
+          }
+        },
+        "n-U39u2S": {
+          "type": "text",
+          "data": {
+            "type": "bullet-list",
+            "text": "<li><strong>Infrastructure and maintenance:</strong> Better road upkeep and lower speed limits in remote areas.</li><li><strong>Technology:</strong> Accident detection systems and satellite communication to reduce emergency response times.</li><li><strong>Healthcare services:</strong> Enhanced air ambulance availability for rapid transport to major healthcare centers.</li><li><strong>Education and enforcement:</strong> Driver education programs addressing risks of high speeds, alcohol use, and off-road vehicle safety.</li>"
+          }
+        },
+        "n-GA7cnk": {
+          "type": "text",
+          "data": {
+            "type": "paragraph",
+            "text": "Collaboration with local Indigenous communities is emphasized to ensure culturally informed strategies. Public platforms providing real-time road and weather conditions could also help drivers make safer travel decisions."
+          }
+        },
+        "n-uthJcs": {
+          "type": "text",
+          "data": {
+            "type": "h2",
+            "text": "Conclusion"
+          }
+        },
+        "n-YhwkIH": {
+          "type": "text",
+          "data": {
+            "type": "paragraph",
+            "text": "Road accidents in remote regions can have more serious consequences than those in areas with better transportation access. Delays in accident detection, emergency response, and transport to healthcare facilities – often worsened by harsh weather and poor road conditions – can turn treatable injuries into life-threatening situations. This study provides new insights into accident severity in Canada’s circumpolar north by analyzing risk factors specific to this context. \n\nUsing multinomial logistic regression, the findings show strong positive correlations between accident severity and remoteness, off-road vehicle involvement, and alcohol use. Higher speed limits also increase severity, while weather effects remain inconclusive. Off-road vehicles, common in northern communities, significantly raise injury and fatality risks due to limited protection and training. These results underscore the need for road safety policies tailored to remote regions, including improved infrastructure, healthcare access, and culturally informed strategies.\n\nThe study acknowledges limitations such as reliance on one regression method, data from a single territory, and incomplete weather information. Future research should incorporate richer datasets, improved weather data, and comparative analyses across other circumpolar regions."
+          }
+        },
+        "n-zNFElL": {
+          "type": "text",
+          "data": {
+            "type": "paragraph",
+            "text": ""
+          }
+        },
+        "n-CyRuyX": {
+          "type": "text",
+          "data": {
+            "type": "paragraph",
+            "text": ""
+          }
+        },
+        "n-jACHuS": {
+          "type": "text",
+          "data": {
+            "text": "",
+            "type": "h4"
+          }
+        },
+        "n-SKZPDt": {
+          "type": "text",
+          "data": {
+            "text": "",
+            "type": "paragraph"
+          }
+        },
+        "n-zVGdzd": {
+          "type": "attribution",
+          "data": {
+            "content": "",
+            "attribution": ""
+          }
+        },
+        "n-VW4KvX": {
+          "type": "credits",
+          "children": [
+            "n-jACHuS",
+            "n-SKZPDt",
+            "n-zVGdzd"
+          ]
+        },
+        "n-jljnFT": {
+          "type": "story",
+          "data": {
+            "storyTheme": "r-qRFK5d"
+          },
+          "config": {
+            "coverDate": "none",
+            "isSocialIconsHidden": false,
+            "shouldHideSimilarItems": true,
+            "scriptEmbedDomains": [],
+            "isScriptEmbedEnabled": false,
+            "storyLocale": "en"
+          },
+          "children": [
+            "n-XxBXOC",
+            "n-PxwSqw",
+            "n-VaQDod",
+            "n-Ou5yua",
+            "n-LR4pqH",
+            "n-FOEq8k",
+            "n-AgTeJe",
+            "n-aELxzF",
+            "n-2j6H8H",
+            "n-McWxM9",
+            "n-PyvcFX",
+            "n-epBSf3",
+            "n-LSgrxX",
+            "n-eNlSOa",
+            "n-skv9TT",
+            "n-kwwcV2",
+            "n-ybkHcp",
+            "n-fVt91i",
+            "n-SDmu5y",
+            "n-fleeqY",
+            "n-JxNTRf",
+            "n-vG6ENS",
+            "n-U39u2S",
+            "n-GA7cnk",
+            "n-uthJcs",
+            "n-YhwkIH",
+            "n-zNFElL",
+            "n-CyRuyX",
+            "n-VW4KvX"
+          ]
+        }
+      },
+      "resources": {
+        "r-qRFK5d": {
+          "type": "story-theme",
+          "data": {
+            "themeId": "summit",
+            "themeBaseVariableOverrides": {}
+          }
+        }
+      }
+    }
+  ]
+}

@@ -15,7 +15,7 @@ import {
 } from "./Data.js"
 import { getClimateCity } from "../../services/meteo.service.js"
 import { cities } from "../../utils/constants.js"
-import { LineChart, lineElementClasses, areaElementClasses } from "@mui/x-charts/LineChart"
+import { LineChart } from "@mui/x-charts/LineChart"
 import { BarChart } from "@mui/x-charts/BarChart"
 import { FormControlLabel, Icon, Switch, Typography } from "@mui/material"
 import useMediaQuery from "@mui/material/useMediaQuery"
@@ -30,27 +30,46 @@ import UnfoldMoreIcon from "@mui/icons-material/UnfoldMore"
 import StraightenIcon from "@mui/icons-material/Straighten"
 import KeyboardDoubleArrowLeftIcon from "@mui/icons-material/KeyboardDoubleArrowLeft"
 import KeyboardDoubleArrowRightIcon from "@mui/icons-material/KeyboardDoubleArrowRight"
-import IconButton from "@mui/material/IconButton"
 import ForecastPanel from "./ForecastPanel.jsx"
 import YearRangeSlider from "../YearRangeSlider/YearRangeSlider.jsx"
-import usePinchZoomYears from "../../hooks/usePinchZoomYears.js"
+import FddChart, { MIN_GRAPH_POINTS } from "./components/FddChart"
+import PrecipChart, { PRECIP_BAR_GAPS } from "./components/PrecipChart"
+import ChartScroller from "./components/ChartScroller.jsx"
 
 const API_BASE = "https://dev-moh.wramp.ca/python-api";
-
-// A station needs at least this many usable seasons before its FDD graph is
-// drawn — one or two dots read as a trend when they aren't one. Stations below
-// the threshold get a "not enough data" message instead.
-const MIN_GRAPH_POINTS = 6
 
 // Short month names for chart labels.
 const MONTH_ABBR = ["", "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
 
-// Bar geometry for the precipitation chart. A monthly range is at most 12 bars,
-// so they can be wide; a daily range is up to ~90, so they have to be thin.
-// (categoryGapRatio: gap between categories, barGapRatio: gap between bars.)
-const PRECIP_BAR_GAPS = {
-  monthly: { categoryGapRatio: 0.15, barGapRatio: 0.05 },
-  daily: { categoryGapRatio: 0.55, barGapRatio: 0.2 },
+// Horizontal space each season gets in the road-popup charts. A road can carry
+// 40+ seasons, and on a phone the popup leaves the plot barely 220px wide — at
+// that point the duration bars collapse to ~4px and the trend marks smear into
+// a line. Below these widths the chart stops compressing and scrolls sideways
+// inside its own container instead (the pattern the city modal already uses).
+// The pointer floor is deliberately low: the widest popup fits today's longest
+// record without scrolling, so it only kicks in for an even longer one.
+const POPUP_CHART_SLOT = { compact: 22, wide: 8 }
+
+// Axis gutters for the road-popup charts. On a phone the rotated y-axis label
+// costs about a quarter of the plot for something both captions below the chart
+// and the tick text already say, so it is dropped there and the gutter shrinks
+// to what the tick labels alone need.
+const popupChartGeometry = ({ count, compact, tickGutter, height }) => {
+  const left = compact ? tickGutter : tickGutter + 26
+  const right = 18
+  const top = 16
+  const bottom = compact ? 34 : 50
+  const slot = compact ? POPUP_CHART_SLOT.compact : POPUP_CHART_SLOT.wide
+  return {
+    margin: { left, right, top, bottom },
+    minWidth: Math.ceil(left + right + Math.max(count, 1) * slot),
+    height,
+    // Year labels need ~26px; thin them out until they fit their own slot.
+    labelEvery: Math.max(1, Math.ceil(26 / slot)),
+    // Wide touch bars need a visible gap to read as separate seasons; the
+    // narrow pointer bars cannot spare the pixels.
+    categoryGapRatio: compact ? 0.28 : 0.1,
+  }
 }
 
 // Stations with fewer than this many seasons of data get a persistent warning
@@ -408,13 +427,16 @@ function WeatherMap() {
   // Per-month Mann-Kendall / Sen's slope trends for the precipitation table.
   const [precipTrend, setPrecipTrend] = useState(null)
   const [precipTrendLoading, setPrecipTrendLoading] = useState(false)
+  const [precipLegendVersion, setPrecipLegendVersion] = useState(1)
   const [tempData, setTempData] = useState(null) // {labels: [], avgs: [], maxs: [], mins: []}
   const [tempLoading, setTempLoading] = useState(false)
   const [tempMonthRange, setTempMonthRange] = useState([defaultMonthStart, defaultMonthEnd])
   const [tempShowMax, setTempShowMax] = useState(true)
   const [tempShowAvg, setTempShowAvg] = useState(true)
   const [tempShowMin, setTempShowMin] = useState(true)
-  const isMobile = useMediaQuery("(max-width:768px)")
+  // Matches the --bp-md breakpoint the stylesheet uses, so the JS and CSS
+  // mobile branches never disagree at exactly 768px.
+  const isMobile = useMediaQuery("(max-width:767.98px)")
 
   /**
    * Effect hook to load data when component mounts.
@@ -557,6 +579,25 @@ function WeatherMap() {
       cancelled = true
     }
   }, [popupRoadName])
+
+  // On a phone the popup is a bottom sheet with room for little more than the
+  // details, so a road popup opens enlarged (near full screen) and the header
+  // button shrinks it from there. Desktop still opens compact.
+  //
+  // This fires on the open itself, not on every road: switching straight from
+  // one road to another keeps whatever size the user chose, the way the
+  // collapsed sections above already persist, and a rotation that flips
+  // isMobile mid-popup leaves that choice alone too. Closing ends the run, so
+  // the next popup opens at the default again.
+  const roadPopupWasOpen = useRef(false)
+
+  useEffect(() => {
+    const open = popupRoadName != null
+    if (open === roadPopupWasOpen.current) return
+
+    roadPopupWasOpen.current = open
+    if (open) setRoadPopupEnlarged(isMobile)
+  }, [popupRoadName, isMobile])
 
   // Convert a "day of season" (days since Aug 1) back to a readable date label.
   const SEASON_BASE_MS = Date.UTC(2001, 7, 1) // Aug 1
@@ -715,67 +756,96 @@ function WeatherMap() {
       },
     ]
 
+    // Tick labels are dates ("Apr 8"), so the left gutter has to clear ~52px of
+    // text before the axis line.
+    const geo = popupChartGeometry({
+      count: years.length,
+      compact: isMobile,
+      tickGutter: 52,
+      height,
+    })
+
     return (
       <div style={{ width: "100%" }}>
-        <LineChart
-          height={height}
-          series={series}
-          xAxis={[
-            {
-              data: years,
-              scaleType: "point",
-              label: "Year",
-              valueFormatter: (v) => String(v),
-            },
-          ]}
-          yAxis={[
-            {
-              label: "Date",
-              min: yMin,
-              max: yMax,
-              valueFormatter: (v) => dosToLabel(v),
-            },
-          ]}
-          margin={{ left: 78, right: 18, top: 48, bottom: 50 }}
-          grid={{ horizontal: true }}
-          slotProps={{
-            legend: {
-              direction: "row",
-              position: { vertical: "top", horizontal: "middle" },
-              padding: 0,
-              itemMarkWidth: 14,
-              itemMarkHeight: 3,
-              markGap: 5,
-              itemGap: 18,
-              labelStyle: { fontSize: 12 },
-            },
-            // The chart's hover tooltip renders in a Popper. Its default
-            // z-index sits below the road-closure popup (5000/6000), so lift
-            // it above the popup to keep the datapoint tooltip on top.
-            popper: {
-              sx: { zIndex: 7000 },
-            },
-          }}
-          sx={{
-            // The y-axis label sits at a fixed offset that ignores tick-label
-            // width, so wide date labels (e.g. "Jan 15") overlap it. Nudge the
-            // label group further left to clear them.
-            "& .MuiChartsAxis-left .MuiChartsAxis-label": { transform: "translateX(-28px)" },
-            // Hide the connecting lines for the raw-point series; keep only marks.
-            "& .MuiLineElement-series-openPts": { display: "none" },
-            "& .MuiLineElement-series-closePts": { display: "none" },
-            // Hide the line strokes of the shading helper series (only fills show).
-            "& .MuiLineElement-series-redBg": { display: "none" },
-            "& .MuiLineElement-series-bandBase": { display: "none" },
-            "& .MuiLineElement-series-bandFill": { display: "none" },
-            // Soft orange "closed" wash and solid blue "open" band.
-            "& .MuiAreaElement-series-redBg": { fill: THERMAL.warmMid, fillOpacity: 0.14 },
-            "& .MuiAreaElement-series-bandFill": { fill: OPEN_COLOR, fillOpacity: 0.3 },
-            // Dash the trend lines so they read distinctly from the points.
-            "& .MuiLineElement-series-openTrend": { strokeDasharray: "6 4" },
-            "& .MuiLineElement-series-closeTrend": { strokeDasharray: "6 4" },
-          }}
-        />
+        {/* The chart is wider than the popup and scrolls, so its legend has to
+            live outside the scroller or it drifts off-screen with the plot. */}
+        <div className="wrtdip-popup-legend">
+          {[
+            { label: "Opening (freeze-up)", color: OPEN_COLOR, kind: "mark" },
+            { label: "Opening trend", color: OPEN_COLOR, kind: "dash" },
+            { label: "Closing (thaw)", color: CLOSE_COLOR, kind: "mark" },
+            { label: "Closing trend", color: CLOSE_COLOR, kind: "dash" },
+          ].map((item) => (
+            <span key={item.label} className="wrtdip-popup-legend__item">
+              <span
+                className={`wrtdip-popup-legend__swatch wrtdip-popup-legend__swatch--${item.kind}`}
+                style={{ color: item.color }}
+              />
+              {item.label}
+            </span>
+          ))}
+        </div>
+        <ChartScroller
+          minWidth={geo.minWidth}
+          hint="Scroll sideways to see every season"
+        >
+          <LineChart
+            height={geo.height}
+            series={series}
+            xAxis={[
+              {
+                data: years,
+                scaleType: "point",
+                label: isMobile ? undefined : "Year",
+                valueFormatter: (v) => String(v),
+                tickInterval: (v, i) => i % geo.labelEvery === 0,
+                tickLabelStyle: { fontSize: isMobile ? 10 : 11 },
+              },
+            ]}
+            yAxis={[
+              {
+                label: isMobile ? undefined : "Date",
+                min: yMin,
+                max: yMax,
+                valueFormatter: (v) => dosToLabel(v),
+                tickLabelStyle: { fontSize: isMobile ? 10 : 11 },
+              },
+            ]}
+            margin={geo.margin}
+            grid={{ horizontal: true }}
+            slotProps={{
+              legend: { hidden: true },
+              // The chart's hover tooltip renders in a Popper. Its default
+              // z-index sits below the road-closure popup (5000/6000), so lift
+              // it above the popup to keep the datapoint tooltip on top.
+              popper: {
+                sx: { zIndex: 7000 },
+              },
+            }}
+            sx={{
+              // The y-axis label sits at a fixed offset that ignores tick-label
+              // width, so wide date labels (e.g. "Jan 15") overlap it. Nudge the
+              // label group further left to clear them.
+              "& .MuiChartsAxis-left .MuiChartsAxis-label": { transform: "translateX(-28px)" },
+              // Hide the connecting lines for the raw-point series; keep only marks.
+              "& .MuiLineElement-series-openPts": { display: "none" },
+              "& .MuiLineElement-series-closePts": { display: "none" },
+              // Hide the line strokes of the shading helper series (only fills show).
+              "& .MuiLineElement-series-redBg": { display: "none" },
+              "& .MuiLineElement-series-bandBase": { display: "none" },
+              "& .MuiLineElement-series-bandFill": { display: "none" },
+              // Soft orange "closed" wash and solid blue "open" band.
+              "& .MuiAreaElement-series-redBg": { fill: THERMAL.warmMid, fillOpacity: 0.14 },
+              "& .MuiAreaElement-series-bandFill": { fill: OPEN_COLOR, fillOpacity: 0.3 },
+              // Dash the trend lines so they read distinctly from the points.
+              "& .MuiLineElement-series-openTrend": { strokeDasharray: "6 4" },
+              "& .MuiLineElement-series-closeTrend": { strokeDasharray: "6 4" },
+              // Marks are drawn as paths, so thicken the ring rather than the
+              // radius to keep neighbouring seasons separable.
+              "& .MuiMarkElement-root": { strokeWidth: 2 },
+            }}
+          />
+        </ChartScroller>
         <div
           style={{
             display: "flex",
@@ -850,47 +920,73 @@ function WeatherMap() {
     const avgDuration =
       durationDays.reduce((sum, d) => sum + d, 0) / durationDays.length
 
+    // Tick labels are day counts (at most 3 digits), so this axis needs a much
+    // narrower gutter than the date-labelled trend chart above it.
+    const geo = popupChartGeometry({
+      count: durationYears.length,
+      compact: isMobile,
+      tickGutter: 34,
+      height,
+    })
+
     return (
       <div style={{ width: "100%" }}>
         <DurationHeatGauge durationDays={durationDays} />
-        <BarChart
-          height={height}
-          series={[
-            {
-              type: "bar",
-              id: "openDuration",
-              label: "Days open",
-              color: "#2563eb",
-              data: durationDays,
-              valueFormatter: (v) => (v == null ? "" : `${v} days`),
-            },
-          ]}
-          xAxis={[
-            {
-              data: durationYears,
-              scaleType: "band",
-              label: "Year",
-              valueFormatter: (v) => String(v),
-            },
-          ]}
-          yAxis={[
-            {
-              label: "Days open",
-              min: 0,
-            },
-          ]}
-          margin={{ left: 64, right: 18, top: 24, bottom: 50 }}
-          grid={{ horizontal: true }}
-          slotProps={{
-            legend: { hidden: true },
-            // The chart's hover tooltip renders in a Popper. Its default
-            // z-index sits below the road-closure popup (5000/6000), so lift
-            // it above the popup to keep the datapoint tooltip on top.
-            popper: {
-              sx: { zIndex: 7000 },
-            },
-          }}
-        />
+        <ChartScroller
+          minWidth={geo.minWidth}
+          hint="Scroll sideways to see every season"
+        >
+          <BarChart
+            height={geo.height}
+            series={[
+              {
+                type: "bar",
+                id: "openDuration",
+                label: "Days open",
+                color: "#2563eb",
+                data: durationDays,
+                valueFormatter: (v) => (v == null ? "" : `${v} days`),
+                highlightScope: { highlighted: "item", faded: "global" },
+              },
+            ]}
+            xAxis={[
+              {
+                data: durationYears,
+                scaleType: "band",
+                label: isMobile ? undefined : "Year",
+                valueFormatter: (v) => String(v),
+                categoryGapRatio: geo.categoryGapRatio,
+                barGapRatio: 0,
+                tickInterval: (v, i) => i % geo.labelEvery === 0,
+                tickLabelStyle: { fontSize: isMobile ? 10 : 11 },
+              },
+            ]}
+            yAxis={[
+              {
+                label: isMobile ? undefined : "Days open",
+                min: 0,
+                tickLabelStyle: { fontSize: isMobile ? 10 : 11 },
+              },
+            ]}
+            borderRadius={3}
+            margin={{ ...geo.margin, top: 24 }}
+            grid={{ horizontal: true }}
+            slotProps={{
+              legend: { hidden: true },
+              // The chart's hover tooltip renders in a Popper. Its default
+              // z-index sits below the road-closure popup (5000/6000), so lift
+              // it above the popup to keep the datapoint tooltip on top.
+              popper: {
+                sx: { zIndex: 7000 },
+              },
+            }}
+            sx={{
+              // The y-axis label sits at a fixed offset that ignores tick-label
+              // width, so the day counts overlap it. Nudge it clear.
+              "& .MuiChartsAxis-left .MuiChartsAxis-label": { transform: "translateX(-14px)" },
+            }}
+          />
+        </ChartScroller>
         <Typography variant="caption" color="text.secondary" sx={{ display: "block", mt: 0.5, textAlign: "center" }}>
           Number of days the road stayed open each season (close date − open date). Average:{" "}
           {Math.round(avgDuration)} days.
@@ -1091,13 +1187,38 @@ function WeatherMap() {
           </table>
         </div>
 
-        <div className="wrtdip-precip-scale">
-          <WaterDropIcon className="wrtdip-precip-scale__icon" />
+        <div className="wrtdip-precip-legend-dev" role="group" aria-label="Precipitation legend version">
+          <span className="wrtdip-precip-legend-dev__label">Dev: Legend</span>
+          {[1, 2, 3, 4].map((version) => (
+            <button
+              key={version}
+              type="button"
+              aria-pressed={precipLegendVersion === version}
+              className={`wrtdip-precip-resolution__btn${precipLegendVersion === version ? " wrtdip-precip-resolution__btn--active" : ""}`}
+              onClick={() => setPrecipLegendVersion(version)}
+            >
+              Version {version}
+            </button>
+          ))}
+        </div>
+        <div className={`wrtdip-precip-scale wrtdip-precip-scale--v${precipLegendVersion}`}>
+          {precipLegendVersion !== 4 && <WaterDropIcon className="wrtdip-precip-scale__icon" />}
           <div className="wrtdip-precip-scale__body">
-            <div className="wrtdip-precip-scale__gradient" aria-hidden="true" />
+            {precipLegendVersion === 4 ? (
+              <div className="wrtdip-precip-scale__droplets" aria-hidden="true">
+                {Array.from({ length: 9 }, (_, index) => (
+                  <WaterDropIcon
+                    key={index}
+                    style={{ color: trendColor(maxAbs * (index / 4 - 1)) }}
+                  />
+                ))}
+              </div>
+            ) : (
+              <div className="wrtdip-precip-scale__gradient" aria-hidden="true" />
+            )}
             <div className="wrtdip-precip-scale__labels">
-              <span>Getting drier</span>
-              <span>Getting wetter</span>
+              <span>{precipLegendVersion === 3 ? "Getting wetter" : "Getting drier"}</span>
+              <span>{precipLegendVersion === 3 ? "Getting drier" : "Getting wetter"}</span>
             </div>
           </div>
         </div>
@@ -1659,6 +1780,23 @@ function WeatherMap() {
       })
   }, [modalIsOpen, territory, key])
 
+
+  /* The Max/Avg/Min switches report which series they are, so each panel needs
+     one handler rather than three setters threaded through the chart. */
+  const setPrecipSeriesVisible = (key, on) => {
+    if (key === "max") setPrecipShowMax(on)
+    else if (key === "avg") setPrecipShowAvg(on)
+    else setPrecipShowMin(on)
+  }
+  const setSnowSeriesVisible = (key, on) => {
+    if (key === "max") setSnowShowMax(on)
+    else if (key === "avg") setSnowShowAvg(on)
+    else setSnowShowMin(on)
+  }
+  /* Whether the phone layout can offer "show monthly instead" as the way out
+     of a daily chart too dense to fit the screen. */
+  const hasMonthlyPrecip = precipSources.some((source) => source.resolution === "monthly")
+
   // Fetch FDD data for all selected stations
   useEffect(() => {
     if (!modalIsOpen || selectedStations.length === 0) {
@@ -1907,13 +2045,6 @@ function WeatherMap() {
     if (fddSeries.length === 0) return []
     return [...new Set(fddSeries.flatMap((s) => s.years))].sort((a, b) => a - b)
   }, [fddSeries])
-  const fddPinchRef = usePinchZoomYears(
-    fddViewRange,
-    setFddViewRange,
-    fddAllYears[0],
-    fddAllYears[fddAllYears.length - 1],
-    { range: fddYRange, setRange: setFddYRange, min: fddYBounds.min, max: fddYBounds.max }
-  )
 
   /**
    * Function to close the modal.
@@ -1966,200 +2097,26 @@ function WeatherMap() {
     return cityName
   }
 
+  // The FDD graph has a desktop and a phone layout; <FddChart> picks one. All
+  // the state it reads stays here, because crossing the breakpoint remounts the
+  // variant and anything held inside it would be lost on rotate.
   function generateChart() {
-    if (fddLoading) {
-      return (
-        <Typography variant="body2" color="text.secondary" sx={{ py: 2, textAlign: "center" }}>
-          Loading FDD data...
-        </Typography>
-      )
-    }
-    // Only stations with enough seasons of data get plotted; the rest would
-    // render as one or two floating dots.
-    const chartSeries = fddSeries.filter((s) => s.years.length >= MIN_GRAPH_POINTS)
-    if (fddSeries.length > 0 && chartSeries.length === 0) {
-      return (
-        <Typography variant="body2" color="text.secondary" sx={{ py: 2, textAlign: "center" }}>
-          Not enough data points.
-        </Typography>
-      )
-    }
-    if (chartSeries.length > 0) {
-      // Only keep LOWESS curves for stations that are actually plotted.
-      const chartLowess = lowessSeries.filter((ls) =>
-        chartSeries.some((s) => s.stationId === ls.stationId)
-      )
-      // Combine all years from all series for the x-axis
-      const allYears = [...new Set(chartSeries.flatMap((s) => s.years))].sort((a, b) => a - b)
-
-      // Filter by view range
-      const filteredYears = allYears.filter((y) => y >= fddViewRange[0] && y <= fddViewRange[1])
-      const dataMin = allYears[0]
-      const dataMax = allYears[allYears.length - 1]
-
-      const colors = ["#2563eb", "#dc2626", "#16a34a", "#ea580c", "#7c3aed", "#0891b2"]
-      const lowessColors = ["#f59e0b", "#9333ea", "#0d9488", "#e11d48", "#1d4ed8", "#78716c"]
-      const cityName = getCityName()
-      // Use an area fill only when a single station is shown (cleaner with one line)
-      const singleSeries = chartSeries.length === 1
-      const series = chartSeries.map((s, idx) => {
-        // Align data to the filtered x-axis (null for missing years)
-        const yearMap = {}
-        s.years.forEach((y, i) => { yearMap[y] = s.fdds[i] })
-        const alignedData = filteredYears.map((y) => yearMap[y] ?? null)
-        // Show just the city name by default; full station name in advanced mode
-        const displayLabel = showAdvanced ? s.stationName : (cityName || s.stationName)
-        return {
-          id: `fdd-${s.stationId}`,
-          data: alignedData,
-          color: colors[idx % colors.length],
-          showMark: false,
-          curve: "monotoneX",
-          label: displayLabel,
-          connectNulls: true,
-          area: singleSeries,
-          valueFormatter: (v) => (v == null ? "No data" : `${Math.round(v)} °C·days`),
-        }
-      })
-
-      // Add LOWESS trend lines if enabled
-      if (showLowess && chartLowess.length > 0) {
-        chartLowess.forEach((ls, idx) => {
-          const yearMap = {}
-          ls.years.forEach((y, i) => { yearMap[y] = ls.fdds[i] })
-          const alignedData = filteredYears.map((y) => yearMap[y] ?? null)
-          const matchingStation = chartSeries.find((s) => s.stationId === ls.stationId)
-          const baseName = showAdvanced ? (matchingStation?.stationName || `Station ${ls.stationId}`) : (cityName || matchingStation?.stationName || `Station ${ls.stationId}`)
-          const label = `${baseName} (LOWESS)`
-          series.push({
-            id: `lowess-${ls.stationId}`,
-            data: alignedData,
-            color: lowessColors[idx % lowessColors.length],
-            showMark: false,
-            curve: "monotoneX",
-            label,
-            connectNulls: true,
-            valueFormatter: (v) => (v == null ? "" : `${Math.round(v)} °C·days`),
-          })
-        })
-      }
-
-      // Build per-series styling: thick smooth data lines, dashed LOWESS trend lines,
-      // and a soft gradient fill under a single-station line for a modern look.
-      const chartSx = {
-        [`.${lineElementClasses.root}`]: {
-          strokeWidth: 2.5,
-          strokeLinecap: "round",
-        },
-        [`.${areaElementClasses.root}`]: {
-          fillOpacity: 0.12,
-        },
-      }
-      if (showLowess && chartLowess.length > 0) {
-        chartLowess.forEach((ls) => {
-          chartSx[`.MuiLineElement-series-lowess-${ls.stationId}`] = {
-            strokeWidth: 2,
-            strokeDasharray: "6 5",
-          }
-        })
-      }
-
-      const chartHeight = chartSeries.length > 1 ? 300 : 260
-
-
-      return (
-        <div>
-          <YearRangeSlider
-            value={fddViewRange}
-            onChange={setFddViewRange}
-            min={dataMin}
-            max={dataMax}
-          />
-          <YearRangeSlider
-            value={fddYRange}
-            onChange={setFddYRange}
-            min={fddYBounds.min}
-            max={fddYBounds.max}
-            label="FDD Range (°C·days)"
-          />
-          <div ref={fddPinchRef} style={{ touchAction: "none", overflow: "hidden" }}>
-            {filteredYears.length > 0 ? (
-              <LineChart
-                xAxis={[
-                  {
-                    data: filteredYears,
-                    valueFormatter: (year) => year.toString(),
-                    label: "Year",
-                    tickMinStep: 1,
-                  },
-                ]}
-                yAxis={[
-                  {
-                    min: fddYRange[0],
-                    max: fddYRange[1],
-                    label: "Freezing Degree Days (°C·days)",
-                    labelStyle: { transform: "rotate(270deg) translate(-94px, -176px)" },
-                  },
-                ]}
-                series={series}
-                height={chartHeight}
-                margin={{ left: 95, right: 20, top: 10, bottom: 50 }}
-                grid={{ horizontal: true }}
-                slotProps={{
-                  legend: { hidden: true },
-                  // The chart's hover tooltip renders in a Popper. Its default
-                  // z-index sits below the road-closure popup (5000/6000), so lift
-                  // it above the popup to keep the datapoint tooltip on top.
-                  popper: {
-                    sx: { zIndex: 7000 },
-                  },
-                }}
-                sx={chartSx}
-              />
-            ) : (
-              <Typography variant="body2" color="text.secondary" sx={{ py: 2, textAlign: "center" }}>
-                No data in the selected year range.
-              </Typography>
-            )}
-          </div>
-          {isMobile && (
-            <p style={{ textAlign: "center", fontSize: "0.7rem", color: "#888", margin: "4px 0 0" }}>
-              Pinch to zoom · Swipe to pan
-            </p>
-          )}
-          {(chartSeries.length > 1 || (showLowess && chartLowess.length > 0)) && (
-            <div style={{ display: "flex", flexWrap: "wrap", gap: "12px", justifyContent: "center", padding: "8px 0" }}>
-              {chartSeries.map((s, idx) => {
-                const displayLabel = showAdvanced ? s.stationName : (cityName || s.stationName)
-                return (
-                  <div key={s.stationId} style={{ display: "flex", alignItems: "center", gap: "6px", fontSize: "0.75rem" }}>
-                    <span style={{ width: 14, height: 3, backgroundColor: colors[idx % colors.length], display: "inline-block", borderRadius: 2 }} />
-                    <span>{displayLabel}</span>
-                  </div>
-                )
-              })}
-              {showLowess && chartLowess.map((ls, idx) => {
-                const matchingStation = chartSeries.find((s) => s.stationId === ls.stationId)
-                const baseName = showAdvanced ? (matchingStation?.stationName || `Station ${ls.stationId}`) : (cityName || matchingStation?.stationName || `Station ${ls.stationId}`)
-                const label = `${baseName} (LOWESS)`
-                return (
-                  <div key={`lowess-${ls.stationId}`} style={{ display: "flex", alignItems: "center", gap: "6px", fontSize: "0.75rem" }}>
-                    <span style={{ width: 14, height: 0, borderTop: `2px dashed ${lowessColors[idx % lowessColors.length]}`, display: "inline-block" }} />
-                    <span>{label}</span>
-                  </div>
-                )
-              })}
-            </div>
-          )}
-        </div>
-      )
-    } else {
-      return (
-        <Typography variant="body2" color="text.secondary" sx={{ py: 2, textAlign: "center" }}>
-          No FDDs data available for this location.
-        </Typography>
-      )
-    }
+    return (
+      <FddChart
+        loading={fddLoading}
+        series={fddSeries}
+        lowessSeries={lowessSeries}
+        showLowess={showLowess}
+        showAdvanced={showAdvanced}
+        cityName={getCityName()}
+        viewRange={fddViewRange}
+        onViewRangeChange={setFddViewRange}
+        yRange={fddYRange}
+        onYRangeChange={setFddYRange}
+        yBounds={fddYBounds}
+        allYears={fddAllYears}
+      />
+    )
   }
 
   // Name of the climate station currently providing the FDD data, so the
@@ -2231,7 +2188,8 @@ function WeatherMap() {
             </div>
             {isRoadPopup && (
               <button
-                className="wrtdip-feature-popup__close"
+                type="button"
+                className="wrtdip-popup-icon-btn"
                 onClick={() => setRoadPopupEnlarged((e) => !e)}
                 aria-label={enlarged ? "Shrink" : "Enlarge"}
                 title={enlarged ? "Shrink" : "Enlarge"}
@@ -2240,9 +2198,11 @@ function WeatherMap() {
               </button>
             )}
             <button
-              className="wrtdip-feature-popup__close"
+              type="button"
+              className="wrtdip-popup-icon-btn"
               onClick={() => { setFeaturePopup(null); setRoadPopupEnlarged(false) }}
               aria-label="Close"
+              title="Close"
             >
               ×
             </button>
@@ -2371,22 +2331,24 @@ function WeatherMap() {
                 </span>
               }
             />
-            <IconButton
+            <button
+              type="button"
+              className="wrtdip-popup-icon-btn"
               onClick={() => setModalEnlarge(!modalEnlarge)}
-              size="small"
-              sx={{ color: "#fff" }}
               aria-label={modalEnlarge ? "Shrink" : "Enlarge"}
+              title={modalEnlarge ? "Shrink" : "Enlarge"}
             >
-              {modalEnlarge ? <CloseFullscreenIcon fontSize="small" /> : <OpenInFullIcon fontSize="small" />}
-            </IconButton>
-            <IconButton
+              {modalEnlarge ? <CloseFullscreenIcon style={{ fontSize: 14 }} /> : <OpenInFullIcon style={{ fontSize: 14 }} />}
+            </button>
+            <button
+              type="button"
+              className="wrtdip-popup-icon-btn"
               onClick={closeModal}
-              size="small"
-              sx={{ color: "#fff" }}
               aria-label="Close"
+              title="Close"
             >
-              <span style={{ fontSize: 20, lineHeight: 1, fontWeight: 300 }}>×</span>
-            </IconButton>
+              ×
+            </button>
           </div>
         </Modal.Header>
         <Modal.Body className="wrtdip-map-modal__body">
@@ -2626,67 +2588,24 @@ function WeatherMap() {
                 </div>
 
                 <div className="wrtdip-map-modal__chart">
-                  {precipLoading ? (
-                    <Typography variant="body2" color="text.secondary" sx={{ py: 2, textAlign: "center" }}>
-                      Loading precipitation data...
-                    </Typography>
-                  ) : precipData && precipData.labels.length > 0 ? (
-                    <div>
-                      <div className="wrtdip-series-toggles">
-                        <label className={`wrtdip-series-toggle${precipShowMax ? " wrtdip-series-toggle--on" : ""}`}>
-                          <input
-                            type="checkbox"
-                            className="wrtdip-series-toggle__input"
-                            checked={precipShowMax}
-                            onChange={(e) => setPrecipShowMax(e.target.checked)}
-                          />
-                          <span className="wrtdip-series-toggle__dot" style={{ background: "#e53935" }} />
-                          Max
-                        </label>
-                        <label className={`wrtdip-series-toggle${precipShowAvg ? " wrtdip-series-toggle--on" : ""}`}>
-                          <input
-                            type="checkbox"
-                            className="wrtdip-series-toggle__input"
-                            checked={precipShowAvg}
-                            onChange={(e) => setPrecipShowAvg(e.target.checked)}
-                          />
-                          <span className="wrtdip-series-toggle__dot" style={{ background: "#42a5f5" }} />
-                          Avg
-                        </label>
-                        <label className={`wrtdip-series-toggle${precipShowMin ? " wrtdip-series-toggle--on" : ""}`}>
-                          <input
-                            type="checkbox"
-                            className="wrtdip-series-toggle__input"
-                            checked={precipShowMin}
-                            onChange={(e) => setPrecipShowMin(e.target.checked)}
-                          />
-                          <span className="wrtdip-series-toggle__dot" style={{ background: "#66bb6a" }} />
-                          Min
-                        </label>
-                      </div>
-                      <BarChart
-                        xAxis={[{
-                          data: precipData.labels,
-                          label: precipResolution === "monthly" ? "Month" : "Date",
-                          scaleType: "band",
-                          ...PRECIP_BAR_GAPS[precipResolution],
-                        }]}
-                        yAxis={[{ label: "Precipitation (mm)" }]}
-                        series={[
-                          ...(precipShowMax ? [{ data: precipData.maxs, label: "Max", color: "#e53935" }] : []),
-                          ...(precipShowAvg ? [{ data: precipData.avgs, label: "Avg", color: "#42a5f5" }] : []),
-                          ...(precipShowMin ? [{ data: precipData.mins, label: "Min", color: "#66bb6a" }] : []),
-                        ]}
-                        height={240}
-                        margin={{ left: 50, right: 10, top: 10, bottom: 40 }}
-                        grid={{ horizontal: true }}
-                      />
-                    </div>
-                  ) : (
-                    <Typography variant="body2" color="text.secondary" sx={{ py: 2, textAlign: "center" }}>
-                      No CanHomP V2 precipitation data available for this location.
-                    </Typography>
-                  )}
+                  <PrecipChart
+                    loading={precipLoading}
+                    data={precipData}
+                    visible={{ max: precipShowMax, avg: precipShowAvg, min: precipShowMin }}
+                    onVisibleChange={setPrecipSeriesVisible}
+                    xAxisLabel={precipResolution === "monthly" ? "Month" : "Date"}
+                    yAxisLabel="Precipitation (mm)"
+                    barGaps={PRECIP_BAR_GAPS[precipResolution]}
+                    loadingMessage="Loading precipitation data..."
+                    emptyMessage="No CanHomP V2 precipitation data available for this location."
+                    denseHint="Scroll sideways to see every day"
+                    onRequestCoarser={
+                      precipResolution === "daily" && hasMonthlyPrecip
+                        ? () => setPrecipResolution("monthly")
+                        : undefined
+                    }
+                    coarserLabel="Show monthly instead — fits the screen"
+                  />
                 </div>
 
                 {renderPrecipTrendTable()}
@@ -2713,62 +2632,17 @@ function WeatherMap() {
                   </Typography>
                 </div>
                 <div className="wrtdip-map-modal__chart">
-                  {snowfallLoading ? (
-                    <Typography variant="body2" color="text.secondary" sx={{ py: 2, textAlign: "center" }}>
-                      Loading snowfall data...
-                    </Typography>
-                  ) : snowfallData && snowfallData.labels.length > 0 ? (
-                    <div>
-                      <div className="wrtdip-series-toggles">
-                        <label className={`wrtdip-series-toggle${snowShowMax ? " wrtdip-series-toggle--on" : ""}`}>
-                          <input
-                            type="checkbox"
-                            className="wrtdip-series-toggle__input"
-                            checked={snowShowMax}
-                            onChange={(e) => setSnowShowMax(e.target.checked)}
-                          />
-                          <span className="wrtdip-series-toggle__dot" style={{ background: "#e53935" }} />
-                          Max
-                        </label>
-                        <label className={`wrtdip-series-toggle${snowShowAvg ? " wrtdip-series-toggle--on" : ""}`}>
-                          <input
-                            type="checkbox"
-                            className="wrtdip-series-toggle__input"
-                            checked={snowShowAvg}
-                            onChange={(e) => setSnowShowAvg(e.target.checked)}
-                          />
-                          <span className="wrtdip-series-toggle__dot" style={{ background: "#42a5f5" }} />
-                          Avg
-                        </label>
-                        <label className={`wrtdip-series-toggle${snowShowMin ? " wrtdip-series-toggle--on" : ""}`}>
-                          <input
-                            type="checkbox"
-                            className="wrtdip-series-toggle__input"
-                            checked={snowShowMin}
-                            onChange={(e) => setSnowShowMin(e.target.checked)}
-                          />
-                          <span className="wrtdip-series-toggle__dot" style={{ background: "#66bb6a" }} />
-                          Min
-                        </label>
-                      </div>
-                      <BarChart
-                        xAxis={[{ data: snowfallData.labels, label: "Date", scaleType: "band" }]}
-                        yAxis={[{ label: "Snowfall (cm)" }]}
-                        series={[
-                          ...(snowShowMax ? [{ data: snowfallData.maxs, label: "Max", color: "#e53935" }] : []),
-                          ...(snowShowAvg ? [{ data: snowfallData.avgs, label: "Avg", color: "#42a5f5" }] : []),
-                          ...(snowShowMin ? [{ data: snowfallData.mins, label: "Min", color: "#66bb6a" }] : []),
-                        ]}
-                        height={240}
-                        margin={{ left: 50, right: 10, top: 10, bottom: 40 }}
-                        grid={{ horizontal: true }}
-                      />
-                    </div>
-                  ) : (
-                    <Typography variant="body2" color="text.secondary" sx={{ py: 2, textAlign: "center" }}>
-                      No snowfall data available for this location.
-                    </Typography>
-                  )}
+                  <PrecipChart
+                    loading={snowfallLoading}
+                    data={snowfallData}
+                    visible={{ max: snowShowMax, avg: snowShowAvg, min: snowShowMin }}
+                    onVisibleChange={setSnowSeriesVisible}
+                    xAxisLabel="Date"
+                    yAxisLabel="Snowfall (cm)"
+                    loadingMessage="Loading snowfall data..."
+                    emptyMessage="No snowfall data available for this location."
+                    denseHint="Scroll sideways to see every day"
+                  />
                 </div>
               </>
             )}
@@ -2947,7 +2821,6 @@ function WeatherMap() {
         // esriConfig.apiKey =
         //   "AAPKd7da5e4a967540cfb66765bf918280a4t9Et4goGp4RqyeGZkQfG9yVBkkmOC1j35X1YLmsZ1nqucmvVp0j2nXbwF5wP3XRw"
 
-         console.log("Get Climate City", getClimateCity("ON-1"))
 
         if ("serviceWorker" in navigator) {
           navigator.serviceWorker.register("service-worker.js")
@@ -3103,7 +2976,13 @@ function WeatherMap() {
    console.log(`Adding layer: ${layer.title}`); // Debugging
     const featureLayer = new FeatureLayer({
       url: layer.link,
-      outFields: ["*"],
+      // Layers without a popup are drawn, never inspected, so their attributes
+      // are dead weight. The GNWT Transportation service in particular returns
+      // ~1.1 MB per tile query with outFields ["*"] vs ~90 KB with just the
+      // object id; at that size a zoom fires enough concurrent requests for the
+      // server to reset the connections (ERR_CONNECTION_RESET) and the roads
+      // drop out of the map.
+      outFields: layer.popupTemplate ? ["*"] : ["OBJECTID"],
       popupTemplate: layer.popupTemplate,
       popupEnabled: layer.popupTemplate !== null,
       visible: layer.visible, // Apply the visible property from layerData
@@ -3908,6 +3787,9 @@ function WeatherMap() {
                 setClimateData(null)
                 getClimateCity(city.province, city.stationCode)
                   .then((data) => setClimateData(data))
+                  .catch(() =>
+                    setClimateData({ error: "Weather data is unavailable right now." })
+                  )
                   .finally(() => setClimateLoading(false))
               } else if (city) {
                 setClimateData({ error: "No weather data available for this location." })

@@ -8,7 +8,7 @@ import './styles.css';
 
 function CarouselHome() {
   return (
-    <div className="h-75 container-fluid carousel">
+    <div className="homeCarousel">
       <Carousel>
         <Carousel.Item>
           <img className="carousel-image" src={homebg_1} alt="First slide" /> 

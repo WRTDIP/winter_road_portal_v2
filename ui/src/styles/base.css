@@ -29,12 +29,65 @@
   flex-shrink: 0;
 }
 
+/* The immersive variant, set by AppShell on routes that own the whole phone
+   screen (/map). Phone only -- at --bp-sm and up the footer belongs there as
+   much as on any other page.
+
+   Three things have to happen together, or hiding the footer just moves the
+   problem: the footer goes, the shell pins to exactly one *stable* viewport,
+   and the page content stretches into the space the footer left. Without the
+   third rule the shell is still one viewport tall while the ArcGIS container
+   keeps its own 84svh, and the 132px the footer used to occupy becomes 80px of
+   blank page instead.
+
+   --svh, not --dvh: this height feeds the ArcGIS view, which refires its
+   internal ResizeObserver every time its container resizes. svh is the stable
+   small-viewport value, so a URL bar animating in or out cannot start that
+   loop. */
+/* --bp-sm */
+@media (max-width: 575.98px) {
+  .app-shell--immersive {
+    height: calc(100 * var(--svh));
+    min-height: calc(100 * var(--svh));
+  }
+
+  .app-shell--immersive > .footerContainer {
+    display: none;
+  }
+
+  /* min-height:0 lets the page shrink below its content box -- the vertical
+     twin of the .u-minw0 guard, and what stops a tall child from re-inflating
+     the column. */
+  .app-shell--immersive > .app-main {
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 auto;
+    min-height: 0;
+  }
+
+  .app-shell--immersive > .app-main > * {
+    flex: 1 1 auto;
+    min-height: 0;
+  }
+}
+
 /* --- overflow guards ------------------------------------------------------ */
 
 /* min-width:0 -- the flex/grid overflow guard. A flex item defaults to
    min-width:auto, which refuses to shrink below its content and is the root
    cause of most horizontal overflow in this app. */
 .u-minw0 { min-width: 0; }
+
+/* The opt-out from a container that forces a minimum width on its child so
+   wide desktop content scrolls sideways. A responsive variant that has already
+   laid itself out for the viewport marks itself with this: it fits, so the
+   scroller would only clip it. Paired with `> div:not(.u-fit-width)` on the
+   container, which is what keeps the specificity in the container's own sheet
+   rather than here. */
+.u-fit-width {
+  min-width: 0;
+  max-width: 100%;
+}
 
 /* Wide tables go in here rather than being made narrow. */
 .u-scroll-x {

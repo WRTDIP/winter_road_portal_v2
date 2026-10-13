@@ -1,7 +1,37 @@
-.carousel-image{
-    height:62vh;
+/* The wrapper is deliberately NOT called `carousel`. react-bootstrap renders
+   its own `.carousel` element as this div's only child, so a rule written here
+   under that name matches both boxes. That collision is what knocked the
+   slides off centre: `.carousel { margin-left: 5vh }` was applied twice, and
+   an override aimed at the wrapper (`.welcomeCarousel > .carousel`) could
+   never reach the inner copy. */
+.homeCarousel {
+    width: 100%;
+    min-width: 0;
 }
 
-.carousel{
-    margin-left: 5vh;
+/* The carousel is centred by filling the column it sits in, not by being
+   nudged across it. Bootstrap's `.carousel` and `.carousel-item` are already
+   full-width blocks, so the only box left to fix is the <img>: an image is
+   inline by default, which leaves it sitting on a text baseline wherever the
+   inherited text-align puts it.
+
+   height and object-fit belong together. base.css caps every image at
+   max-width:100%, so a bare height stretches each slide off its native
+   994x521; cover crops to the box instead. */
+.homeCarousel .carousel-image {
+    display: block;
+    width: 100%;
+    height: 62vh;
+    object-fit: cover;
+}
+
+@media (max-width: 991.98px) { /* --bp-lg */
+    /* Stacked under the text rather than beside it, the slide is as wide as
+       the phone, so a 62vh panel would be a slab. A fixed ratio keeps it a
+       picture and keeps the height tied to the width the column actually
+       gives it. */
+    .homeCarousel .carousel-image {
+        height: auto;
+        aspect-ratio: 4 / 3;
+    }
 }

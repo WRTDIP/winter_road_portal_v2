@@ -29,23 +29,10 @@
         row-gap: 24px;
     }
 
+    /* The carousel sizes itself -- see components/Carousel/styles.css. The
+       column only has to stop constraining it. */
     .welcomeCarousel {
         min-width: 0;
         height: auto;
-    }
-
-    .welcomeCarousel > .carousel {
-        width: 100%;
-        max-width: 100%;
-        margin: 0;
-        padding: 0;
-        height: auto !important;
-    }
-
-    .welcomeCarousel .carousel-image {
-        width: 100%;
-        height: auto;
-        aspect-ratio: 4 / 3;
-        object-fit: cover;
     }
 }

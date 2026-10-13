@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Button, Drawer } from "antd";
 import { MenuOutlined, UserOutlined } from "@ant-design/icons";
 import { Link, useLocation } from "react-router-dom";
+import { useAccount } from "../../Auth0/AccountProvider";
 import { useBreakpoint } from "../../../hooks/useBreakpoint";
 import NavbarLogo from "../../../assets/navbarLogo.png";
 import "./styles.css";
@@ -23,6 +24,7 @@ const rightItems = [
 ];
 
 const NavigationBar = () => {
+  const { isAuthenticated } = useAccount();
   const compact = !useBreakpoint().xxl;
   const [open, setOpen] = useState(false);
   const { pathname } = useLocation();
@@ -31,7 +33,10 @@ const NavigationBar = () => {
     setOpen(false);
   }, [pathname, compact]);
 
-  const links = rightItems.map((item) => (
+  const links = rightItems.map((item) => ({
+    ...item,
+    link: item.link === "/login" && isAuthenticated ? "/dashboard" : item.link,
+  })).map((item) => (
     <Link
       key={item.link}
       to={item.link}

@@ -122,6 +122,7 @@ exports.Prisma.TransactionIsolationLevel = makeStrictEnum({
 
 exports.Prisma.UserScalarFieldEnum = {
   id: 'id',
+  auth0Id: 'auth0Id',
   email: 'email',
   name: 'name',
   password: 'password',
@@ -173,6 +174,17 @@ exports.Prisma.PostScalarFieldEnum = {
   authorId: 'authorId'
 };
 
+exports.Prisma.RoadClosureScalarFieldEnum = {
+  id: 'id',
+  dataset_id: 'dataset_id',
+  year: 'year',
+  road_name: 'road_name',
+  road_type: 'road_type',
+  status: 'status',
+  month: 'month',
+  day: 'day'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -195,7 +207,8 @@ exports.Prisma.ModelName = {
   OutBoundEmail: 'OutBoundEmail',
   OutBoundEmailQueue: 'OutBoundEmailQueue',
   Session: 'Session',
-  Post: 'Post'
+  Post: 'Post',
+  RoadClosure: 'RoadClosure'
 };
 
 /**
