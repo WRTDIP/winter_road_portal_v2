@@ -1,15 +1,23 @@
+.projectList {
+  padding-left: max(1.25rem, env(safe-area-inset-left));
+  padding-right: max(1.25rem, env(safe-area-inset-right));
+}
+
 .projectRow {
-  --project-accent: #2685ae;
+  --project-accent: var(--c-ice-500);
   width: 100%;
-  max-width: 1140px;
-  margin: 0 auto;
-  padding: 2.5rem 2rem;
-  border-bottom: 1px solid #e0e8eb;
+  max-width: 1100px;
+  margin: 0 auto 24px;
+  padding: clamp(1.5rem, 1rem + 2vw, 2.5rem);
+  border: 1px solid var(--c-border);
+  border-radius: var(--radius-lg);
+  background: var(--c-surface);
+  box-shadow: var(--shadow-sm);
   row-gap: 1.25rem;
 }
 
 .projectRow:last-child {
-  border-bottom: 0;
+  margin-bottom: 0;
 }
 
 .projectImageColumn,
@@ -20,8 +28,11 @@
 .projectImage {
   display: block;
   width: 100%;
-  max-width: 9rem;
+  max-width: 8rem;
   aspect-ratio: 1;
+  padding: 1rem;
+  border-radius: var(--radius-lg);
+  background: var(--c-ice-50);
   object-fit: contain;
 }
 
@@ -30,21 +41,19 @@
 }
 
 .projectItemTitle {
-  font-family: 'Roboto', sans-serif;
-  color: rgb(56, 80, 126);
-  font-size: var(--fs-h2);
-  font-weight: 600;
+  color: var(--c-ink);
+  font-size: var(--fs-h3);
+  font-weight: 700;
   line-height: 1.25;
   overflow-wrap: anywhere;
   margin: 0;
 }
 
 .projectItemText {
-  margin-top: 1.25rem;
-  font-family: 'Roboto', sans-serif;
-  font-size: var(--fs-lead);
-  line-height: 1.7;
-  color: #404e5a;
+  margin-top: 1rem;
+  font-size: var(--fs-body);
+  line-height: 1.75;
+  color: var(--c-text);
   overflow-wrap: anywhere;
 }
 
@@ -53,63 +62,77 @@
 }
 
 .projectGettingStarted {
-  margin: 1.75rem 0 1rem;
-  color: #38507e;
+  margin: 1.75rem 0 0.75rem;
+  color: var(--c-ink);
   font-size: var(--fs-h4);
-  font-weight: 600;
+  font-weight: 700;
 }
 
 .projectItemText .projectNote {
-  padding-left: 1rem;
-  border-left: 3px solid #cadde5;
-  font-size: var(--fs-body);
+  padding: 0.75rem 1rem;
+  border-left: 3px solid var(--c-ice-300);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  background: var(--c-bg);
+  font-size: var(--fs-body-sm);
 }
 
 .projectLineBreak {
-  background-color: var(--project-accent);
+  background: linear-gradient(90deg, var(--c-ice-500), var(--c-ice-300));
   width: 3rem;
   height: 3px;
-  margin-top: 1rem;
+  border-radius: 2px;
+  margin-top: 0.875rem;
 }
 
 .projectResourceLink {
   display: flex;
   align-items: center;
   gap: 0.75rem;
-  min-height: 44px;
+  min-height: 48px;
   margin: 0.75rem 0 1.5rem;
   padding: 0.75rem 1rem;
-  border: 1px solid #c5dce6;
-  border-radius: 6px;
-  background: #f2f8fb;
-  color: #206285;
+  border: 1px solid var(--c-border);
+  border-radius: var(--radius-md);
+  background: var(--c-surface);
+  box-shadow: var(--shadow-sm);
+  color: var(--c-navy-700);
   font-size: var(--fs-body);
   font-weight: 600;
   line-height: 1.5;
   text-decoration: none;
   touch-action: manipulation;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease;
 }
 
 .projectResourceLink .anticon {
   flex-shrink: 0;
-  font-size: var(--fs-h4);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-sm);
+  background: var(--c-ice-100);
+  color: var(--c-ice-600);
+  font-size: var(--fs-body);
 }
 
 .projectResourceLink:hover,
 .projectResourceLink:active {
-  color: #16445d;
-  background: #e4f1f7;
-  border-color: var(--project-accent);
+  color: var(--c-navy-800);
+  background: var(--c-ice-50);
+  border-color: var(--c-ice-300);
+  box-shadow: var(--shadow-md);
 }
 
 .projectResourceLink:focus-visible {
-  outline: 2px solid var(--project-accent);
-  outline-offset: 3px;
+  outline: 3px solid var(--c-ice-300);
+  outline-offset: 2px;
 }
 
 @media (max-width: 991.98px) { /* --bp-lg */
   .projectImage {
-    max-width: 6rem;
+    max-width: 5.5rem;
   }
 
   .projectItemBody {
@@ -119,19 +142,11 @@
 
 @media (max-width: 575.98px) { /* --bp-sm */
   .projectRow {
-    padding: 2rem 1.25rem;
+    padding: 1.5rem 1.25rem;
   }
 
   .projectImageColumn,
   .projectContentColumn {
     padding: 0;
-  }
-
-  .projectItemTitle {
-    font-size: var(--fs-h3);
-  }
-
-  .projectItemText {
-    font-size: var(--fs-body);
   }
 }
