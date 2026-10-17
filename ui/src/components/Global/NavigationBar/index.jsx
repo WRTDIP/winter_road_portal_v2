@@ -84,13 +84,9 @@ const NavigationBar = () => {
 
   return (
     <header className="portal-header" id="top">
-      <Link to="/" className="portal-brand" aria-label="WRaMP home">
+      <Link to="/" className="portal-brand" aria-label="Climate Lab at UTSC home">
         <img src={NavbarLogo} alt="" />
-        <span className="portal-brand__divider" aria-hidden="true" />
-        <span className="portal-brand__text">
-          <span className="portal-brand__name">WRaMP</span>
-          <span className="portal-brand__sub">Climate Lab @ UTSC</span>
-        </span>
+        <span>Climate Lab @ UTSC</span>
       </Link>
 
       {compact ? (
@@ -125,10 +121,10 @@ const NavigationBar = () => {
           <Link
             to="/login"
             className="portal-account"
+            aria-label="Account"
             aria-current={pathname === "/login" ? "page" : undefined}
           >
             <UserOutlined aria-hidden="true" />
-            <span>Account</span>
           </Link>
         </>
       )}
