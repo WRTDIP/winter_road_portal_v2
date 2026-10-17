@@ -12,7 +12,6 @@
   border: 1px solid var(--c-border);
   border-radius: var(--radius-lg);
   background: var(--c-surface);
-  box-shadow: var(--shadow-sm);
   row-gap: 1.25rem;
 }
 
@@ -31,8 +30,8 @@
   max-width: 8rem;
   aspect-ratio: 1;
   padding: 1rem;
-  border-radius: var(--radius-lg);
-  background: var(--c-ice-50);
+  border-radius: var(--radius-md);
+  background: var(--c-bg);
   object-fit: contain;
 }
 
@@ -43,7 +42,7 @@
 .projectItemTitle {
   color: var(--c-ink);
   font-size: var(--fs-h3);
-  font-weight: 700;
+  font-weight: 600;
   line-height: 1.25;
   overflow-wrap: anywhere;
   margin: 0;
@@ -65,7 +64,7 @@
   margin: 1.75rem 0 0.75rem;
   color: var(--c-ink);
   font-size: var(--fs-h4);
-  font-weight: 700;
+  font-weight: 600;
 }
 
 .projectItemText .projectNote {
@@ -77,7 +76,7 @@
 }
 
 .projectLineBreak {
-  background: linear-gradient(90deg, var(--c-ice-500), var(--c-ice-300));
+  background: var(--c-navy-700);
   width: 3rem;
   height: 3px;
   border-radius: 2px;
@@ -94,7 +93,6 @@
   border: 1px solid var(--c-border);
   border-radius: var(--radius-md);
   background: var(--c-surface);
-  box-shadow: var(--shadow-sm);
   color: var(--c-navy-700);
   font-size: var(--fs-body);
   font-weight: 600;
@@ -112,8 +110,8 @@
   width: 32px;
   height: 32px;
   border-radius: var(--radius-sm);
-  background: var(--c-ice-100);
-  color: var(--c-ice-600);
+  background: var(--c-bg);
+  color: var(--c-navy-700);
   font-size: var(--fs-body);
 }
 
@@ -121,8 +119,7 @@
 .projectResourceLink:active {
   color: var(--c-navy-800);
   background: var(--c-ice-50);
-  border-color: var(--c-ice-300);
-  box-shadow: var(--shadow-md);
+  border-color: var(--c-navy-700);
 }
 
 .projectResourceLink:focus-visible {

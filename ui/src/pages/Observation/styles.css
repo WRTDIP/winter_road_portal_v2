@@ -5,7 +5,7 @@
   background: var(--c-bg);
 }
 
-/* The map preview, framed like a browser window, links out to ArcGIS. */
+/* The map preview links out to the ArcGIS experience. */
 .observationPreview {
   position: relative;
   display: block;
@@ -15,23 +15,7 @@
   border: 1px solid var(--c-border);
   border-radius: var(--radius-lg);
   background: var(--c-surface);
-  box-shadow: var(--shadow-lg);
   text-decoration: none;
-}
-
-.observationPreview__bar {
-  display: flex;
-  gap: 6px;
-  padding: 12px 16px;
-  border-bottom: 1px solid var(--c-border);
-  background: var(--c-bg);
-}
-
-.observationPreview__bar span {
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  background: var(--c-border);
 }
 
 .observationPreview .mapImage {

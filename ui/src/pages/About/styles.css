@@ -6,16 +6,13 @@
   padding: clamp(1.75rem, 1rem + 3vw, 3rem);
   border: 1px solid var(--c-border);
   border-radius: var(--radius-lg);
-  background:
-    radial-gradient(30rem 16rem at 100% 0%, var(--c-ice-100), transparent 70%),
-    var(--c-surface);
-  box-shadow: var(--shadow-sm);
+  background: var(--c-surface);
 }
 
 .aboutContact__intro h2 {
   margin: 0 0 12px;
   font-size: var(--fs-h2);
-  font-weight: 700;
+  font-weight: 600;
 }
 
 .aboutContact__intro p {
@@ -30,7 +27,7 @@
   gap: 4px;
   margin: 0;
   padding: 20px 24px;
-  border-left: 3px solid var(--c-ice-500);
+  border-left: 3px solid var(--c-navy-700);
   border-radius: 0 var(--radius-md) var(--radius-md) 0;
   background: var(--c-bg);
   font-style: normal;
