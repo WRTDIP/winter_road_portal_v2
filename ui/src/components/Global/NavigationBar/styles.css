@@ -1,14 +1,15 @@
+/* The bar keeps the original WRaMP header look: the portal blue, translucent
+   white links and no pills or underlines. Only the grouping is new. */
 .portal-header {
   position: sticky;
   top: 0;
   z-index: 1000;
   display: flex;
   height: var(--nav-h);
-  padding: 0 max(20px, env(safe-area-inset-left));
+  padding: 0 max(24px, env(safe-area-inset-left));
   gap: 24px;
   align-items: center;
-  background: var(--c-navy-900);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  background: var(--c-wramp-blue);
   color: #fff;
 }
 
@@ -21,40 +22,15 @@
   min-width: 0;
   min-height: 44px;
   margin-right: auto;
+  font-size: var(--fs-body);
   color: #fff;
   text-decoration: none;
 }
 
 .portal-brand img {
-  width: 92px;
+  width: 110px;
   height: auto;
   flex-shrink: 0;
-}
-
-.portal-brand__divider {
-  width: 1px;
-  height: 28px;
-  background: rgba(255, 255, 255, 0.25);
-}
-
-.portal-brand__text {
-  display: flex;
-  flex-direction: column;
-  line-height: 1.15;
-  min-width: 0;
-}
-
-.portal-brand__name {
-  font-family: var(--font-display);
-  font-size: 1.125rem;
-  font-weight: 600;
-  letter-spacing: 0.02em;
-}
-
-.portal-brand__sub {
-  font-size: var(--fs-caption);
-  color: rgba(255, 255, 255, 0.7);
-  white-space: nowrap;
 }
 
 .portal-brand:hover,
@@ -67,7 +43,6 @@
 .portal-desktop-navigation {
   display: flex;
   align-items: center;
-  gap: 2px;
 }
 
 .portal-nav-group {
@@ -75,49 +50,30 @@
 }
 
 .portal-nav-link {
-  position: relative;
   display: inline-flex;
   align-items: center;
   gap: 6px;
   min-height: 44px;
-  padding: 0 14px;
+  padding: 0 18px;
   border: 0;
-  border-radius: var(--radius-sm);
   background: transparent;
-  font: 500 var(--fs-body-sm) / 1 var(--font-sans);
-  color: rgba(255, 255, 255, 0.82);
+  font: 400 0.875rem / 1 var(--font-sans);
+  color: rgba(255, 255, 255, 0.65);
   text-decoration: none;
   cursor: pointer;
-  transition: color 0.15s ease, background-color 0.15s ease;
+  transition: color 0.15s ease;
 }
 
 .portal-nav-link:hover,
 .portal-nav-link:focus-visible,
-.portal-nav-link[aria-expanded="true"] {
-  color: #fff;
-  background: rgba(255, 255, 255, 0.08);
-}
-
+.portal-nav-link[aria-expanded="true"],
 .portal-nav-link[aria-current="page"],
 .portal-nav-link[data-active] {
   color: #fff;
 }
 
-.portal-nav-link[aria-current="page"]::after,
-.portal-nav-link[data-active]::after {
-  content: "";
-  position: absolute;
-  left: 14px;
-  right: 14px;
-  bottom: 4px;
-  height: 2px;
-  border-radius: 2px;
-  background: var(--c-ice-300);
-}
-
 .portal-nav-caret {
   font-size: 10px;
-  opacity: 0.7;
   transition: transform 0.15s ease;
 }
 
@@ -125,15 +81,15 @@
   transform: rotate(180deg);
 }
 
-/* The dropdown panel. A transparent top pad bridges the gap to the trigger so
-   the pointer can travel into the panel without closing it. */
+/* The dropdown panel, in the same blue as the bar. A transparent top pad
+   bridges the gap to the trigger so the pointer can travel into the panel
+   without closing it. */
 .portal-nav-menu {
   position: absolute;
   top: 100%;
-  left: 50%;
-  min-width: 280px;
-  padding-top: 8px;
-  transform: translateX(-50%);
+  left: 0;
+  min-width: 260px;
+  padding-top: 4px;
 }
 
 .portal-nav-menu[hidden] {
@@ -143,10 +99,9 @@
 .portal-nav-menu::before {
   content: "";
   position: absolute;
-  inset: 8px 0 0;
-  border: 1px solid var(--c-border);
-  border-radius: var(--radius-md);
-  background: var(--c-surface);
+  inset: 4px 0 0;
+  border-radius: var(--radius-sm);
+  background: var(--c-wramp-blue);
   box-shadow: var(--shadow-md);
 }
 
@@ -155,31 +110,32 @@
   display: flex;
   flex-direction: column;
   gap: 2px;
-  margin: 6px;
-  padding: 10px 12px;
-  border-radius: var(--radius-sm);
+  padding: 10px 18px;
   text-decoration: none;
+}
+
+.portal-nav-menu__item:first-child {
+  margin-top: 4px;
+}
+
+.portal-nav-menu__item:last-child {
+  margin-bottom: 4px;
 }
 
 .portal-nav-menu__item:hover,
 .portal-nav-menu__item:focus-visible,
 .portal-nav-menu__item[aria-current="page"] {
-  background: var(--c-ice-50);
+  background: rgba(255, 255, 255, 0.08);
 }
 
 .portal-nav-menu__name {
-  font-weight: 600;
-  font-size: var(--fs-body-sm);
-  color: var(--c-ink);
-}
-
-.portal-nav-menu__item[aria-current="page"] .portal-nav-menu__name {
-  color: var(--c-ice-600);
+  font-size: 0.875rem;
+  color: #fff;
 }
 
 .portal-nav-menu__hint {
   font-size: var(--fs-caption);
-  color: var(--c-muted);
+  color: rgba(255, 255, 255, 0.6);
 }
 
 /* --- account -------------------------------------------------------------- */
@@ -187,24 +143,19 @@
 .portal-account {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  min-height: 40px;
-  padding: 0 16px;
-  border: 1px solid rgba(255, 255, 255, 0.35);
-  border-radius: var(--radius-sm);
-  font-size: var(--fs-body-sm);
-  font-weight: 600;
-  color: #fff;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  font-size: 18px;
+  color: rgba(255, 255, 255, 0.65);
   text-decoration: none;
-  transition: background-color 0.15s ease, border-color 0.15s ease;
+  transition: color 0.15s ease;
 }
 
 .portal-account:hover,
 .portal-account:focus-visible,
 .portal-account[aria-current="page"] {
   color: #fff;
-  border-color: #fff;
-  background: rgba(255, 255, 255, 0.1);
 }
 
 /* --- compact -------------------------------------------------------------- */
@@ -281,8 +232,8 @@
 .portal-navigation-drawer .menuLink:active,
 .portal-navigation-drawer .menuLink:focus-visible,
 .portal-navigation-drawer .menuLink[aria-current="page"] {
-  background: var(--c-ice-50);
-  color: var(--c-ice-600);
+  background: #eaf2f4;
+  color: #145566;
 }
 
 .portal-navigation-drawer .menuLink--account {

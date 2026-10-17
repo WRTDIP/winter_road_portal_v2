@@ -47,6 +47,9 @@
   --c-bg: #f5f8fb;
   --c-surface: #ffffff;
 
+  /* The original WRaMP header and banner blue. */
+  --c-wramp-blue: #364c77;
+
   --c-primary: var(--c-navy-700);
   --c-primary-hover: var(--c-navy-800);
   --c-accent: var(--c-ice-500);
