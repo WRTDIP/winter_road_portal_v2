@@ -23,7 +23,6 @@
   border: 1px solid var(--c-border);
   border-radius: var(--radius-lg);
   background: var(--c-surface);
-  box-shadow: var(--shadow-sm);
   padding: 1.5rem 1.75rem;
   margin-bottom: 1rem;
   transition: opacity 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
@@ -31,8 +30,7 @@
 
 /* The step waiting for an answer gets the accent edge. */
 .downloadStep:not(.isLocked):not(.isComplete) {
-  border-color: var(--c-ice-300);
-  box-shadow: var(--shadow-md);
+  border-color: var(--c-navy-700);
 }
 
 .downloadStep:not(.isLocked):not(.isComplete)::before {
@@ -43,7 +41,7 @@
   bottom: 20px;
   width: 4px;
   border-radius: 0 4px 4px 0;
-  background: var(--c-ice-500);
+  background: var(--c-navy-700);
 }
 
 .downloadStep.isLocked {
@@ -85,7 +83,7 @@
 
 .downloadStepTitle {
   font-size: var(--fs-h4);
-  font-weight: 700;
+  font-weight: 600;
   color: var(--c-ink);
   margin: 0;
 }
@@ -99,11 +97,8 @@
 
 .downloadStepSummary {
   margin-left: auto;
-  padding: 4px 12px;
-  border-radius: 999px;
-  background: var(--c-ice-50);
   font-size: var(--fs-caption);
-  color: var(--c-ice-600);
+  color: var(--c-muted);
   font-weight: 600;
   text-align: right;
 }

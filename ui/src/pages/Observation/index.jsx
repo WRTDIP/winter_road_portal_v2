@@ -28,11 +28,6 @@ function Observation() {
           target="_blank"
           rel="noopener noreferrer"
         >
-          <span className="observationPreview__bar" aria-hidden="true">
-            <span />
-            <span />
-            <span />
-          </span>
           <img
             src={ObservationFirst}
             alt="Preview of the Winter Road Watch map"

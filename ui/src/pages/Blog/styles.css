@@ -59,7 +59,6 @@
 
 .blogCard:hover {
   box-shadow: 0 4px 14px rgba(14, 41, 89, 0.12);
-  transform: translateY(-2px);
 }
 
 .blogCardImage {

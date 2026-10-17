@@ -43,7 +43,7 @@
 .authTitle {
     margin-bottom: 0.35rem;
     font-size: var(--fs-h3);
-    font-weight: 700;
+    font-weight: 600;
     color: var(--c-ink);
 }
 
@@ -135,7 +135,7 @@
     gap: 0.5rem;
     width: 100%;
     min-height: 48px;
-    border-radius: 999px;
+    border-radius: var(--radius-sm);
     font-weight: 600;
     text-transform: none;
     touch-action: manipulation;
