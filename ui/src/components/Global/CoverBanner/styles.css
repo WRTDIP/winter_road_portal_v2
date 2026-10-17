@@ -1,21 +1,48 @@
-.coverBanner{
-    border-radius: 0;
-    border: none;
-    background-color: rgb(54, 76, 119);
+.coverBanner {
+  position: relative;
+  overflow: hidden;
+  background:
+    linear-gradient(100deg, rgba(7, 21, 40, 0.94) 0%, rgba(18, 48, 90, 0.82) 55%, rgba(27, 66, 117, 0.45) 100%),
+    url("../../../assets/winterBanner.jpg") center 40% / cover no-repeat,
+    var(--c-navy-900);
+  color: #fff;
 }
 
-.coverDiv{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-}
-.coverTitle{
-    color: white;
-    font-size: var(--fs-display);
+.coverBanner::after {
+  content: "";
+  position: absolute;
+  inset: auto 0 0;
+  height: 4px;
+  background: linear-gradient(90deg, var(--c-ice-500), var(--c-ice-300) 40%, transparent);
 }
 
-.coverImageBanner{
-    width: 100%;
-    min-height: clamp(96px, 15vw, 220px);
+.coverBanner__inner {
+  padding-top: clamp(2.5rem, 1.5rem + 4vw, 4.5rem);
+  padding-bottom: clamp(2.5rem, 1.5rem + 4vw, 4.5rem);
+}
+
+.coverBanner__eyebrow {
+  display: inline-block;
+  margin-bottom: 0.75rem;
+  font-size: var(--fs-caption);
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--c-ice-300);
+}
+
+.coverTitle {
+  margin: 0;
+  font-size: var(--fs-hero);
+  font-weight: 800;
+  color: #fff;
+  letter-spacing: -0.02em;
+}
+
+.coverBanner__subtitle {
+  max-width: 42rem;
+  margin: 0.875rem 0 0;
+  font-size: var(--fs-lead);
+  line-height: 1.55;
+  color: rgba(255, 255, 255, 0.82);
 }
