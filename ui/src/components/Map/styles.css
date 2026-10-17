@@ -368,9 +368,9 @@
   max-width: 900px;
 }
 
-/* Entry transition (first map visit per session, see shouldPlayMapIntro):
-   while the view eases in, the left controls fade in one after another, then
-   the legend on the right. Short, one-off, and off for reduced motion. */
+/* Entry transition (each time the map opens, see shouldPlayMapIntro): while
+   the view eases in, the left controls fade in one after another, then the
+   legend on the right. Short, plays once per opening, off for reduced motion. */
 @keyframes wrtdip-control-in {
   from {
     opacity: 0;

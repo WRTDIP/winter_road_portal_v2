@@ -61,24 +61,15 @@ const SHORT_RECORD_YEARS = 30
 // The research area the map opens on (also the "Default" button's target).
 const RESEARCH_VIEW = { center: [-110, 65.5], zoom: 4.5 }
 
-// Entry transition: the first map visit in a browser session starts on the
-// whole of northern Canada and eases into the research area while the map
-// controls fade in. Later visits, and anyone with reduced motion turned on,
-// open directly on the research area.
+// Entry transition: each time the map opens it starts on the whole of
+// northern Canada and eases into the research area while the map controls
+// fade in. Anyone with reduced motion turned on gets the research area
+// directly.
 const INTRO_START = { center: [-100, 64], zoom: 3 }
 const INTRO_DURATION_MS = 1400
-const INTRO_SEEN_KEY = "wramp-map-intro-seen"
 
-const shouldPlayMapIntro = () => {
-  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return false
-  try {
-    if (window.sessionStorage.getItem(INTRO_SEEN_KEY)) return false
-    window.sessionStorage.setItem(INTRO_SEEN_KEY, "1")
-  } catch (e) {
-    // Storage blocked: still play once for this page load.
-  }
-  return true
-}
+const shouldPlayMapIntro = () =>
+  !window.matchMedia("(prefers-reduced-motion: reduce)").matches
 
 // Map city names (as they appear in Data.js) to weather station IDs
 // Uses station IDs that have both ECCC and AHCCD data where possible
