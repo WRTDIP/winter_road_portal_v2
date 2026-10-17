@@ -57,7 +57,7 @@
   left: 0;
   right: 0;
   height: 2px;
-  background-color: #2563eb;
+  background-color: var(--c-navy-600);
   border-radius: 2px;
 }
 
@@ -80,7 +80,7 @@
 }
 
 .custom-layerlist-icon::before {
-  box-shadow: 0 5px 0 0 #2563eb;
+  box-shadow: 0 5px 0 0 var(--c-navy-600);
 }
 
 .custom-legend-icon {
@@ -143,7 +143,7 @@
   align-items: flex-start;
   gap: 8px;
   padding: 10px 12px;
-  background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%);
+  background: linear-gradient(135deg, var(--c-navy-800) 0%, var(--c-navy-600) 100%);
   color: #ffffff;
   flex-shrink: 0;
 }
@@ -265,7 +265,7 @@
   align-items: center;
   font-weight: 600;
   font-size: 13px;
-  color: #1e3a8a;
+  color: var(--c-navy-800);
 }
 
 .wrtdip-popup-section__title::before {
@@ -273,7 +273,7 @@
   display: inline-block;
   width: 4px;
   height: 15px;
-  background: #2563eb;
+  background: var(--c-navy-600);
   border-radius: 2px;
   margin-right: 8px;
 }
@@ -282,7 +282,7 @@
   transition: transform 0.2s ease;
   transform: rotate(-90deg);
   font-size: 12px;
-  color: #2563eb;
+  color: var(--c-navy-600);
 }
 
 .wrtdip-popup-section__caret--open {
@@ -368,6 +368,73 @@
   max-width: 900px;
 }
 
+/* The view takes focus programmatically on every click; ArcGIS draws its
+   own keyboard focus ring, so the global one would frame the whole map. */
+.wrtdip-map .esri-view-surface:focus-visible {
+  outline: none;
+}
+
+/* Docked panel (wider than phones): the modal shell lets clicks through to
+   the map, and the dialog sits as a full-height card on the right. */
+.wrtdip-map-modal-shell {
+  pointer-events: none;
+}
+
+.wrtdip-map-modal-shell .wrtdip-map-modal {
+  position: fixed;
+  top: calc(var(--nav-h) + 12px);
+  right: 12px;
+  bottom: 12px;
+  width: min(520px, calc(100% - 24px));
+  max-width: none;
+  height: auto;
+  min-height: 0;
+  margin: 0;
+}
+
+.wrtdip-map-modal-shell .wrtdip-map-modal--enlarged {
+  width: min(900px, calc(100% - 24px));
+}
+
+.wrtdip-map-modal-shell.fade .wrtdip-map-modal {
+  transform: translateX(32px);
+  transition: transform 0.25s ease-out;
+}
+
+.wrtdip-map-modal-shell.show .wrtdip-map-modal {
+  transform: none;
+}
+
+.wrtdip-map-modal-shell .modal-content.wrtdip-map-modal__content {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  max-height: 100%;
+  border: 1px solid var(--c-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+}
+
+.wrtdip-map-modal-shell .wrtdip-map-modal__header {
+  flex-wrap: nowrap;
+  padding: 16px 16px 16px 20px;
+  background: linear-gradient(135deg, var(--c-navy-900) 0%, var(--c-navy-700) 100%);
+}
+
+.wrtdip-map-modal-shell .wrtdip-map-modal__heading {
+  flex: 1 1 0;
+}
+
+.wrtdip-map-modal-shell .wrtdip-map-modal__actions {
+  flex-wrap: nowrap;
+  gap: 4px;
+}
+
+.wrtdip-map-modal-shell .wrtdip-map-modal__body {
+  flex: 1 1 auto;
+  max-height: none;
+}
+
 .wrtdip-map-modal .modal-content,
 .wrtdip-map-modal__content {
   height: auto;
@@ -380,7 +447,7 @@
 }
 
 .wrtdip-map-modal__header {
-  background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%);
+  background: linear-gradient(135deg, var(--c-navy-800) 0%, var(--c-navy-600) 100%);
   color: #fff;
   padding: 14px 18px;
   border-bottom: none;
@@ -440,7 +507,7 @@
 .wrtdip-map-modal__advanced--active.MuiFormControlLabel-root {
   background: #e0f2fe;
   border-color: #e0f2fe;
-  color: #1e3a8a;
+  color: var(--c-navy-800);
 }
 
 .wrtdip-map-modal__advanced--active.MuiFormControlLabel-root:hover,
@@ -493,7 +560,7 @@
 .wrtdip-map-modal__advanced .MuiSwitch-track {
   border: 1px solid #bfdbfe;
   border-radius: 12px;
-  background: #1e3a8a;
+  background: var(--c-navy-800);
   opacity: 1;
 }
 
@@ -503,8 +570,8 @@
 }
 
 .wrtdip-map-modal__advanced .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track {
-  border-color: #2563eb;
-  background: #2563eb;
+  border-color: var(--c-navy-600);
+  background: var(--c-navy-600);
   opacity: 1;
 }
 
@@ -580,7 +647,7 @@
   display: inline-block;
   width: 4px;
   height: 16px;
-  background: #2563eb;
+  background: var(--c-navy-600);
   border-radius: 2px;
   margin-right: 8px;
 }
@@ -663,7 +730,7 @@
 .wrtdip-calc-info__toggle:hover {
   background: #f1f5f9;
   border-color: #94a3b8;
-  color: #1e3a8a;
+  color: var(--c-navy-800);
 }
 
 .wrtdip-calc-info__toggle-icon {
@@ -691,7 +758,7 @@
   padding: 9px 14px;
   font-size: 0.82rem;
   font-weight: 600;
-  color: #1e40af;
+  color: var(--c-navy-700);
   background: #fff;
   border: 1px solid #bfdbfe;
   border-radius: 8px;
@@ -707,15 +774,15 @@
 }
 
 .wrtdip-toggle-btn--active {
-  background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
-  border-color: #1d4ed8;
+  background: linear-gradient(135deg, var(--c-navy-600) 0%, var(--c-navy-700) 100%);
+  border-color: var(--c-navy-700);
   color: #fff;
   box-shadow: 0 2px 8px rgba(37, 99, 235, 0.3);
 }
 
 .wrtdip-toggle-btn--active:hover {
-  background: linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%);
-  border-color: #1e40af;
+  background: linear-gradient(135deg, var(--c-navy-700) 0%, var(--c-navy-700) 100%);
+  border-color: var(--c-navy-700);
   color: #fff;
 }
 
@@ -741,7 +808,7 @@
 .wrtdip-adv-toggle:hover {
   background: #f1f5f9;
   border-color: #94a3b8;
-  color: #1e3a8a;
+  color: var(--c-navy-800);
 }
 
 .wrtdip-adv-toggle-icon {
@@ -782,7 +849,7 @@
 .wrtdip-adv-label {
   font-size: 0.78rem;
   font-weight: 600;
-  color: #1e3a8a;
+  color: var(--c-navy-800);
   display: block;
   margin-bottom: 6px;
 }
@@ -804,7 +871,7 @@
   padding: 9px 36px 9px 12px;
   font-size: 0.85rem;
   font-weight: 500;
-  color: #1e3a8a;
+  color: var(--c-navy-800);
   background-color: #fff;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%232563eb' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
@@ -822,14 +889,14 @@
 
 .wrtdip-select:focus {
   outline: none;
-  border-color: #2563eb;
+  border-color: var(--c-navy-600);
   box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.18);
 }
 
 /* Toggle/checkbox row */
 .wrtdip-adv-check {
   font-size: 0.82rem;
-  color: #1e3a8a;
+  color: var(--c-navy-800);
   display: flex;
   align-items: center;
   gap: 8px;
@@ -840,7 +907,7 @@
 .wrtdip-adv-check input[type="checkbox"] {
   width: 16px;
   height: 16px;
-  accent-color: #2563eb;
+  accent-color: var(--c-navy-600);
   cursor: pointer;
 }
 
@@ -876,7 +943,7 @@
   font-family: "Courier New", Courier, monospace;
   font-size: 0.85rem;
   font-weight: 600;
-  color: #1e3a8a;
+  color: var(--c-navy-800);
   background: rgba(255, 255, 255, 0.7);
   border: 1px solid #93c5fd;
   border-radius: 6px;
@@ -913,7 +980,7 @@
 .wrtdip-calc-info__datasource-title {
   font-size: 0.82rem;
   font-weight: 700;
-  color: #1e3a8a;
+  color: var(--c-navy-800);
   margin: 0 0 6px;
 }
 
@@ -1057,8 +1124,8 @@
 }
 
 .wrtdip-forecast__attribution a:hover {
-  color: #2563eb;
-  border-bottom-color: #2563eb;
+  color: var(--c-navy-600);
+  border-bottom-color: var(--c-navy-600);
 }
 
 @media (max-width: 480px) {
@@ -1088,7 +1155,7 @@
   justify-content: space-between;
   gap: 8px;
   padding: 10px 12px;
-  background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%);
+  background: linear-gradient(135deg, var(--c-navy-800) 0%, var(--c-navy-600) 100%);
   color: #ffffff;
   flex-shrink: 0;
 }
@@ -1186,7 +1253,7 @@
 .wrtdip-layer-panel__featured-title {
   font-size: 13px;
   font-weight: 600;
-  color: #1e3a8a;
+  color: var(--c-navy-800);
   line-height: 1.2;
 }
 
@@ -1230,7 +1297,7 @@
   margin-top: 4px;
   font-size: 12px;
   font-weight: 700;
-  color: #1e3a8a;
+  color: var(--c-navy-800);
 }
 
 .wrtdip-layer-panel__item {
@@ -1263,12 +1330,12 @@
 }
 
 .wrtdip-layer-panel__checkbox:hover {
-  border-color: #2563eb;
+  border-color: var(--c-navy-600);
 }
 
 .wrtdip-layer-panel__checkbox:checked {
-  background: #2563eb;
-  border-color: #2563eb;
+  background: var(--c-navy-600);
+  border-color: var(--c-navy-600);
 }
 
 .wrtdip-layer-panel__checkbox:checked::after {
@@ -1356,7 +1423,7 @@
 }
 
 .wrtdip-basemap-panel__option.is-active .wrtdip-basemap-panel__name {
-  color: #1e3a8a;
+  color: var(--c-navy-800);
 }
 
 .wrtdip-basemap-panel__sub {
@@ -1368,7 +1435,7 @@
 .wrtdip-basemap-panel__check {
   font-size: 13px;
   font-weight: 700;
-  color: #2563eb;
+  color: var(--c-navy-600);
   visibility: hidden;
 }
 
@@ -1391,7 +1458,7 @@
   padding: 6px 18px;
   font-size: 0.82rem;
   font-weight: 600;
-  color: #1e40af;
+  color: var(--c-navy-700);
   background: transparent;
   border: 0;
   border-radius: 7px;
@@ -1404,7 +1471,7 @@
 }
 
 .wrtdip-section-switch__btn--active {
-  background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+  background: linear-gradient(135deg, var(--c-navy-600) 0%, var(--c-navy-700) 100%);
   color: #fff;
   box-shadow: 0 2px 6px rgba(37, 99, 235, 0.28);
 }
@@ -1458,7 +1525,7 @@
   padding: 7px 16px;
   font-size: 0.8rem;
   font-weight: 600;
-  color: #1e40af;
+  color: var(--c-navy-700);
   background: #fff;
   border: 1px solid #bfdbfe;
   border-radius: 8px;
@@ -1472,8 +1539,8 @@
 }
 
 .wrtdip-precip-resolution__btn--active {
-  background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
-  border-color: #1d4ed8;
+  background: linear-gradient(135deg, var(--c-navy-600) 0%, var(--c-navy-700) 100%);
+  border-color: var(--c-navy-700);
   color: #fff;
   box-shadow: 0 2px 6px rgba(37, 99, 235, 0.28);
 }
@@ -1597,7 +1664,7 @@
 .wrtdip-trend-panel__range-years {
   font-size: 0.78rem;
   font-weight: 700;
-  color: #1e40af;
+  color: var(--c-navy-700);
   font-variant-numeric: tabular-nums;
 }
 
@@ -1626,7 +1693,7 @@
   font-size: 0.7rem;
   font-weight: 700;
   letter-spacing: 0.02em;
-  color: #1e40af;
+  color: var(--c-navy-700);
   background: #fff;
   border: 1px solid #bfdbfe;
   border-radius: 999px;
@@ -1642,15 +1709,15 @@
 }
 
 .wrtdip-trend-adv-btn--active {
-  background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
-  border-color: #1d4ed8;
+  background: linear-gradient(135deg, var(--c-navy-600) 0%, var(--c-navy-700) 100%);
+  border-color: var(--c-navy-700);
   color: #fff;
   box-shadow: 0 2px 6px rgba(37, 99, 235, 0.28);
 }
 
 .wrtdip-trend-adv-btn--active:hover {
-  background: linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%);
-  border-color: #1e40af;
+  background: linear-gradient(135deg, var(--c-navy-700) 0%, var(--c-navy-700) 100%);
+  border-color: var(--c-navy-700);
   color: #fff;
 }
 
@@ -1670,7 +1737,7 @@
   color: #334155;
   background: #fff;
   border: 1px solid #e2e8f0;
-  border-left: 3px solid #2563eb;
+  border-left: 3px solid var(--c-navy-600);
   border-radius: 8px;
   font-variant-numeric: tabular-nums;
 }
@@ -1748,7 +1815,7 @@
 
 .wrtdip-trend-table__row--active .wrtdip-trend-table__month-name {
   font-weight: 700;
-  color: #1e3a8a;
+  color: var(--c-navy-800);
 }
 
 .wrtdip-trend-table td {
@@ -1845,18 +1912,18 @@
 
 .wrtdip-sig-pill--very {
   color: #fff;
-  background: #1e3a8a;
-  border-color: #1e3a8a;
+  background: var(--c-navy-800);
+  border-color: var(--c-navy-800);
 }
 
 .wrtdip-sig-pill--significant {
   color: #fff;
-  background: #3b82f6;
-  border-color: #3b82f6;
+  background: var(--c-ice-500);
+  border-color: var(--c-ice-500);
 }
 
 .wrtdip-sig-pill--somewhat {
-  color: #1d4ed8;
+  color: var(--c-navy-700);
   background: #dbeafe;
   border-color: #bfdbfe;
 }
@@ -1885,11 +1952,11 @@
 }
 
 .wrtdip-sig-dot--very {
-  background: #1e3a8a;
+  background: var(--c-navy-800);
 }
 
 .wrtdip-sig-dot--significant {
-  background: #3b82f6;
+  background: var(--c-ice-500);
 }
 
 .wrtdip-sig-dot--somewhat {
@@ -1919,7 +1986,7 @@
   width: 20rem;
   max-width: 100%;
   margin: 14px auto 0;
-  color: #1e3a8a;
+  color: var(--c-navy-800);
 }
 
 .wrtdip-precip-scale__icon {
@@ -1935,7 +2002,7 @@
   height: 12px;
   border: 1px solid #94a3b8;
   border-radius: 3px;
-  background: linear-gradient(90deg, #f7fbff, #1e3a8a);
+  background: linear-gradient(90deg, #f7fbff, var(--c-navy-800));
 }
 
 .wrtdip-precip-scale__labels {
@@ -1963,13 +2030,13 @@
   align-items: center;
   justify-content: flex-end;
   min-height: 44px;
-  color: #1e40af;
+  color: var(--c-navy-700);
   text-decoration: underline;
 }
 
 .wrtdip-forecast-links a:hover,
 .wrtdip-forecast-links a:focus-visible {
-  color: #1e3a8a;
+  color: var(--c-navy-800);
   text-decoration-thickness: 2px;
 }
 
