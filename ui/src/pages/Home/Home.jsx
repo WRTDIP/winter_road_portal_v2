@@ -1,18 +1,13 @@
 // import CarouselHome from "../../components/CarouselHome";
 
-import "./styles.css"
 import WelcomeBanner from "../../components/Home/WelcomeBanner/WelcomeBanner"
-import Feature from "../../components/Home/Feature/Features"
+import Explore from "../../components/Home/Explore"
+import FeaturedTrend from "../../components/Home/FeaturedTrend"
 import TemplateBanner from "../../components/Home/TemlateBanner"
 // import bgImage from "../../assets/homebg_3.png"
 import firstBanner from "../../assets/firstBanner.png"
 import secondBanner from "../../assets/homebg_2.png"
 import thirdBanner from "../../assets/northern_lights.png"
-
-import firstfeatures from "../../assets/map_icon.png"
-import secondFeatures from "../../assets/presentation_icon.png"
-import thirdFeatures from "../../assets/smartphone_icon.png"
-import fourthFeatures from "../../assets/ice_road_icon.png"
 
 import firstpartners from "../../assets/Transport_Canada.png"
 import secondPartners from "../../assets/UTSC.png"
@@ -24,15 +19,12 @@ import seventhPartners from "../../assets/CIRNAC.png"
 
 import Partner from "../../components/Home/Partner"
 import * as React from "react"
-import { Link } from "react-router-dom"
-import { ArrowRightOutlined } from "@ant-design/icons"
 
 function Home() {
   const BannerContents = [
     {
       id: 1,
       image: firstBanner,
-      tag: "Roads",
       title: "Climate Change Impacts on Winter Roads",
       content:
         "Winter road networks are critical land transportation for remote Northern communities who rely on these networks for receiving essential goods and services during winter season. The public and private transportation sectors also rely on winter road networks for their operations. A warming climate has created a shorter winter road season, unreliable road conditions, and safety concerns. ",
@@ -41,7 +33,6 @@ function Home() {
     {
       id: 2,
       image: secondBanner,
-      tag: "Transportation",
       title: "Climate Change Impacts on Northern Transportation Networks",
       content:
         "In the North, winter roads provide relatively inexpensive overland connection to the all-season road network, which in turn connects from remote to larger communities and the rest of Canada, much passenger and freight movements for remote Northern communities and resource sites occur during the winter road season. Climate change is impacting the surface quality of the winter roads, seasonal lengths, and freight schedule such as the movements of goods and services. ",
@@ -49,49 +40,9 @@ function Home() {
     {
       id: 3,
       image: thirdBanner,
-      tag: "Communities",
       title: "Climate Change Impacts on Northern Communities",
       content:
         "A shorter winter road season with less reliable winter road conditions has a substantial socio-economic impact on Northern communities, particularly for remote Indigenous communities. The lack of winter road access for these remote communities has important consequences from a socio-economic perspective, for example, an increase in price of goods and services, which are already expensive in the North. ",
-    },
-  ]
-
-  const FeatureContents = [
-    {
-      id: 1,
-      image: firstfeatures,
-      title: "Interactive Map",
-      link: "/map",
-      cta: "Open the map",
-      content:
-        "Where can you find the winter roads? How is climate change affecting these winter roads? Our interactive map provides an opportunity to explore Northern transportation networks, climate change impacts, and socio-economic information. ",
-    },
-    {
-      id: 2,
-      image: secondFeatures,
-      title: "Northern Transportation Network Study",
-      link: "/transportation",
-      cta: "Read the study",
-      content:
-        "We present studies and data related to Northern transportation.",
-    },
-    {
-      id: 3,
-      image: thirdFeatures,
-      title: "Winter Road Watch App",
-      link: "/observation",
-      cta: "See observations",
-      content:
-        "Our portal is also linked to the Winter Road Watch app which is a monitoring tool for tracking changes on the winter road conditions.",
-    },
-    {
-      id: 4,
-      image: fourthFeatures,
-      title: "Winter Road Profile",
-      link: "/projects",
-      cta: "View profiles",
-      content:
-        "All winter roads have a unique physical feature. Learn more about each winter road network and how climate change has been impacting them.",
     },
   ]
 
@@ -145,35 +96,22 @@ function Home() {
     <div>
       <WelcomeBanner />
 
+      <Explore />
+
+      <FeaturedTrend />
+
       <section className="ui-section">
         <div className="ui-container">
           <div className="ui-section-head">
-            <span className="ui-eyebrow">Why it matters</span>
-            <h2>A warming climate is shortening the winter road season</h2>
-            <p>Winter roads link remote Northern communities to the rest of Canada. Here is what is at stake.</p>
+            <span className="ui-eyebrow">Research context</span>
+            <h2>Why winter roads matter</h2>
+            <p>Winter roads link remote Northern communities to the rest of Canada, and a warming climate is shortening the season they can be used.</p>
           </div>
           <div className="templateBannerGrid">
             {BannerContents.map((content) => (
               <TemplateBanner key={content.id} props={content} />
             ))}
           </div>
-        </div>
-      </section>
-
-      <Feature props={FeatureContents} />
-
-      <section className="homeCta">
-        <div className="ui-container homeCta__inner">
-          <div>
-            <h2 className="homeCta__title">See the data for your community</h2>
-            <p className="homeCta__text">
-              Click any community on the map for freezing degree days, precipitation, temperature trends and the forecast.
-            </p>
-          </div>
-          <Link to="/map" className="ui-btn ui-btn--primary">
-            Open the interactive map
-            <ArrowRightOutlined aria-hidden="true" />
-          </Link>
         </div>
       </section>
 

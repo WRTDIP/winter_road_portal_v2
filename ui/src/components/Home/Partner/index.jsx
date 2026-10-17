@@ -3,11 +3,10 @@ import "./styles.css";
 
 const Partner = ({ props }) => {
   return (
-    <section className="ui-section">
+    <section className="ui-section ui-section--tint partnerSection">
       <div className="ui-container">
         <div className="ui-section-head">
-          <span className="ui-eyebrow">Partners</span>
-          <h2>Built together</h2>
+          <h2>Partners</h2>
           <p>
             We gratefully acknowledge the support and collaboration of our partner organizations to
             develop the WRaMP - Winter Road and Mobility Portal.
