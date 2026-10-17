@@ -58,6 +58,28 @@ const PRECIP_BAR_GAPS = {
 // (30 years is the standard climate-normal period).
 const SHORT_RECORD_YEARS = 30
 
+// The research area the map opens on (also the "Default" button's target).
+const RESEARCH_VIEW = { center: [-110, 65.5], zoom: 4.5 }
+
+// Entry transition: the first map visit in a browser session starts on the
+// whole of northern Canada and eases into the research area while the map
+// controls fade in. Later visits, and anyone with reduced motion turned on,
+// open directly on the research area.
+const INTRO_START = { center: [-100, 64], zoom: 3 }
+const INTRO_DURATION_MS = 1400
+const INTRO_SEEN_KEY = "wramp-map-intro-seen"
+
+const shouldPlayMapIntro = () => {
+  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return false
+  try {
+    if (window.sessionStorage.getItem(INTRO_SEEN_KEY)) return false
+    window.sessionStorage.setItem(INTRO_SEEN_KEY, "1")
+  } catch (e) {
+    // Storage blocked: still play once for this page load.
+  }
+  return true
+}
+
 // Map city names (as they appear in Data.js) to weather station IDs
 // Uses station IDs that have both ECCC and AHCCD data where possible
 const CITY_STATION_MAP = {
@@ -3033,13 +3055,28 @@ function WeatherMap() {
             basemap: oldCanadaTopoBasemap,
           },
         ]
+        const playIntro = shouldPlayMapIntro()
         const view = new MapView({
           container: MapElement.current,
           map: map,
-          center: [-110, 65.5], // Adjust longitude and latitude as needed
-          zoom: 4.5,
+          ...(playIntro ? INTRO_START : RESEARCH_VIEW),
           popupEnabled: true,
         })
+
+        if (playIntro) {
+          // The class staggers the map controls in (see styles.css); any user
+          // pan or zoom interrupts the flight, which ArcGIS reports as a
+          // rejected goTo.
+          MapElement.current.classList.add("wrtdip-map--intro")
+          view
+            .when(() =>
+              view.goTo(RESEARCH_VIEW, { duration: INTRO_DURATION_MS, easing: "in-out-cubic" })
+            )
+            .catch(() => {})
+            .finally(() => {
+              setTimeout(() => MapElement.current?.classList.remove("wrtdip-map--intro"), 1200)
+            })
+        }
 
         // Hovered road features get a bright glow (see the pointer-move
         // handler below) so users can tell they're clickable.
@@ -3417,7 +3454,7 @@ function WeatherMap() {
         )
 
         customZoomButton.addEventListener("click", () => {
-          view.goTo({ center: [-110, 65.5], zoom: 4.5 })
+          view.goTo(RESEARCH_VIEW)
         })
 
         view.ui.add(customZoomButton, "top-left")

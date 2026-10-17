@@ -368,6 +368,39 @@
   max-width: 900px;
 }
 
+/* Entry transition (first map visit per session, see shouldPlayMapIntro):
+   while the view eases in, the left controls fade in one after another, then
+   the legend on the right. Short, one-off, and off for reduced motion. */
+@keyframes wrtdip-control-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.wrtdip-map--intro .esri-ui-top-left .esri-component,
+.wrtdip-map--intro .esri-ui-top-right .esri-component {
+  animation: wrtdip-control-in 280ms ease-out both;
+}
+
+.wrtdip-map--intro .esri-ui-top-left .esri-component:nth-child(1) { animation-delay: 500ms; }
+.wrtdip-map--intro .esri-ui-top-left .esri-component:nth-child(2) { animation-delay: 580ms; }
+.wrtdip-map--intro .esri-ui-top-left .esri-component:nth-child(3) { animation-delay: 660ms; }
+.wrtdip-map--intro .esri-ui-top-left .esri-component:nth-child(4) { animation-delay: 740ms; }
+.wrtdip-map--intro .esri-ui-top-left .esri-component:nth-child(n + 5) { animation-delay: 820ms; }
+.wrtdip-map--intro .esri-ui-top-right .esri-component { animation-delay: 1000ms; }
+
+@media (prefers-reduced-motion: reduce) {
+  .wrtdip-map--intro .esri-ui-top-left .esri-component,
+  .wrtdip-map--intro .esri-ui-top-right .esri-component {
+    animation: none;
+  }
+}
+
 /* The view takes focus programmatically on every click; ArcGIS draws its
    own keyboard focus ring, so the global one would frame the whole map. */
 .wrtdip-map .esri-view-surface:focus-visible {
