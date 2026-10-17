@@ -7,7 +7,7 @@
     padding-block: clamp(1.5rem, 5vw, 3.5rem);
     padding-left: max(1rem, env(safe-area-inset-left));
     padding-right: max(1rem, env(safe-area-inset-right));
-    background-color: #f5f7fa;
+    background-color: var(--c-bg);
 }
 
 .loginContainer{
@@ -21,7 +21,7 @@
     margin-inline: auto;
     padding: clamp(1.25rem, 5vw, 2.5rem);
     background-color: #fff;
-    border: 1px solid #e3e8f0;
+    border: 1px solid var(--c-border);
     border-radius: 16px;
     box-shadow: 0 10px 30px rgba(20, 35, 70, 0.08);
 }
@@ -44,13 +44,13 @@
     margin-bottom: 0.35rem;
     font-size: var(--fs-h3);
     font-weight: 700;
-    color: #1f2a44;
+    color: var(--c-ink);
 }
 
 .authSubtitle {
     margin-bottom: 0;
     font-size: var(--fs-body-sm);
-    color: #5b6780;
+    color: var(--c-muted);
 }
 
 .loginForm .form-label,
@@ -58,28 +58,28 @@
     margin-bottom: 0.35rem;
     font-size: var(--fs-body-sm);
     font-weight: 600;
-    color: #1f2a44;
+    color: var(--c-ink);
 }
 
 .authHint {
     display: block;
     margin-top: 0.4rem;
     font-size: var(--fs-caption);
-    color: #6b7793;
+    color: var(--c-muted);
 }
 
 .loginForm .form-control,
 .registerForm .form-control {
     min-height: 48px;
     border-radius: 10px;
-    border-color: #cfd6e4;
+    border-color: var(--c-border);
     /* 16px floor keeps iOS Safari from zooming the page on focus. */
     font-size: max(16px, var(--fs-body));
 }
 
 .loginForm .form-control:focus,
 .registerForm .form-control:focus {
-    border-color: #364c77;
+    border-color: var(--c-navy-700);
     box-shadow: 0 0 0 0.2rem rgba(54, 76, 119, 0.2);
 }
 
@@ -104,7 +104,7 @@
     border: 0;
     border-radius: 0 10px 10px 0;
     background: transparent;
-    color: #5b6780;
+    color: var(--c-muted);
     font-size: var(--fs-body-sm);
     font-weight: 600;
     touch-action: manipulation;
@@ -113,11 +113,11 @@
 .authToggle:hover,
 .authToggle:active,
 .authToggle:focus-visible {
-    color: #364c77;
+    color: var(--c-navy-700);
 }
 
 .authToggle:focus-visible {
-    outline: 2px solid #364c77;
+    outline: 2px solid var(--c-navy-700);
     outline-offset: -2px;
 }
 
@@ -149,7 +149,7 @@
     font-size: var(--fs-caption);
     text-transform: uppercase;
     letter-spacing: 0.06em;
-    color: #8792a8;
+    color: var(--c-muted);
 }
 
 .authDivider::before,
@@ -157,7 +157,7 @@
     content: "";
     flex: 1 1 auto;
     height: 1px;
-    background-color: #e3e8f0;
+    background-color: var(--c-border);
 }
 
 .authFooterLinks {
@@ -173,7 +173,7 @@
     display: inline-flex;
     align-items: center;
     min-height: 44px;
-    color: #364c77;
+    color: var(--c-navy-700);
     text-decoration: none;
     touch-action: manipulation;
 }
@@ -199,4 +199,4 @@
 
 .authAlert p:last-child {
     margin-bottom: 0;
-}
+}

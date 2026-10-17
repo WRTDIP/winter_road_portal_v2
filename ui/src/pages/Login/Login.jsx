@@ -5,10 +5,14 @@ import LoginForm from "../../components/Login/Login";
 function Login() {
     return (
       <Container className="p-0" fluid>
-      <CoverBanner title="Login" />
+      <CoverBanner
+        eyebrow="Account"
+        title="Login"
+        subtitle="Sign in to save data selections and use portal tools."
+      />
       <LoginForm />
       </Container>
     );
 }
 
-export default Login;
+export default Login;

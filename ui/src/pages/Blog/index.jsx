@@ -33,7 +33,11 @@ function Blog() {
 
   return (
     <div>
-      <CoverBanner title="Blog" />
+      <CoverBanner
+        eyebrow="Resources"
+        title="Blog"
+        subtitle="News and field notes from the WRaMP team."
+      />
       <div className="blogPage">
         <div className="blogContainer">
           <div className="blogNotice">
