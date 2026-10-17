@@ -1,34 +1,54 @@
-.observationIframe {
-    width: 80%;
-    height: 120vh;
+.observationIframeContainer {
+  display: flex;
+  justify-content: center;
+  padding: 1rem 1.25rem clamp(3rem, 2rem + 3vw, 5rem);
+  background: var(--c-bg);
 }
 
-.observationIframeContainer{
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 0 16px;
+/* The map preview, framed like a browser window, links out to ArcGIS. */
+.observationPreview {
+  position: relative;
+  display: block;
+  width: 100%;
+  max-width: 1100px;
+  overflow: hidden;
+  border: 1px solid var(--c-border);
+  border-radius: var(--radius-lg);
+  background: var(--c-surface);
+  box-shadow: var(--shadow-lg);
+  text-decoration: none;
 }
 
-.observationIframeContainer > p {
-    min-width: 0;
-    width: 100%;
-    max-width: 1200px;
+.observationPreview__bar {
+  display: flex;
+  gap: 6px;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--c-border);
+  background: var(--c-bg);
 }
 
-.observationIframeContainer a {
-    display: block;
+.observationPreview__bar span {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--c-border);
 }
 
-.observationIframeContainer .mapImage {
-    display: block;
-    max-width: 100%;
+.observationPreview .mapImage {
+  display: block;
+  width: 100%;
+  height: auto;
+  transition: filter 0.2s ease;
 }
-  
-.mapImage {
-    width: 100%; /* Make the image twice as wide */
-    max-width: none; /* Remove the maximum width limit */
-    height: auto; /* Maintain aspect ratio */
-    margin-top: 10px; /* Add spacing above the image */
-    cursor: pointer; /* Show a pointer cursor on hover */
-  }
+
+.observationPreview__cta {
+  display: flex;
+  width: fit-content;
+  max-width: calc(100% - 32px);
+  margin: 20px auto;
+}
+
+.observationPreview:hover .mapImage,
+.observationPreview:focus-visible .mapImage {
+  filter: brightness(0.92);
+}

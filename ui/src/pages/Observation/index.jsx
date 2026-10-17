@@ -15,21 +15,33 @@ function Observation() {
   ];
   return (
     <div>
-      <CoverBanner title="Observation" />
+      <CoverBanner
+        eyebrow="Winter Road Watch"
+        title="Observation"
+        subtitle="Road condition reports collected by citizen scientists across the Northwest Territories."
+      />
       <SubSectionBanner props={BannerContents[0]} />
       <div className="observationIframeContainer">
-        <p>
-          <a href="https://experience.arcgis.com/experience/53a7d50029164034802c870e8c7e72ae" 
-              target="_blank" 
-              rel="noopener noreferrer"
-          >
-            <img
-              src={ObservationFirst}
-              alt="Winter Road Watch Map"
-              className="mapImage"
-            />
-          </a>
-        </p>
+        <a
+          className="observationPreview"
+          href="https://experience.arcgis.com/experience/53a7d50029164034802c870e8c7e72ae"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <span className="observationPreview__bar" aria-hidden="true">
+            <span />
+            <span />
+            <span />
+          </span>
+          <img
+            src={ObservationFirst}
+            alt="Preview of the Winter Road Watch map"
+            className="mapImage"
+          />
+          <span className="observationPreview__cta ui-btn ui-btn--primary">
+            Open the interactive web map ↗
+          </span>
+        </a>
       </div>
     </div>
   );
@@ -47,4 +59,4 @@ export default Observation;
           // style={{ width: "100%", height: "600px", border: "none"}}
         // ></iframe>
       // </div>
-    // <div>
+    // <div>

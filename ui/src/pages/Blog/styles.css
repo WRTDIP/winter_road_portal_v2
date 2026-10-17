@@ -1,6 +1,6 @@
 .blogPage {
   padding: 2rem 1.5rem 4rem;
-  color: #0e2959;
+  color: var(--c-ink);
 }
 
 .blogContainer {
@@ -9,15 +9,15 @@
 }
 
 .blogNotice {
-  border: 1px solid #d9e2f0;
+  border: 1px solid var(--c-border);
   border-radius: 8px;
   padding: 1.5rem;
-  background: #f7f9fc;
+  background: var(--c-bg);
   margin-bottom: 2rem;
 }
 
 .blogNotice h3 {
-  color: #38507e;
+  color: var(--c-navy-700);
   margin-bottom: 0.5rem;
 }
 
@@ -38,17 +38,17 @@
 }
 
 .blogSectionTitle {
-  color: #38507e;
+  color: var(--c-navy-700);
   font-size: 1.25rem;
   margin-bottom: 1rem;
   padding-bottom: 0.5rem;
-  border-bottom: 2px solid #d9e2f0;
+  border-bottom: 2px solid var(--c-border);
 }
 
 .blogCard {
   display: flex;
   gap: 1rem;
-  border: 1px solid #d9e2f0;
+  border: 1px solid var(--c-border);
   border-radius: 8px;
   background: #fff;
   overflow: hidden;
@@ -76,33 +76,33 @@
 }
 
 .blogCardTitle {
-  color: #0e2959;
+  color: var(--c-ink);
   font-size: 1.15rem;
   font-weight: 600;
   margin-bottom: 0.25rem;
 }
 
 .blogMeta {
-  color: #6b7a99;
+  color: var(--c-muted);
   font-size: 0.85rem;
   margin-bottom: 0.5rem;
 }
 
 .blogCardSummary {
   margin: 0;
-  color: #33405c;
+  color: var(--c-ink);
 }
 
 .blogSidebarBox {
-  border: 1px solid #d9e2f0;
+  border: 1px solid var(--c-border);
   border-radius: 8px;
-  background: #f7f9fc;
+  background: var(--c-bg);
   padding: 1rem 1.25rem;
   margin-bottom: 1.5rem;
 }
 
 .blogSidebarBox h4 {
-  color: #38507e;
+  color: var(--c-navy-700);
   font-size: 1.05rem;
   margin-bottom: 0.75rem;
 }
@@ -115,7 +115,7 @@
 
 .blogSidebarItem {
   padding: 0.5rem 0;
-  border-bottom: 1px solid #e3eaf5;
+  border-bottom: 1px solid var(--c-border);
   cursor: pointer;
 }
 
@@ -128,13 +128,13 @@
 }
 
 .blogSidebarItemTitle {
-  color: #0e2959;
+  color: var(--c-ink);
   font-weight: 600;
   font-size: 0.95rem;
 }
 
 .blogSidebarItemMeta {
-  color: #6b7a99;
+  color: var(--c-muted);
   font-size: 0.8rem;
 }
 
@@ -147,12 +147,12 @@
 }
 
 .blogPreviewTitle {
-  color: #0e2959;
+  color: var(--c-ink);
   margin-bottom: 0.25rem;
 }
 
 .blogPreviewContent p {
-  color: #33405c;
+  color: var(--c-ink);
   line-height: 1.6;
 }
 

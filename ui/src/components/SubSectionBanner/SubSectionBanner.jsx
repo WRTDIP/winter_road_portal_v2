@@ -1,21 +1,13 @@
 import React from "react";
-import { Grid, Layout, Menu, Typography } from "antd";
-import { Link } from "react-router-dom";
-import CanadaMap from "../../assets/canada_map.png";
-import { MenuOutlined } from "@ant-design/icons";
-import titleImage from "../../assets/homebg_3.png";
 import "./styles.css";
 
 const SubSectionBanner = ({ props }) => {
-  const { image, title, content, bgColor } = props;
+  const { title, content } = props;
   return (
-    <div
-      className="subSectionBannerContainer"
-      style={{ backgroundColor: bgColor }}
-    >
+    <div className="subSectionBannerContainer">
       <div className="subSectionBannerTextContainer">
-      <div className="subSectionBannerTitle">{title}</div>
-      <div className="subSectionBannerContent">{content}</div>
+        <h2 className="subSectionBannerTitle">{title}</h2>
+        <p className="subSectionBannerContent">{content}</p>
       </div>
     </div>
   );

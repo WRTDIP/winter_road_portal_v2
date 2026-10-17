@@ -1,28 +1,30 @@
 .subSectionBannerContainer {
-  display: flex;
-  height: 40vh;
-  background-color: white;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
-
-}
-.subSectionBannerTitle {
-  font-family: 'Roboto', sans-serif;
-  font-size: var(--fs-hero);
-  color: rgb(56, 80, 126);
+  padding: clamp(2.5rem, 2rem + 2vw, 4rem) 1.25rem 1.5rem;
+  background: var(--c-bg);
 }
 
-.subSectionBannerImageContainer {
-  padding-top: 0px;
-}
 .subSectionBannerTextContainer {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  max-width: 44rem;
+  margin: 0 auto;
+  text-align: center;
 }
+
+.subSectionBannerTitle {
+  margin: 0 0 0.75rem;
+  font-size: var(--fs-h2);
+  font-weight: 700;
+  color: var(--c-ink);
+}
+
 .subSectionBannerContent {
-  font-size: 18px;
-  color: #333; /* Adjust color as needed */
-  margin-top: 10px;
+  margin: 0;
+  font-size: var(--fs-lead);
+  color: var(--c-muted);
+}
+
+.subSectionAction {
+  display: flex;
+  justify-content: center;
+  padding: 0.5rem 1.25rem clamp(3rem, 2rem + 3vw, 5rem);
+  background: var(--c-bg);
 }
