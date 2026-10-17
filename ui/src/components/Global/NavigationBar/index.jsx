@@ -1,29 +1,80 @@
-import React, { useEffect, useState } from "react";
-import { Button, Drawer } from "antd";
-import { MenuOutlined, UserOutlined } from "@ant-design/icons";
+import React, { useEffect, useRef, useState } from "react";
+import { Drawer } from "antd";
+import { DownOutlined, MenuOutlined, UserOutlined } from "@ant-design/icons";
 import { Link, useLocation } from "react-router-dom";
 import { useBreakpoint } from "../../../hooks/useBreakpoint";
 import NavbarLogo from "../../../assets/navbarLogo.png";
+import { NAV_GROUPS } from "./navItems";
 import "./styles.css";
 
-const rightItems = [
-  { name: "Home", link: "/" },
-  //{ name: "Map", link: "https://climatechange.utsc.utoronto.ca/esri_leaflet/map.html", newTab: true },
-  { name: "Map", link: "/map" },
-  { name: "Projects", link: "/projects" },
-  { name: "Observation", link: "/observation" },
-  { name: "Transportation", link: "/transportation" },
-  { name: "Download", link: "/download" },
-  { name: "API", link: "/api" },
-  { name: "References", link: "/references" },
-  { name: "Blog", link: "/blog" },
-  { name: "About", link: "/about" },
+const isActive = (item, pathname) =>
+  item.items ? item.items.some((child) => child.link === pathname) : item.link === pathname;
 
-  { name: "Account", link: "/login", icon: <UserOutlined /> },
-];
+/* One grouped entry in the desktop bar. Opens on click, hover or keyboard;
+   Escape, an outside tap or leaving the group closes it. */
+const NavMenu = ({ group, pathname }) => {
+  const [open, setOpen] = useState(false);
+  const wrapRef = useRef(null);
+  const menuId = `nav-menu-${group.name.toLowerCase()}`;
+
+  useEffect(() => setOpen(false), [pathname]);
+
+  useEffect(() => {
+    if (!open) return undefined;
+    const onPointer = (event) => {
+      if (!wrapRef.current?.contains(event.target)) setOpen(false);
+    };
+    const onKey = (event) => {
+      if (event.key === "Escape") setOpen(false);
+    };
+    document.addEventListener("pointerdown", onPointer);
+    document.addEventListener("keydown", onKey);
+    return () => {
+      document.removeEventListener("pointerdown", onPointer);
+      document.removeEventListener("keydown", onKey);
+    };
+  }, [open]);
+
+  return (
+    <div
+      className="portal-nav-group"
+      ref={wrapRef}
+      onMouseEnter={() => setOpen(true)}
+      onMouseLeave={() => setOpen(false)}
+      onBlur={(event) => {
+        if (!wrapRef.current?.contains(event.relatedTarget)) setOpen(false);
+      }}
+    >
+      <button
+        type="button"
+        className="portal-nav-link"
+        aria-expanded={open}
+        aria-controls={menuId}
+        data-active={isActive(group, pathname) || undefined}
+        onClick={() => setOpen((value) => !value)}
+      >
+        <span>{group.name}</span>
+        <DownOutlined className="portal-nav-caret" aria-hidden="true" />
+      </button>
+      <div id={menuId} className="portal-nav-menu" hidden={!open}>
+        {group.items.map((item) => (
+          <Link
+            key={item.link}
+            to={item.link}
+            className="portal-nav-menu__item"
+            aria-current={pathname === item.link ? "page" : undefined}
+          >
+            <span className="portal-nav-menu__name">{item.name}</span>
+            <span className="portal-nav-menu__hint">{item.hint}</span>
+          </Link>
+        ))}
+      </div>
+    </div>
+  );
+};
 
 const NavigationBar = () => {
-  const compact = !useBreakpoint().xxl;
+  const compact = !useBreakpoint().lg;
   const [open, setOpen] = useState(false);
   const { pathname } = useLocation();
 
@@ -31,46 +82,101 @@ const NavigationBar = () => {
     setOpen(false);
   }, [pathname, compact]);
 
-  const links = rightItems.map((item) => (
-    <Link
-      key={item.link}
-      to={item.link}
-      className="menuLink"
-      aria-current={pathname === item.link ? "page" : undefined}
-      onClick={() => setOpen(false)}
-    >
-      {item.icon}
-      <span>{item.name}</span>
-    </Link>
-  ));
-
   return (
     <header className="portal-header" id="top">
-      <Link to="/" className="portal-brand" aria-label="Climate Lab at UTSC home">
-        <img width={110} src={NavbarLogo} alt="" />
-        <span>Climate Lab @ UTSC</span>
+      <Link to="/" className="portal-brand" aria-label="WRaMP home">
+        <img src={NavbarLogo} alt="" />
+        <span className="portal-brand__divider" aria-hidden="true" />
+        <span className="portal-brand__text">
+          <span className="portal-brand__name">WRaMP</span>
+          <span className="portal-brand__sub">Climate Lab @ UTSC</span>
+        </span>
       </Link>
+
       {compact ? (
-        <Button
+        <button
+          type="button"
           className="portal-menu-toggle"
-          icon={<MenuOutlined />}
           aria-label="Open navigation"
           aria-expanded={open}
           aria-controls={open ? "portal-mobile-navigation" : undefined}
           onClick={() => setOpen(true)}
-        />
+        >
+          <MenuOutlined aria-hidden="true" />
+        </button>
       ) : (
-        <nav className="portal-desktop-navigation" aria-label="Main navigation">{links}</nav>
+        <>
+          <nav className="portal-desktop-navigation" aria-label="Main navigation">
+            {NAV_GROUPS.map((group) =>
+              group.items ? (
+                <NavMenu key={group.name} group={group} pathname={pathname} />
+              ) : (
+                <Link
+                  key={group.link}
+                  to={group.link}
+                  className="portal-nav-link"
+                  aria-current={pathname === group.link ? "page" : undefined}
+                >
+                  {group.name}
+                </Link>
+              )
+            )}
+          </nav>
+          <Link
+            to="/login"
+            className="portal-account"
+            aria-current={pathname === "/login" ? "page" : undefined}
+          >
+            <UserOutlined aria-hidden="true" />
+            <span>Account</span>
+          </Link>
+        </>
       )}
+
       <Drawer
         className="portal-navigation-drawer"
-        title="Navigation"
+        title="WRaMP"
         placement="right"
         width="min(340px, 100%)"
         visible={compact && open}
         onClose={() => setOpen(false)}
       >
-        <nav id="portal-mobile-navigation" aria-label="Main navigation">{links}</nav>
+        <nav id="portal-mobile-navigation" aria-label="Main navigation">
+          {NAV_GROUPS.map((group) =>
+            group.items ? (
+              <div key={group.name} className="portal-drawer-group">
+                <span className="portal-drawer-group__label">{group.name}</span>
+                {group.items.map((item) => (
+                  <Link
+                    key={item.link}
+                    to={item.link}
+                    className="menuLink"
+                    aria-current={pathname === item.link ? "page" : undefined}
+                  >
+                    {item.name}
+                  </Link>
+                ))}
+              </div>
+            ) : (
+              <Link
+                key={group.link}
+                to={group.link}
+                className="menuLink"
+                aria-current={pathname === group.link ? "page" : undefined}
+              >
+                {group.name}
+              </Link>
+            )
+          )}
+          <Link
+            to="/login"
+            className="menuLink menuLink--account"
+            aria-current={pathname === "/login" ? "page" : undefined}
+          >
+            <UserOutlined aria-hidden="true" />
+            <span>Account</span>
+          </Link>
+        </nav>
       </Drawer>
     </header>
   );
