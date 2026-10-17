@@ -1,72 +1,91 @@
-.welcomeContainer {
-  background: var(--c-surface);
-  border-bottom: 1px solid var(--c-border);
+.welcomeContainer{
+    background-color: rgb(54, 77, 119);
+    min-height: calc(94 * var(--dvh));
+    padding: 6%;
 }
 
-.welcomeGrid {
-  display: grid;
-  grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
-  gap: clamp(2rem, 1rem + 4vw, 4.5rem);
-  align-items: center;
-  padding-top: clamp(2.5rem, 1.5rem + 4vw, 5rem);
-  padding-bottom: clamp(2.5rem, 1.5rem + 4vw, 5rem);
+.welcomeTitle{
+    color:  white;
+    font-family: 'Roboto', sans-serif;
+    font-size: var(--fs-h1);
+    font-weight: 500;
+    line-height: 1.2;
+}
+.welcomeText{
+    font-size: var(--fs-lead);
+    color: white;
+    font-family: 'Roboto', sans-serif;
 }
 
-.welcomeTitle {
-  margin: 0 0 1.25rem;
-  font-size: var(--fs-h1);
-  font-weight: 600;
-  line-height: 1.15;
-  color: var(--c-ink);
-}
-
-.welcomeText {
-  max-width: 34rem;
-  margin: 0;
-  font-size: var(--fs-body);
-  line-height: 1.75;
-  color: var(--c-text);
-}
-
-.welcomeActions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
-  margin-top: 2rem;
-}
-
-/* Field photographs: one large frame over two smaller ones. */
-.welcomePhotos {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 8px;
-  min-width: 0;
-}
-
-.welcomePhotos img {
-  display: block;
-  width: 100%;
-  object-fit: cover;
-  border-radius: var(--radius-md);
-}
-
-.welcomePhotos__main {
-  grid-column: 1 / -1;
-  aspect-ratio: 994 / 521;
-}
-
-.welcomePhotos__side {
-  aspect-ratio: 4 / 3;
+.welcomeCarousel{
+    height: 80%;
 }
 
 @media (max-width: 991.98px) { /* --bp-lg */
-  .welcomeGrid {
-    grid-template-columns: minmax(0, 1fr);
-  }
+    .welcomeContainer {
+        min-height: 0;
+        padding: 32px 16px;
+    }
+
+    .welcomeContainer > .row {
+        row-gap: 24px;
+    }
+
+    .welcomeCarousel {
+        min-width: 0;
+        height: auto;
+    }
+
+    .welcomeCarousel > .carousel {
+        width: 100%;
+        max-width: 100%;
+        margin: 0;
+        padding: 0;
+        height: auto !important;
+    }
+
+    .welcomeCarousel .carousel-image {
+        width: 100%;
+        height: auto;
+        aspect-ratio: 4 / 3;
+        object-fit: cover;
+    }
+}
+
+/* The two calls to action, inverted for the navy banner. */
+.welcomeActions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 12px;
+    margin-top: 1.75rem;
+}
+
+.welcomeButton--primary {
+    background: #fff;
+    color: var(--c-navy-800);
+}
+
+.welcomeButton--primary:hover,
+.welcomeButton--primary:focus-visible {
+    background: var(--c-bg);
+    color: var(--c-navy-900);
+}
+
+.welcomeButton--secondary {
+    border-color: rgba(255, 255, 255, 0.7);
+    color: #fff;
+}
+
+.welcomeButton--secondary:hover,
+.welcomeButton--secondary:focus-visible {
+    border-color: #fff;
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
 }
 
 @media (max-width: 575.98px) { /* --bp-sm */
-  .welcomeActions .ui-btn {
-    flex: 1 1 100%;
-  }
+    .welcomeActions .ui-btn {
+        flex: 1 1 100%;
+    }
 }
