@@ -1,64 +1,31 @@
 .welcomeContainer {
-  position: relative;
-  overflow: hidden;
-  background:
-    radial-gradient(60rem 30rem at 85% 10%, rgba(21, 149, 181, 0.28), transparent 60%),
-    linear-gradient(160deg, var(--c-navy-900) 0%, var(--c-navy-800) 55%, var(--c-navy-700) 100%);
-  color: #fff;
-}
-
-/* A faint photo texture under the gradient, kept off the text column. */
-.welcomeContainer::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: url("../../../assets/winterBanner.jpg") center / cover no-repeat;
-  opacity: 0.12;
-  mix-blend-mode: screen;
-  pointer-events: none;
+  background: var(--c-surface);
+  border-bottom: 1px solid var(--c-border);
 }
 
 .welcomeGrid {
-  position: relative;
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
+  grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
   gap: clamp(2rem, 1rem + 4vw, 4.5rem);
   align-items: center;
-  min-height: min(calc(86 * var(--dvh) - var(--nav-h)), 720px);
-  padding-top: clamp(3rem, 2rem + 4vw, 5.5rem);
-  padding-bottom: clamp(3rem, 2rem + 4vw, 5.5rem);
-}
-
-.welcomeEyebrow {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  margin-bottom: 1.25rem;
-  padding: 6px 14px;
-  border: 1px solid rgba(127, 208, 227, 0.4);
-  border-radius: 999px;
-  background: rgba(127, 208, 227, 0.1);
-  font-size: var(--fs-caption);
-  font-weight: 600;
-  letter-spacing: 0.06em;
-  color: var(--c-ice-300);
+  padding-top: clamp(2.5rem, 1.5rem + 4vw, 5rem);
+  padding-bottom: clamp(2.5rem, 1.5rem + 4vw, 5rem);
 }
 
 .welcomeTitle {
   margin: 0 0 1.25rem;
-  font-size: var(--fs-hero);
-  font-weight: 800;
-  line-height: 1.05;
-  letter-spacing: -0.03em;
-  color: #fff;
+  font-size: var(--fs-h1);
+  font-weight: 600;
+  line-height: 1.15;
+  color: var(--c-ink);
 }
 
 .welcomeText {
-  max-width: 36rem;
+  max-width: 34rem;
   margin: 0;
-  font-size: var(--fs-lead);
-  line-height: 1.65;
-  color: rgba(255, 255, 255, 0.8);
+  font-size: var(--fs-body);
+  line-height: 1.75;
+  color: var(--c-text);
 }
 
 .welcomeActions {
@@ -68,14 +35,33 @@
   margin-top: 2rem;
 }
 
-.welcomeCarousel {
+/* Field photographs: one large frame over two smaller ones. */
+.welcomePhotos {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
   min-width: 0;
+}
+
+.welcomePhotos img {
+  display: block;
+  width: 100%;
+  object-fit: cover;
+  border-radius: var(--radius-md);
+}
+
+.welcomePhotos__main {
+  grid-column: 1 / -1;
+  aspect-ratio: 994 / 521;
+}
+
+.welcomePhotos__side {
+  aspect-ratio: 4 / 3;
 }
 
 @media (max-width: 991.98px) { /* --bp-lg */
   .welcomeGrid {
     grid-template-columns: minmax(0, 1fr);
-    min-height: 0;
   }
 }
 

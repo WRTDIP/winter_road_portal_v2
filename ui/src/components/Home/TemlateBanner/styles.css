@@ -1,77 +1,39 @@
 .templateBannerGrid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 24px;
+  gap: clamp(1.5rem, 1rem + 2vw, 3rem);
 }
 
 .templateBannerContainer {
   display: flex;
   flex-direction: column;
-  overflow: hidden;
-  border: 1px solid var(--c-border);
-  border-radius: var(--radius-lg);
-  background: var(--c-surface);
-  box-shadow: var(--shadow-sm);
-  transition: box-shadow 0.2s ease, transform 0.2s ease;
-}
-
-.templateBannerContainer:hover {
-  box-shadow: var(--shadow-md);
-  transform: translateY(-2px);
-}
-
-.templateBannerImageContainer {
-  position: relative;
+  min-width: 0;
 }
 
 .templateBannerImage {
   display: block;
   width: 100%;
-  aspect-ratio: 16 / 10;
+  aspect-ratio: 3 / 2;
+  margin-bottom: 18px;
+  border-radius: var(--radius-md);
   object-fit: cover;
-}
-
-.templateBannerTag {
-  position: absolute;
-  left: 16px;
-  top: 16px;
-  padding: 4px 10px;
-  border-radius: 999px;
-  background: rgba(11, 31, 58, 0.78);
-  backdrop-filter: blur(4px);
-  font-size: var(--fs-caption);
-  font-weight: 600;
-  color: #fff;
-}
-
-.templateBannerBody {
-  padding: 22px 24px 26px;
 }
 
 .templateBannerTitle {
   margin: 0 0 10px;
   font-size: var(--fs-h4);
-  font-weight: 700;
-  color: var(--c-ink);
 }
 
 .templateBannerText {
   margin: 0;
   font-size: var(--fs-body-sm);
-  line-height: 1.7;
-  color: var(--c-muted);
+  line-height: 1.75;
+  color: var(--c-text);
 }
 
 @media (max-width: 991.98px) { /* --bp-lg */
   .templateBannerGrid {
     grid-template-columns: minmax(0, 1fr);
     max-width: 40rem;
-    margin: 0 auto;
-  }
-}
-
-@media (hover: none) {
-  .templateBannerContainer:hover {
-    transform: none;
   }
 }
