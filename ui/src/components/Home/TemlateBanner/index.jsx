@@ -1,26 +1,21 @@
 import React from "react";
-import {Typography } from "antd";
 
 import "./styles.css";
 
+/* One "impact" story on the home page: a photo card with its title and text. */
 const TemplateBanner = ({ props }) => {
-  const { image, title, content, bgColor } = props;
+  const { image, title, content, tag } = props;
   return (
-    <div
-      className="templateBannerContainer"
-      style={{ backgroundColor: bgColor }}
-    >
+    <article className="templateBannerContainer">
       <div className="templateBannerImageContainer">
-        <img className="templateBannerImage" src={image} alt="templateBanner" />
+        <img className="templateBannerImage" src={image} alt="" />
+        {tag && <span className="templateBannerTag">{tag}</span>}
       </div>
-      <div className="templateBannerTitle">
-        <Typography style={{ color: "#0E2959" }}>{title}</Typography>
+      <div className="templateBannerBody">
+        <h3 className="templateBannerTitle">{title}</h3>
+        <p className="templateBannerText">{content}</p>
       </div>
-
-      <div className="templateBannerText">
-        <Typography style={{ color: "#0E2959" }}>{content}</Typography>
-      </div>
-    </div>
+    </article>
   );
 };
 

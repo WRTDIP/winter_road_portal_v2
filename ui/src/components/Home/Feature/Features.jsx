@@ -1,21 +1,23 @@
 import React from "react";
-import {Typography}  from "antd";
-import {Container,Row,Col} from 'react-bootstrap';
 import FeatureItem from "./FeatureItem";
 import "./styles.css";
 
 const Feature = ({ props }) => {
   return (
-    <Container className="featureContainer" fluid>
-      <Row className="d-flex justify-content-center featureRow">
-        <Typography className="featurePageTitleText ">Features</Typography>
-        {props.map((content) => (
-          <Col xs={12} md={6} lg="3" className="d-flex justify-content-center">
+    <section className="featureContainer ui-section ui-section--tint">
+      <div className="ui-container">
+        <div className="ui-section-head">
+          <span className="ui-eyebrow">What you can do here</span>
+          <h2>Portal features</h2>
+          <p>Maps, studies and field observations for the people who plan, build and travel northern winter roads.</p>
+        </div>
+        <div className="featureRow">
+          {props.map((content) => (
             <FeatureItem key={content.id} props={content} />
-          </Col>
-        ))}
-      </Row>
-    </Container>
+          ))}
+        </div>
+      </div>
+    </section>
   );
 };
 

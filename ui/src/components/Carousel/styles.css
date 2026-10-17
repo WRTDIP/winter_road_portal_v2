@@ -1,7 +1,51 @@
-.carousel-image{
-    height:62vh;
+.carousel-frame {
+  position: relative;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.35), 0 0 0 1px rgba(255, 255, 255, 0.12);
 }
 
-.carousel{
-    margin-left: 5vh;
+.carousel-image {
+  display: block;
+  width: 100%;
+  aspect-ratio: 994 / 521;
+  object-fit: cover;
+}
+
+.carousel-frame .carousel-indicators {
+  margin-bottom: 14px;
+}
+
+.carousel-frame .carousel-indicators [data-bs-target] {
+  width: 24px;
+  height: 4px;
+  border: 0;
+  border-radius: 2px;
+  opacity: 0.5;
+}
+
+.carousel-frame .carousel-indicators .active {
+  width: 36px;
+  opacity: 1;
+}
+
+.carousel-frame .carousel-control-prev,
+.carousel-frame .carousel-control-next {
+  width: 56px;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.carousel-frame:hover .carousel-control-prev,
+.carousel-frame:hover .carousel-control-next,
+.carousel-frame .carousel-control-prev:focus-visible,
+.carousel-frame .carousel-control-next:focus-visible {
+  opacity: 0.9;
+}
+
+@media (hover: none) {
+  .carousel-frame .carousel-control-prev,
+  .carousel-frame .carousel-control-next {
+    opacity: 0.8;
+  }
 }
