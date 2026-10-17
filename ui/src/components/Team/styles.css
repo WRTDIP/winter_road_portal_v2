@@ -1,20 +1,61 @@
-.teamContainer{
-    margin-bottom: 6vh;
+.teamContainer {
+  margin-bottom: 32px;
+  padding: clamp(1.5rem, 1rem + 2vw, 2.5rem);
+  border: 1px solid var(--c-border);
+  border-radius: var(--radius-lg);
+  background: var(--c-surface);
+  box-shadow: var(--shadow-sm);
 }
 
-.teamLineBreak{
-  border-bottom: 0.8vh solid rgb(70, 178, 227);
-  width: 10%;
-  margin-bottom: 4vh;
+.teamContainer:last-child {
+  margin-bottom: 0;
 }
 
-.teamTitle{
-    display: flex;
-    justify-content: center;
-    flex-direction: column;
-    font-family: 'Roboto', sans-serif;
-    color: rgb(56, 80, 126);
-    font-size: var(--fs-h1);
-    padding: 3vh;
-    padding-left:0 ;
+.teamHeader {
+  margin-bottom: 28px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid var(--c-border);
+}
+
+.teamTitle {
+  margin: 0;
+  font-size: var(--fs-h3);
+  font-weight: 700;
+  color: var(--c-ink);
+}
+
+.teamInstitution {
+  margin: 4px 0 0;
+  font-size: var(--fs-body-sm);
+  font-weight: 600;
+  color: var(--c-ice-600);
+}
+
+.teamDescription {
+  max-width: 62rem;
+  margin: 14px 0 0;
+  font-size: var(--fs-body-sm);
+  line-height: 1.75;
+  color: var(--c-muted);
+}
+
+.teamGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+@media (max-width: 991.98px) { /* --bp-lg */
+  .teamGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 575.98px) { /* --bp-sm */
+  .teamGrid {
+    grid-template-columns: minmax(0, 1fr);
+  }
 }
