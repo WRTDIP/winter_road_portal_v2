@@ -24,8 +24,47 @@
   /* Reserved for CoverBanner. Reaches the original 100px only past ~1800px. */
   --fs-display: clamp(2.5rem, 1.6rem + 4.2vw, 6.25rem);
 
+  /* Typefaces. Display for headings, sans for everything else. */
+  --font-display: "Plus Jakarta Sans", "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-sans: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+
+  /* Colour. A deep polar navy for chrome and headings, a glacier teal accent
+     for links, focus and active states, and a cool neutral ramp. */
+  --c-navy-950: #071528;
+  --c-navy-900: #0b1f3a;
+  --c-navy-800: #12305a;
+  --c-navy-700: #1b4275;
+  --c-navy-600: #275694;
+  --c-ice-600: #0e7c99;
+  --c-ice-500: #1595b5;
+  --c-ice-300: #7fd0e3;
+  --c-ice-100: #e3f4f8;
+  --c-ice-50: #f2fafc;
+  --c-ink: #0f1e33;
+  --c-text: #2b3a4e;
+  --c-muted: #5d6b7e;
+  --c-border: #dfe6ee;
+  --c-bg: #f5f8fb;
+  --c-surface: #ffffff;
+
+  --c-primary: var(--c-navy-700);
+  --c-primary-hover: var(--c-navy-800);
+  --c-accent: var(--c-ice-500);
+
+  /* Shape and depth. */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 18px;
+  --shadow-sm: 0 1px 2px rgba(11, 31, 58, 0.06), 0 1px 3px rgba(11, 31, 58, 0.06);
+  --shadow-md: 0 4px 12px rgba(11, 31, 58, 0.08), 0 2px 4px rgba(11, 31, 58, 0.05);
+  --shadow-lg: 0 18px 40px rgba(11, 31, 58, 0.14), 0 4px 10px rgba(11, 31, 58, 0.06);
+
+  /* Layout. */
+  --container: 1200px;
+  --section-y: clamp(3rem, 2rem + 4vw, 6rem);
+
   /* Chrome heights, needed by fixed shells that subtract them. */
-  /* antd Layout.Header, measured: constant across widths. */
+  /* The portal header: constant across widths. */
   --nav-h: 64px;
 
   /* Breakpoint canon, for reference only -- CSS cannot use a var in a media

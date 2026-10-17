@@ -2,6 +2,175 @@
    kits. Component stylesheets still win over this file -- it is a floor, not a
    theme. */
 
+/* --- typography and surface --------------------------------------------- */
+
+body {
+  font-family: var(--font-sans);
+  color: var(--c-text);
+  background: var(--c-surface);
+  line-height: 1.6;
+  text-rendering: optimizeLegibility;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-display);
+  color: var(--c-ink);
+  letter-spacing: -0.015em;
+  line-height: 1.2;
+}
+
+a {
+  color: var(--c-ice-600);
+  text-underline-offset: 3px;
+}
+
+a:hover {
+  color: var(--c-navy-700);
+}
+
+:focus-visible {
+  outline: 3px solid var(--c-ice-300);
+  outline-offset: 2px;
+}
+
+/* Bootstrap's primary buttons and form focus, brought onto the palette. */
+.btn-primary {
+  --bs-btn-bg: var(--c-primary);
+  --bs-btn-border-color: var(--c-primary);
+  --bs-btn-hover-bg: var(--c-primary-hover);
+  --bs-btn-hover-border-color: var(--c-primary-hover);
+  --bs-btn-active-bg: var(--c-navy-900);
+  --bs-btn-active-border-color: var(--c-navy-900);
+  --bs-btn-disabled-bg: var(--c-primary);
+  --bs-btn-disabled-border-color: var(--c-primary);
+}
+
+.btn-outline-primary {
+  --bs-btn-color: var(--c-primary);
+  --bs-btn-border-color: var(--c-primary);
+  --bs-btn-hover-bg: var(--c-primary);
+  --bs-btn-hover-border-color: var(--c-primary);
+  --bs-btn-active-bg: var(--c-primary-hover);
+  --bs-btn-active-border-color: var(--c-primary-hover);
+}
+
+.btn {
+  border-radius: var(--radius-sm);
+  font-weight: 600;
+}
+
+.form-control:focus,
+.form-select:focus {
+  border-color: var(--c-ice-500);
+  box-shadow: 0 0 0 0.2rem rgba(21, 149, 181, 0.2);
+}
+
+/* --- shared building blocks ---------------------------------------------- */
+
+.ui-container {
+  width: 100%;
+  max-width: var(--container);
+  margin: 0 auto;
+  padding-left: max(1.25rem, env(safe-area-inset-left));
+  padding-right: max(1.25rem, env(safe-area-inset-right));
+}
+
+.ui-section {
+  padding: var(--section-y) 0;
+}
+
+.ui-section--tint {
+  background: var(--c-bg);
+}
+
+.ui-eyebrow {
+  display: inline-block;
+  margin-bottom: 0.75rem;
+  font-family: var(--font-sans);
+  font-size: var(--fs-caption);
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--c-ice-600);
+}
+
+.ui-section-head {
+  max-width: 44rem;
+  margin: 0 auto clamp(2rem, 1.5rem + 2vw, 3rem);
+  text-align: center;
+}
+
+.ui-section-head h2 {
+  margin: 0 0 0.75rem;
+  font-size: var(--fs-h2);
+  font-weight: 700;
+}
+
+.ui-section-head p {
+  margin: 0;
+  font-size: var(--fs-lead);
+  color: var(--c-muted);
+}
+
+.ui-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  min-height: 48px;
+  padding: 0.75rem 1.4rem;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  font-size: var(--fs-body);
+  font-weight: 600;
+  line-height: 1.2;
+  text-decoration: none;
+  transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease,
+    transform 0.15s ease, box-shadow 0.15s ease;
+  touch-action: manipulation;
+}
+
+.ui-btn--primary {
+  background: var(--c-accent);
+  color: #fff;
+  box-shadow: 0 8px 20px rgba(21, 149, 181, 0.35);
+}
+
+.ui-btn--primary:hover,
+.ui-btn--primary:focus-visible {
+  background: var(--c-ice-600);
+  color: #fff;
+  transform: translateY(-1px);
+}
+
+.ui-btn--ghost {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.45);
+  color: #fff;
+}
+
+.ui-btn--ghost:hover,
+.ui-btn--ghost:focus-visible {
+  background: rgba(255, 255, 255, 0.18);
+  border-color: #fff;
+  color: #fff;
+}
+
+@media (hover: none) {
+  .ui-btn:hover {
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+  }
+}
+
 /* --- overflow guards ------------------------------------------------------ */
 
 /* min-width:0 -- the flex/grid overflow guard. A flex item defaults to
