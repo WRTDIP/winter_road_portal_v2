@@ -1,51 +1,86 @@
-.welcomeContainer{
-    background-color: rgb(54, 77, 119);
-    min-height: calc(94 * var(--dvh));
-    padding: 6%;
+.welcomeContainer {
+  position: relative;
+  overflow: hidden;
+  background:
+    radial-gradient(60rem 30rem at 85% 10%, rgba(21, 149, 181, 0.28), transparent 60%),
+    linear-gradient(160deg, var(--c-navy-900) 0%, var(--c-navy-800) 55%, var(--c-navy-700) 100%);
+  color: #fff;
 }
 
-.welcomeTitle{
-    color:  white;
-    font-family: 'Roboto', sans-serif;
-    font-size: var(--fs-h1);
-}
-.welcomeText{
-    font-size: var(--fs-lead);
-    color: white;
-    font-family: 'Roboto', sans-serif;
+/* A faint photo texture under the gradient, kept off the text column. */
+.welcomeContainer::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: url("../../../assets/winterBanner.jpg") center / cover no-repeat;
+  opacity: 0.12;
+  mix-blend-mode: screen;
+  pointer-events: none;
 }
 
-.welcomeCarousel{
-    height: 80%;
+.welcomeGrid {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
+  gap: clamp(2rem, 1rem + 4vw, 4.5rem);
+  align-items: center;
+  min-height: min(calc(86 * var(--dvh) - var(--nav-h)), 720px);
+  padding-top: clamp(3rem, 2rem + 4vw, 5.5rem);
+  padding-bottom: clamp(3rem, 2rem + 4vw, 5.5rem);
+}
+
+.welcomeEyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 1.25rem;
+  padding: 6px 14px;
+  border: 1px solid rgba(127, 208, 227, 0.4);
+  border-radius: 999px;
+  background: rgba(127, 208, 227, 0.1);
+  font-size: var(--fs-caption);
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  color: var(--c-ice-300);
+}
+
+.welcomeTitle {
+  margin: 0 0 1.25rem;
+  font-size: var(--fs-hero);
+  font-weight: 800;
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+  color: #fff;
+}
+
+.welcomeText {
+  max-width: 36rem;
+  margin: 0;
+  font-size: var(--fs-lead);
+  line-height: 1.65;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.welcomeActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 2rem;
+}
+
+.welcomeCarousel {
+  min-width: 0;
 }
 
 @media (max-width: 991.98px) { /* --bp-lg */
-    .welcomeContainer {
-        min-height: 0;
-        padding: 32px 16px;
-    }
+  .welcomeGrid {
+    grid-template-columns: minmax(0, 1fr);
+    min-height: 0;
+  }
+}
 
-    .welcomeContainer > .row {
-        row-gap: 24px;
-    }
-
-    .welcomeCarousel {
-        min-width: 0;
-        height: auto;
-    }
-
-    .welcomeCarousel > .carousel {
-        width: 100%;
-        max-width: 100%;
-        margin: 0;
-        padding: 0;
-        height: auto !important;
-    }
-
-    .welcomeCarousel .carousel-image {
-        width: 100%;
-        height: auto;
-        aspect-ratio: 4 / 3;
-        object-fit: cover;
-    }
+@media (max-width: 575.98px) { /* --bp-sm */
+  .welcomeActions .ui-btn {
+    flex: 1 1 100%;
+  }
 }

@@ -1,24 +1,24 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import {Button,Card,Col} from "react-bootstrap";
+import { ArrowRightOutlined } from "@ant-design/icons";
 
 import "./styles.css";
 
+/* A feature card. The whole card is the link to the page it describes. */
 const FeatureItem = ({ props }) => {
-  const { image, title, content, color } = props;
+  const { image, title, content, link, cta = "Learn more" } = props;
   return (
-    <Card
-      className="text-center border-0"
-      style={{ width: "15rem", flex: "1" , backgroundColor: "rgb(244, 245, 250)"}}
-    >
-      <Card.Img className="cardImage" variant="top" src={image} />
-      <Card.Body>
-        <Card.Title className="featureBannerTitle" style={{ color: color }}>
-          {title}</Card.Title>
-        <Card.Text className="featureBannerText" style={{ color: color }}
-        >{content}</Card.Text>
-      </Card.Body>
-    </Card>
+    <Link to={link} className="featureCard u-nohover-move">
+      <span className="featureCard__icon">
+        <img className="cardImage" src={image} alt="" />
+      </span>
+      <h3 className="featureBannerTitle">{title}</h3>
+      <p className="featureBannerText">{content}</p>
+      <span className="featureCard__cta">
+        {cta}
+        <ArrowRightOutlined aria-hidden="true" />
+      </span>
+    </Link>
   );
 };
 
