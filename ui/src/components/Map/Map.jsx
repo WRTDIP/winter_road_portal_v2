@@ -2330,7 +2330,12 @@ function WeatherMap() {
       <Modal
         show={modalIsOpen}
         onHide={closeModal}
-        centered={!modalEnlarge}
+        centered={isMobile && !modalEnlarge}
+        // On wider screens the panel docks beside the map instead of covering
+        // it, so the map stays clickable and another community can be picked.
+        backdrop={isMobile}
+        enforceFocus={isMobile}
+        className={isMobile ? undefined : "wrtdip-map-modal-shell"}
         dialogClassName={
           modalEnlarge ? "wrtdip-map-modal wrtdip-map-modal--enlarged" : "wrtdip-map-modal"
         }
