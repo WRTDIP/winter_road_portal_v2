@@ -1,20 +1,17 @@
 import React from "react";
-import { Grid, Typography } from "antd";
-import coverBannerBg from "../../../assets/winterBanner.jpg";
-import Card from "react-bootstrap/Card";
 import "./styles.css";
 
-const CoverBanner = ({title}) => {
+/* The page header used by every inner page: a photo band under a navy wash,
+   with an optional eyebrow and one-line summary under the title. */
+const CoverBanner = ({ title, subtitle, eyebrow }) => {
   return (
-    <Card className="text-white coverBanner">
-      <div className="coverImageBanner"></div>
-      {/* <Card.Img src={coverBannerBg} alt="Card image" className="coverImage"/> */}
-      <Card.ImgOverlay className="coverDiv">
-        <div>
-          <h1 className="coverTitle">{title}</h1>
-        </div>
-      </Card.ImgOverlay>
-    </Card>
+    <header className="coverBanner">
+      <div className="ui-container coverBanner__inner">
+        {eyebrow && <span className="coverBanner__eyebrow">{eyebrow}</span>}
+        <h1 className="coverTitle">{title}</h1>
+        {subtitle && <p className="coverBanner__subtitle">{subtitle}</p>}
+      </div>
+    </header>
   );
 };
 

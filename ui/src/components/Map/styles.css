@@ -2,7 +2,8 @@
   position: relative;
   width: 100%;
   min-width: 0;
-  height: calc(84 * var(--svh));
+  /* The map page has no footer: fill everything under the header. */
+  height: calc(100 * var(--svh) - var(--nav-h));
   border: none;
 }
 
