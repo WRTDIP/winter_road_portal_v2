@@ -143,7 +143,7 @@
   align-items: flex-start;
   gap: 8px;
   padding: 10px 12px;
-  background: linear-gradient(135deg, var(--c-navy-800) 0%, var(--c-navy-600) 100%);
+  background: var(--c-navy-800);
   color: #ffffff;
   flex-shrink: 0;
 }
@@ -241,7 +241,7 @@
   justify-content: space-between;
   width: 100%;
   padding: 10px 14px;
-  background: linear-gradient(135deg, #e8f4fd, #f0f7ff);
+  background: var(--c-ice-50);
   border: none;
   border-bottom: 1px solid #d3e6f4;
   cursor: pointer;
@@ -418,7 +418,7 @@
 .wrtdip-map-modal-shell .wrtdip-map-modal__header {
   flex-wrap: nowrap;
   padding: 16px 16px 16px 20px;
-  background: linear-gradient(135deg, var(--c-navy-900) 0%, var(--c-navy-700) 100%);
+  background: var(--c-navy-900);
 }
 
 .wrtdip-map-modal-shell .wrtdip-map-modal__heading {
@@ -447,7 +447,7 @@
 }
 
 .wrtdip-map-modal__header {
-  background: linear-gradient(135deg, var(--c-navy-800) 0%, var(--c-navy-600) 100%);
+  background: var(--c-navy-800);
   color: #fff;
   padding: 14px 18px;
   border-bottom: none;
@@ -588,7 +588,7 @@
 }
 
 .wrtdip-map-modal__data-badge {
-  background: linear-gradient(135deg, #e8f4fd, #f0f7ff);
+  background: var(--c-ice-50);
   border: 1px solid #b6d4e8;
   border-radius: 8px;
   padding: 10px 14px;
@@ -774,14 +774,14 @@
 }
 
 .wrtdip-toggle-btn--active {
-  background: linear-gradient(135deg, var(--c-navy-600) 0%, var(--c-navy-700) 100%);
+  background: var(--c-navy-600);
   border-color: var(--c-navy-700);
   color: #fff;
   box-shadow: 0 2px 8px rgba(37, 99, 235, 0.3);
 }
 
 .wrtdip-toggle-btn--active:hover {
-  background: linear-gradient(135deg, var(--c-navy-700) 0%, var(--c-navy-700) 100%);
+  background: var(--c-navy-700);
   border-color: var(--c-navy-700);
   color: #fff;
 }
@@ -819,7 +819,7 @@
 .wrtdip-adv-panel {
   margin-top: 0.75rem;
   padding: 16px;
-  background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+  background: var(--c-ice-50);
   border: 1px solid #bfdbfe;
   border-radius: 10px;
   animation: wrtdip-calcInfoSlideIn 0.2s ease-out;
@@ -915,7 +915,7 @@
 .wrtdip-calc-info__body {
   margin-top: 0.75rem;
   padding: 14px 16px;
-  background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+  background: var(--c-ice-50);
   border: 1px solid #bae6fd;
   border-radius: 8px;
   animation: wrtdip-calcInfoSlideIn 0.2s ease-out;
@@ -1155,7 +1155,7 @@
   justify-content: space-between;
   gap: 8px;
   padding: 10px 12px;
-  background: linear-gradient(135deg, var(--c-navy-800) 0%, var(--c-navy-600) 100%);
+  background: var(--c-navy-800);
   color: #ffffff;
   flex-shrink: 0;
 }
@@ -1216,7 +1216,7 @@
   gap: 10px;
   padding: 10px 12px;
   margin: 8px 8px 4px;
-  background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+  background: var(--c-ice-50);
   border: 1px solid #bfdbfe;
   border-radius: 8px;
   cursor: pointer;
@@ -1397,7 +1397,7 @@
 }
 
 .wrtdip-basemap-panel__option.is-active {
-  background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+  background: var(--c-ice-50);
   border-color: #bfdbfe;
 }
 
@@ -1471,7 +1471,7 @@
 }
 
 .wrtdip-section-switch__btn--active {
-  background: linear-gradient(135deg, var(--c-navy-600) 0%, var(--c-navy-700) 100%);
+  background: var(--c-navy-600);
   color: #fff;
   box-shadow: 0 2px 6px rgba(37, 99, 235, 0.28);
 }
@@ -1539,7 +1539,7 @@
 }
 
 .wrtdip-precip-resolution__btn--active {
-  background: linear-gradient(135deg, var(--c-navy-600) 0%, var(--c-navy-700) 100%);
+  background: var(--c-navy-600);
   border-color: var(--c-navy-700);
   color: #fff;
   box-shadow: 0 2px 6px rgba(37, 99, 235, 0.28);
@@ -1621,7 +1621,7 @@
 .wrtdip-trend-panel {
   margin-top: 16px;
   padding: 14px 14px 12px;
-  background: linear-gradient(180deg, #f8fafc 0%, #ffffff 60%);
+  background: var(--c-bg);
   border: 1px solid #e2e8f0;
   border-radius: 12px;
 }
@@ -1709,14 +1709,14 @@
 }
 
 .wrtdip-trend-adv-btn--active {
-  background: linear-gradient(135deg, var(--c-navy-600) 0%, var(--c-navy-700) 100%);
+  background: var(--c-navy-600);
   border-color: var(--c-navy-700);
   color: #fff;
   box-shadow: 0 2px 6px rgba(37, 99, 235, 0.28);
 }
 
 .wrtdip-trend-adv-btn--active:hover {
-  background: linear-gradient(135deg, var(--c-navy-700) 0%, var(--c-navy-700) 100%);
+  background: var(--c-navy-700);
   border-color: var(--c-navy-700);
   color: #fff;
 }
