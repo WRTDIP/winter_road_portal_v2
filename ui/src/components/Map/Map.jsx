@@ -2638,8 +2638,8 @@ function WeatherMap() {
                     label="Months"
                   />
                   <Typography variant="caption" sx={{ display: "block", textAlign: "center", mt: -0.5 }}>
-                    {new Date(2000, precipMonthRange[0] - 1).toLocaleString("default", { month: "long" })}
-                    {precipMonthRange[0] !== precipMonthRange[1] && ` – ${new Date(2000, precipMonthRange[1] - 1).toLocaleString("default", { month: "long" })}`}
+                    {new Date(2000, precipMonthRange[0] - 1).toLocaleString("en-CA", { month: "long" })}
+                    {precipMonthRange[0] !== precipMonthRange[1] && ` – ${new Date(2000, precipMonthRange[1] - 1).toLocaleString("en-CA", { month: "long" })}`}
                   </Typography>
                 </div>
 
@@ -2726,8 +2726,8 @@ function WeatherMap() {
                     label="Months"
                   />
                   <Typography variant="caption" sx={{ display: "block", textAlign: "center", mt: -0.5 }}>
-                    {new Date(2000, snowMonthRange[0] - 1).toLocaleString("default", { month: "long" })}
-                    {snowMonthRange[0] !== snowMonthRange[1] && ` – ${new Date(2000, snowMonthRange[1] - 1).toLocaleString("default", { month: "long" })}`}
+                    {new Date(2000, snowMonthRange[0] - 1).toLocaleString("en-CA", { month: "long" })}
+                    {snowMonthRange[0] !== snowMonthRange[1] && ` – ${new Date(2000, snowMonthRange[1] - 1).toLocaleString("en-CA", { month: "long" })}`}
                   </Typography>
                 </div>
                 <div className="wrtdip-map-modal__chart">
@@ -2808,8 +2808,8 @@ function WeatherMap() {
                 label="Months"
               />
               <Typography variant="caption" sx={{ display: "block", textAlign: "center", mt: -0.5 }}>
-                {new Date(2000, tempMonthRange[0] - 1).toLocaleString("default", { month: "long" })}
-                {tempMonthRange[0] !== tempMonthRange[1] && ` – ${new Date(2000, tempMonthRange[1] - 1).toLocaleString("default", { month: "long" })}`}
+                {new Date(2000, tempMonthRange[0] - 1).toLocaleString("en-CA", { month: "long" })}
+                {tempMonthRange[0] !== tempMonthRange[1] && ` – ${new Date(2000, tempMonthRange[1] - 1).toLocaleString("en-CA", { month: "long" })}`}
               </Typography>
             </div>
             <div className="wrtdip-map-modal__chart">
