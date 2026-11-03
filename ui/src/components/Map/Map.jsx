@@ -2697,6 +2697,7 @@ function WeatherMap() {
                         ]}
                         height={240}
                         margin={{ left: 50, right: 10, top: 10, bottom: 40 }}
+                        slotProps={{ legend: { hidden: true } }}
                         grid={{ horizontal: true }}
                       />
                     </div>
@@ -2779,6 +2780,7 @@ function WeatherMap() {
                         ]}
                         height={240}
                         margin={{ left: 50, right: 10, top: 10, bottom: 40 }}
+                        slotProps={{ legend: { hidden: true } }}
                         grid={{ horizontal: true }}
                       />
                     </div>
@@ -2861,6 +2863,7 @@ function WeatherMap() {
                     ]}
                     height={240}
                     margin={{ left: 50, right: 10, top: 10, bottom: 40 }}
+                    slotProps={{ legend: { hidden: true } }}
                     grid={{ horizontal: true }}
                   />
                 </div>
