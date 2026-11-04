@@ -33,6 +33,7 @@ import KeyboardDoubleArrowRightIcon from "@mui/icons-material/KeyboardDoubleArro
 import IconButton from "@mui/material/IconButton"
 import ForecastPanel from "./ForecastPanel.jsx"
 import RoadFddCorrelation from "./RoadFddCorrelation.jsx"
+import { ROAD_FDD_LAYER_TITLE, ROAD_FDD_LAYER_URLS, roadFddRenderer } from "./roadFddRenderer.js"
 import YearRangeSlider from "../YearRangeSlider/YearRangeSlider.jsx"
 import usePinchZoomYears from "../../hooks/usePinchZoomYears.js"
 
@@ -2954,6 +2955,7 @@ function WeatherMap() {
         "esri/portal/Portal",
         "esri/identity/OAuthInfo",
         "esri/layers/MapImageLayer",
+        "esri/layers/GroupLayer",
       ],
       {
         css: true,
@@ -2982,6 +2984,7 @@ function WeatherMap() {
         Portal,
         OAuthInfo,
         MapImageLayer,
+        GroupLayer,
       ]) => {
         // esriConfig.apiKey =
         //   "AAPKd7da5e4a967540cfb66765bf918280a4t9Et4goGp4RqyeGZkQfG9yVBkkmOC1j35X1YLmsZ1nqucmvVp0j2nXbwF5wP3XRw"
@@ -3190,6 +3193,25 @@ function WeatherMap() {
   featureLayer.title = layer.title;
   map.add(featureLayer);
   });
+
+  // Optional overlay: winter roads coloured by how closely their opening date
+  // tracks early-winter FDD. Popups stay off so clicks reach the road below.
+  map.add(
+    new GroupLayer({
+      title: ROAD_FDD_LAYER_TITLE,
+      visible: false,
+      layers: ROAD_FDD_LAYER_URLS.map(
+        (url, i) =>
+          new FeatureLayer({
+            url,
+            outFields: ["STREET"],
+            popupEnabled: false,
+            renderer: roadFddRenderer,
+            legendEnabled: i === 0,
+          })
+      ),
+    })
+  );
 
   // Create a custom layer list panel (replaces the default ArcGIS LayerList).
   // It's wrapped in an Expand widget so it occupies the exact same UI slot.

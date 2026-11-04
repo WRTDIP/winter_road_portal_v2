@@ -111,6 +111,16 @@
   overflow: hidden;
 }
 
+/* The FDD link overlay is the only group layer: stack its legend and hide
+   the inner service title, which repeats the group title. */
+#legend-container .esri-legend__group-layer {
+  flex-direction: column;
+}
+
+#legend-container .esri-legend__group-layer-child > .esri-legend__service-label {
+  display: none;
+}
+
 /* ===========================================================
    Custom feature popup (replaces ArcGIS native popup)
    =========================================================== */
