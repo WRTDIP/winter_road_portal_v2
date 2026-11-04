@@ -2196,3 +2196,52 @@
     min-height: 44px;
   }
 }
+
+/* Early-winter FDD vs opening date section of the road popup. */
+.wrtdip-road-fdd__summary {
+  margin: 0 0 10px;
+  color: var(--c-navy-800);
+}
+
+.wrtdip-road-fdd__stats {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
+  margin: 0 0 8px;
+}
+
+.wrtdip-road-fdd__stats > div {
+  padding: 6px 8px;
+  border: 1px solid #d3e6f4;
+  border-radius: 6px;
+  background: var(--c-ice-50);
+}
+
+.wrtdip-road-fdd__stats dt {
+  font-size: 11px;
+  font-weight: 500;
+  color: #64748b;
+}
+
+.wrtdip-road-fdd__stats dd {
+  margin: 0;
+  font-weight: 600;
+  color: #0f172a;
+  font-variant-numeric: tabular-nums;
+}
+
+.wrtdip-road-fdd__chart {
+  width: 100%;
+}
+
+.wrtdip-road-fdd__note {
+  margin: 8px 0 0;
+  font-size: 12px;
+  color: #64748b;
+}
+
+@media (max-width: 575px) {
+  .wrtdip-road-fdd__stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}

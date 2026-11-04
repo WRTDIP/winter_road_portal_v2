@@ -32,6 +32,7 @@ import KeyboardDoubleArrowLeftIcon from "@mui/icons-material/KeyboardDoubleArrow
 import KeyboardDoubleArrowRightIcon from "@mui/icons-material/KeyboardDoubleArrowRight"
 import IconButton from "@mui/material/IconButton"
 import ForecastPanel from "./ForecastPanel.jsx"
+import RoadFddCorrelation from "./RoadFddCorrelation.jsx"
 import YearRangeSlider from "../YearRangeSlider/YearRangeSlider.jsx"
 import usePinchZoomYears from "../../hooks/usePinchZoomYears.js"
 
@@ -381,6 +382,8 @@ function WeatherMap() {
   const [roadStats, setRoadStats] = useState(null) // backend payload
   const [roadStatsLoading, setRoadStatsLoading] = useState(false)
   const [roadStatsCollapsed, setRoadStatsCollapsed] = useState(false)
+  // Early-winter FDD vs opening date section of the road popup.
+  const [roadFddCollapsed, setRoadFddCollapsed] = useState(false)
   // Whether the full numbers table inside the stats section is shown.
   const [roadStatsDetail, setRoadStatsDetail] = useState(false)
   // FDD chart state
@@ -2324,6 +2327,24 @@ function WeatherMap() {
                 {!roadStatsCollapsed && (
                   <div className="wrtdip-popup-section__content">
                     {renderRoadStatsSection()}
+                  </div>
+                )}
+              </div>
+              <div className="wrtdip-popup-section">
+                <button
+                  type="button"
+                  className="wrtdip-popup-section__header"
+                  onClick={() => setRoadFddCollapsed((c) => !c)}
+                  aria-expanded={!roadFddCollapsed}
+                >
+                  <span className="wrtdip-popup-section__title">Early-Winter FDD vs Opening Date</span>
+                  <span className={`wrtdip-popup-section__caret${roadFddCollapsed ? "" : " wrtdip-popup-section__caret--open"}`}>
+                    ▾
+                  </span>
+                </button>
+                {!roadFddCollapsed && (
+                  <div className="wrtdip-popup-section__content">
+                    <RoadFddCorrelation roadName={featurePopup.title} height={enlarged ? 420 : 320} />
                   </div>
                 )}
               </div>
