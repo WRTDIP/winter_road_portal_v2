@@ -728,8 +728,29 @@ function WeatherMap() {
       },
     ]
 
+    // Drawn as HTML rather than the chart's SVG legend: the SVG legend has a
+    // fixed height, so on a phone its items wrapped onto a second row that
+    // overlapped the plot. Points and trends also get distinct markers here.
+    const legendItems = [
+      { label: "Opening (freeze-up)", color: OPEN_COLOR, kind: "point" },
+      { label: "Opening trend", color: OPEN_COLOR, kind: "trend" },
+      { label: "Closing (thaw)", color: CLOSE_COLOR, kind: "point" },
+      { label: "Closing trend", color: CLOSE_COLOR, kind: "trend" },
+    ]
+
     return (
       <div style={{ width: "100%" }}>
+        <div className="wrtdip-trend-chart-legend">
+          {legendItems.map((item) => (
+            <span key={item.label} className="wrtdip-trend-chart-legend__item">
+              <span
+                className={`wrtdip-trend-chart-legend__mark wrtdip-trend-chart-legend__mark--${item.kind}`}
+                style={{ borderColor: item.color }}
+              />
+              {item.label}
+            </span>
+          ))}
+        </div>
         <LineChart
           height={height}
           series={series}
@@ -749,19 +770,10 @@ function WeatherMap() {
               valueFormatter: (v) => dosToLabel(v),
             },
           ]}
-          margin={{ left: 78, right: 18, top: 48, bottom: 50 }}
+          margin={{ left: 78, right: 18, top: 12, bottom: 50 }}
           grid={{ horizontal: true }}
           slotProps={{
-            legend: {
-              direction: "row",
-              position: { vertical: "top", horizontal: "middle" },
-              padding: 0,
-              itemMarkWidth: 14,
-              itemMarkHeight: 3,
-              markGap: 5,
-              itemGap: 18,
-              labelStyle: { fontSize: 12 },
-            },
+            legend: { hidden: true },
             // The chart's hover tooltip renders in a Popper. Its default
             // z-index sits below the road-closure popup (5000/6000), so lift
             // it above the popup to keep the datapoint tooltip on top.

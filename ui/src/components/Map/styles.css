@@ -2192,3 +2192,42 @@
     min-height: 44px;
   }
 }
+
+/* Legend for the road open/close trend chart. Plain HTML so it wraps onto
+   extra rows on narrow screens instead of overlapping the plot. */
+.wrtdip-trend-chart-legend {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 4px 14px;
+  margin-bottom: 4px;
+  font-size: 12px;
+  color: #334155;
+}
+
+.wrtdip-trend-chart-legend__item {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+}
+
+.wrtdip-trend-chart-legend__mark {
+  flex: 0 0 auto;
+  border-style: solid;
+}
+
+.wrtdip-trend-chart-legend__mark--point {
+  width: 10px;
+  height: 10px;
+  border-width: 2px;
+  border-radius: 50%;
+  background: #ffffff;
+}
+
+.wrtdip-trend-chart-legend__mark--trend {
+  width: 18px;
+  height: 0;
+  border-width: 2px 0 0;
+  border-top-style: dashed;
+}
