@@ -1,0 +1,1647 @@
+{
+  "generatedAt": "2026-11-04",
+  "source": "https://dev-moh.wramp.ca/python-api",
+  "fddPeriod": "October 1 to December 31 of the season's starting year",
+  "openDay": "days since August 1 of the season's starting year",
+  "units": "°C·days",
+  "maxDistanceKm": 150,
+  "roads": {
+    "Aklavik Ice Road": {
+      "status": "ok",
+      "closureName": "Aklavik Ice Road",
+      "station": {
+        "id": 41883,
+        "name": "INUVIK CLIMATE",
+        "distanceKm": 8
+      },
+      "n": 23,
+      "seasonRange": [
+        2003,
+        2025
+      ],
+      "spearman": {
+        "rho": -0.365,
+        "p": 0.0867
+      },
+      "pearson": {
+        "r": -0.461,
+        "p": 0.0268
+      },
+      "slopeDaysPer100Fdd": -2.06,
+      "intercept": 165.38,
+      "points": [
+        {
+          "season": 2003,
+          "fdd": 1411.6,
+          "openDay": 144
+        },
+        {
+          "season": 2004,
+          "fdd": 1744,
+          "openDay": 127
+        },
+        {
+          "season": 2005,
+          "fdd": 1420.7,
+          "openDay": 165
+        },
+        {
+          "season": 2006,
+          "fdd": 1273.7,
+          "openDay": 127
+        },
+        {
+          "season": 2007,
+          "fdd": 1437.9,
+          "openDay": 140
+        },
+        {
+          "season": 2008,
+          "fdd": 1461.6,
+          "openDay": 140
+        },
+        {
+          "season": 2009,
+          "fdd": 1379.8,
+          "openDay": 142
+        },
+        {
+          "season": 2010,
+          "fdd": 1396.6,
+          "openDay": 143
+        },
+        {
+          "season": 2011,
+          "fdd": 1448.4,
+          "openDay": 128
+        },
+        {
+          "season": 2012,
+          "fdd": 1496.3,
+          "openDay": 132
+        },
+        {
+          "season": 2013,
+          "fdd": 1176.5,
+          "openDay": 144
+        },
+        {
+          "season": 2014,
+          "fdd": 1335.6,
+          "openDay": 124
+        },
+        {
+          "season": 2015,
+          "fdd": 1317.3,
+          "openDay": 132
+        },
+        {
+          "season": 2016,
+          "fdd": 1344.9,
+          "openDay": 129
+        },
+        {
+          "season": 2017,
+          "fdd": 1078.1,
+          "openDay": 143
+        },
+        {
+          "season": 2018,
+          "fdd": 1219.3,
+          "openDay": 145
+        },
+        {
+          "season": 2019,
+          "fdd": 1373.6,
+          "openDay": 132
+        },
+        {
+          "season": 2020,
+          "fdd": 1349.1,
+          "openDay": 132
+        },
+        {
+          "season": 2021,
+          "fdd": 1326.8,
+          "openDay": 138
+        },
+        {
+          "season": 2022,
+          "fdd": 1273.3,
+          "openDay": 143
+        },
+        {
+          "season": 2023,
+          "fdd": 1005.9,
+          "openDay": 164
+        },
+        {
+          "season": 2024,
+          "fdd": 1329.9,
+          "openDay": 132
+        },
+        {
+          "season": 2025,
+          "fdd": 1178.4,
+          "openDay": 151
+        }
+      ]
+    },
+    "Aklavik to Gwich’in Wellness Camp": {
+      "status": "no-closure-records"
+    },
+    "Colville Lake Winter Road": {
+      "status": "ok",
+      "closureName": "Colville Lake Winter Road",
+      "station": {
+        "id": 10867,
+        "name": "COLVILLE LAKE",
+        "distanceKm": 0
+      },
+      "n": 19,
+      "seasonRange": [
+        2000,
+        2025
+      ],
+      "spearman": {
+        "rho": -0.286,
+        "p": 0.2351
+      },
+      "pearson": {
+        "r": 0.047,
+        "p": 0.849
+      },
+      "slopeDaysPer100Fdd": -1.13,
+      "intercept": 157.77,
+      "points": [
+        {
+          "season": 2000,
+          "fdd": 1656.5,
+          "openDay": 206
+        },
+        {
+          "season": 2001,
+          "fdd": 1354.2,
+          "openDay": 161
+        },
+        {
+          "season": 2002,
+          "fdd": 1020.4,
+          "openDay": 172
+        },
+        {
+          "season": 2003,
+          "fdd": 1370.7,
+          "openDay": 140
+        },
+        {
+          "season": 2004,
+          "fdd": 1774.5,
+          "openDay": 134
+        },
+        {
+          "season": 2005,
+          "fdd": 1281.9,
+          "openDay": 165
+        },
+        {
+          "season": 2006,
+          "fdd": 1286.8,
+          "openDay": 156
+        },
+        {
+          "season": 2007,
+          "fdd": 1368.1,
+          "openDay": 135
+        },
+        {
+          "season": 2008,
+          "fdd": 1345.3,
+          "openDay": 140
+        },
+        {
+          "season": 2009,
+          "fdd": 1309.4,
+          "openDay": 144
+        },
+        {
+          "season": 2011,
+          "fdd": 1450.5,
+          "openDay": 141
+        },
+        {
+          "season": 2016,
+          "fdd": 1297.9,
+          "openDay": 138
+        },
+        {
+          "season": 2018,
+          "fdd": 1157.6,
+          "openDay": 141
+        },
+        {
+          "season": 2019,
+          "fdd": 1443.6,
+          "openDay": 144
+        },
+        {
+          "season": 2020,
+          "fdd": 1491.2,
+          "openDay": 143
+        },
+        {
+          "season": 2021,
+          "fdd": 1527.3,
+          "openDay": 137
+        },
+        {
+          "season": 2022,
+          "fdd": 1382.3,
+          "openDay": 144
+        },
+        {
+          "season": 2023,
+          "fdd": 1046.1,
+          "openDay": 141
+        },
+        {
+          "season": 2025,
+          "fdd": 1213.2,
+          "openDay": 144
+        }
+      ]
+    },
+    "Déline Winter Road": {
+      "status": "ok",
+      "closureName": "Délįne Winter Road",
+      "station": {
+        "id": 27749,
+        "name": "DELINE CS",
+        "distanceKm": 3
+      },
+      "n": 25,
+      "seasonRange": [
+        1999,
+        2025
+      ],
+      "spearman": {
+        "rho": -0.123,
+        "p": 0.5584
+      },
+      "pearson": {
+        "r": -0.034,
+        "p": 0.8715
+      },
+      "slopeDaysPer100Fdd": -0.91,
+      "intercept": 184.19,
+      "points": [
+        {
+          "season": 1999,
+          "fdd": 1395.7,
+          "openDay": 180
+        },
+        {
+          "season": 2000,
+          "fdd": 1438.8,
+          "openDay": 172
+        },
+        {
+          "season": 2001,
+          "fdd": 1243.9,
+          "openDay": 170
+        },
+        {
+          "season": 2002,
+          "fdd": 953.1,
+          "openDay": 179
+        },
+        {
+          "season": 2003,
+          "fdd": 1182.3,
+          "openDay": 175
+        },
+        {
+          "season": 2004,
+          "fdd": 1547.7,
+          "openDay": 173
+        },
+        {
+          "season": 2005,
+          "fdd": 1116.1,
+          "openDay": 177
+        },
+        {
+          "season": 2006,
+          "fdd": 1256.8,
+          "openDay": 171
+        },
+        {
+          "season": 2007,
+          "fdd": 1263.7,
+          "openDay": 174
+        },
+        {
+          "season": 2008,
+          "fdd": 1341.2,
+          "openDay": 172
+        },
+        {
+          "season": 2009,
+          "fdd": 1297.1,
+          "openDay": 180
+        },
+        {
+          "season": 2010,
+          "fdd": 1302.9,
+          "openDay": 162
+        },
+        {
+          "season": 2011,
+          "fdd": 1281.5,
+          "openDay": 151
+        },
+        {
+          "season": 2012,
+          "fdd": 1514,
+          "openDay": 174
+        },
+        {
+          "season": 2013,
+          "fdd": 1278.2,
+          "openDay": 140
+        },
+        {
+          "season": 2014,
+          "fdd": 1277.4,
+          "openDay": 161
+        },
+        {
+          "season": 2016,
+          "fdd": 1234.8,
+          "openDay": 179
+        },
+        {
+          "season": 2017,
+          "fdd": 1151.1,
+          "openDay": 177
+        },
+        {
+          "season": 2018,
+          "fdd": 1046.6,
+          "openDay": 177
+        },
+        {
+          "season": 2019,
+          "fdd": 1386.9,
+          "openDay": 141
+        },
+        {
+          "season": 2021,
+          "fdd": 1344.7,
+          "openDay": 163
+        },
+        {
+          "season": 2022,
+          "fdd": 1255.3,
+          "openDay": 142
+        },
+        {
+          "season": 2023,
+          "fdd": 881.9,
+          "openDay": 157
+        },
+        {
+          "season": 2024,
+          "fdd": 1283,
+          "openDay": 168
+        },
+        {
+          "season": 2025,
+          "fdd": 1191.6,
+          "openDay": 145
+        }
+      ]
+    },
+    "Dettah Ice Road": {
+      "status": "ok",
+      "closureName": "Dettah Ice Road",
+      "station": {
+        "id": 1706,
+        "name": "YELLOWKNIFE A",
+        "distanceKm": 4
+      },
+      "n": 28,
+      "seasonRange": [
+        1983,
+        2012
+      ],
+      "spearman": {
+        "rho": -0.484,
+        "p": 0.009
+      },
+      "pearson": {
+        "r": -0.539,
+        "p": 0.0031
+      },
+      "slopeDaysPer100Fdd": -2.21,
+      "intercept": 161.98,
+      "points": [
+        {
+          "season": 1983,
+          "fdd": 1047.6,
+          "openDay": 134
+        },
+        {
+          "season": 1984,
+          "fdd": 1645.6,
+          "openDay": 111
+        },
+        {
+          "season": 1985,
+          "fdd": 1355.9,
+          "openDay": 119
+        },
+        {
+          "season": 1986,
+          "fdd": 1210.7,
+          "openDay": 112
+        },
+        {
+          "season": 1987,
+          "fdd": 870,
+          "openDay": 139
+        },
+        {
+          "season": 1988,
+          "fdd": 1358.6,
+          "openDay": 140
+        },
+        {
+          "season": 1989,
+          "fdd": 1501.4,
+          "openDay": 134
+        },
+        {
+          "season": 1990,
+          "fdd": 1644.4,
+          "openDay": 125
+        },
+        {
+          "season": 1991,
+          "fdd": 1473.7,
+          "openDay": 130
+        },
+        {
+          "season": 1994,
+          "fdd": 1034.8,
+          "openDay": 134
+        },
+        {
+          "season": 1995,
+          "fdd": 1287.9,
+          "openDay": 120
+        },
+        {
+          "season": 1996,
+          "fdd": 1238.5,
+          "openDay": 133
+        },
+        {
+          "season": 1997,
+          "fdd": 924.2,
+          "openDay": 139
+        },
+        {
+          "season": 1998,
+          "fdd": 819.4,
+          "openDay": 152
+        },
+        {
+          "season": 1999,
+          "fdd": 965.7,
+          "openDay": 163
+        },
+        {
+          "season": 2000,
+          "fdd": 1295.7,
+          "openDay": 142
+        },
+        {
+          "season": 2001,
+          "fdd": 1114.7,
+          "openDay": 142
+        },
+        {
+          "season": 2002,
+          "fdd": 900.9,
+          "openDay": 127
+        },
+        {
+          "season": 2003,
+          "fdd": 990.1,
+          "openDay": 140
+        },
+        {
+          "season": 2004,
+          "fdd": 1402.9,
+          "openDay": 131
+        },
+        {
+          "season": 2005,
+          "fdd": 716.8,
+          "openDay": 141
+        },
+        {
+          "season": 2006,
+          "fdd": 1040.1,
+          "openDay": 156
+        },
+        {
+          "season": 2007,
+          "fdd": 1167.6,
+          "openDay": 142
+        },
+        {
+          "season": 2008,
+          "fdd": 1212.4,
+          "openDay": 144
+        },
+        {
+          "season": 2009,
+          "fdd": 1078.6,
+          "openDay": 145
+        },
+        {
+          "season": 2010,
+          "fdd": 1115.3,
+          "openDay": 137
+        },
+        {
+          "season": 2011,
+          "fdd": 1017.1,
+          "openDay": 152
+        },
+        {
+          "season": 2012,
+          "fdd": 1412.4,
+          "openDay": 141
+        }
+      ]
+    },
+    "Edzo Ice Road": {
+      "status": "no-closure-records"
+    },
+    "Gamètì Winter Road": {
+      "status": "ok",
+      "closureName": "Gamètì Winter Road",
+      "station": {
+        "id": 10926,
+        "name": "GAMETI",
+        "distanceKm": 1
+      },
+      "n": 24,
+      "seasonRange": [
+        1996,
+        2025
+      ],
+      "spearman": {
+        "rho": -0.262,
+        "p": 0.2166
+      },
+      "pearson": {
+        "r": -0.381,
+        "p": 0.0665
+      },
+      "slopeDaysPer100Fdd": -1.79,
+      "intercept": 220.8,
+      "points": [
+        {
+          "season": 1996,
+          "fdd": 1456.4,
+          "openDay": 190
+        },
+        {
+          "season": 1997,
+          "fdd": 1067.4,
+          "openDay": 190
+        },
+        {
+          "season": 1998,
+          "fdd": 915.7,
+          "openDay": 191
+        },
+        {
+          "season": 2001,
+          "fdd": 1424.4,
+          "openDay": 194
+        },
+        {
+          "season": 2002,
+          "fdd": 976.6,
+          "openDay": 193
+        },
+        {
+          "season": 2003,
+          "fdd": 1151.2,
+          "openDay": 221
+        },
+        {
+          "season": 2004,
+          "fdd": 1608.4,
+          "openDay": 180
+        },
+        {
+          "season": 2005,
+          "fdd": 884.9,
+          "openDay": 227
+        },
+        {
+          "season": 2006,
+          "fdd": 1148.7,
+          "openDay": 211
+        },
+        {
+          "season": 2007,
+          "fdd": 1322,
+          "openDay": 211
+        },
+        {
+          "season": 2008,
+          "fdd": 1349,
+          "openDay": 204
+        },
+        {
+          "season": 2009,
+          "fdd": 1250.8,
+          "openDay": 205
+        },
+        {
+          "season": 2010,
+          "fdd": 1243.6,
+          "openDay": 188
+        },
+        {
+          "season": 2011,
+          "fdd": 1202.9,
+          "openDay": 200
+        },
+        {
+          "season": 2012,
+          "fdd": 1565,
+          "openDay": 196
+        },
+        {
+          "season": 2014,
+          "fdd": 1220.8,
+          "openDay": 199
+        },
+        {
+          "season": 2017,
+          "fdd": 1241.9,
+          "openDay": 188
+        },
+        {
+          "season": 2018,
+          "fdd": 1071.5,
+          "openDay": 215
+        },
+        {
+          "season": 2019,
+          "fdd": 1437.1,
+          "openDay": 195
+        },
+        {
+          "season": 2021,
+          "fdd": 1307.7,
+          "openDay": 199
+        },
+        {
+          "season": 2022,
+          "fdd": 1272.4,
+          "openDay": 210
+        },
+        {
+          "season": 2023,
+          "fdd": 867.3,
+          "openDay": 205
+        },
+        {
+          "season": 2024,
+          "fdd": 1112.9,
+          "openDay": 190
+        },
+        {
+          "season": 2025,
+          "fdd": 1225.1,
+          "openDay": 187
+        }
+      ]
+    },
+    "Hay River Ice Road (New Town)": {
+      "status": "no-closure-records"
+    },
+    "Hay River Ice Road (Old Town)": {
+      "status": "no-closure-records"
+    },
+    "Nahanni Butte Winter Road": {
+      "status": "ok",
+      "closureName": "Nahanni Butte Winter Road",
+      "station": {
+        "id": 27608,
+        "name": "LINDBERG LANDING",
+        "distanceKm": 24
+      },
+      "n": 22,
+      "seasonRange": [
+        1998,
+        2025
+      ],
+      "spearman": {
+        "rho": -0.447,
+        "p": 0.0371
+      },
+      "pearson": {
+        "r": -0.602,
+        "p": 0.0031
+      },
+      "slopeDaysPer100Fdd": -2.66,
+      "intercept": 165.33,
+      "points": [
+        {
+          "season": 1998,
+          "fdd": 1174.9,
+          "openDay": 142
+        },
+        {
+          "season": 1999,
+          "fdd": 1184.6,
+          "openDay": 134
+        },
+        {
+          "season": 2000,
+          "fdd": 1274,
+          "openDay": 127
+        },
+        {
+          "season": 2001,
+          "fdd": 1192.3,
+          "openDay": 135
+        },
+        {
+          "season": 2002,
+          "fdd": 868.5,
+          "openDay": 139
+        },
+        {
+          "season": 2003,
+          "fdd": 1079.5,
+          "openDay": 137
+        },
+        {
+          "season": 2004,
+          "fdd": 1233.8,
+          "openDay": 134
+        },
+        {
+          "season": 2005,
+          "fdd": 936.9,
+          "openDay": 129
+        },
+        {
+          "season": 2006,
+          "fdd": 1179.5,
+          "openDay": 122
+        },
+        {
+          "season": 2007,
+          "fdd": 1225.1,
+          "openDay": 135
+        },
+        {
+          "season": 2008,
+          "fdd": 1210.4,
+          "openDay": 136
+        },
+        {
+          "season": 2009,
+          "fdd": 1257,
+          "openDay": 130
+        },
+        {
+          "season": 2010,
+          "fdd": 1147.9,
+          "openDay": 131
+        },
+        {
+          "season": 2011,
+          "fdd": 1152.4,
+          "openDay": 123
+        },
+        {
+          "season": 2012,
+          "fdd": 1644.5,
+          "openDay": 113
+        },
+        {
+          "season": 2013,
+          "fdd": 1240.7,
+          "openDay": 133
+        },
+        {
+          "season": 2014,
+          "fdd": 1291,
+          "openDay": 131
+        },
+        {
+          "season": 2016,
+          "fdd": 1128,
+          "openDay": 136
+        },
+        {
+          "season": 2022,
+          "fdd": 1207.8,
+          "openDay": 126
+        },
+        {
+          "season": 2023,
+          "fdd": 830.1,
+          "openDay": 140
+        },
+        {
+          "season": 2024,
+          "fdd": 1180.5,
+          "openDay": 140
+        },
+        {
+          "season": 2025,
+          "fdd": 1250.7,
+          "openDay": 132
+        }
+      ]
+    },
+    "Norman Wells to Fort Good Hope Winter Road": {
+      "status": "ok",
+      "closureName": "Norman Wells to Fort Good Hope Winter Road (Highway #1)",
+      "station": {
+        "id": 27549,
+        "name": "FORT GOOD HOPE CS",
+        "distanceKm": 1
+      },
+      "n": 27,
+      "seasonRange": [
+        1998,
+        2024
+      ],
+      "spearman": {
+        "rho": -0.237,
+        "p": 0.2336
+      },
+      "pearson": {
+        "r": -0.354,
+        "p": 0.0696
+      },
+      "slopeDaysPer100Fdd": -0.81,
+      "intercept": 153.45,
+      "points": [
+        {
+          "season": 1998,
+          "fdd": 1411.7,
+          "openDay": 159
+        },
+        {
+          "season": 1999,
+          "fdd": 1598.3,
+          "openDay": 145
+        },
+        {
+          "season": 2000,
+          "fdd": 1620.6,
+          "openDay": 160
+        },
+        {
+          "season": 2001,
+          "fdd": 1471.2,
+          "openDay": 163
+        },
+        {
+          "season": 2002,
+          "fdd": 973.6,
+          "openDay": 172
+        },
+        {
+          "season": 2003,
+          "fdd": 1297.5,
+          "openDay": 140
+        },
+        {
+          "season": 2004,
+          "fdd": 1671.1,
+          "openDay": 134
+        },
+        {
+          "season": 2005,
+          "fdd": 1291.6,
+          "openDay": 150
+        },
+        {
+          "season": 2006,
+          "fdd": 1367.4,
+          "openDay": 142
+        },
+        {
+          "season": 2007,
+          "fdd": 1465.1,
+          "openDay": 129
+        },
+        {
+          "season": 2008,
+          "fdd": 1470.7,
+          "openDay": 137
+        },
+        {
+          "season": 2009,
+          "fdd": 1356.6,
+          "openDay": 144
+        },
+        {
+          "season": 2010,
+          "fdd": 1482,
+          "openDay": 135
+        },
+        {
+          "season": 2011,
+          "fdd": 1330.3,
+          "openDay": 141
+        },
+        {
+          "season": 2012,
+          "fdd": 1889,
+          "openDay": 140
+        },
+        {
+          "season": 2013,
+          "fdd": 1531.4,
+          "openDay": 149
+        },
+        {
+          "season": 2014,
+          "fdd": 1634.5,
+          "openDay": 138
+        },
+        {
+          "season": 2015,
+          "fdd": 1407.6,
+          "openDay": 142
+        },
+        {
+          "season": 2016,
+          "fdd": 1641.6,
+          "openDay": 138
+        },
+        {
+          "season": 2017,
+          "fdd": 1382.2,
+          "openDay": 137
+        },
+        {
+          "season": 2018,
+          "fdd": 1390.2,
+          "openDay": 143
+        },
+        {
+          "season": 2019,
+          "fdd": 1457.3,
+          "openDay": 144
+        },
+        {
+          "season": 2020,
+          "fdd": 1520.1,
+          "openDay": 145
+        },
+        {
+          "season": 2021,
+          "fdd": 1541.9,
+          "openDay": 137
+        },
+        {
+          "season": 2022,
+          "fdd": 1397.1,
+          "openDay": 144
+        },
+        {
+          "season": 2023,
+          "fdd": 1112.9,
+          "openDay": 140
+        },
+        {
+          "season": 2024,
+          "fdd": 1508,
+          "openDay": 141
+        }
+      ]
+    },
+    "Sambaa K'e Winter Road": {
+      "status": "ok",
+      "closureName": "Sambaa K’e Winter Road",
+      "station": {
+        "id": 10880,
+        "name": "SAMBAA K'E",
+        "distanceKm": 1
+      },
+      "n": 19,
+      "seasonRange": [
+        1997,
+        2025
+      ],
+      "spearman": {
+        "rho": -0.14,
+        "p": 0.5663
+      },
+      "pearson": {
+        "r": -0.298,
+        "p": 0.2159
+      },
+      "slopeDaysPer100Fdd": -0.19,
+      "intercept": 144.17,
+      "points": [
+        {
+          "season": 1997,
+          "fdd": 881.3,
+          "openDay": 175
+        },
+        {
+          "season": 1998,
+          "fdd": 1029.1,
+          "openDay": 142
+        },
+        {
+          "season": 1999,
+          "fdd": 961.3,
+          "openDay": 163
+        },
+        {
+          "season": 2000,
+          "fdd": 1153.5,
+          "openDay": 139
+        },
+        {
+          "season": 2002,
+          "fdd": 769.7,
+          "openDay": 161
+        },
+        {
+          "season": 2003,
+          "fdd": 953.6,
+          "openDay": 133
+        },
+        {
+          "season": 2004,
+          "fdd": 1123.3,
+          "openDay": 142
+        },
+        {
+          "season": 2005,
+          "fdd": 736.8,
+          "openDay": 143
+        },
+        {
+          "season": 2006,
+          "fdd": 1049.9,
+          "openDay": 157
+        },
+        {
+          "season": 2007,
+          "fdd": 1056.4,
+          "openDay": 143
+        },
+        {
+          "season": 2009,
+          "fdd": 1039.9,
+          "openDay": 139
+        },
+        {
+          "season": 2010,
+          "fdd": 1108.4,
+          "openDay": 138
+        },
+        {
+          "season": 2019,
+          "fdd": 1016.8,
+          "openDay": 137
+        },
+        {
+          "season": 2020,
+          "fdd": 1080,
+          "openDay": 145
+        },
+        {
+          "season": 2021,
+          "fdd": 1226.4,
+          "openDay": 143
+        },
+        {
+          "season": 2022,
+          "fdd": 1197.9,
+          "openDay": 143
+        },
+        {
+          "season": 2023,
+          "fdd": 636.9,
+          "openDay": 140
+        },
+        {
+          "season": 2024,
+          "fdd": 1073,
+          "openDay": 142
+        },
+        {
+          "season": 2025,
+          "fdd": 1160.3,
+          "openDay": 140
+        }
+      ]
+    },
+    "Tibbitt-Contwoyto Winter Road": {
+      "status": "ok",
+      "closureName": "Tibbitt-Contwoyto Winter Road",
+      "station": {
+        "id": 1671,
+        "name": "LUPIN A",
+        "distanceKm": 0
+      },
+      "n": 22,
+      "seasonRange": [
+        1983,
+        2005
+      ],
+      "spearman": {
+        "rho": 0.044,
+        "p": 0.8448
+      },
+      "pearson": {
+        "r": 0.063,
+        "p": 0.7812
+      },
+      "slopeDaysPer100Fdd": 0,
+      "intercept": 180,
+      "points": [
+        {
+          "season": 1983,
+          "fdd": 1551.6,
+          "openDay": 200
+        },
+        {
+          "season": 1984,
+          "fdd": 1947.9,
+          "openDay": 182
+        },
+        {
+          "season": 1985,
+          "fdd": 1790,
+          "openDay": 174
+        },
+        {
+          "season": 1986,
+          "fdd": 1794.3,
+          "openDay": 166
+        },
+        {
+          "season": 1988,
+          "fdd": 1897.4,
+          "openDay": 195
+        },
+        {
+          "season": 1989,
+          "fdd": 1929.2,
+          "openDay": 197
+        },
+        {
+          "season": 1990,
+          "fdd": 2003.6,
+          "openDay": 184
+        },
+        {
+          "season": 1991,
+          "fdd": 1872.5,
+          "openDay": 175
+        },
+        {
+          "season": 1992,
+          "fdd": 1620.3,
+          "openDay": 180
+        },
+        {
+          "season": 1993,
+          "fdd": 1833.3,
+          "openDay": 186
+        },
+        {
+          "season": 1994,
+          "fdd": 1438.5,
+          "openDay": 170
+        },
+        {
+          "season": 1995,
+          "fdd": 1835.1,
+          "openDay": 177
+        },
+        {
+          "season": 1996,
+          "fdd": 1741.1,
+          "openDay": 180
+        },
+        {
+          "season": 1997,
+          "fdd": 1494.8,
+          "openDay": 171
+        },
+        {
+          "season": 1998,
+          "fdd": 1203.6,
+          "openDay": 184
+        },
+        {
+          "season": 1999,
+          "fdd": 1552.3,
+          "openDay": 180
+        },
+        {
+          "season": 2000,
+          "fdd": 1747.5,
+          "openDay": 184
+        },
+        {
+          "season": 2001,
+          "fdd": 1633.5,
+          "openDay": 178
+        },
+        {
+          "season": 2002,
+          "fdd": 1423,
+          "openDay": 184
+        },
+        {
+          "season": 2003,
+          "fdd": 1511,
+          "openDay": 180
+        },
+        {
+          "season": 2004,
+          "fdd": 1908.4,
+          "openDay": 178
+        },
+        {
+          "season": 2005,
+          "fdd": 1379.7,
+          "openDay": 188
+        }
+      ]
+    },
+    "Tulita to Norman Wells Winter Road": {
+      "status": "ok",
+      "closureName": "Tulita to Norman Wells Winter Road (Highway #1)",
+      "station": {
+        "id": 43004,
+        "name": "NORMAN WELLS CLIMATE",
+        "distanceKm": 1
+      },
+      "n": 23,
+      "seasonRange": [
+        2003,
+        2025
+      ],
+      "spearman": {
+        "rho": 0.184,
+        "p": 0.4005
+      },
+      "pearson": {
+        "r": 0.126,
+        "p": 0.5666
+      },
+      "slopeDaysPer100Fdd": 0.6,
+      "intercept": 135.52,
+      "points": [
+        {
+          "season": 2003,
+          "fdd": 1253,
+          "openDay": 150
+        },
+        {
+          "season": 2004,
+          "fdd": 1563,
+          "openDay": 156
+        },
+        {
+          "season": 2005,
+          "fdd": 1257.1,
+          "openDay": 140
+        },
+        {
+          "season": 2006,
+          "fdd": 1331.1,
+          "openDay": 141
+        },
+        {
+          "season": 2007,
+          "fdd": 1443.7,
+          "openDay": 145
+        },
+        {
+          "season": 2008,
+          "fdd": 1391.6,
+          "openDay": 144
+        },
+        {
+          "season": 2009,
+          "fdd": 1301.9,
+          "openDay": 144
+        },
+        {
+          "season": 2010,
+          "fdd": 1409,
+          "openDay": 144
+        },
+        {
+          "season": 2011,
+          "fdd": 1424.4,
+          "openDay": 141
+        },
+        {
+          "season": 2012,
+          "fdd": 1765.9,
+          "openDay": 137
+        },
+        {
+          "season": 2013,
+          "fdd": 1388.6,
+          "openDay": 148
+        },
+        {
+          "season": 2014,
+          "fdd": 1328.1,
+          "openDay": 141
+        },
+        {
+          "season": 2015,
+          "fdd": 1244.1,
+          "openDay": 142
+        },
+        {
+          "season": 2016,
+          "fdd": 1373.4,
+          "openDay": 138
+        },
+        {
+          "season": 2017,
+          "fdd": 1133.2,
+          "openDay": 137
+        },
+        {
+          "season": 2018,
+          "fdd": 1151.4,
+          "openDay": 141
+        },
+        {
+          "season": 2019,
+          "fdd": 1419.2,
+          "openDay": 144
+        },
+        {
+          "season": 2020,
+          "fdd": 1492.6,
+          "openDay": 145
+        },
+        {
+          "season": 2021,
+          "fdd": 1488,
+          "openDay": 136
+        },
+        {
+          "season": 2022,
+          "fdd": 1380.2,
+          "openDay": 144
+        },
+        {
+          "season": 2023,
+          "fdd": 1032.4,
+          "openDay": 141
+        },
+        {
+          "season": 2024,
+          "fdd": 1371.2,
+          "openDay": 144
+        },
+        {
+          "season": 2025,
+          "fdd": 1284.7,
+          "openDay": 145
+        }
+      ]
+    },
+    "Wekweètì Winter Road": {
+      "status": "ok",
+      "closureName": "Wekweètì Winter Road",
+      "station": {
+        "id": 1674,
+        "name": "WHATI",
+        "distanceKm": 39
+      },
+      "n": 18,
+      "seasonRange": [
+        2007,
+        2025
+      ],
+      "spearman": {
+        "rho": -0.308,
+        "p": 0.2137
+      },
+      "pearson": {
+        "r": -0.29,
+        "p": 0.2433
+      },
+      "slopeDaysPer100Fdd": -1.9,
+      "intercept": 245.76,
+      "points": [
+        {
+          "season": 2007,
+          "fdd": 1256.5,
+          "openDay": 243
+        },
+        {
+          "season": 2008,
+          "fdd": 1311.5,
+          "openDay": 222
+        },
+        {
+          "season": 2009,
+          "fdd": 1226.6,
+          "openDay": 222
+        },
+        {
+          "season": 2010,
+          "fdd": 1290.9,
+          "openDay": 197
+        },
+        {
+          "season": 2011,
+          "fdd": 1169.1,
+          "openDay": 218
+        },
+        {
+          "season": 2013,
+          "fdd": 1319.1,
+          "openDay": 218
+        },
+        {
+          "season": 2014,
+          "fdd": 1286.6,
+          "openDay": 218
+        },
+        {
+          "season": 2015,
+          "fdd": 1001.4,
+          "openDay": 226
+        },
+        {
+          "season": 2016,
+          "fdd": 1148.9,
+          "openDay": 214
+        },
+        {
+          "season": 2017,
+          "fdd": 1221.4,
+          "openDay": 205
+        },
+        {
+          "season": 2018,
+          "fdd": 1110.5,
+          "openDay": 231
+        },
+        {
+          "season": 2019,
+          "fdd": 1421.8,
+          "openDay": 218
+        },
+        {
+          "season": 2020,
+          "fdd": 1374.3,
+          "openDay": 223
+        },
+        {
+          "season": 2021,
+          "fdd": 1317.6,
+          "openDay": 222
+        },
+        {
+          "season": 2022,
+          "fdd": 1300.2,
+          "openDay": 231
+        },
+        {
+          "season": 2023,
+          "fdd": 864.6,
+          "openDay": 233
+        },
+        {
+          "season": 2024,
+          "fdd": 1156.9,
+          "openDay": 225
+        },
+        {
+          "season": 2025,
+          "fdd": 1218,
+          "openDay": 223
+        }
+      ]
+    },
+    "Whatì to Gamètì Winter Road": {
+      "status": "no-closure-records"
+    },
+    "Wrigley to Tulita Winter Road": {
+      "status": "ok",
+      "closureName": "Wrigley to Tulita Winter Road (Highway #1)",
+      "station": {
+        "id": 52967,
+        "name": "TULITA A",
+        "distanceKm": 2
+      },
+      "n": 12,
+      "seasonRange": [
+        2014,
+        2025
+      ],
+      "spearman": {
+        "rho": -0.19,
+        "p": 0.5546
+      },
+      "pearson": {
+        "r": -0.374,
+        "p": 0.231
+      },
+      "slopeDaysPer100Fdd": -0.72,
+      "intercept": 146.29,
+      "points": [
+        {
+          "season": 2014,
+          "fdd": 1285,
+          "openDay": 133
+        },
+        {
+          "season": 2015,
+          "fdd": 1120.5,
+          "openDay": 139
+        },
+        {
+          "season": 2016,
+          "fdd": 1290.3,
+          "openDay": 138
+        },
+        {
+          "season": 2017,
+          "fdd": 1111.7,
+          "openDay": 132
+        },
+        {
+          "season": 2018,
+          "fdd": 1093.8,
+          "openDay": 139
+        },
+        {
+          "season": 2019,
+          "fdd": 1369.2,
+          "openDay": 141
+        },
+        {
+          "season": 2020,
+          "fdd": 1359.3,
+          "openDay": 132
+        },
+        {
+          "season": 2021,
+          "fdd": 1364,
+          "openDay": 136
+        },
+        {
+          "season": 2022,
+          "fdd": 1291.2,
+          "openDay": 134
+        },
+        {
+          "season": 2023,
+          "fdd": 933.8,
+          "openDay": 141
+        },
+        {
+          "season": 2024,
+          "fdd": 1300.9,
+          "openDay": 135
+        },
+        {
+          "season": 2025,
+          "fdd": 1195.9,
+          "openDay": 140
+        }
+      ]
+    }
+  }
+}
