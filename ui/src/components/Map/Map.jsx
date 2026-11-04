@@ -58,6 +58,19 @@ const PRECIP_BAR_GAPS = {
 // (30 years is the standard climate-normal period).
 const SHORT_RECORD_YEARS = 30
 
+// The research area the map opens on (also the "Default" button's target).
+const RESEARCH_VIEW = { center: [-110, 65.5], zoom: 4.5 }
+
+// Entry transition: each time the map opens it starts on the whole of
+// northern Canada and eases into the research area while the map controls
+// fade in. Anyone with reduced motion turned on gets the research area
+// directly.
+const INTRO_START = { center: [-100, 64], zoom: 3 }
+const INTRO_DURATION_MS = 1400
+
+const shouldPlayMapIntro = () =>
+  !window.matchMedia("(prefers-reduced-motion: reduce)").matches
+
 // Map city names (as they appear in Data.js) to weather station IDs
 // Uses station IDs that have both ECCC and AHCCD data where possible
 const CITY_STATION_MAP = {
@@ -2330,7 +2343,12 @@ function WeatherMap() {
       <Modal
         show={modalIsOpen}
         onHide={closeModal}
-        centered={!modalEnlarge}
+        centered={isMobile && !modalEnlarge}
+        // On wider screens the panel docks beside the map instead of covering
+        // it, so the map stays clickable and another community can be picked.
+        backdrop={isMobile}
+        enforceFocus={isMobile}
+        className={isMobile ? undefined : "wrtdip-map-modal-shell"}
         dialogClassName={
           modalEnlarge ? "wrtdip-map-modal wrtdip-map-modal--enlarged" : "wrtdip-map-modal"
         }
@@ -2620,8 +2638,8 @@ function WeatherMap() {
                     label="Months"
                   />
                   <Typography variant="caption" sx={{ display: "block", textAlign: "center", mt: -0.5 }}>
-                    {new Date(2000, precipMonthRange[0] - 1).toLocaleString("default", { month: "long" })}
-                    {precipMonthRange[0] !== precipMonthRange[1] && ` – ${new Date(2000, precipMonthRange[1] - 1).toLocaleString("default", { month: "long" })}`}
+                    {new Date(2000, precipMonthRange[0] - 1).toLocaleString("en-CA", { month: "long" })}
+                    {precipMonthRange[0] !== precipMonthRange[1] && ` – ${new Date(2000, precipMonthRange[1] - 1).toLocaleString("en-CA", { month: "long" })}`}
                   </Typography>
                 </div>
 
@@ -2708,8 +2726,8 @@ function WeatherMap() {
                     label="Months"
                   />
                   <Typography variant="caption" sx={{ display: "block", textAlign: "center", mt: -0.5 }}>
-                    {new Date(2000, snowMonthRange[0] - 1).toLocaleString("default", { month: "long" })}
-                    {snowMonthRange[0] !== snowMonthRange[1] && ` – ${new Date(2000, snowMonthRange[1] - 1).toLocaleString("default", { month: "long" })}`}
+                    {new Date(2000, snowMonthRange[0] - 1).toLocaleString("en-CA", { month: "long" })}
+                    {snowMonthRange[0] !== snowMonthRange[1] && ` – ${new Date(2000, snowMonthRange[1] - 1).toLocaleString("en-CA", { month: "long" })}`}
                   </Typography>
                 </div>
                 <div className="wrtdip-map-modal__chart">
@@ -2790,8 +2808,8 @@ function WeatherMap() {
                 label="Months"
               />
               <Typography variant="caption" sx={{ display: "block", textAlign: "center", mt: -0.5 }}>
-                {new Date(2000, tempMonthRange[0] - 1).toLocaleString("default", { month: "long" })}
-                {tempMonthRange[0] !== tempMonthRange[1] && ` – ${new Date(2000, tempMonthRange[1] - 1).toLocaleString("default", { month: "long" })}`}
+                {new Date(2000, tempMonthRange[0] - 1).toLocaleString("en-CA", { month: "long" })}
+                {tempMonthRange[0] !== tempMonthRange[1] && ` – ${new Date(2000, tempMonthRange[1] - 1).toLocaleString("en-CA", { month: "long" })}`}
               </Typography>
             </div>
             <div className="wrtdip-map-modal__chart">
@@ -3028,13 +3046,28 @@ function WeatherMap() {
             basemap: oldCanadaTopoBasemap,
           },
         ]
+        const playIntro = shouldPlayMapIntro()
         const view = new MapView({
           container: MapElement.current,
           map: map,
-          center: [-110, 65.5], // Adjust longitude and latitude as needed
-          zoom: 4.5,
+          ...(playIntro ? INTRO_START : RESEARCH_VIEW),
           popupEnabled: true,
         })
+
+        if (playIntro) {
+          // The class staggers the map controls in (see styles.css); any user
+          // pan or zoom interrupts the flight, which ArcGIS reports as a
+          // rejected goTo.
+          MapElement.current.classList.add("wrtdip-map--intro")
+          view
+            .when(() =>
+              view.goTo(RESEARCH_VIEW, { duration: INTRO_DURATION_MS, easing: "in-out-cubic" })
+            )
+            .catch(() => {})
+            .finally(() => {
+              setTimeout(() => MapElement.current?.classList.remove("wrtdip-map--intro"), 1200)
+            })
+        }
 
         // Hovered road features get a bright glow (see the pointer-move
         // handler below) so users can tell they're clickable.
@@ -3412,7 +3445,7 @@ function WeatherMap() {
         )
 
         customZoomButton.addEventListener("click", () => {
-          view.goTo({ center: [-110, 65.5], zoom: 4.5 })
+          view.goTo(RESEARCH_VIEW)
         })
 
         view.ui.add(customZoomButton, "top-left")

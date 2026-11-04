@@ -1,6 +1,7 @@
 import React from "react";
 //import {Typography } from "antd";
 //import CanadaMap from "../../../assets/canada_map.png";
+import { Link } from "react-router-dom";
 import { Container, Row, Col } from "react-bootstrap";
 import CarouselHome from "../../Carousel/Carousel";
 
@@ -23,6 +24,14 @@ const WelcomeBanner = () => {
             aid in decision-making and prioritize policies for managing
             winter roads impacted by climate change.
           </p>
+          <div className="welcomeActions">
+            <Link to="/map" className="ui-btn welcomeButton welcomeButton--primary">
+              Explore the map
+            </Link>
+            <Link to="/download" className="ui-btn welcomeButton welcomeButton--secondary">
+              Download climate data
+            </Link>
+          </div>
         </Col>
         <Col xs={12} lg="8" className="vertical-center welcomeCarousel">
           <CarouselHome />

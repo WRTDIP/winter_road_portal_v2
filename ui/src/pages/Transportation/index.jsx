@@ -15,19 +15,22 @@ function Transportation() {
   ];
   return (
     <div>
-      <CoverBanner title="Transportation" />
+      <CoverBanner
+        eyebrow="Research"
+        title="Transportation"
+        subtitle="How northern transportation networks move people and freight, and how climate change is affecting them."
+      />
       <SubSectionBanner props={BannerContents[0]} />
-      <p style={{ textAlign: 'center', fontSize: '18px', color: '#333' }}>
-        For more details, visit{" "}
+      <div className="subSectionAction">
         <a
+          className="ui-btn ui-btn--primary"
           href="https://storymaps.arcgis.com/collections/6f533a8170a84785a48d5d6810115c58"
           target="_blank"
           rel="noopener noreferrer"
         >
-          our ArcGIS StoryMap Collection
+          Open our ArcGIS StoryMap Collection ↗
         </a>
-        .
-      </p>
+      </div>
     </div>
   );
 }

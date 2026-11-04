@@ -11,20 +11,20 @@ function CarouselHome() {
     <div className="h-75 container-fluid carousel">
       <Carousel>
         <Carousel.Item>
-          <img className="carousel-image" src={homebg_1} alt="First slide" /> 
+          <img className="carousel-image" src={homebg_1} alt="A plowed winter road crossing snow-covered ground" /> 
         </Carousel.Item>
         <Carousel.Item>
-          <img className="carousel-image" src={homebg_2} alt="Second slide" />       
+          <img className="carousel-image" src={homebg_2} alt="Snowmobile tracks leading across open tundra" />       
         </Carousel.Item>
         <Carousel.Item>
-          <img className="carousel-image" src={homebg_3} alt="Third slide" />
+          <img className="carousel-image" src={homebg_3} alt="A wide ice road through boreal forest under a blue sky" />
         </Carousel.Item>
         <Carousel.Item>
-          <img className="carousel-image" src={homebg_4} alt="Fourth slide" />
+          <img className="carousel-image" src={homebg_4} alt="Cleared lanes of clear blue ice on a winter road" />
         </Carousel.Item>
       </Carousel>
     </div>
   );
 }
 
-export default CarouselHome;
+export default CarouselHome;

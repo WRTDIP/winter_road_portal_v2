@@ -4,14 +4,18 @@ import CoverBanner from "../../components/Global/CoverBanner/CoverBanner";
 function References() {
   return (
     <div>
-      <CoverBanner title="References" />
-      <div style={{ padding: "2rem 1.5rem 4rem", color: "#0E2959" }}>
+      <CoverBanner
+        eyebrow="Resources"
+        title="References"
+        subtitle="Story maps, reports and publications behind the portal."
+      />
+      <div style={{ padding: "2rem 1.5rem 4rem", color: "var(--c-ink)" }}>
         <div style={{ maxWidth: "900px", margin: "0 auto" }}>
           <div
             style={{
               position: "relative",
               width: "100%",
-              border: "1px solid #d9e2f0",
+              border: "1px solid var(--c-border)",
               borderRadius: "8px",
               overflow: "hidden",
               background: "#fff",

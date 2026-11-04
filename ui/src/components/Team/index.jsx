@@ -1,21 +1,22 @@
-import { Container,Row,Col } from "react-bootstrap";
 import TeamMember from "./TeamMember/TeamMemberItem";
 import "./styles.css";
-function Team({teamName, description, teamMemberInfo}) {
-  
+
+function Team({ teamName, institution, description, teamMemberInfo }) {
   return (
-    <Container className="teamContainer">
-      <div className="teamTitle">{teamName}</div>
-      {description}
-      <div className="teamLineBreak"></div>
-      <Row className="">
+    <article className="teamContainer">
+      <header className="teamHeader">
+        <h3 className="teamTitle">{teamName}</h3>
+        {institution && <p className="teamInstitution">{institution}</p>}
+        <p className="teamDescription">{description}</p>
+      </header>
+      <ul className="teamGrid">
         {teamMemberInfo.map((content) => (
-          <Col xs={12} lg={6} key={content.id}>
+          <li key={content.id}>
             <TeamMember props={content} />
-          </Col>
+          </li>
         ))}
-      </Row>
-    </Container>
+      </ul>
+    </article>
   );
 }
 
