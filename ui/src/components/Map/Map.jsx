@@ -2421,7 +2421,8 @@ function WeatherMap() {
         </Modal.Header>
         <Modal.Body className="wrtdip-map-modal__body">
           {/* Sticky short-record warning: stays pinned while the user scrolls
-              so it can't be missed when reading the graphs. Wording is a
+              so it can't be missed when reading the graphs (desktop only; on
+              phones it would cover too much of the screen). Wording is a
               placeholder — final text to be confirmed with Yukari. */}
           {showShortRecordBanner && (
             <div className="wrtdip-short-record-banner" role="alert">

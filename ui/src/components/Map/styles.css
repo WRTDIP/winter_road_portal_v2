@@ -2190,6 +2190,16 @@
     font-size: var(--fs-caption);
   }
 
+  /* On a phone the pinned warning took a quarter of the screen and covered
+     section titles and slider labels while scrolling. It stays at the top of
+     the modal, where it is read first, but no longer follows the scroll. */
+  .wrtdip-short-record-banner {
+    position: static;
+    padding: 8px 10px;
+    font-size: 0.75rem;
+    box-shadow: none;
+  }
+
   .wrtdip-popup-section__header {
     min-height: 44px;
   }
