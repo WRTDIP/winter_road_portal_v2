@@ -2143,7 +2143,9 @@
     inset: auto 16px 16px !important;
     width: auto;
     max-width: none;
-    max-height: calc(72 * var(--dvh));
+    /* Grow up to just below the navbar instead of stopping at 72% of the
+       screen, which left a band of unused map above a scrolling popup. */
+    max-height: calc(100 * var(--dvh) - var(--nav-h) - 28px);
     display: flex;
     flex-direction: column;
     transform: none;
@@ -2184,15 +2186,60 @@
     min-width: 0;
   }
 
-  .wrtdip-map-modal__chart > div {
-    min-width: 420px;
-  }
-
   .wrtdip-map-modal__chart .MuiChartsAxis-tickLabel {
     font-size: var(--fs-caption);
+  }
+
+  /* On a phone the pinned warning took a quarter of the screen and covered
+     section titles and slider labels while scrolling. It stays at the top of
+     the modal, where it is read first, but no longer follows the scroll. */
+  .wrtdip-short-record-banner {
+    position: static;
+    padding: 8px 10px;
+    font-size: 0.75rem;
+    box-shadow: none;
   }
 
   .wrtdip-popup-section__header {
     min-height: 44px;
   }
+}
+
+/* Legend for the road open/close trend chart. Plain HTML so it wraps onto
+   extra rows on narrow screens instead of overlapping the plot. */
+.wrtdip-trend-chart-legend {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 4px 14px;
+  margin-bottom: 4px;
+  font-size: 12px;
+  color: #334155;
+}
+
+.wrtdip-trend-chart-legend__item {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+}
+
+.wrtdip-trend-chart-legend__mark {
+  flex: 0 0 auto;
+  border-style: solid;
+}
+
+.wrtdip-trend-chart-legend__mark--point {
+  width: 10px;
+  height: 10px;
+  border-width: 2px;
+  border-radius: 50%;
+  background: #ffffff;
+}
+
+.wrtdip-trend-chart-legend__mark--trend {
+  width: 18px;
+  height: 0;
+  border-width: 2px 0 0;
+  border-top-style: dashed;
 }

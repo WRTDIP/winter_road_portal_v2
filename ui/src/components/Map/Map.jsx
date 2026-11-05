@@ -728,8 +728,29 @@ function WeatherMap() {
       },
     ]
 
+    // Drawn as HTML rather than the chart's SVG legend: the SVG legend has a
+    // fixed height, so on a phone its items wrapped onto a second row that
+    // overlapped the plot. Points and trends also get distinct markers here.
+    const legendItems = [
+      { label: "Opening (freeze-up)", color: OPEN_COLOR, kind: "point" },
+      { label: "Opening trend", color: OPEN_COLOR, kind: "trend" },
+      { label: "Closing (thaw)", color: CLOSE_COLOR, kind: "point" },
+      { label: "Closing trend", color: CLOSE_COLOR, kind: "trend" },
+    ]
+
     return (
       <div style={{ width: "100%" }}>
+        <div className="wrtdip-trend-chart-legend">
+          {legendItems.map((item) => (
+            <span key={item.label} className="wrtdip-trend-chart-legend__item">
+              <span
+                className={`wrtdip-trend-chart-legend__mark wrtdip-trend-chart-legend__mark--${item.kind}`}
+                style={{ borderColor: item.color }}
+              />
+              {item.label}
+            </span>
+          ))}
+        </div>
         <LineChart
           height={height}
           series={series}
@@ -749,19 +770,10 @@ function WeatherMap() {
               valueFormatter: (v) => dosToLabel(v),
             },
           ]}
-          margin={{ left: 78, right: 18, top: 48, bottom: 50 }}
+          margin={{ left: 78, right: 18, top: 12, bottom: 50 }}
           grid={{ horizontal: true }}
           slotProps={{
-            legend: {
-              direction: "row",
-              position: { vertical: "top", horizontal: "middle" },
-              padding: 0,
-              itemMarkWidth: 14,
-              itemMarkHeight: 3,
-              markGap: 5,
-              itemGap: 18,
-              labelStyle: { fontSize: 12 },
-            },
+            legend: { hidden: true },
             // The chart's hover tooltip renders in a Popper. Its default
             // z-index sits below the road-closure popup (5000/6000), so lift
             // it above the popup to keep the datapoint tooltip on top.
@@ -2079,6 +2091,9 @@ function WeatherMap() {
 
       const chartHeight = chartSeries.length > 1 ? 300 : 260
 
+      // Pad the plotted y-range a little beyond the slider values so the
+      // highest and lowest seasons are not drawn on the plot edge and clipped.
+      const fddYPad = Math.max(50, Math.round((fddYRange[1] - fddYRange[0]) * 0.06))
 
       return (
         <div>
@@ -2101,6 +2116,10 @@ function WeatherMap() {
                 xAxis={[
                   {
                     data: filteredYears,
+                    // Pin the axis to the data so it doesn't round out to
+                    // empty decades (e.g. 1990–2030 for a 1998–2023 record).
+                    min: filteredYears[0],
+                    max: filteredYears[filteredYears.length - 1],
                     valueFormatter: (year) => year.toString(),
                     label: "Year",
                     tickMinStep: 1,
@@ -2108,8 +2127,8 @@ function WeatherMap() {
                 ]}
                 yAxis={[
                   {
-                    min: fddYRange[0],
-                    max: fddYRange[1],
+                    min: fddYRange[0] - fddYPad,
+                    max: fddYRange[1] + fddYPad,
                     label: "Freezing Degree Days (°C·days)",
                     labelStyle: { transform: "rotate(270deg) translate(-94px, -176px)" },
                   },
@@ -2211,6 +2230,23 @@ function WeatherMap() {
     lat = nunavutCoordinates[key][0];
     lon = nunavutCoordinates[key][1];
   }
+
+  // Fit the temperature axis to the series that are switched on, rounded out
+  // to the next 10 °C. The chart's automatic range rounds to coarse steps and
+  // could leave a wide empty band below the coldest day, squashing the bars.
+  const visibleTemps = tempData
+    ? [
+        ...(tempShowMax ? tempData.maxs : []),
+        ...(tempShowAvg ? tempData.avgs : []),
+        ...(tempShowMin ? tempData.mins : []),
+      ].filter((v) => v != null && !isNaN(v))
+    : []
+  const tempAxisBounds = visibleTemps.length
+    ? {
+        min: Math.min(0, Math.floor(Math.min(...visibleTemps) / 10) * 10),
+        max: Math.max(0, Math.ceil(Math.max(...visibleTemps) / 10) * 10),
+      }
+    : {}
 
   return (
     <div className="wrtdip-map" ref={MapElement}>
@@ -2409,7 +2445,8 @@ function WeatherMap() {
         </Modal.Header>
         <Modal.Body className="wrtdip-map-modal__body">
           {/* Sticky short-record warning: stays pinned while the user scrolls
-              so it can't be missed when reading the graphs. Wording is a
+              so it can't be missed when reading the graphs (desktop only; on
+              phones it would cover too much of the screen). Wording is a
               placeholder — final text to be confirmed with Yukari. */}
           {showShortRecordBanner && (
             <div className="wrtdip-short-record-banner" role="alert">
@@ -2697,6 +2734,7 @@ function WeatherMap() {
                         ]}
                         height={240}
                         margin={{ left: 50, right: 10, top: 10, bottom: 40 }}
+                        slotProps={{ legend: { hidden: true } }}
                         grid={{ horizontal: true }}
                       />
                     </div>
@@ -2779,6 +2817,7 @@ function WeatherMap() {
                         ]}
                         height={240}
                         margin={{ left: 50, right: 10, top: 10, bottom: 40 }}
+                        slotProps={{ legend: { hidden: true } }}
                         grid={{ horizontal: true }}
                       />
                     </div>
@@ -2853,7 +2892,7 @@ function WeatherMap() {
                   </div>
                   <BarChart
                     xAxis={[{ data: tempData.labels, label: "Date", scaleType: "band" }]}
-                    yAxis={[{ label: "Temperature (°C)" }]}
+                    yAxis={[{ label: "Temperature (°C)", ...tempAxisBounds }]}
                     series={[
                       ...(tempShowMax ? [{ data: tempData.maxs, label: "Max", color: "#e53935" }] : []),
                       ...(tempShowAvg ? [{ data: tempData.avgs, label: "Avg", color: "#42a5f5" }] : []),
@@ -2861,6 +2900,7 @@ function WeatherMap() {
                     ]}
                     height={240}
                     margin={{ left: 50, right: 10, top: 10, bottom: 40 }}
+                    slotProps={{ legend: { hidden: true } }}
                     grid={{ horizontal: true }}
                   />
                 </div>
