@@ -2091,6 +2091,9 @@ function WeatherMap() {
 
       const chartHeight = chartSeries.length > 1 ? 300 : 260
 
+      // Pad the plotted y-range a little beyond the slider values so the
+      // highest and lowest seasons are not drawn on the plot edge and clipped.
+      const fddYPad = Math.max(50, Math.round((fddYRange[1] - fddYRange[0]) * 0.06))
 
       return (
         <div>
@@ -2113,6 +2116,10 @@ function WeatherMap() {
                 xAxis={[
                   {
                     data: filteredYears,
+                    // Pin the axis to the data so it doesn't round out to
+                    // empty decades (e.g. 1990–2030 for a 1998–2023 record).
+                    min: filteredYears[0],
+                    max: filteredYears[filteredYears.length - 1],
                     valueFormatter: (year) => year.toString(),
                     label: "Year",
                     tickMinStep: 1,
@@ -2120,8 +2127,8 @@ function WeatherMap() {
                 ]}
                 yAxis={[
                   {
-                    min: fddYRange[0],
-                    max: fddYRange[1],
+                    min: fddYRange[0] - fddYPad,
+                    max: fddYRange[1] + fddYPad,
                     label: "Freezing Degree Days (°C·days)",
                     labelStyle: { transform: "rotate(270deg) translate(-94px, -176px)" },
                   },
@@ -2223,6 +2230,23 @@ function WeatherMap() {
     lat = nunavutCoordinates[key][0];
     lon = nunavutCoordinates[key][1];
   }
+
+  // Fit the temperature axis to the series that are switched on, rounded out
+  // to the next 10 °C. The chart's automatic range rounds to coarse steps and
+  // could leave a wide empty band below the coldest day, squashing the bars.
+  const visibleTemps = tempData
+    ? [
+        ...(tempShowMax ? tempData.maxs : []),
+        ...(tempShowAvg ? tempData.avgs : []),
+        ...(tempShowMin ? tempData.mins : []),
+      ].filter((v) => v != null && !isNaN(v))
+    : []
+  const tempAxisBounds = visibleTemps.length
+    ? {
+        min: Math.min(0, Math.floor(Math.min(...visibleTemps) / 10) * 10),
+        max: Math.max(0, Math.ceil(Math.max(...visibleTemps) / 10) * 10),
+      }
+    : {}
 
   return (
     <div className="wrtdip-map" ref={MapElement}>
@@ -2868,7 +2892,7 @@ function WeatherMap() {
                   </div>
                   <BarChart
                     xAxis={[{ data: tempData.labels, label: "Date", scaleType: "band" }]}
-                    yAxis={[{ label: "Temperature (°C)" }]}
+                    yAxis={[{ label: "Temperature (°C)", ...tempAxisBounds }]}
                     series={[
                       ...(tempShowMax ? [{ data: tempData.maxs, label: "Max", color: "#e53935" }] : []),
                       ...(tempShowAvg ? [{ data: tempData.avgs, label: "Avg", color: "#42a5f5" }] : []),
