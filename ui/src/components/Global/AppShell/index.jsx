@@ -8,6 +8,10 @@ import { useLocation } from "react-router-dom";
    route is a one-line change. */
 const IMMERSIVE_ROUTES = ["/map"];
 
+/* Routes that render with no site chrome at any width (header and footer both
+   hidden), e.g. the full-screen QR code. */
+const BARE_ROUTES = ["/qrcode"];
+
 const normalise = (pathname) => pathname.replace(/\/+$/, "").toLowerCase() || "/";
 
 /**
@@ -20,10 +24,13 @@ const normalise = (pathname) => pathname.replace(/\/+$/, "").toLowerCase() || "/
  */
 const AppShell = ({ children }) => {
   const { pathname } = useLocation();
-  const immersive = IMMERSIVE_ROUTES.includes(normalise(pathname));
+  const route = normalise(pathname);
+  const classes = ["app-shell"];
+  if (IMMERSIVE_ROUTES.includes(route)) classes.push("app-shell--immersive");
+  if (BARE_ROUTES.includes(route)) classes.push("app-shell--bare");
 
   return (
-    <div className={immersive ? "app-shell app-shell--immersive" : "app-shell"}>
+    <div className={classes.join(" ")}>
       {children}
     </div>
   );

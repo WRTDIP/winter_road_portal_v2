@@ -1,15 +1,42 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Alert, Button, Form, Spinner } from "react-bootstrap";
-import { Link, Navigate, useNavigate } from "react-router-dom";
-import { LoginOutlined, UserAddOutlined } from "@ant-design/icons";
+import { Link, Navigate, useNavigate, useSearchParams } from "react-router-dom";
+import { GoogleOutlined, LoginOutlined, UserAddOutlined, WindowsOutlined } from "@ant-design/icons";
 import { useAccount } from "../Auth0/AccountProvider";
 import "./styles.css";
 
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
+const SOCIAL_PROVIDERS = [
+  { id: "google", label: "Continue with Google", Icon: GoogleOutlined },
+  { id: "microsoft", label: "Continue with Microsoft", Icon: WindowsOutlined },
+];
+
+const SOCIAL_ERRORS = {
+  social_cancelled: "Sign in was cancelled. Choose a sign in option to try again.",
+  social_denied: "That account is not allowed to sign in here. Try another account or sign in with your email and password.",
+  social_expired: "Your sign in attempt expired or could not be verified. Please try again.",
+  social_failed: "We could not sign you in with that account. Please try again or use your email and password.",
+  social_unavailable: "That sign in option is not available right now. Please use your email and password.",
+};
+
 export default function AuthForm({ signup = false }) {
-  const { isAuthenticated, login, signup: register } = useAccount();
+  const { isAuthenticated, error: accountError, login, signup: register } = useAccount();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const [providers, setProviders] = useState([]);
+  const redirectError = SOCIAL_ERRORS[searchParams.get("error")] || "";
+
+  useEffect(() => {
+    let active = true;
+    fetch("/api/auth/providers", { credentials: "same-origin" })
+      .then((response) => (response.ok ? response.json() : { data: [] }))
+      .then((result) => active && setProviders(Array.isArray(result.data) ? result.data : []))
+      .catch(() => active && setProviders([]));
+    return () => { active = false; };
+  }, []);
+
+  const socialOptions = SOCIAL_PROVIDERS.filter((provider) => providers.includes(provider.id));
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -17,6 +44,7 @@ export default function AuthForm({ signup = false }) {
   const [showPassword, setShowPassword] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
+  const [errorVariant, setErrorVariant] = useState("danger");
 
   if (isAuthenticated && !submitting) return <Navigate to="/dashboard" replace />;
 
@@ -33,6 +61,7 @@ export default function AuthForm({ signup = false }) {
     if (submitting) return;
     const problem = validate();
     setError(problem);
+    setErrorVariant("danger");
     if (problem) return;
     setSubmitting(true);
     try {
@@ -41,6 +70,7 @@ export default function AuthForm({ signup = false }) {
       navigate("/dashboard", { replace: true });
     } catch (failure) {
       setError(failure.message || "Unable to sign in. Please try again.");
+      setErrorVariant(failure.accountCreated ? "info" : "danger");
       setSubmitting(false);
     }
   }
@@ -131,12 +161,29 @@ export default function AuthForm({ signup = false }) {
               : (signup ? "Create account" : "Sign in")}
           </Button>
           <div className="authDivider">or</div>
+          {socialOptions.map(({ id, label, Icon }) => (
+            <Button key={id} variant="outline-secondary" href={`/api/auth/social/${id}`} disabled={submitting}>
+              <Icon aria-hidden="true" />
+              {label}
+            </Button>
+          ))}
           <Button variant="outline-primary" as={Link} to={signup ? "/login" : "/register"}>
             {signup ? "Back to sign in" : "Create an account"}
           </Button>
         </div>
 
-        {error && <Alert className="authAlert" variant="danger" style={{ whiteSpace: "pre-line" }}>{error}</Alert>}
+        {!signup && (
+          <div className="authFooterLinks">
+            <Link to="/forgot-password">Forgot your password?</Link>
+          </div>
+        )}
+
+        {error && <Alert className="authAlert" variant={errorVariant} style={{ whiteSpace: "pre-line" }}>{error}</Alert>}
+        {!error && (redirectError || accountError) && (
+          <Alert className="authAlert" variant={searchParams.get("error") === "social_cancelled" ? "info" : "danger"}>
+            {redirectError || accountError}
+          </Alert>
+        )}
       </Form>
     </div>
   );

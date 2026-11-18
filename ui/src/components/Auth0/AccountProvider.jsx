@@ -30,15 +30,21 @@ export function AccountProvider({ children }) {
       if (ok) {
         setAccount(result.data);
         setIsAuthenticated(true);
-      } else if (status === 401) {
+      } else {
+        // Anything but success leaves the user signed out, so a failed account
+        // load never looks like a working session.
         setAccount(null);
         setIsAuthenticated(false);
-      } else {
-        setIsAuthenticated(true);
-        setError(result.message || "Unable to load your account. Please try again.");
+        if (status !== 401) setError(result.message || "Unable to load your account. Please try again.");
+        if (status === 409) await request("/api/auth/logout").catch(() => {});
       }
+      return { ok, status, result };
     } catch {
-      setError("We could not reach the server. Please check your connection and try again.");
+      setAccount(null);
+      setIsAuthenticated(false);
+      const message = "We could not reach the server. Please check your connection and try again.";
+      setError(message);
+      return { ok: false, status: 0, result: { message } };
     } finally {
       setIsLoading(false);
     }
@@ -50,8 +56,18 @@ export function AccountProvider({ children }) {
 
   const authenticate = useCallback(async (path, body) => {
     const { ok, result } = await request(path, body);
-    if (!ok) throw new Error(result.message || "Unable to sign in. Please try again.");
-    await loadAccount();
+    if (!ok) {
+      const failure = new Error(result.message || "Unable to sign in. Please try again.");
+      failure.accountCreated = result.accountCreated === true;
+      throw failure;
+    }
+    const loaded = await loadAccount();
+    if (!loaded.ok) {
+      // The sign-in cookie was set but the account could not be loaded; drop
+      // the cookie so the user is not left half signed in.
+      await request("/api/auth/logout");
+      throw new Error(loaded.result.message || "Signed in, but your account could not be loaded. Please try again.");
+    }
   }, [loadAccount]);
 
   const value = {

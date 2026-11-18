@@ -17,12 +17,14 @@ import Observation from "./pages/Observation/index.jsx";
 import Login from "./pages/Login/Login.jsx";
 import Map from "./components/Map/Map.jsx";
 import Register from "./pages/Register/Register.jsx";
+import ForgotPassword from "./pages/ForgotPassword/ForgotPassword.jsx";
 import Dashboard from "./pages/Dashboard/Dashboard.jsx";
 import FDDTest from "./pages/FDDTest/FDDTest.jsx";
 import Api from "./pages/Api/index.jsx";
 import Download from "./pages/Download/index.jsx";
 import References from "./pages/References/index.jsx";
 import Blog from "./pages/Blog/index.jsx";
+import QRCodePage from "./pages/QRCode/index.jsx";
 import { AccountProvider } from "./components/Auth0/AccountProvider.jsx";
 
 /* Dev-only responsive harness. `import.meta.env.DEV` is a literal at build
@@ -59,6 +61,7 @@ ReactDOM.render(
           <Route path="/observation" element={<Observation />} exact />
           <Route path="/login" element={<Login />} exact />
           <Route path="/register" element={<Register />} exact />
+          <Route path="/forgot-password" element={<ForgotPassword />} exact />
           <Route path="/resend-email-validation" element={<Navigate to="/login" replace />} />
           <Route path="/validate-email" element={<Navigate to="/login" replace />} />
           <Route path="/dashboard" element={<Dashboard />} exact />
@@ -67,6 +70,7 @@ ReactDOM.render(
           <Route path="/download" element={<Download />} exact />
           <Route path="/references" element={<References />} exact />
           <Route path="/blog" element={<Blog />} exact />
+          <Route path="/qrcode" element={<QRCodePage />} exact />
           {ResponsiveHarness && (
             <Route
               path="/dev/responsive"

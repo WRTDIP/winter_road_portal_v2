@@ -29,6 +29,13 @@
   flex-shrink: 0;
 }
 
+/* The bare variant, set by AppShell on routes that show no site chrome at all
+   (/qrcode). Applies at every width. */
+.app-shell--bare > .portal-header,
+.app-shell--bare > .footerContainer {
+  display: none;
+}
+
 /* The immersive variant, set by AppShell on routes that own the whole phone
    screen (/map). Phone only -- at --bp-sm and up the footer belongs there as
    much as on any other page.

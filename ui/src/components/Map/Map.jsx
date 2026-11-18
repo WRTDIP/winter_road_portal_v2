@@ -35,6 +35,7 @@ import YearRangeSlider from "../YearRangeSlider/YearRangeSlider.jsx"
 import FddChart, { MIN_GRAPH_POINTS } from "./components/FddChart"
 import PrecipChart, { PRECIP_BAR_GAPS } from "./components/PrecipChart"
 import ChartScroller from "./components/ChartScroller.jsx"
+import ClimateTrendStats from "./components/ClimateTrendStats.jsx"
 
 const API_BASE = "https://dev-moh.wramp.ca/python-api";
 
@@ -1237,9 +1238,26 @@ function WeatherMap() {
     )
   }
 
-  // Render the climate-trend statistics as stat tiles + a season timeline,
-  // with the full numbers table behind a toggle (bottom section of the popup).
+  // Climate-trend statistics (bottom section of the popup). Loading and
+  // no-data states still come from the legacy renderer.
   const renderRoadStatsSection = () => {
+    if (roadStatsLoading || !roadStats?.matched || (!roadStats?.open && !roadStats?.close)) {
+      return renderLegacyRoadStats()
+    }
+    return (
+      <ClimateTrendStats
+        open={roadStats.open}
+        close={roadStats.close}
+        openPoints={roadTrend?.open_scatter}
+        closePoints={roadTrend?.close_scatter}
+        fmtP={fmtP}
+        legacy={renderLegacyRoadStats}
+      />
+    )
+  }
+
+  // Previous layout, kept selectable from the debug switcher for comparison.
+  const renderLegacyRoadStats = () => {
     if (roadStatsLoading) {
       return (
         <Typography variant="body2" color="text.secondary" sx={{ py: 3, textAlign: "center" }}>
