@@ -44,7 +44,7 @@ function formatDayLabel(isoDate, index) {
   if (index === 1) return "Tomorrow"
   try {
     const d = new Date(isoDate + "T00:00:00")
-    return d.toLocaleDateString(undefined, { weekday: "short", month: "short", day: "numeric" })
+    return d.toLocaleDateString("en-CA", { weekday: "short", month: "short", day: "numeric" })
   } catch {
     return isoDate
   }

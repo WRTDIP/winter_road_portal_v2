@@ -1,26 +1,16 @@
 import React from "react";
-import {Typography } from "antd";
 
 import "./styles.css";
 
+/* One "impact" story on the home page: a field photograph with its text. */
 const TemplateBanner = ({ props }) => {
-  const { image, title, content, bgColor } = props;
+  const { image, title, content } = props;
   return (
-    <div
-      className="templateBannerContainer"
-      style={{ backgroundColor: bgColor }}
-    >
-      <div className="templateBannerImageContainer">
-        <img className="templateBannerImage" src={image} alt="templateBanner" />
-      </div>
-      <div className="templateBannerTitle">
-        <Typography style={{ color: "#0E2959" }}>{title}</Typography>
-      </div>
-
-      <div className="templateBannerText">
-        <Typography style={{ color: "#0E2959" }}>{content}</Typography>
-      </div>
-    </div>
+    <article className="templateBannerContainer">
+      <img className="templateBannerImage" src={image} alt="" />
+      <h3 className="templateBannerTitle">{title}</h3>
+      <p className="templateBannerText">{content}</p>
+    </article>
   );
 };
 

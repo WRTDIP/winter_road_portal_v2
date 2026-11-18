@@ -8,6 +8,8 @@
     color:  white;
     font-family: 'Roboto', sans-serif;
     font-size: var(--fs-h1);
+    font-weight: 500;
+    line-height: 1.2;
 }
 .welcomeText{
     font-size: var(--fs-lead);
@@ -47,5 +49,43 @@
         height: auto;
         aspect-ratio: 4 / 3;
         object-fit: cover;
+    }
+}
+
+/* The two calls to action, inverted for the navy banner. */
+.welcomeActions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 12px;
+    margin-top: 1.75rem;
+}
+
+.welcomeButton--primary {
+    background: #fff;
+    color: var(--c-navy-800);
+}
+
+.welcomeButton--primary:hover,
+.welcomeButton--primary:focus-visible {
+    background: var(--c-bg);
+    color: var(--c-navy-900);
+}
+
+.welcomeButton--secondary {
+    border-color: rgba(255, 255, 255, 0.7);
+    color: #fff;
+}
+
+.welcomeButton--secondary:hover,
+.welcomeButton--secondary:focus-visible {
+    border-color: #fff;
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+}
+
+@media (max-width: 575.98px) { /* --bp-sm */
+    .welcomeActions .ui-btn {
+        flex: 1 1 100%;
     }
 }
