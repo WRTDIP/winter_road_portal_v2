@@ -1103,6 +1103,12 @@ function WeatherMap() {
     }
 
     const isSignificant = (m) => m.p != null && m.p < 0.05
+    // Sign from the rounded value, so a tiny slope shows "0.0", not "−0.0".
+    const signed = (v, digits) => {
+      const text = Math.abs(v).toFixed(digits)
+      if (Number(text) === 0) return text
+      return `${v > 0 ? "+" : "−"}${text}`
+    }
     // Months in the chart's current window get a subtle highlight so the table
     // and the bars above stay visually linked.
     const [ms, me] = precipMonthRange
@@ -1224,8 +1230,8 @@ function WeatherMap() {
                         {slope == null
                           ? "—"
                           : showAdvanced
-                            ? `${slope > 0 ? "+" : slope < 0 ? "−" : ""}${Math.abs(slope).toFixed(3)}`
-                            : `${slope > 0 ? "+" : slope < 0 ? "−" : ""}${Math.abs(slope * 10).toFixed(1)}`}
+                            ? signed(slope, 3)
+                            : signed(slope * 10, 1)}
                       </span>
                     </td>
                     {showAdvanced && (

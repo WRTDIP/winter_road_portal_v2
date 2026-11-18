@@ -2336,6 +2336,18 @@
     padding-top: calc(12px + env(safe-area-inset-top, 0px));
   }
 
+  /* Keep the title and the controls on one row: the Advanced switch keeps
+     its icon and toggle (the input is still labelled "Advanced"), and the
+     heading no longer reserves 12rem that pushed the controls onto a row of
+     their own. */
+  .wrtdip-map-modal__heading {
+    flex: 1 1 0;
+  }
+
+  .wrtdip-map-modal__advanced-label > span {
+    display: none;
+  }
+
   .wrtdip-map-modal__section {
     padding: 12px 8px;
     min-width: 0;
