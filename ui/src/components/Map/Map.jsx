@@ -428,7 +428,6 @@ function WeatherMap() {
   // Per-month Mann-Kendall / Sen's slope trends for the precipitation table.
   const [precipTrend, setPrecipTrend] = useState(null)
   const [precipTrendLoading, setPrecipTrendLoading] = useState(false)
-  const [precipLegendVersion, setPrecipLegendVersion] = useState(1)
   const [tempData, setTempData] = useState(null) // {labels: [], avgs: [], maxs: [], mins: []}
   const [tempLoading, setTempLoading] = useState(false)
   const [tempMonthRange, setTempMonthRange] = useState([defaultMonthStart, defaultMonthEnd])
@@ -1188,38 +1187,19 @@ function WeatherMap() {
           </table>
         </div>
 
-        <div className="wrtdip-precip-legend-dev" role="group" aria-label="Precipitation legend version">
-          <span className="wrtdip-precip-legend-dev__label">Dev: Legend</span>
-          {[1, 2, 3, 4].map((version) => (
-            <button
-              key={version}
-              type="button"
-              aria-pressed={precipLegendVersion === version}
-              className={`wrtdip-precip-resolution__btn${precipLegendVersion === version ? " wrtdip-precip-resolution__btn--active" : ""}`}
-              onClick={() => setPrecipLegendVersion(version)}
-            >
-              Version {version}
-            </button>
-          ))}
-        </div>
-        <div className={`wrtdip-precip-scale wrtdip-precip-scale--v${precipLegendVersion}`}>
-          {precipLegendVersion !== 4 && <WaterDropIcon className="wrtdip-precip-scale__icon" />}
+        <div className="wrtdip-precip-scale">
           <div className="wrtdip-precip-scale__body">
-            {precipLegendVersion === 4 ? (
-              <div className="wrtdip-precip-scale__droplets" aria-hidden="true">
-                {Array.from({ length: 9 }, (_, index) => (
-                  <WaterDropIcon
-                    key={index}
-                    style={{ color: trendColor(maxAbs * (index / 4 - 1)) }}
-                  />
-                ))}
-              </div>
-            ) : (
-              <div className="wrtdip-precip-scale__gradient" aria-hidden="true" />
-            )}
+            <div className="wrtdip-precip-scale__droplets" aria-hidden="true">
+              {Array.from({ length: 9 }, (_, index) => (
+                <WaterDropIcon
+                  key={index}
+                  style={{ color: trendColor(maxAbs * (index / 4 - 1)) }}
+                />
+              ))}
+            </div>
             <div className="wrtdip-precip-scale__labels">
-              <span>{precipLegendVersion === 3 ? "Getting wetter" : "Getting drier"}</span>
-              <span>{precipLegendVersion === 3 ? "Getting drier" : "Getting wetter"}</span>
+              <span>Getting drier</span>
+              <span>Getting wetter</span>
             </div>
           </div>
         </div>

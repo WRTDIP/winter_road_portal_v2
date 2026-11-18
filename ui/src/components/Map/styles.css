@@ -1993,31 +1993,6 @@
   color: #64748b;
 }
 
-.wrtdip-precip-legend-dev {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 6px;
-  margin-top: 14px;
-}
-
-.wrtdip-precip-legend-dev__label {
-  font-size: 0.72rem;
-  font-weight: 700;
-  color: #64748b;
-}
-
-.wrtdip-precip-legend-dev .wrtdip-precip-resolution__btn {
-  flex: 0 0 auto;
-  min-height: 44px;
-  padding: 7px 10px;
-}
-
-.wrtdip-precip-legend-dev .wrtdip-precip-resolution__btn:focus-visible {
-  outline: 2px solid #1e40af;
-  outline-offset: 2px;
-}
-
 .wrtdip-precip-scale {
   display: flex;
   align-items: flex-start;
@@ -2028,30 +2003,9 @@
   color: #1e3a8a;
 }
 
-.wrtdip-precip-scale__icon {
-  flex: 0 0 auto;
-}
-
 .wrtdip-precip-scale__body {
   flex: 1;
   min-width: 0;
-}
-
-.wrtdip-precip-scale__gradient {
-  height: 12px;
-  border: 1px solid #94a3b8;
-  border-radius: 3px;
-  background: linear-gradient(90deg, #f7fbff, #1e3a8a);
-}
-
-.wrtdip-precip-scale--v2 .wrtdip-precip-scale__icon {
-  color: #dbeafe;
-  stroke: #94a3b8;
-  stroke-width: 0.5px;
-}
-
-.wrtdip-precip-scale--v3 .wrtdip-precip-scale__gradient {
-  background: linear-gradient(90deg, #1e3a8a, #f7fbff);
 }
 
 .wrtdip-precip-scale__droplets {
