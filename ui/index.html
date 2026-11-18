@@ -2,6 +2,18 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
+    <script>
+      (function () {
+        var canonicalHost = "dev-moh.wramp.ca";
+        var host = window.location.hostname;
+        var isLocal = host === "localhost" || host === "127.0.0.1" || host === "[::1]";
+        if (host !== canonicalHost && !isLocal) {
+          window.location.replace(
+            "https://" + canonicalHost + window.location.pathname + window.location.search + window.location.hash
+          );
+        }
+      })();
+    </script>
     <link rel="icon" href="/favicon.ico" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#000000" />
