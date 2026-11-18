@@ -17,7 +17,7 @@ import { getClimateCity } from "../../services/meteo.service.js"
 import { cities } from "../../utils/constants.js"
 import { LineChart } from "@mui/x-charts/LineChart"
 import { BarChart } from "@mui/x-charts/BarChart"
-import { FormControlLabel, Icon, Switch, Typography } from "@mui/material"
+import { FormControlLabel, Icon, Switch, Tab, Tabs, Typography } from "@mui/material"
 import useMediaQuery from "@mui/material/useMediaQuery"
 import OpenInFullIcon from "@mui/icons-material/OpenInFull"
 import CloseFullscreenIcon from "@mui/icons-material/CloseFullscreen"
@@ -36,6 +36,7 @@ import FddChart, { MIN_GRAPH_POINTS } from "./components/FddChart"
 import PrecipChart, { PRECIP_BAR_GAPS } from "./components/PrecipChart"
 import ChartScroller from "./components/ChartScroller.jsx"
 import ClimateTrendStats from "./components/ClimateTrendStats.jsx"
+import useSheetDrag from "../../hooks/useSheetDrag.js"
 
 const API_BASE = "https://dev-moh.wramp.ca/python-api";
 
@@ -367,6 +368,9 @@ function WeatherMap() {
   // State to control modal visibility
   const [modalIsOpen, setModalIsOpen] = useState(false)
   const [modalEnlarge, setModalEnlarge] = useState(false)
+  // Section the Climate & Weather body is scrolled to, for the jump links.
+  const [climateSection, setClimateSection] = useState("fdd")
+  const climateBodyRef = useRef(null)
 
   // Custom feature popup state (replaces ArcGIS native popup)
   const [featurePopup, setFeaturePopup] = useState(null) // {title, content, layerTitle, screenX, screenY}
@@ -376,18 +380,16 @@ function WeatherMap() {
   const [roadTrendLoading, setRoadTrendLoading] = useState(false)
   const [roadTrend, setRoadTrend] = useState(null) // backend payload
   // Whether the road popup is enlarged (centered on screen like a modal).
+  // Desktop only; on a phone the popup is a bottom sheet sized by roadSheetSnap.
   const [roadPopupEnlarged, setRoadPopupEnlarged] = useState(false)
-  // Whether the inline trend chart is collapsed. Persists for the lifetime of
-  // the page (session) so the user's choice is remembered across road popups.
-  // Defaults to expanded (open) on page load.
-  const [roadTrendCollapsed, setRoadTrendCollapsed] = useState(false)
-  // Whether the inline open-duration chart is collapsed. Same persistence
-  // behaviour as the trend chart; defaults to expanded.
-  const [roadDurationCollapsed, setRoadDurationCollapsed] = useState(false)
+  // Phone bottom-sheet height: "peek" (header and tabs), "half" or "full".
+  const [roadSheetSnap, setRoadSheetSnap] = useState("half")
+  // Which tab of the road popup is showing. Persists across road popups for
+  // the page session, so a reader comparing roads stays on the same view.
+  const [roadTab, setRoadTab] = useState("season")
   // Climate trend statistics (bottom section of the road popup).
   const [roadStats, setRoadStats] = useState(null) // backend payload
   const [roadStatsLoading, setRoadStatsLoading] = useState(false)
-  const [roadStatsCollapsed, setRoadStatsCollapsed] = useState(false)
   // Whether the full numbers table inside the stats section is shown.
   const [roadStatsDetail, setRoadStatsDetail] = useState(false)
   // FDD chart state
@@ -580,15 +582,13 @@ function WeatherMap() {
     }
   }, [popupRoadName])
 
-  // On a phone the popup is a bottom sheet with room for little more than the
-  // details, so a road popup opens enlarged (near full screen) and the header
-  // button shrinks it from there. Desktop still opens compact.
+  // Each road popup opens at the default size: compact on desktop, a half-height
+  // sheet on a phone, so the road stays visible on the map above it.
   //
   // This fires on the open itself, not on every road: switching straight from
-  // one road to another keeps whatever size the user chose, the way the
-  // collapsed sections above already persist, and a rotation that flips
-  // isMobile mid-popup leaves that choice alone too. Closing ends the run, so
-  // the next popup opens at the default again.
+  // one road to another keeps whatever size the user chose, and a rotation
+  // that flips isMobile mid-popup leaves that choice alone too. Closing ends
+  // the run, so the next popup opens at the default again.
   const roadPopupWasOpen = useRef(false)
 
   useEffect(() => {
@@ -596,8 +596,22 @@ function WeatherMap() {
     if (open === roadPopupWasOpen.current) return
 
     roadPopupWasOpen.current = open
-    if (open) setRoadPopupEnlarged(isMobile)
-  }, [popupRoadName, isMobile])
+    if (open) {
+      setRoadPopupEnlarged(false)
+      setRoadSheetSnap("half")
+    }
+  }, [popupRoadName])
+
+  const closeFeaturePopup = () => {
+    setFeaturePopup(null)
+    setRoadPopupEnlarged(false)
+  }
+  const roadSheet = useSheetDrag({
+    enabled: isMobile && popupRoadName != null,
+    snap: roadSheetSnap,
+    setSnap: setRoadSheetSnap,
+    onClose: closeFeaturePopup,
+  })
 
   // Convert a "day of season" (days since Aug 1) back to a readable date label.
   const SEASON_BASE_MS = Date.UTC(2001, 7, 1) // Aug 1
@@ -2046,6 +2060,46 @@ function WeatherMap() {
   /**
    * Function to close the modal.
    */
+  // Jump links in the Climate & Weather header. The short-record banner is
+  // sticky at the top of the body, so land each section just below it.
+  const CLIMATE_SECTIONS = [
+    { id: "fdd", label: "Winter (FDD)" },
+    { id: "precip", label: "Precip & snow" },
+    { id: "temp", label: "Temperature" },
+    { id: "forecast", label: "Forecast" },
+  ]
+  const climateStickyOffset = (body) => {
+    const banner = body.querySelector(".wrtdip-short-record-banner")
+    return (banner ? banner.getBoundingClientRect().height : 0) + 12
+  }
+  const jumpToClimateSection = (id) => {
+    const body = climateBodyRef.current
+    const section = document.getElementById(`wrtdip-cw-${id}`)
+    if (!body || !section) return
+    const top =
+      body.scrollTop +
+      section.getBoundingClientRect().top -
+      body.getBoundingClientRect().top -
+      climateStickyOffset(body)
+    const reduce = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches
+    body.scrollTo({ top, behavior: reduce ? "auto" : "smooth" })
+    setClimateSection(id)
+  }
+  const onClimateBodyScroll = (e) => {
+    const body = e.currentTarget
+    const line = body.getBoundingClientRect().top + climateStickyOffset(body) + 24
+    let current = CLIMATE_SECTIONS[0].id
+    for (const { id } of CLIMATE_SECTIONS) {
+      const el = document.getElementById(`wrtdip-cw-${id}`)
+      if (el && el.getBoundingClientRect().top <= line) current = id
+    }
+    // At the very bottom the last section may be too short to reach the line.
+    if (body.scrollTop + body.clientHeight >= body.scrollHeight - 4) {
+      current = CLIMATE_SECTIONS[CLIMATE_SECTIONS.length - 1].id
+    }
+    if (current !== climateSection) setClimateSection(current)
+  }
+
   function closeModal() {
     setModalEnlarge(false)
     setModalIsOpen(false)
@@ -2158,117 +2212,132 @@ function WeatherMap() {
       <div id="legend-container"></div>
       <div id="layer-list-container"></div>
 
-      {/* Custom feature popup (replaces ArcGIS native popup) */}
+      {/* Custom feature popup (replaces ArcGIS native popup). On a phone a road
+          popup is a bottom sheet: drag the header to peek / half / full. */}
       {featurePopup && (() => {
         const isRoadPopup = ROAD_CLOSURE_LAYERS.includes(featurePopup.layerTitle)
-        const enlarged = isRoadPopup && roadPopupEnlarged
+        const isSheet = isRoadPopup && isMobile
+        const enlarged = isRoadPopup && roadPopupEnlarged && !isMobile
         const containerWidth = MapElement.current?.clientWidth || 600
         // Popup is centered on `left` via translateX(-50%), so keep its half
         // width inside the map bounds.
         const popupWidth = isRoadPopup ? Math.min(560, containerWidth - 32) : 280
         const half = popupWidth / 2
         const clampedLeft = Math.max(half + 8, Math.min(featurePopup.screenX, containerWidth - half - 8))
+        const chartHeight = enlarged ? 420 : isMobile ? 260 : 320
+        const roadTabs = [
+          { id: "season", label: "Season" },
+          { id: "details", label: "Details" },
+          { id: "dates", label: "Open/Close" },
+          { id: "duration", label: "Duration" },
+        ]
+        const tab = roadTabs.some((t) => t.id === roadTab) ? roadTab : "season"
+        const popupClass = [
+          "wrtdip-feature-popup",
+          isRoadPopup && "wrtdip-feature-popup--wide",
+          enlarged && "wrtdip-feature-popup--enlarged",
+          isSheet && "wrtdip-feature-popup--sheet",
+          isSheet && `wrtdip-feature-popup--${roadSheetSnap}`,
+        ].filter(Boolean).join(" ")
         return (
         <div
-          className={`wrtdip-feature-popup${isRoadPopup ? " wrtdip-feature-popup--wide" : ""}${enlarged ? " wrtdip-feature-popup--enlarged" : ""}`}
-          style={enlarged ? {} : {
-            left: clampedLeft,
-            top: Math.max(featurePopup.screenY - 10, 10),
-          }}
+          ref={isSheet ? roadSheet.sheetRef : undefined}
+          className={popupClass}
+          role="dialog"
+          aria-modal="false"
+          aria-label={featurePopup.title || "Feature"}
+          onKeyDown={(e) => { if (e.key === "Escape") closeFeaturePopup() }}
+          style={
+            isSheet ? roadSheet.sheetStyle
+              : enlarged ? {}
+              : { left: clampedLeft, top: Math.max(featurePopup.screenY - 10, 10) }
+          }
         >
-          <div className="wrtdip-feature-popup__header">
-            <div className="wrtdip-feature-popup__header-text">
-              {featurePopup.layerTitle && (
-                <span className="wrtdip-feature-popup__layer-tag">{featurePopup.layerTitle}</span>
+          <div className="wrtdip-feature-popup__grab" {...(isSheet ? roadSheet.zoneProps : {})}>
+            {isSheet && (
+              <button
+                type="button"
+                className="wrtdip-feature-popup__handle"
+                onClick={() => setRoadSheetSnap((s) => (s === "full" ? "half" : "full"))}
+                aria-label={roadSheetSnap === "full" ? "Shrink details" : "Expand details"}
+              >
+                <span aria-hidden="true" />
+              </button>
+            )}
+            <div className="wrtdip-feature-popup__header">
+              <div className="wrtdip-feature-popup__header-text">
+                {featurePopup.layerTitle && (
+                  <span className="wrtdip-feature-popup__layer-tag">{featurePopup.layerTitle}</span>
+                )}
+                <span className="wrtdip-feature-popup__title">{featurePopup.title || "Feature"}</span>
+              </div>
+              {isRoadPopup && !isMobile && (
+                <button
+                  type="button"
+                  className="wrtdip-popup-icon-btn"
+                  onClick={() => setRoadPopupEnlarged((e) => !e)}
+                  aria-label={enlarged ? "Shrink" : "Enlarge"}
+                  title={enlarged ? "Shrink" : "Enlarge"}
+                >
+                  {enlarged ? <CloseFullscreenIcon style={{ fontSize: 14 }} /> : <OpenInFullIcon style={{ fontSize: 14 }} />}
+                </button>
               )}
-              <span className="wrtdip-feature-popup__title">{featurePopup.title || "Feature"}</span>
-            </div>
-            {isRoadPopup && (
               <button
                 type="button"
                 className="wrtdip-popup-icon-btn"
-                onClick={() => setRoadPopupEnlarged((e) => !e)}
-                aria-label={enlarged ? "Shrink" : "Enlarge"}
-                title={enlarged ? "Shrink" : "Enlarge"}
+                onClick={closeFeaturePopup}
+                aria-label="Close"
+                title="Close"
               >
-                {enlarged ? <CloseFullscreenIcon style={{ fontSize: 14 }} /> : <OpenInFullIcon style={{ fontSize: 14 }} />}
+                ×
               </button>
+            </div>
+            {isRoadPopup && (
+              <Tabs
+                value={tab}
+                onChange={(_, v) => {
+                  setRoadTab(v)
+                  // Picking a tab from the peek strip means "show me this".
+                  if (isSheet && roadSheetSnap === "peek") setRoadSheetSnap("half")
+                }}
+                variant="fullWidth"
+                className="wrtdip-popup-tabs"
+                aria-label="Road information"
+              >
+                {roadTabs.map((t) => (
+                  <Tab
+                    key={t.id}
+                    value={t.id}
+                    label={t.label}
+                    id={`wrtdip-road-tab-${t.id}`}
+                    aria-controls="wrtdip-road-tabpanel"
+                  />
+                ))}
+              </Tabs>
             )}
-            <button
-              type="button"
-              className="wrtdip-popup-icon-btn"
-              onClick={() => { setFeaturePopup(null); setRoadPopupEnlarged(false) }}
-              aria-label="Close"
-              title="Close"
-            >
-              ×
-            </button>
           </div>
           {isRoadPopup ? (
-            <div className="wrtdip-feature-popup__body">
+            <div
+              className="wrtdip-feature-popup__body"
+              role="tabpanel"
+              id="wrtdip-road-tabpanel"
+              aria-labelledby={`wrtdip-road-tab-${tab}`}
+            >
               <div className="wrtdip-popup-section">
-                <div className="wrtdip-popup-section__header wrtdip-popup-section__header--static">
-                  <span className="wrtdip-popup-section__title">Details</span>
-                </div>
-                {featurePopup.content && (
+                {tab === "details" && featurePopup.content && (
                   <div
                     className="wrtdip-popup-section__content"
                     dangerouslySetInnerHTML={{ __html: featurePopup.content }}
                   />
                 )}
-              </div>
-              <div className="wrtdip-popup-section">
-                <button
-                  type="button"
-                  className="wrtdip-popup-section__header"
-                  onClick={() => setRoadTrendCollapsed((c) => !c)}
-                  aria-expanded={!roadTrendCollapsed}
-                >
-                  <span className="wrtdip-popup-section__title">Open/Close Trend</span>
-                  <span className={`wrtdip-popup-section__caret${roadTrendCollapsed ? "" : " wrtdip-popup-section__caret--open"}`}>
-                    ▾
-                  </span>
-                </button>
-                {!roadTrendCollapsed && (
-                  <div className="wrtdip-popup-section__content">
-                    {renderRoadTrendChart(enlarged ? 420 : 320)}
-                  </div>
+                {tab === "season" && (
+                  <div className="wrtdip-popup-section__content">{renderRoadStatsSection()}</div>
                 )}
-              </div>
-              <div className="wrtdip-popup-section">
-                <button
-                  type="button"
-                  className="wrtdip-popup-section__header"
-                  onClick={() => setRoadDurationCollapsed((c) => !c)}
-                  aria-expanded={!roadDurationCollapsed}
-                >
-                  <span className="wrtdip-popup-section__title">Open Duration per Year</span>
-                  <span className={`wrtdip-popup-section__caret${roadDurationCollapsed ? "" : " wrtdip-popup-section__caret--open"}`}>
-                    ▾
-                  </span>
-                </button>
-                {!roadDurationCollapsed && (
-                  <div className="wrtdip-popup-section__content">
-                    {renderRoadDurationChart(enlarged ? 420 : 320)}
-                  </div>
+                {tab === "dates" && (
+                  <div className="wrtdip-popup-section__content">{renderRoadTrendChart(chartHeight)}</div>
                 )}
-              </div>
-              <div className="wrtdip-popup-section">
-                <button
-                  type="button"
-                  className="wrtdip-popup-section__header"
-                  onClick={() => setRoadStatsCollapsed((c) => !c)}
-                  aria-expanded={!roadStatsCollapsed}
-                >
-                  <span className="wrtdip-popup-section__title">Climate Trend Statistics</span>
-                  <span className={`wrtdip-popup-section__caret${roadStatsCollapsed ? "" : " wrtdip-popup-section__caret--open"}`}>
-                    ▾
-                  </span>
-                </button>
-                {!roadStatsCollapsed && (
-                  <div className="wrtdip-popup-section__content">
-                    {renderRoadStatsSection()}
-                  </div>
+                {tab === "duration" && (
+                  <div className="wrtdip-popup-section__content">{renderRoadDurationChart(chartHeight)}</div>
                 )}
               </div>
             </div>
@@ -2287,6 +2356,8 @@ function WeatherMap() {
       <Modal
         show={modalIsOpen}
         onHide={closeModal}
+        onEnter={() => setClimateSection("fdd")}
+        fullscreen="md-down"
         centered={!modalEnlarge}
         dialogClassName={
           modalEnlarge ? "wrtdip-map-modal wrtdip-map-modal--enlarged" : "wrtdip-map-modal"
@@ -2328,15 +2399,17 @@ function WeatherMap() {
                 </span>
               }
             />
-            <button
-              type="button"
-              className="wrtdip-popup-icon-btn"
-              onClick={() => setModalEnlarge(!modalEnlarge)}
-              aria-label={modalEnlarge ? "Shrink" : "Enlarge"}
-              title={modalEnlarge ? "Shrink" : "Enlarge"}
-            >
-              {modalEnlarge ? <CloseFullscreenIcon style={{ fontSize: 14 }} /> : <OpenInFullIcon style={{ fontSize: 14 }} />}
-            </button>
+            {!isMobile && (
+              <button
+                type="button"
+                className="wrtdip-popup-icon-btn"
+                onClick={() => setModalEnlarge(!modalEnlarge)}
+                aria-label={modalEnlarge ? "Shrink" : "Enlarge"}
+                title={modalEnlarge ? "Shrink" : "Enlarge"}
+              >
+                {modalEnlarge ? <CloseFullscreenIcon style={{ fontSize: 14 }} /> : <OpenInFullIcon style={{ fontSize: 14 }} />}
+              </button>
+            )}
             <button
               type="button"
               className="wrtdip-popup-icon-btn"
@@ -2347,8 +2420,21 @@ function WeatherMap() {
               ×
             </button>
           </div>
+          <nav className="wrtdip-map-modal__jump" aria-label="Jump to section">
+            {CLIMATE_SECTIONS.map(({ id, label }) => (
+              <button
+                key={id}
+                type="button"
+                className={`wrtdip-map-modal__jump-btn${climateSection === id ? " wrtdip-map-modal__jump-btn--active" : ""}`}
+                aria-current={climateSection === id ? "true" : undefined}
+                onClick={() => jumpToClimateSection(id)}
+              >
+                {label}
+              </button>
+            ))}
+          </nav>
         </Modal.Header>
-        <Modal.Body className="wrtdip-map-modal__body">
+        <Modal.Body className="wrtdip-map-modal__body" ref={climateBodyRef} onScroll={onClimateBodyScroll}>
           {/* Sticky short-record warning: stays pinned while the user scrolls
               so it can't be missed when reading the graphs. Wording is a
               placeholder — final text to be confirmed with Yukari. */}
@@ -2368,7 +2454,7 @@ function WeatherMap() {
               Datasource from <strong>CanHomT V4</strong>, Canada's gold-standard climate record. It's carefully corrected for station moves and equipment changes, so you get the most accurate picture of how the climate is changing.
             </Typography>
           </div>
-          <section className="wrtdip-map-modal__section">
+          <section className="wrtdip-map-modal__section" id="wrtdip-cw-fdd">
             <Typography variant="subtitle1" className="wrtdip-map-modal__section-title">
               Freezing Degree Days (FDDs)
             </Typography>
@@ -2500,7 +2586,7 @@ function WeatherMap() {
             </div>
           </section>
 
-          <section className="wrtdip-map-modal__section">
+          <section className="wrtdip-map-modal__section" id="wrtdip-cw-precip">
             <div className="wrtdip-section-switch" role="tablist" aria-label="Precipitation or snowfall">
               <button
                 type="button"
@@ -2645,7 +2731,7 @@ function WeatherMap() {
             )}
           </section>
 
-          <section className="wrtdip-map-modal__section">
+          <section className="wrtdip-map-modal__section" id="wrtdip-cw-temp">
             <Typography variant="subtitle1" className="wrtdip-map-modal__section-title">
               Average Daily Temperature
             </Typography>
@@ -2725,7 +2811,7 @@ function WeatherMap() {
             </div>
           </section>
 
-          <section className="wrtdip-map-modal__section">
+          <section className="wrtdip-map-modal__section" id="wrtdip-cw-forecast">
             <Typography variant="subtitle1" className="wrtdip-map-modal__section-title">
               3-Day Weather Forecast
             </Typography>

@@ -409,6 +409,85 @@
   display: none;
 }
 
+/* Header + tabs of a popup. On a phone sheet this is also the drag zone. */
+.wrtdip-feature-popup__grab {
+  position: relative;
+  flex-shrink: 0;
+}
+
+/* Bottom-sheet drag handle; only rendered on a phone. It sits over the top of
+   the header and is a real button, so a tap (or keyboard) toggles half/full. */
+.wrtdip-feature-popup__handle {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  z-index: 1;
+  width: 96px;
+  height: 26px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: none;
+  background: transparent;
+  transform: translateX(-50%);
+  cursor: grab;
+}
+
+.wrtdip-feature-popup__handle span {
+  width: 40px;
+  height: 5px;
+  border-radius: 3px;
+  background: rgba(255, 255, 255, 0.65);
+}
+
+.wrtdip-feature-popup__handle:focus-visible {
+  outline: 2px solid #ffffff;
+  outline-offset: -4px;
+  border-radius: 8px;
+}
+
+/* Tabs under the road popup header (MUI Tabs). */
+.wrtdip-popup-tabs.MuiTabs-root {
+  min-height: 44px;
+  background: #ffffff;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.wrtdip-popup-tabs .MuiTab-root {
+  min-width: 0;
+  min-height: 44px;
+  padding: 6px 4px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: none;
+  letter-spacing: 0;
+  color: #475569;
+}
+
+.wrtdip-popup-tabs .MuiTab-root.Mui-selected {
+  color: #1e3a8a;
+}
+
+.wrtdip-popup-tabs .MuiTabs-indicator {
+  height: 3px;
+  background-color: #2563eb;
+}
+
+/* MUI X charts set touch-action: none on their SVG, so a vertical swipe that
+   starts on a chart would not scroll the popup. Let the page take vertical
+   pans (and sideways ones inside a scrolling chart); a tap still shows the
+   tooltip. */
+.wrtdip-feature-popup__body svg,
+.wrtdip-map-modal__body svg {
+  touch-action: pan-y;
+}
+
+.wrtdip-popup-chart svg,
+.wrtdip-map-modal__chart svg {
+  touch-action: pan-x pan-y;
+}
+
 .wrtdip-feature-popup__arrow {
   position: absolute;
   bottom: -7px;
@@ -591,6 +670,51 @@
 
 .wrtdip-map-modal__header .btn-close {
   display: none;
+}
+
+/* Section jump links under the Climate & Weather title. One row that scrolls
+   sideways on a narrow phone rather than wrapping into the header. */
+.wrtdip-map-modal__jump {
+  flex: 1 0 100%;
+  display: flex;
+  gap: 6px;
+  margin-top: 10px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.wrtdip-map-modal__jump::-webkit-scrollbar {
+  display: none;
+}
+
+.wrtdip-map-modal__jump-btn {
+  flex: 0 0 auto;
+  min-height: 44px;
+  padding: 0 14px;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  border-radius: 22px;
+  background: rgba(255, 255, 255, 0.12);
+  color: #ffffff;
+  font-size: 0.8rem;
+  font-weight: 600;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.wrtdip-map-modal__jump-btn:hover {
+  background: rgba(255, 255, 255, 0.24);
+}
+
+.wrtdip-map-modal__jump-btn:focus-visible {
+  outline: 2px solid #ffffff;
+  outline-offset: 2px;
+}
+
+.wrtdip-map-modal__jump-btn--active,
+.wrtdip-map-modal__jump-btn--active:hover {
+  background: #ffffff;
+  color: #1e3a8a;
 }
 
 .wrtdip-map-modal__body {
@@ -2134,14 +2258,43 @@
     animation: none;
   }
 
-  /* This block outranks the desktop .wrtdip-feature-popup--enlarged rule, so
-     without its own override the enlarge button only grew the charts and left
-     the sheet the same size. On a phone "enlarged" means near-full-screen. */
-  .wrtdip-map .wrtdip-feature-popup--enlarged {
-    inset: 12px 12px 12px !important;
-    width: auto;
-    max-width: none;
+  /* Road popups become a full-width bottom sheet. Its height comes inline
+     from useSheetDrag (peek / half / full) and animates between them. */
+  .wrtdip-map .wrtdip-feature-popup.wrtdip-feature-popup--sheet {
+    inset: auto 0 0 0 !important;
     max-height: none;
+    border-radius: 16px 16px 0 0;
+    box-shadow: 0 -8px 30px rgba(15, 23, 42, 0.22);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+    transition: height 0.28s cubic-bezier(0.2, 0.8, 0.2, 1);
+    animation: wrtdip-sheetIn 0.28s cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+
+  .wrtdip-map .wrtdip-feature-popup--sheet.wrtdip-feature-popup--dragging {
+    transition: none;
+  }
+
+  /* The whole header strip is the drag zone; the browser must not claim the
+     gesture for scrolling or it cancels the drag. */
+  .wrtdip-feature-popup--sheet .wrtdip-feature-popup__grab {
+    touch-action: none;
+    user-select: none;
+    -webkit-user-select: none;
+  }
+
+  .wrtdip-feature-popup--sheet .wrtdip-feature-popup__header {
+    padding-top: 24px;
+    align-items: center;
+  }
+
+  .wrtdip-map .wrtdip-feature-popup--sheet .wrtdip-feature-popup__body {
+    flex: 1 1 auto;
+    overscroll-behavior: contain;
+  }
+
+  /* Peeking: only the header and tabs show, the map gets the screen. */
+  .wrtdip-feature-popup--sheet.wrtdip-feature-popup--peek .wrtdip-feature-popup__body {
+    visibility: hidden;
   }
 
   .wrtdip-map .wrtdip-feature-popup__body {
@@ -2160,17 +2313,35 @@
     display: none;
   }
 
+  /* Full screen on a phone (react-bootstrap fullscreen="md-down"). These
+     undo the desktop card sizing, which otherwise outranks Bootstrap's own
+     .modal-fullscreen-md-down rules. */
   .wrtdip-map-modal {
-    margin: 12px auto;
+    width: 100%;
+    max-width: none;
+    height: 100%;
+    margin: 0;
   }
 
   .wrtdip-map-modal .modal-content {
-    max-height: calc(100 * var(--dvh) - 24px);
+    height: 100%;
+    max-height: none;
+    border-radius: 0;
+  }
+
+  .wrtdip-map-modal__body {
+    flex: 1 1 auto;
+    max-height: none;
+    overscroll-behavior: contain;
   }
 
   .wrtdip-map-modal__header,
   .wrtdip-map-modal__body {
     padding: 12px;
+  }
+
+  .wrtdip-map-modal__header {
+    padding-top: calc(12px + env(safe-area-inset-top, 0px));
   }
 
   .wrtdip-map-modal__section {
@@ -2212,4 +2383,24 @@
 .wrtdip-numbers-toggle:focus-visible {
   outline: 2px solid #1e40af;
   outline-offset: 2px;
+}
+
+@keyframes wrtdip-sheetIn {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wrtdip-map .wrtdip-feature-popup.wrtdip-feature-popup--sheet {
+    transition: none;
+    animation: none;
+  }
+
+  .wrtdip-map-modal__jump-btn {
+    transition: none;
+  }
 }
