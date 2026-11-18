@@ -10,8 +10,10 @@ import { lineElementClasses, areaElementClasses } from "@mui/x-charts/LineChart"
    one or two dots read as a trend when they aren't one. */
 export const MIN_GRAPH_POINTS = 6;
 
+/* Okabe-Ito order (colour-blind safe): no red/green pair among the first few
+   stations, which are the ones that are actually compared. */
 export const FDD_COLORS = [
-  "#2563eb", "#dc2626", "#16a34a", "#ea580c", "#7c3aed", "#0891b2",
+  "#2563eb", "#d55e00", "#009e73", "#cc79a7", "#e69f00", "#56b4e9",
 ];
 export const FDD_LOWESS_COLORS = [
   "#f59e0b", "#9333ea", "#0d9488", "#e11d48", "#1d4ed8", "#78716c",

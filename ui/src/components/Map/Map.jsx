@@ -40,6 +40,11 @@ import useSheetDrag from "../../hooks/useSheetDrag.js"
 
 const API_BASE = "https://dev-moh.wramp.ca/python-api";
 
+// Temperature Max/Avg/Min: warm, dark and cool. Orange vs blue stays distinct
+// for colour-blind readers, unlike the old red/blue/green.
+const TEMP_COLORS = { max: "#c2410c", avg: "#1e293b", min: "#2563eb" }
+const fmtTemp = (v) => (v == null ? "No data" : `${v.toFixed(1)} °C`)
+
 // Short month names for chart labels.
 const MONTH_ABBR = ["", "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
 
@@ -2757,7 +2762,7 @@ function WeatherMap() {
                   Loading temperature data...
                 </Typography>
               ) : tempData && tempData.labels.length > 0 ? (
-                <div>
+                <div className="u-fit-width">
                   <div className="wrtdip-series-toggles">
                     <label className={`wrtdip-series-toggle${tempShowMax ? " wrtdip-series-toggle--on" : ""}`}>
                       <input
@@ -2766,7 +2771,7 @@ function WeatherMap() {
                         checked={tempShowMax}
                         onChange={(e) => setTempShowMax(e.target.checked)}
                       />
-                      <span className="wrtdip-series-toggle__dot" style={{ background: "#e53935" }} />
+                      <span className="wrtdip-series-toggle__dot" style={{ background: TEMP_COLORS.max }} />
                       Max
                     </label>
                     <label className={`wrtdip-series-toggle${tempShowAvg ? " wrtdip-series-toggle--on" : ""}`}>
@@ -2776,7 +2781,7 @@ function WeatherMap() {
                         checked={tempShowAvg}
                         onChange={(e) => setTempShowAvg(e.target.checked)}
                       />
-                      <span className="wrtdip-series-toggle__dot" style={{ background: "#42a5f5" }} />
+                      <span className="wrtdip-series-toggle__dot" style={{ background: TEMP_COLORS.avg }} />
                       Avg
                     </label>
                     <label className={`wrtdip-series-toggle${tempShowMin ? " wrtdip-series-toggle--on" : ""}`}>
@@ -2786,21 +2791,33 @@ function WeatherMap() {
                         checked={tempShowMin}
                         onChange={(e) => setTempShowMin(e.target.checked)}
                       />
-                      <span className="wrtdip-series-toggle__dot" style={{ background: "#66bb6a" }} />
+                      <span className="wrtdip-series-toggle__dot" style={{ background: TEMP_COLORS.min }} />
                       Min
                     </label>
                   </div>
-                  <BarChart
-                    xAxis={[{ data: tempData.labels, label: "Date", scaleType: "band" }]}
-                    yAxis={[{ label: "Temperature (°C)" }]}
+                  {/* Lines, not bars: a few months of days is hundreds of
+                      points, which as bars became hairlines that needed a
+                      sideways scroll. Lines fit the screen and show the
+                      max-min spread at a glance. */}
+                  <LineChart
+                    xAxis={[{
+                      data: tempData.labels,
+                      label: isMobile ? undefined : "Date",
+                      scaleType: "point",
+                      tickInterval: (_, i) => i % Math.max(1, Math.ceil(tempData.labels.length / (isMobile ? 4 : 8))) === 0,
+                      tickLabelStyle: { fontSize: 12 },
+                    }]}
+                    yAxis={[{ label: isMobile ? undefined : "Temperature (°C)", tickLabelStyle: { fontSize: 12 } }]}
                     series={[
-                      ...(tempShowMax ? [{ data: tempData.maxs, label: "Max", color: "#e53935" }] : []),
-                      ...(tempShowAvg ? [{ data: tempData.avgs, label: "Avg", color: "#42a5f5" }] : []),
-                      ...(tempShowMin ? [{ data: tempData.mins, label: "Min", color: "#66bb6a" }] : []),
+                      ...(tempShowMax ? [{ id: "max", data: tempData.maxs, label: "Max", color: TEMP_COLORS.max, showMark: false, valueFormatter: fmtTemp }] : []),
+                      ...(tempShowAvg ? [{ id: "avg", data: tempData.avgs, label: "Avg", color: TEMP_COLORS.avg, showMark: false, valueFormatter: fmtTemp }] : []),
+                      ...(tempShowMin ? [{ id: "min", data: tempData.mins, label: "Min", color: TEMP_COLORS.min, showMark: false, valueFormatter: fmtTemp }] : []),
                     ]}
                     height={240}
-                    margin={{ left: 50, right: 10, top: 10, bottom: 40 }}
+                    margin={{ left: isMobile ? 40 : 56, right: 12, top: 10, bottom: isMobile ? 28 : 44 }}
                     grid={{ horizontal: true }}
+                    slotProps={{ legend: { hidden: true } }}
+                    sx={{ "& .MuiLineElement-series-avg": { strokeWidth: 2.5 } }}
                   />
                 </div>
               ) : (

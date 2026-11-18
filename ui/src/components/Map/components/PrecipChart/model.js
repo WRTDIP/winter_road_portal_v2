@@ -7,10 +7,13 @@ import { useMemo } from "react";
 
 /* Order is load-bearing: it is the order of the bars in each group, of the
    toggles above the chart, and of the legend. */
+/* One hue, three lightnesses: Max/Avg/Min are three amounts of the same
+   thing, and lightness stays readable for colour-blind readers where the old
+   red/blue/green did not. */
 export const PRECIP_SERIES = [
-  { key: "max", label: "Max", color: "#e53935", field: "maxs" },
-  { key: "avg", label: "Avg", color: "#42a5f5", field: "avgs" },
-  { key: "min", label: "Min", color: "#66bb6a", field: "mins" },
+  { key: "max", label: "Max", color: "#1e3a8a", field: "maxs" },
+  { key: "avg", label: "Avg", color: "#2563eb", field: "avgs" },
+  { key: "min", label: "Min", color: "#60a5fa", field: "mins" },
 ];
 
 /* Bar geometry for the desktop chart. A monthly range is at most 12 bars, so
