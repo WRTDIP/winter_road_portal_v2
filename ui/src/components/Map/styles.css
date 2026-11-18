@@ -2194,3 +2194,22 @@
     min-height: 44px;
   }
 }
+
+.wrtdip-numbers-toggle {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  margin-top: 4px;
+  padding: 0;
+  border: none;
+  background: none;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #1d4ed8;
+  cursor: pointer;
+}
+
+.wrtdip-numbers-toggle:focus-visible {
+  outline: 2px solid #1e40af;
+  outline-offset: 2px;
+}

@@ -1231,7 +1231,6 @@ function WeatherMap() {
         openPoints={roadTrend?.open_scatter}
         closePoints={roadTrend?.close_scatter}
         fmtP={fmtP}
-        legacy={renderLegacyRoadStats}
       />
     )
   }
