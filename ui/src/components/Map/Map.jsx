@@ -25,11 +25,6 @@ import TuneIcon from "@mui/icons-material/Tune"
 import AcUnitIcon from "@mui/icons-material/AcUnit"
 import LocalFireDepartmentIcon from "@mui/icons-material/LocalFireDepartment"
 import WaterDropIcon from "@mui/icons-material/WaterDrop"
-import CompressIcon from "@mui/icons-material/Compress"
-import UnfoldMoreIcon from "@mui/icons-material/UnfoldMore"
-import StraightenIcon from "@mui/icons-material/Straighten"
-import KeyboardDoubleArrowLeftIcon from "@mui/icons-material/KeyboardDoubleArrowLeft"
-import KeyboardDoubleArrowRightIcon from "@mui/icons-material/KeyboardDoubleArrowRight"
 import ForecastPanel from "./ForecastPanel.jsx"
 import YearRangeSlider from "../YearRangeSlider/YearRangeSlider.jsx"
 import FddChart, { MIN_GRAPH_POINTS } from "./components/FddChart"
@@ -39,6 +34,15 @@ import ClimateTrendStats from "./components/ClimateTrendStats.jsx"
 import useSheetDrag from "../../hooks/useSheetDrag.js"
 
 const API_BASE = "https://dev-moh.wramp.ca/python-api";
+
+// A road season starting in year Y runs into Y+1 (it opens in winter). Label it
+// as a season so "2025" is not read as the winter of early 2025: "'25–26" on an
+// axis tick, "2025–26" in a tooltip.
+const seasonLabel = (y, ctx) => {
+  if (y == null) return ""
+  const next = String(Number(y) + 1).slice(2)
+  return ctx?.location === "tick" ? `’${String(y).slice(2)}–${next}` : `${y}–${next}`
+}
 
 // Temperature Max/Avg/Min: warm, dark and cool. Orange vs blue stays distinct
 // for colour-blind readers, unlike the old red/blue/green.
@@ -175,6 +179,8 @@ const SnowIcon = (props) => <AcUnitIcon {...props} />
 function DurationHeatGauge({ durationDays }) {
   const trackRef = useRef(null)
   const [hover, setHover] = useState(null) // { pct, days, label, color }
+  const clearTimer = useRef(null)
+  useEffect(() => () => clearTimeout(clearTimer.current), [])
 
   if (!durationDays || durationDays.length === 0) return null
 
@@ -241,7 +247,11 @@ function DurationHeatGauge({ durationDays }) {
     return { color: GREY, label: `very rare · <1% of seasons · ${lean}` }
   }
 
+  // Pointer events, not mouse events, so a tap or a finger sliding along the
+  // bar shows the readout on a phone too. A touch readout clears itself
+  // shortly after the finger lifts instead of sticking forever.
   const handleMove = (e) => {
+    clearTimeout(clearTimer.current)
     const el = trackRef.current
     if (!el) return
     const rect = el.getBoundingClientRect()
@@ -266,10 +276,10 @@ function DurationHeatGauge({ durationDays }) {
         pointerEvents: "none",
       }}
     >
-      <span style={{ fontSize: 11, fontWeight: 700, color, lineHeight: 1.2, whiteSpace: "nowrap" }}>
+      <span style={{ fontSize: 12, fontWeight: 700, color, lineHeight: 1.2, whiteSpace: "nowrap" }}>
         {label}
       </span>
-      <span style={{ fontSize: 10, color: "#475569", lineHeight: 1.2, whiteSpace: "nowrap" }}>
+      <span style={{ fontSize: 12, color: "#475569", lineHeight: 1.2, whiteSpace: "nowrap" }}>
         {Math.round(value)} days
       </span>
       <div style={{ width: 2, height: 8, background: color, marginTop: below ? 0 : 2, marginBottom: below ? 2 : 0 }} />
@@ -278,6 +288,12 @@ function DurationHeatGauge({ durationDays }) {
 
   return (
     <div style={{ width: "100%", padding: "4px 12px 2px" }}>
+      {/* The numbers in words first, so the gauge is a picture of them rather
+          than the only way to read them. */}
+      <div style={{ fontSize: 13, color: "#334155", lineHeight: 1.45, marginBottom: 6 }}>
+        <strong>Usually {Math.max(0, Math.round(avg - unit))}–{Math.round(avg + unit)} days open</strong>
+        {" "}· shortest {min} · longest {max} · {durationDays.length} seasons
+      </div>
       <div style={{ position: "relative", height: 36 }}>
         {hover ? (
           <div
@@ -292,7 +308,7 @@ function DurationHeatGauge({ durationDays }) {
               pointerEvents: "none",
             }}
           >
-            <span style={{ fontSize: 11, fontWeight: 700, color: hover.color, lineHeight: 1.2, whiteSpace: "nowrap" }}>
+            <span style={{ fontSize: 12, fontWeight: 700, color: hover.color, lineHeight: 1.2, whiteSpace: "nowrap" }}>
               {hover.days} days
             </span>
             <span style={{ fontSize: 10, color: "#475569", lineHeight: 1.2, whiteSpace: "nowrap" }}>
@@ -306,11 +322,16 @@ function DurationHeatGauge({ durationDays }) {
       </div>
       <div
         ref={trackRef}
-        onMouseMove={handleMove}
-        onMouseLeave={() => setHover(null)}
+        onPointerDown={handleMove}
+        onPointerMove={handleMove}
+        onPointerLeave={() => setHover(null)}
+        onPointerUp={(e) => {
+          if (e.pointerType !== "mouse") clearTimer.current = setTimeout(() => setHover(null), 2500)
+        }}
         style={{
           position: "relative",
           height: 22,
+          touchAction: "pan-y",
           borderRadius: 11,
           background: gradient,
           border: "1px solid #e2e8f0",
@@ -395,8 +416,6 @@ function WeatherMap() {
   // Climate trend statistics (bottom section of the road popup).
   const [roadStats, setRoadStats] = useState(null) // backend payload
   const [roadStatsLoading, setRoadStatsLoading] = useState(false)
-  // Whether the full numbers table inside the stats section is shown.
-  const [roadStatsDetail, setRoadStatsDetail] = useState(false)
   // FDD chart state
   const [fddSeries, setFddSeries] = useState([]) // [{stationId, stationName, years, fdds}]
   const [fddLoading, setFddLoading] = useState(false)
@@ -479,10 +498,15 @@ function WeatherMap() {
     const roadName = featurePopup.title
     let cancelled = false
 
-    const fmt = (iso) => {
+    // An actual date keeps its year. A predicted one is an average over the
+    // whole record, so it gets month and day only: "January 31, 2027" read as
+    // a forecast for a specific season, which it is not.
+    const fmt = (iso, predicted) => {
       if (!iso) return null
       const d = new Date(iso + "T00:00:00")
-      return d.toLocaleDateString("en-CA", { year: "numeric", month: "long", day: "numeric" })
+      return predicted
+        ? `around ${d.toLocaleDateString("en-CA", { month: "long", day: "numeric" })}`
+        : d.toLocaleDateString("en-CA", { year: "numeric", month: "long", day: "numeric" })
     }
 
     fetch(`${API_BASE}/road-closure-forecast?road_name=${encodeURIComponent(roadName)}`)
@@ -490,8 +514,8 @@ function WeatherMap() {
       .then((res) => {
         if (cancelled) return
         const d = res?.data || {}
-        const open = fmt(d.expected_open)
-        const close = fmt(d.expected_close)
+        const open = fmt(d.expected_open, d.open_predicted)
+        const close = fmt(d.expected_close, d.close_predicted)
 
         let html
         if (!d.matched || (!open && !close)) {
@@ -499,12 +523,16 @@ function WeatherMap() {
         } else {
           // No season in brackets — averages are computed across the full
           // historical record, so a single season label is misleading.
-          const openLabel = d.open_predicted ? "Average Opening" : "Opening"
-          const closeLabel = d.close_predicted ? "Average Closure" : "Closure"
+          const openLabel = d.open_predicted ? "Usually opens" : "Opened"
+          const closeLabel = d.close_predicted ? "Usually closes" : "Closed"
+          const n = Math.max(d.open_samples || 0, d.close_samples || 0)
           html =
             `<div data-road-forecast>` +
             `<b>${openLabel}:</b> ${open || "N/A"}<br>` +
             `<b>${closeLabel}:</b> ${close || "N/A"}<br>` +
+            (d.open_predicted || d.close_predicted
+              ? `<span class="wrtdip-forecast-note">Average of ${n} seasons on record</span>`
+              : "") +
             `</div>`
         }
 
@@ -819,10 +847,10 @@ function WeatherMap() {
               {
                 data: years,
                 scaleType: "point",
-                label: isMobile ? undefined : "Year",
-                valueFormatter: (v) => String(v),
+                label: isMobile ? undefined : "Season",
+                valueFormatter: seasonLabel,
                 tickInterval: (v, i) => i % geo.labelEvery === 0,
-                tickLabelStyle: { fontSize: isMobile ? 10 : 11 },
+                tickLabelStyle: { fontSize: 12 },
               },
             ]}
             yAxis={[
@@ -831,7 +859,7 @@ function WeatherMap() {
                 min: yMin,
                 max: yMax,
                 valueFormatter: (v) => dosToLabel(v),
-                tickLabelStyle: { fontSize: isMobile ? 10 : 11 },
+                tickLabelStyle: { fontSize: 12 },
               },
             ]}
             margin={geo.margin}
@@ -892,8 +920,7 @@ function WeatherMap() {
           </span>
         </div>
         <Typography variant="caption" color="text.secondary" sx={{ display: "block", mt: 0.5, textAlign: "center" }}>
-          Points are recorded open/close dates per season; dashed lines are the long-term trends.
-          If the blue band gets narrower from left to right, the season is shrinking.
+          If the blue band narrows from left to right, the season is shrinking.
         </Typography>
       </div>
     )
@@ -976,19 +1003,19 @@ function WeatherMap() {
               {
                 data: durationYears,
                 scaleType: "band",
-                label: isMobile ? undefined : "Year",
-                valueFormatter: (v) => String(v),
+                label: isMobile ? undefined : "Season",
+                valueFormatter: seasonLabel,
                 categoryGapRatio: geo.categoryGapRatio,
                 barGapRatio: 0,
                 tickInterval: (v, i) => i % geo.labelEvery === 0,
-                tickLabelStyle: { fontSize: isMobile ? 10 : 11 },
+                tickLabelStyle: { fontSize: 12 },
               },
             ]}
             yAxis={[
               {
                 label: isMobile ? undefined : "Days open",
                 min: 0,
-                tickLabelStyle: { fontSize: isMobile ? 10 : 11 },
+                tickLabelStyle: { fontSize: 12 },
               },
             ]}
             borderRadius={3}
@@ -1256,7 +1283,7 @@ function WeatherMap() {
   // no-data states still come from the legacy renderer.
   const renderRoadStatsSection = () => {
     if (roadStatsLoading || !roadStats?.matched || (!roadStats?.open && !roadStats?.close)) {
-      return renderLegacyRoadStats()
+      return renderRoadStatsMessage()
     }
     return (
       <ClimateTrendStats
@@ -1269,516 +1296,14 @@ function WeatherMap() {
     )
   }
 
-  // Previous layout, kept selectable from the debug switcher for comparison.
-  const renderLegacyRoadStats = () => {
-    if (roadStatsLoading) {
-      return (
-        <Typography variant="body2" color="text.secondary" sx={{ py: 3, textAlign: "center" }}>
-          Loading statistics…
-        </Typography>
-      )
-    }
-
-    const open = roadStats?.open
-    const close = roadStats?.close
-    if (!roadStats?.matched || (!open && !close)) {
-      return (
-        <Typography variant="body2" color="text.secondary" sx={{ py: 3, textAlign: "center" }}>
-          Not enough historical data to compute trend statistics for this road.
-        </Typography>
-      )
-    }
-
-    const { cold, coldDeep, coldSoft, warm, warmDeep, warmMid, warmSoft, warmTint, warmEdge, ink: INK, muted: MUTED } = THERMAL
-
-    const isSig = (s) => s && s.mk_p < 0.05
-    // Long-term shift in days per decade, as a friendly rounded string.
-    const perDecade = (slope) => {
-      const v = Math.abs(slope * 10)
-      return v >= 3 ? String(Math.round(v)) : v.toFixed(1)
-    }
-    // A shift is "warming" when it shortens the season: openings drifting later
-    // or closings drifting earlier. Every colour in this section keys off this.
-    const isWarming = (s, kind) => (kind === "open" ? s.sens_slope > 0 : s.sens_slope < 0)
-
-    const CHIP_TONES = {
-      warm: { color: warmDeep, background: "#ffedd5", border: warmEdge },
-      cold: { color: coldDeep, background: "#e0f2fe", border: coldSoft },
-      neutral: { color: MUTED, background: "#f1f5f9", border: "#e2e8f0" },
-    }
-
-    // One headline tile: icon + label, big value (tinted warm or cold when it
-    // represents a real shift), small context line, and a plain-language chip.
-    const Tile = ({ icon, label, value, valueColor, sub, chip, tone = "neutral" }) => {
-      const t = CHIP_TONES[tone]
-      return (
-        <div
-          style={{
-            flex: "1 1 130px",
-            minWidth: 130,
-            background: "#f8fafc",
-            border: "1px solid #e2e8f0",
-            borderRadius: 10,
-            padding: "10px 12px",
-          }}
-        >
-          <div style={{ display: "flex", alignItems: "center", gap: 5, fontSize: 11, color: MUTED }}>
-            {icon}
-            {label}
-          </div>
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: 2,
-              fontSize: 19,
-              fontWeight: 600,
-              color: valueColor || INK,
-              lineHeight: 1.25,
-              marginTop: 2,
-            }}
-          >
-            {value}
-          </div>
-          {sub && <div style={{ fontSize: 11, color: MUTED, marginTop: 1 }}>{sub}</div>}
-          {chip && (
-            <span
-              style={{
-                display: "inline-block",
-                marginTop: 6,
-                padding: "1px 8px",
-                borderRadius: 999,
-                fontSize: 10,
-                fontWeight: 600,
-                color: t.color,
-                background: t.background,
-                border: `1px solid ${t.border}`,
-              }}
-            >
-              {chip}
-            </span>
-          )}
-        </div>
-      )
-    }
-
-    const openIcon = <SnowIcon sx={{ fontSize: 14, color: cold }} />
-    const closeIcon = <FireIcon sx={{ fontSize: 14, color: warmMid }} />
-
-    // Headline for a date series: the per-decade shift if the trend is real,
-    // otherwise "no clear shift". Shifts that shorten the season are warm/red,
-    // shifts that lengthen it are cold/blue.
-    const seriesTile = (kind, s) => {
-      const isOpen = kind === "open"
-      const label = isOpen ? "Opening date (freeze-up)" : "Closing date (thaw)"
-      const icon = isOpen ? openIcon : closeIcon
-      if (!s) return <Tile icon={icon} label={label} value="No data" />
-      if (!isSig(s)) {
-        return (
-          <Tile
-            icon={icon}
-            label={label}
-            value="No clear shift"
-            sub={`usually around ${s.avg_date}`}
-            chip="steady so far"
-          />
-        )
-      }
-      const later = s.sens_slope > 0
-      const warming = isWarming(s, kind)
-      const Arrow = later ? KeyboardDoubleArrowRightIcon : KeyboardDoubleArrowLeftIcon
-      const Thermo = warming ? FireIcon : SnowIcon
-      return (
-        <Tile
-          icon={icon}
-          label={label}
-          value={
-            <>
-              <Thermo sx={{ fontSize: 20, mr: 0.25 }} />
-              <Arrow sx={{ fontSize: 22, ml: -0.5 }} />
-              {perDecade(s.sens_slope)} days {later ? "later" : "earlier"}
-            </>
-          }
-          valueColor={warming ? warm : cold}
-          sub={`per decade since ${s.first_year} · strong evidence`}
-          chip={
-            warming
-              ? isOpen ? "warmer early winters" : "warmer springs"
-              : isOpen ? "colder early winters" : "colder springs"
-          }
-          tone={warming ? "warm" : "cold"}
-        />
-      )
-    }
-
-    // Derived season-length tile from the two slopes.
-    const seasonTile = () => {
-      if (!open || !close) return null
-      const changePerDecade = (close.sens_slope - open.sens_slope) * 10
-      const avgLen = Math.round(close.avg_dos - open.avg_dos)
-      const icon = <StraightenIcon sx={{ fontSize: 14, color: MUTED }} />
-      if (Math.abs(changePerDecade) < 1) {
-        return <Tile icon={icon} label="Season length" value="Holding steady" sub={`≈ ${avgLen} days on average`} />
-      }
-      const shrinking = changePerDecade < 0
-      const evidence = isSig(open) || isSig(close)
-      return (
-        <Tile
-          icon={icon}
-          label="Season length"
-          value={
-            <>
-              {shrinking ? (
-                <FireIcon sx={{ fontSize: 20, mr: 0.25 }} />
-              ) : (
-                <SnowIcon sx={{ fontSize: 20, mr: 0.25 }} />
-              )}
-              {shrinking ? (
-                <CompressIcon sx={{ fontSize: 22, ml: -0.5, transform: "rotate(90deg)" }} />
-              ) : (
-                <UnfoldMoreIcon sx={{ fontSize: 22, ml: -0.5, transform: "rotate(90deg)" }} />
-              )}
-              {Math.round(Math.abs(changePerDecade))} days {shrinking ? "shorter" : "longer"}
-            </>
-          }
-          valueColor={shrinking ? warm : cold}
-          sub={`per decade · ≈ ${avgLen} days on average`}
-          chip={shrinking ? "season squeezing inward" : "season stretching outward"}
-          tone={evidence ? (shrinking ? "warm" : "cold") : "neutral"}
-        />
-      )
-    }
-
-    // "Then vs now" season strip. Each end of the season is projected to the
-    // start and end of the record with its Sen's slope (only when that trend is
-    // significant — steady ends stay put), so the two bars show how far the
-    // season has been squeezed inward (red, lost days) or stretched outward
-    // (pale blue, gained days) over the record. Everything sits on a shared
-    // Aug-to-July day-of-season scale with a warm wash for "road closed".
-    const seasonStrip = () => {
-      if (!open || !close) return null
-      const firstYear = Math.min(open.first_year, close.first_year)
-      const lastYear = Math.max(open.last_year, close.last_year)
-      const mid = (firstYear + lastYear) / 2
-      const project = (s, year) => s.avg_dos + (isSig(s) ? s.sens_slope * (year - mid) : 0)
-      const early = { open: project(open, firstYear), close: project(close, firstYear) }
-      const recent = { open: project(open, lastYear), close: project(close, lastYear) }
-      const openShift = recent.open - early.open // + = opens later (warming)
-      const closeShift = recent.close - early.close // − = closes earlier (warming)
-      const anyShift = Math.abs(openShift) >= 1 || Math.abs(closeShift) >= 1
-
-      const lo = Math.min(open.earliest_dos, early.open, recent.open) - 6
-      const hi = Math.max(close.latest_dos, early.close, recent.close) + 6
-      const pct = (v) => ((v - lo) / (hi - lo)) * 100
-
-      const Segment = ({ from, to, style }) =>
-        to - from > 0.01 ? (
-          <div
-            style={{
-              position: "absolute",
-              top: 3,
-              bottom: 3,
-              left: `${pct(from)}%`,
-              width: `${pct(to) - pct(from)}%`,
-              borderRadius: 3,
-              ...style,
-            }}
-          />
-        ) : null
-
-      // Fire + inward arrow over lost days, snowflake + outward arrow over gained days.
-      const ShiftArrow = ({ from, to, inward, side }) => {
-        if (Math.abs(to - from) < 1) return null
-        const pointsRight = side === "open" ? inward : !inward
-        const Arrow = pointsRight ? KeyboardDoubleArrowRightIcon : KeyboardDoubleArrowLeftIcon
-        const Thermo = inward ? FireIcon : SnowIcon
-        const days = Math.round(Math.abs(to - from))
-        const title =
-          side === "open"
-            ? `Opens ≈ ${days} days ${inward ? "later" : "earlier"} than at the start of the record`
-            : `Closes ≈ ${days} days ${inward ? "earlier" : "later"} than at the start of the record`
-        return (
-          <span
-            title={title}
-            style={{
-              position: "absolute",
-              top: "50%",
-              left: `${(pct(from) + pct(to)) / 2}%`,
-              transform: "translate(-50%, -50%)",
-              display: "flex",
-              alignItems: "center",
-              color: inward ? warm : cold,
-              filter: "drop-shadow(0 0 2px #fff)",
-            }}
-          >
-            {side === "open" && <Thermo sx={{ fontSize: 15 }} />}
-            <Arrow sx={{ fontSize: 18, mx: -0.25 }} />
-            {side === "close" && <Thermo sx={{ fontSize: 15 }} />}
-          </span>
-        )
-      }
-
-      const Row = ({ label, year, o, c, children }) => (
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "84px 1fr",
-            alignItems: "center",
-            gap: 8,
-          }}
-        >
-          <div style={{ fontSize: 11, color: INK, fontWeight: 600, lineHeight: 1.2 }}>
-            {label}
-            {year != null && <div style={{ fontSize: 10, color: MUTED, fontWeight: 400 }}>around {year}</div>}
-          </div>
-          <div>
-            <div
-              style={{
-                position: "relative",
-                height: 24,
-                borderRadius: 6,
-                background: warmTint,
-                border: `1px solid ${warmEdge}`,
-              }}
-            >
-              <Segment
-                from={o}
-                to={c}
-                style={{ background: `linear-gradient(90deg, ${cold} 0%, ${coldDeep} 100%)` }}
-              />
-              <span
-                style={{
-                  position: "absolute",
-                  top: 0,
-                  bottom: 0,
-                  left: `${(pct(o) + pct(c)) / 2}%`,
-                  transform: "translateX(-50%)",
-                  display: "flex",
-                  alignItems: "center",
-                  color: "#fff",
-                  fontSize: 10.5,
-                  fontWeight: 700,
-                  whiteSpace: "nowrap",
-                  pointerEvents: "none",
-                }}
-              >
-                {Math.round(c - o)} days
-              </span>
-              {children}
-            </div>
-            <div style={{ position: "relative", height: 13, fontSize: 10, color: MUTED }}>
-              <span style={{ position: "absolute", left: `${pct(o)}%`, transform: "translateX(-50%)", whiteSpace: "nowrap" }}>
-                {dosToLabel(o)}
-              </span>
-              <span style={{ position: "absolute", left: `${pct(c)}%`, transform: "translateX(-50%)", whiteSpace: "nowrap" }}>
-                {dosToLabel(c)}
-              </span>
-            </div>
-          </div>
-        </div>
-      )
-
-      const lostStyle = { background: warmSoft, border: `1px dashed ${warmMid}` }
-      const gainedStyle = { background: coldSoft, border: `1px dashed ${cold}` }
-
-      return (
-        <div style={{ marginTop: 12 }}>
-          {anyShift ? (
-            <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
-              <Row label="Early record" year={firstYear} o={early.open} c={early.close} />
-              <Row label="Recent" year={lastYear} o={recent.open} c={recent.close}>
-                {openShift > 0 && <Segment from={early.open} to={recent.open} style={lostStyle} />}
-                {openShift < 0 && <Segment from={recent.open} to={early.open} style={gainedStyle} />}
-                {closeShift < 0 && <Segment from={recent.close} to={early.close} style={lostStyle} />}
-                {closeShift > 0 && <Segment from={early.close} to={recent.close} style={gainedStyle} />}
-                <ShiftArrow from={early.open} to={recent.open} inward={openShift > 0} side="open" />
-                <ShiftArrow from={early.close} to={recent.close} inward={closeShift < 0} side="close" />
-              </Row>
-            </div>
-          ) : (
-            <Row label="Typical season" o={early.open} c={early.close} />
-          )}
-          <div style={{ display: "flex", flexWrap: "wrap", gap: "4px 14px", marginTop: 6, fontSize: 11, color: MUTED }}>
-            <span style={{ display: "flex", alignItems: "center", gap: 5 }}>
-              <span style={{ width: 14, height: 10, borderRadius: 2, background: cold }} />
-              <SnowIcon sx={{ fontSize: 13, color: cold }} />
-              Road open — ice is solid
-            </span>
-            <span style={{ display: "flex", alignItems: "center", gap: 5 }}>
-              <span style={{ width: 14, height: 10, borderRadius: 2, background: warmTint, border: `1px solid ${warmEdge}` }} />
-              <FireIcon sx={{ fontSize: 13, color: warmMid }} />
-              Road closed — too warm for safe ice
-            </span>
-            {anyShift && (openShift > 0 || closeShift < 0) && (
-              <span style={{ display: "flex", alignItems: "center", gap: 5 }}>
-                <span style={{ width: 14, height: 10, borderRadius: 2, ...lostStyle }} />
-                <FireIcon sx={{ fontSize: 13, color: warm }} />
-                <CompressIcon sx={{ fontSize: 13, color: warm, transform: "rotate(90deg)", ml: -0.5 }} />
-                Days lost to warming
-              </span>
-            )}
-            {anyShift && (openShift < 0 || closeShift > 0) && (
-              <span style={{ display: "flex", alignItems: "center", gap: 5 }}>
-                <span style={{ width: 14, height: 10, borderRadius: 2, ...gainedStyle }} />
-                <SnowIcon sx={{ fontSize: 13, color: cold }} />
-                <UnfoldMoreIcon sx={{ fontSize: 13, color: cold, transform: "rotate(90deg)", ml: -0.5 }} />
-                Days gained from colder winters
-              </span>
-            )}
-          </div>
-          <div style={{ display: "flex", flexWrap: "wrap", gap: "4px 16px", marginTop: 6 }}>
-            <span style={{ fontSize: 11, color: MUTED, display: "flex", alignItems: "center", gap: 5 }}>
-              {openIcon}
-              Opens {open.earliest_date} – {open.latest_date} (usually {open.avg_date})
-            </span>
-            <span style={{ fontSize: 11, color: MUTED, display: "flex", alignItems: "center", gap: 5 }}>
-              {closeIcon}
-              Closes {close.earliest_date} – {close.latest_date} (usually {close.avg_date})
-            </span>
-          </div>
-        </div>
-      )
-    }
-
-    // One short plain-language takeaway built from the numbers.
-    let takeaway
-    if (isSig(open) && open.sens_slope > 0 && close && !isSig(close)) {
-      takeaway = `The season is being squeezed at the freeze-up end: the road now opens about ${perDecade(open.sens_slope)} days later each decade, while spring closing dates have barely moved. That points to warmer early winters — the ice takes longer to get thick enough for traffic.`
-    } else if (isSig(open) && isSig(close) && open.sens_slope > 0 && close.sens_slope < 0) {
-      takeaway = `The season is shrinking from both ends — opening about ${perDecade(open.sens_slope)} days later and closing about ${perDecade(close.sens_slope)} days earlier each decade — consistent with warmer winters overall.`
-    } else if (!isSig(open) && (!close || !isSig(close))) {
-      takeaway = "So far, neither the opening nor the closing dates show a clear long-term shift for this road — the year-to-year swings are bigger than any steady trend."
-    } else {
-      const parts = []
-      if (isSig(open)) parts.push(`openings have shifted about ${perDecade(open.sens_slope)} days ${open.sens_slope > 0 ? "later" : "earlier"} per decade`)
-      if (isSig(close)) parts.push(`closings about ${perDecade(close.sens_slope)} days ${close.sens_slope > 0 ? "later" : "earlier"} per decade`)
-      takeaway = `Over this record, ${parts.join(" and ")} — a signal of changing winter conditions.`
-    }
-
-    // Whether the overall story is a warming squeeze, used to tint the takeaway.
-    const warmingStory =
-      (isSig(open) && open.sens_slope > 0) || (isSig(close) && close.sens_slope < 0)
-    const coolingStory =
-      !warmingStory && ((isSig(open) && open.sens_slope < 0) || (isSig(close) && close.sens_slope > 0))
-    const takeawayColor = warmingStory ? warm : coolingStory ? cold : MUTED
-
-    const detailRows = [
-      ["Seasons on record", (s) => `${s.n} (${s.first_year}–${s.last_year})`],
-      ["Average date", (s) => s.avg_date],
-      ["Earliest date", (s) => s.earliest_date],
-      ["Latest date", (s) => s.latest_date],
-      ["Year-to-year variability (SD)", (s) => `± ${s.sd_days} days`],
-      ["Sen's slope", (s) => `${s.sens_slope > 0 ? "+" : ""}${s.sens_slope.toFixed(2)} days/year`],
-      ["Mann-Kendall trend", (s) => `${s.mk_trend} (${fmtP(s.mk_p)})`],
-      ["Pearson's r vs year", (s) => `${s.pearson_r.toFixed(2)} (${fmtP(s.pearson_p)})`],
-    ]
-    const cellStyle = { padding: "4px 8px", borderBottom: "1px solid #e2e8f0", fontSize: 12 }
-
-    return (
-      <div style={{ width: "100%" }}>
-        <div
-          style={{
-            display: "flex",
-            flexWrap: "wrap",
-            alignItems: "center",
-            gap: "4px 14px",
-            marginBottom: 8,
-            padding: "6px 10px",
-            fontSize: 11,
-            color: MUTED,
-            background: "#f8fafc",
-            border: "1px solid #e2e8f0",
-            borderRadius: 8,
-          }}
-        >
-          <span style={{ fontWeight: 700, color: INK }}>How to read this:</span>
-          <span style={{ display: "flex", alignItems: "center", gap: 4, color: coldDeep }}>
-            <SnowIcon sx={{ fontSize: 14, color: cold }} />
-            Icy blue = getting colder · earlier openings, later closings, longer season
-          </span>
-          <span style={{ display: "flex", alignItems: "center", gap: 4, color: warmDeep }}>
-            <FireIcon sx={{ fontSize: 14, color: warmMid }} />
-            Orange → red = getting warmer · later openings, earlier closings, shorter season
-          </span>
-        </div>
-        <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
-          {seriesTile("open", open)}
-          {seriesTile("close", close)}
-          {seasonTile()}
-        </div>
-        {seasonStrip()}
-        <div
-          style={{
-            display: "flex",
-            alignItems: "flex-start",
-            gap: 8,
-            marginTop: 12,
-            padding: "8px 10px",
-            background: "#fff",
-            border: "1px solid #e2e8f0",
-            borderLeft: `3px solid ${takeawayColor}`,
-            borderRadius: 8,
-          }}
-        >
-          {warmingStory ? (
-            <FireIcon sx={{ fontSize: 18, color: takeawayColor, mt: "1px", flex: "0 0 auto" }} />
-          ) : (
-            <SnowIcon sx={{ fontSize: 18, color: takeawayColor, mt: "1px", flex: "0 0 auto" }} />
-          )}
-          <Typography variant="body2" sx={{ fontSize: 12, color: "#334155" }}>
-            {takeaway}
-          </Typography>
-        </div>
-        <Typography variant="caption" color="text.secondary" sx={{ display: "block", mt: 0.75, lineHeight: 1.5 }}>
-          Dates naturally bounce around from year to year — the “per decade” numbers are the slow,
-          steady shift underneath that. “Strong evidence” means the shift is too consistent to be
-          chance.
-        </Typography>
-        <button
-          type="button"
-          onClick={() => setRoadStatsDetail((d) => !d)}
-          style={{
-            marginTop: 8,
-            padding: 0,
-            border: "none",
-            background: "none",
-            fontSize: 11.5,
-            fontWeight: 600,
-            color: "#2563eb",
-            cursor: "pointer",
-          }}
-        >
-          {roadStatsDetail ? "Hide detailed statistics ▴" : "Show detailed statistics ▾"}
-        </button>
-        {roadStatsDetail && (
-          <div style={{ overflowX: "auto", marginTop: 6 }}>
-            <table style={{ width: "100%", borderCollapse: "collapse" }}>
-              <thead>
-                <tr>
-                  <th style={{ ...cellStyle, textAlign: "left", color: "#475569" }}>Statistic</th>
-                  <th style={{ ...cellStyle, textAlign: "right", color: "#475569" }}>Opening</th>
-                  <th style={{ ...cellStyle, textAlign: "right", color: "#475569" }}>Closing</th>
-                </tr>
-              </thead>
-              <tbody>
-                {detailRows.map(([label, fmt]) => (
-                  <tr key={label}>
-                    <td style={{ ...cellStyle, color: "#475569" }}>{label}</td>
-                    <td style={{ ...cellStyle, textAlign: "right", fontWeight: 600 }}>
-                      {open ? fmt(open) : "—"}
-                    </td>
-                    <td style={{ ...cellStyle, textAlign: "right", fontWeight: 600 }}>
-                      {close ? fmt(close) : "—"}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        )}
-      </div>
-    )
-  }
+  // Loading and no-data states for the Climate Trend Statistics tab.
+  const renderRoadStatsMessage = () => (
+    <Typography variant="body2" color="text.secondary" sx={{ py: 3, textAlign: "center" }}>
+      {roadStatsLoading
+        ? "Loading statistics…"
+        : "Not enough historical data to compute trend statistics for this road."}
+    </Typography>
+  )
 
   // Fetch available stations for this city when modal opens
   useEffect(() => {
