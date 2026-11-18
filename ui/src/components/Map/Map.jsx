@@ -1063,12 +1063,16 @@ function WeatherMap() {
     // Scale the magnitude bars against the largest absolute slope so the
     // strongest month fills the half-width and the rest read relative to it.
     const maxAbs = Math.max(...usable.map((m) => Math.abs(m.sens_slope)), 0.0001)
+    // Diverging scale with grey at "no change": brown for drier, navy for
+    // wetter. The old white-to-navy ramp drew the strongest drying month white
+    // on a white table. Brown/blue also stays distinct for colour-blind readers.
     const trendColor = (slope) => {
       if (slope == null) return "#94a3b8"
-      const amount = (slope / maxAbs + 1) / 2
-      const dry = [247, 251, 255]
-      const wet = [30, 58, 138]
-      return `rgb(${dry.map((channel, index) => Math.round(channel + (wet[index] - channel) * amount)).join(", ")})`
+      const amount = Math.max(-1, Math.min(1, slope / maxAbs))
+      const mid = [203, 213, 225]
+      const end = amount < 0 ? [161, 98, 7] : [30, 58, 138]
+      const t = Math.abs(amount)
+      return `rgb(${mid.map((channel, index) => Math.round(channel + (end[index] - channel) * t)).join(", ")})`
     }
 
     const isSignificant = (m) => m.p != null && m.p < 0.05
@@ -1093,8 +1097,8 @@ function WeatherMap() {
                 </>
               ) : (
                 <>
-                  How much precipitation each month has gained or lost per year across this
-                  station&rsquo;s record.
+                  How much precipitation each month has gained or lost per decade across
+                  this station&rsquo;s record. Faded months show no clear change.
                 </>
               )}
             </div>
@@ -1135,7 +1139,7 @@ function WeatherMap() {
               <tr>
                 <th className="wrtdip-trend-table__th">Month</th>
                 <th className="wrtdip-trend-table__th wrtdip-trend-table__th--num">
-                  {showAdvanced ? "Sen's Slope (mm/yr)" : "Change (mm/yr)"}
+                  {showAdvanced ? "Sen's Slope (mm/yr)" : "Change (mm/decade)"}
                 </th>
                 {showAdvanced && (
                   <>
@@ -1153,7 +1157,12 @@ function WeatherMap() {
                 return (
                   <tr
                     key={m.month}
-                    className={`wrtdip-trend-table__row${inWindow(m.month) ? " wrtdip-trend-table__row--active" : ""}`}
+                    className={`wrtdip-trend-table__row${inWindow(m.month) ? " wrtdip-trend-table__row--active" : ""}${
+                      // Basic view hides the p-values, so fade the months whose
+                      // change is not significant rather than let noise read as
+                      // a trend.
+                      !showAdvanced && !isSignificant(m) ? " wrtdip-trend-table__row--weak" : ""
+                    }`}
                   >
                     <td className="wrtdip-trend-table__month">
                       <span
@@ -1187,7 +1196,9 @@ function WeatherMap() {
                       <span className="wrtdip-trend-table__value">
                         {slope == null
                           ? "—"
-                          : `${slope > 0 ? "+" : slope < 0 ? "−" : ""}${Math.abs(slope).toFixed(3)}`}
+                          : showAdvanced
+                            ? `${slope > 0 ? "+" : slope < 0 ? "−" : ""}${Math.abs(slope).toFixed(3)}`
+                            : `${slope > 0 ? "+" : slope < 0 ? "−" : ""}${Math.abs(slope * 10).toFixed(1)}`}
                       </span>
                     </td>
                     {showAdvanced && (

@@ -2396,3 +2396,13 @@
     transition: none;
   }
 }
+
+/* Basic precipitation trend view: months without a significant change. */
+.wrtdip-trend-table__row--weak .wrtdip-trend-drop,
+.wrtdip-trend-table__row--weak .wrtdip-trend-bar__fill {
+  opacity: 0.35;
+}
+
+.wrtdip-trend-table__row--weak .wrtdip-trend-table__value {
+  color: #94a3b8;
+}
