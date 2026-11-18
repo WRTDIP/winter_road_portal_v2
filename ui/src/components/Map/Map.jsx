@@ -374,7 +374,7 @@ function WeatherMap() {
   const [modalIsOpen, setModalIsOpen] = useState(false)
   const [modalEnlarge, setModalEnlarge] = useState(false)
   // Section the Climate & Weather body is scrolled to, for the jump links.
-  const [climateSection, setClimateSection] = useState("fdd")
+  const [climateSection, setClimateSection] = useState("forecast")
   const climateBodyRef = useRef(null)
 
   // Custom feature popup state (replaces ArcGIS native popup)
@@ -444,6 +444,10 @@ function WeatherMap() {
   // Matches the --bp-md breakpoint the stylesheet uses, so the JS and CSS
   // mobile branches never disagree at exactly 768px.
   const isMobile = useMediaQuery("(max-width:767.98px)")
+  // For effects that should read the current layout without re-running on a
+  // rotation.
+  const isMobileRef = useRef(isMobile)
+  isMobileRef.current = isMobile
 
   /**
    * Effect hook to load data when component mounts.
@@ -1899,14 +1903,18 @@ function WeatherMap() {
       .then((json) => {
         const sources = json.data || []
         setPrecipSources(sources)
-        // Keep the current resolution if the station has it, else fall back to
-        // whatever it does have (some stations are monthly-only).
+        // On a phone start on monthly: twelve bars fit the screen, ninety
+        // daily ones need a sideways scroll. Otherwise keep the current
+        // resolution if the station has it, else fall back to whatever it
+        // does have (some stations are monthly-only).
         setPrecipResolution((prev) =>
-          sources.some((s) => s.resolution === prev)
-            ? prev
-            : sources.length > 0
-              ? sources[0].resolution
-              : prev
+          isMobileRef.current && sources.some((s) => s.resolution === "monthly")
+            ? "monthly"
+            : sources.some((s) => s.resolution === prev)
+              ? prev
+              : sources.length > 0
+                ? sources[0].resolution
+                : prev
         )
       })
       .catch(() => setPrecipSources([]))
@@ -2068,10 +2076,10 @@ function WeatherMap() {
   // Jump links in the Climate & Weather header. The short-record banner is
   // sticky at the top of the body, so land each section just below it.
   const CLIMATE_SECTIONS = [
+    { id: "forecast", label: "Forecast" },
     { id: "fdd", label: "Winter (FDD)" },
     { id: "precip", label: "Precip & snow" },
     { id: "temp", label: "Temperature" },
-    { id: "forecast", label: "Forecast" },
   ]
   const climateStickyOffset = (body) => {
     const banner = body.querySelector(".wrtdip-short-record-banner")
@@ -2361,7 +2369,7 @@ function WeatherMap() {
       <Modal
         show={modalIsOpen}
         onHide={closeModal}
-        onEnter={() => setClimateSection("fdd")}
+        onEnter={() => setClimateSection("forecast")}
         fullscreen="md-down"
         centered={!modalEnlarge}
         dialogClassName={
@@ -2447,18 +2455,52 @@ function WeatherMap() {
             <div className="wrtdip-short-record-banner" role="alert">
               <span className="wrtdip-short-record-banner__icon" aria-hidden="true">⚠️</span>
               <span>
-                <strong>Limited data:</strong> this station has only{" "}
-                {fddRecordYears} usable {fddRecordYears === 1 ? "season" : "seasons"} of
-                records — fewer than the {SHORT_RECORD_YEARS} years needed to reliably
-                assess long-term climate trends. Interpret these graphs with caution.
+                <strong>Limited data:</strong> only {fddRecordYears}{" "}
+                {fddRecordYears === 1 ? "season" : "seasons"} on record, under the{" "}
+                {SHORT_RECORD_YEARS} needed for a reliable trend. Read the graphs with caution.
               </span>
             </div>
           )}
-          <div className="wrtdip-map-modal__data-badge">
-            <Typography variant="caption" sx={{ display: "block", lineHeight: 1.4 }}>
-              Datasource from <strong>CanHomT V4</strong>, Canada's gold-standard climate record. It's carefully corrected for station moves and equipment changes, so you get the most accurate picture of how the climate is changing.
+          <section className="wrtdip-map-modal__section" id="wrtdip-cw-forecast">
+            <Typography variant="subtitle1" className="wrtdip-map-modal__section-title">
+              3-Day Weather Forecast
             </Typography>
-          </div>
+            <Typography variant="caption" color="text.secondary" sx={{ display: "block", mb: 1.5 }}>
+              Current conditions and outlook for the next 3 days
+            </Typography>
+            <ForecastPanel lat={lat} lon={lon} />
+            <div className="wrtdip-forecast-links">
+              <span>Displayed forecast: Open-Meteo</span>
+              {lat != null && lon != null && (
+                <a
+                  href={`https://weather.gc.ca/en/location/index.html?coords=${lat},${lon}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  3-day weather forecast from Environment Canada
+                </a>
+              )}
+            </div>
+          </section>
+          {/* Names the dataset the FDD graph is actually drawn from; it used
+              to say CanHomT V4 even when the station only had ECCC data. */}
+          {activeDatasetName && (
+            <div className="wrtdip-map-modal__data-badge">
+              <Typography variant="caption" sx={{ display: "block", lineHeight: 1.4 }}>
+                {/canhomt/i.test(activeDatasetName) ? (
+                  <>
+                    Data: <strong>CanHomT V4</strong>, Canada's homogenized temperature record, corrected for
+                    station moves and equipment changes.
+                  </>
+                ) : (
+                  <>
+                    Data: <strong>{activeDatasetName}</strong>. Not adjusted for station moves or equipment
+                    changes, so read long-term trends with some caution.
+                  </>
+                )}
+              </Typography>
+            </div>
+          )}
           <section className="wrtdip-map-modal__section" id="wrtdip-cw-fdd">
             <Typography variant="subtitle1" className="wrtdip-map-modal__section-title">
               Freezing Degree Days (FDDs)
@@ -2624,21 +2666,16 @@ function WeatherMap() {
                 </Typography>
 
                 <div className="wrtdip-precip-controls">
-                  <label className="wrtdip-precip-control">
+                  {/* There is only ever one precipitation dataset, so this is a
+                      label rather than a dropdown with nothing to choose. */}
+                  <div className="wrtdip-precip-control">
                     <span className="wrtdip-precip-control__label">Dataset</span>
-                    <select
-                      className="wrtdip-precip-select"
-                      value={precipSources.length > 0 ? "canhomp-v2" : ""}
-                      onChange={() => {}}
-                      disabled={precipSources.length === 0}
-                    >
-                      {precipSources.length > 0 ? (
-                        <option value="canhomp-v2">CanHomP V2 (Homogenized Precipitation)</option>
-                      ) : (
-                        <option value="">No dataset for this station</option>
-                      )}
-                    </select>
-                  </label>
+                    <span className="wrtdip-precip-dataset">
+                      {precipSources.length > 0
+                        ? "CanHomP V2 (homogenized precipitation)"
+                        : "No dataset for this station"}
+                    </span>
+                  </div>
                   <div className="wrtdip-precip-control">
                     <span className="wrtdip-precip-control__label">Resolution</span>
                     <div className="wrtdip-precip-resolution">
@@ -2828,27 +2865,6 @@ function WeatherMap() {
             </div>
           </section>
 
-          <section className="wrtdip-map-modal__section" id="wrtdip-cw-forecast">
-            <Typography variant="subtitle1" className="wrtdip-map-modal__section-title">
-              3-Day Weather Forecast
-            </Typography>
-            <Typography variant="caption" color="text.secondary" sx={{ display: "block", mb: 1.5 }}>
-              Current conditions and outlook for the next 3 days
-            </Typography>
-            <ForecastPanel lat={lat} lon={lon} />
-            <div className="wrtdip-forecast-links">
-              <span>Displayed forecast: Open-Meteo</span>
-              {lat != null && lon != null && (
-                <a
-                  href={`https://weather.gc.ca/en/location/index.html?coords=${lat},${lon}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  3-day weather forecast from Environment Canada
-                </a>
-              )}
-            </div>
-          </section>
         </Modal.Body>
       </Modal>
     </div>

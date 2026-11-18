@@ -1637,20 +1637,12 @@
   color: #64748b;
 }
 
-.wrtdip-precip-select {
-  padding: 7px 10px;
-  font-size: 0.82rem;
+.wrtdip-precip-dataset {
+  display: flex;
+  align-items: center;
+  min-height: 36px;
+  font-size: 0.85rem;
   color: #1e293b;
-  background: #fff;
-  border: 1px solid #cbd5e1;
-  border-radius: 8px;
-  cursor: pointer;
-}
-
-.wrtdip-precip-select:disabled {
-  color: #94a3b8;
-  background: #f1f5f9;
-  cursor: not-allowed;
 }
 
 .wrtdip-precip-resolution {
