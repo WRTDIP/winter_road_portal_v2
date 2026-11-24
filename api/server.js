@@ -5,6 +5,7 @@ import login from "./routes/login.route.js"
 import user from "./routes/user.route.js"
 import dev from "./routes/dev.route.js"
 import register from "./routes/register.route.js"
+import citizensWatch from "./routes/citizensWatch.route.js"
 import session from "express-session"
 const port = 4000
 const app = express()
@@ -40,6 +41,7 @@ app.use("/api/login", login)
 app.use("/api/dev", dev)
 app.use("/api/user", user)
 app.use("/api/register", register)
+app.use("/api/citizens-watch", citizensWatch)
 
 //Start
 app.listen(port, () => {

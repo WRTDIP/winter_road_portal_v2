@@ -173,9 +173,75 @@ exports.Prisma.PostScalarFieldEnum = {
   authorId: 'authorId'
 };
 
+exports.Prisma.RoadClosureScalarFieldEnum = {
+  id: 'id',
+  dataset_id: 'dataset_id',
+  year: 'year',
+  road_name: 'road_name',
+  road_type: 'road_type',
+  status: 'status',
+  month: 'month',
+  day: 'day'
+};
+
+exports.Prisma.CitizenReportScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  condition: 'condition',
+  caption: 'caption',
+  image: 'image',
+  imageMime: 'imageMime',
+  imageSize: 'imageSize',
+  imageSha256: 'imageSha256',
+  imageWidth: 'imageWidth',
+  imageHeight: 'imageHeight',
+  displayImage: 'displayImage',
+  displayMime: 'displayMime',
+  thumbnail: 'thumbnail',
+  thumbnailMime: 'thumbnailMime',
+  originalFilename: 'originalFilename',
+  fileLastModified: 'fileLastModified',
+  captureMethod: 'captureMethod',
+  latitude: 'latitude',
+  longitude: 'longitude',
+  accuracyM: 'accuracyM',
+  altitudeM: 'altitudeM',
+  headingDeg: 'headingDeg',
+  speedMps: 'speedMps',
+  locationAt: 'locationAt',
+  locationSource: 'locationSource',
+  exifLatitude: 'exifLatitude',
+  exifLongitude: 'exifLongitude',
+  exifTakenAt: 'exifTakenAt',
+  cameraMake: 'cameraMake',
+  cameraModel: 'cameraModel',
+  exifSoftware: 'exifSoftware',
+  exif: 'exif',
+  userId: 'userId',
+  deviceId: 'deviceId',
+  sessionId: 'sessionId',
+  ip: 'ip',
+  forwardedFor: 'forwardedFor',
+  ipCountry: 'ipCountry',
+  userAgent: 'userAgent',
+  acceptLanguage: 'acceptLanguage',
+  headers: 'headers',
+  client: 'client',
+  status: 'status',
+  flags: 'flags',
+  reviewedAt: 'reviewedAt',
+  reviewedBy: 'reviewedBy',
+  reviewNotes: 'reviewNotes'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
+};
+
+exports.Prisma.NullableJsonNullValueInput = {
+  DbNull: Prisma.DbNull,
+  JsonNull: Prisma.JsonNull
 };
 
 exports.Prisma.QueryMode = {
@@ -188,6 +254,12 @@ exports.Prisma.NullsOrder = {
   last: 'last'
 };
 
+exports.Prisma.JsonNullValueFilter = {
+  DbNull: Prisma.DbNull,
+  JsonNull: Prisma.JsonNull,
+  AnyNull: Prisma.AnyNull
+};
+
 
 exports.Prisma.ModelName = {
   User: 'User',
@@ -195,7 +267,9 @@ exports.Prisma.ModelName = {
   OutBoundEmail: 'OutBoundEmail',
   OutBoundEmailQueue: 'OutBoundEmailQueue',
   Session: 'Session',
-  Post: 'Post'
+  Post: 'Post',
+  RoadClosure: 'RoadClosure',
+  CitizenReport: 'CitizenReport'
 };
 
 /**

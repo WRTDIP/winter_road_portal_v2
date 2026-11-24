@@ -24,6 +24,9 @@ import Api from "./pages/Api/index.jsx";
 import Download from "./pages/Download/index.jsx";
 import References from "./pages/References/index.jsx";
 import Blog from "./pages/Blog/index.jsx";
+import CitizensWatch from "./pages/CitizensWatch/index.jsx";
+import CitizensWatchUpload from "./pages/CitizensWatch/Upload.jsx";
+import CitizensWatchLive from "./pages/CitizensWatch/LiveMap.jsx";
 import { Auth0Provider } from "@auth0/auth0-react";
 
 
@@ -61,6 +64,9 @@ ReactDOM.render(
         <Route path="/download" element={<Download />} exact />
         <Route path="/references" element={<References />} exact />
         <Route path="/blog" element={<Blog />} exact />
+        <Route path="/citizens-watch" element={<CitizensWatch />} exact />
+        <Route path="/citizens-watch/upload" element={<CitizensWatchUpload />} exact />
+        <Route path="/citizens-watch/live" element={<CitizensWatchLive />} exact />
       </Routes>
 
       {/* Render global footer */}

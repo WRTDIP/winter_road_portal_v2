@@ -14,18 +14,19 @@ datasource db {
 }
 
 model User {
-  id            String     @id @default(uuid())
-  email         String     @unique
-  name          String?
-  password      String
-  emailverified Boolean    @default(false)
-  datecreated   DateTime   @default(now()) @db.Timestamptz
-  dateupdated   DateTime   @updatedAt @db.Timestamptz
-  dateloggedin  DateTime?  @db.Timestamptz
-  userlevel     Int        @default(30)
-  posts         Post[]
-  authCodes     AuthCode[]
-  sessions      Session[]
+  id             String          @id @default(uuid())
+  email          String          @unique
+  name           String?
+  password       String
+  emailverified  Boolean         @default(false)
+  datecreated    DateTime        @default(now()) @db.Timestamptz
+  dateupdated    DateTime        @updatedAt @db.Timestamptz
+  dateloggedin   DateTime?       @db.Timestamptz
+  userlevel      Int             @default(30)
+  posts          Post[]
+  authCodes      AuthCode[]
+  sessions       Session[]
+  citizenReports CitizenReport[]
 }
 
 model AuthCode {
@@ -72,4 +73,99 @@ model Post {
   published Boolean @default(false)
   author    User    @relation(fields: [authorId], references: [id])
   authorId  String
+}
+
+model RoadClosure {
+  id         BigInt @id @default(autoincrement())
+  dataset_id Int?
+  year       Int
+  road_name  String
+  road_type  String
+  status     String
+  month      Int?
+  day        Int?
+
+  @@unique([dataset_id, year, road_name, status], name: "road_closures_dataset_year_road_status_uniq")
+  @@index([year])
+  @@index([road_name])
+  @@index([road_type])
+  @@index([dataset_id])
+  @@map("road_closures")
+}
+
+// Citizen's Watch: road-condition photos uploaded by the public.
+// Everything beyond the photo itself is captured so spam and fake or
+// recycled pictures can be filtered later; none of it is served publicly.
+model CitizenReport {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now()) @db.Timestamptz
+
+  // What the reporter said
+  condition String? // clear | wet | snow | ice | slush | flooding | washout | closed | other
+  caption   String?
+
+  // The original photo exactly as uploaded (private: it keeps its EXIF), plus
+  // EXIF-free copies the browser redraws for public display and map markers
+  image            Bytes
+  imageMime        String
+  imageSize        Int
+  imageSha256      String
+  imageWidth       Int?
+  imageHeight      Int?
+  displayImage     Bytes?
+  displayMime      String?
+  thumbnail        Bytes?
+  thumbnailMime    String?
+  originalFilename String?
+  fileLastModified DateTime? @db.Timestamptz
+  captureMethod    String? // camera | library
+
+  // Where the phone said it was when the photo was sent
+  latitude       Float?
+  longitude      Float?
+  accuracyM      Float?
+  altitudeM      Float?
+  headingDeg     Float?
+  speedMps       Float?
+  locationAt     DateTime? @db.Timestamptz
+  locationSource String? // device | exif | none
+
+  // What the photo file itself claims (EXIF)
+  exifLatitude  Float?
+  exifLongitude Float?
+  exifTakenAt   DateTime? @db.Timestamptz
+  cameraMake    String?
+  cameraModel   String?
+  exifSoftware  String?
+  exif          Json?
+
+  // Who sent it
+  user      User?   @relation(fields: [userId], references: [id])
+  userId    String?
+  deviceId  String? // random id kept in the browser's localStorage
+  sessionId String?
+
+  // Network and device
+  ip             String?
+  forwardedFor   String?
+  ipCountry      String?
+  userAgent      String?
+  acceptLanguage String?
+  headers        Json?
+  client         Json? // screen, timezone, platform, connection, etc. as reported by the browser
+
+  // Moderation
+  status      String    @default("visible") // visible | hidden | removed
+  flags       String[]  @default([])
+  reviewedAt  DateTime? @db.Timestamptz
+  reviewedBy  String?
+  reviewNotes String?
+
+  @@index([createdAt])
+  @@index([status])
+  @@index([imageSha256])
+  @@index([deviceId])
+  @@index([ip])
+  @@index([userId])
+  @@map("citizen_reports")
 }

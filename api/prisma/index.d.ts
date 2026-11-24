@@ -43,6 +43,16 @@ export type Session = $Result.DefaultSelection<Prisma.$SessionPayload>
  * 
  */
 export type Post = $Result.DefaultSelection<Prisma.$PostPayload>
+/**
+ * Model RoadClosure
+ * 
+ */
+export type RoadClosure = $Result.DefaultSelection<Prisma.$RoadClosurePayload>
+/**
+ * Model CitizenReport
+ * 
+ */
+export type CitizenReport = $Result.DefaultSelection<Prisma.$CitizenReportPayload>
 
 /**
  * ##  Prisma Client ʲˢ
@@ -224,6 +234,26 @@ export class PrismaClient<
     * ```
     */
   get post(): Prisma.PostDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.roadClosure`: Exposes CRUD operations for the **RoadClosure** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more RoadClosures
+    * const roadClosures = await prisma.roadClosure.findMany()
+    * ```
+    */
+  get roadClosure(): Prisma.RoadClosureDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.citizenReport`: Exposes CRUD operations for the **CitizenReport** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more CitizenReports
+    * const citizenReports = await prisma.citizenReport.findMany()
+    * ```
+    */
+  get citizenReport(): Prisma.CitizenReportDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -663,7 +693,9 @@ export namespace Prisma {
     OutBoundEmail: 'OutBoundEmail',
     OutBoundEmailQueue: 'OutBoundEmailQueue',
     Session: 'Session',
-    Post: 'Post'
+    Post: 'Post',
+    RoadClosure: 'RoadClosure',
+    CitizenReport: 'CitizenReport'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -679,7 +711,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "authCode" | "outBoundEmail" | "outBoundEmailQueue" | "session" | "post"
+      modelProps: "user" | "authCode" | "outBoundEmail" | "outBoundEmailQueue" | "session" | "post" | "roadClosure" | "citizenReport"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -1127,6 +1159,154 @@ export namespace Prisma {
           }
         }
       }
+      RoadClosure: {
+        payload: Prisma.$RoadClosurePayload<ExtArgs>
+        fields: Prisma.RoadClosureFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.RoadClosureFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RoadClosurePayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.RoadClosureFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RoadClosurePayload>
+          }
+          findFirst: {
+            args: Prisma.RoadClosureFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RoadClosurePayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.RoadClosureFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RoadClosurePayload>
+          }
+          findMany: {
+            args: Prisma.RoadClosureFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RoadClosurePayload>[]
+          }
+          create: {
+            args: Prisma.RoadClosureCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RoadClosurePayload>
+          }
+          createMany: {
+            args: Prisma.RoadClosureCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.RoadClosureCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RoadClosurePayload>[]
+          }
+          delete: {
+            args: Prisma.RoadClosureDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RoadClosurePayload>
+          }
+          update: {
+            args: Prisma.RoadClosureUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RoadClosurePayload>
+          }
+          deleteMany: {
+            args: Prisma.RoadClosureDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.RoadClosureUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.RoadClosureUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RoadClosurePayload>[]
+          }
+          upsert: {
+            args: Prisma.RoadClosureUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RoadClosurePayload>
+          }
+          aggregate: {
+            args: Prisma.RoadClosureAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateRoadClosure>
+          }
+          groupBy: {
+            args: Prisma.RoadClosureGroupByArgs<ExtArgs>
+            result: $Utils.Optional<RoadClosureGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.RoadClosureCountArgs<ExtArgs>
+            result: $Utils.Optional<RoadClosureCountAggregateOutputType> | number
+          }
+        }
+      }
+      CitizenReport: {
+        payload: Prisma.$CitizenReportPayload<ExtArgs>
+        fields: Prisma.CitizenReportFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.CitizenReportFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CitizenReportPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.CitizenReportFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CitizenReportPayload>
+          }
+          findFirst: {
+            args: Prisma.CitizenReportFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CitizenReportPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.CitizenReportFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CitizenReportPayload>
+          }
+          findMany: {
+            args: Prisma.CitizenReportFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CitizenReportPayload>[]
+          }
+          create: {
+            args: Prisma.CitizenReportCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CitizenReportPayload>
+          }
+          createMany: {
+            args: Prisma.CitizenReportCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.CitizenReportCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CitizenReportPayload>[]
+          }
+          delete: {
+            args: Prisma.CitizenReportDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CitizenReportPayload>
+          }
+          update: {
+            args: Prisma.CitizenReportUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CitizenReportPayload>
+          }
+          deleteMany: {
+            args: Prisma.CitizenReportDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.CitizenReportUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.CitizenReportUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CitizenReportPayload>[]
+          }
+          upsert: {
+            args: Prisma.CitizenReportUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CitizenReportPayload>
+          }
+          aggregate: {
+            args: Prisma.CitizenReportAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateCitizenReport>
+          }
+          groupBy: {
+            args: Prisma.CitizenReportGroupByArgs<ExtArgs>
+            result: $Utils.Optional<CitizenReportGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.CitizenReportCountArgs<ExtArgs>
+            result: $Utils.Optional<CitizenReportCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -1241,6 +1421,8 @@ export namespace Prisma {
     outBoundEmailQueue?: OutBoundEmailQueueOmit
     session?: SessionOmit
     post?: PostOmit
+    roadClosure?: RoadClosureOmit
+    citizenReport?: CitizenReportOmit
   }
 
   /* Types for Logging */
@@ -1324,12 +1506,14 @@ export namespace Prisma {
     posts: number
     authCodes: number
     sessions: number
+    citizenReports: number
   }
 
   export type UserCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     posts?: boolean | UserCountOutputTypeCountPostsArgs
     authCodes?: boolean | UserCountOutputTypeCountAuthCodesArgs
     sessions?: boolean | UserCountOutputTypeCountSessionsArgs
+    citizenReports?: boolean | UserCountOutputTypeCountCitizenReportsArgs
   }
 
   // Custom InputTypes
@@ -1362,6 +1546,13 @@ export namespace Prisma {
    */
   export type UserCountOutputTypeCountSessionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: SessionWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountCitizenReportsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: CitizenReportWhereInput
   }
 
 
@@ -1633,6 +1824,7 @@ export namespace Prisma {
     posts?: boolean | User$postsArgs<ExtArgs>
     authCodes?: boolean | User$authCodesArgs<ExtArgs>
     sessions?: boolean | User$sessionsArgs<ExtArgs>
+    citizenReports?: boolean | User$citizenReportsArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
@@ -1677,6 +1869,7 @@ export namespace Prisma {
     posts?: boolean | User$postsArgs<ExtArgs>
     authCodes?: boolean | User$authCodesArgs<ExtArgs>
     sessions?: boolean | User$sessionsArgs<ExtArgs>
+    citizenReports?: boolean | User$citizenReportsArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type UserIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -1688,6 +1881,7 @@ export namespace Prisma {
       posts: Prisma.$PostPayload<ExtArgs>[]
       authCodes: Prisma.$AuthCodePayload<ExtArgs>[]
       sessions: Prisma.$SessionPayload<ExtArgs>[]
+      citizenReports: Prisma.$CitizenReportPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -2096,6 +2290,7 @@ export namespace Prisma {
     posts<T extends User$postsArgs<ExtArgs> = {}>(args?: Subset<T, User$postsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PostPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     authCodes<T extends User$authCodesArgs<ExtArgs> = {}>(args?: Subset<T, User$authCodesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AuthCodePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     sessions<T extends User$sessionsArgs<ExtArgs> = {}>(args?: Subset<T, User$sessionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SessionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    citizenReports<T extends User$citizenReportsArgs<ExtArgs> = {}>(args?: Subset<T, User$citizenReportsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CitizenReportPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2591,6 +2786,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: SessionScalarFieldEnum | SessionScalarFieldEnum[]
+  }
+
+  /**
+   * User.citizenReports
+   */
+  export type User$citizenReportsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CitizenReport
+     */
+    select?: CitizenReportSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CitizenReport
+     */
+    omit?: CitizenReportOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CitizenReportInclude<ExtArgs> | null
+    where?: CitizenReportWhereInput
+    orderBy?: CitizenReportOrderByWithRelationInput | CitizenReportOrderByWithRelationInput[]
+    cursor?: CitizenReportWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: CitizenReportScalarFieldEnum | CitizenReportScalarFieldEnum[]
   }
 
   /**
@@ -8102,6 +8321,2771 @@ export namespace Prisma {
 
 
   /**
+   * Model RoadClosure
+   */
+
+  export type AggregateRoadClosure = {
+    _count: RoadClosureCountAggregateOutputType | null
+    _avg: RoadClosureAvgAggregateOutputType | null
+    _sum: RoadClosureSumAggregateOutputType | null
+    _min: RoadClosureMinAggregateOutputType | null
+    _max: RoadClosureMaxAggregateOutputType | null
+  }
+
+  export type RoadClosureAvgAggregateOutputType = {
+    id: number | null
+    dataset_id: number | null
+    year: number | null
+    month: number | null
+    day: number | null
+  }
+
+  export type RoadClosureSumAggregateOutputType = {
+    id: bigint | null
+    dataset_id: number | null
+    year: number | null
+    month: number | null
+    day: number | null
+  }
+
+  export type RoadClosureMinAggregateOutputType = {
+    id: bigint | null
+    dataset_id: number | null
+    year: number | null
+    road_name: string | null
+    road_type: string | null
+    status: string | null
+    month: number | null
+    day: number | null
+  }
+
+  export type RoadClosureMaxAggregateOutputType = {
+    id: bigint | null
+    dataset_id: number | null
+    year: number | null
+    road_name: string | null
+    road_type: string | null
+    status: string | null
+    month: number | null
+    day: number | null
+  }
+
+  export type RoadClosureCountAggregateOutputType = {
+    id: number
+    dataset_id: number
+    year: number
+    road_name: number
+    road_type: number
+    status: number
+    month: number
+    day: number
+    _all: number
+  }
+
+
+  export type RoadClosureAvgAggregateInputType = {
+    id?: true
+    dataset_id?: true
+    year?: true
+    month?: true
+    day?: true
+  }
+
+  export type RoadClosureSumAggregateInputType = {
+    id?: true
+    dataset_id?: true
+    year?: true
+    month?: true
+    day?: true
+  }
+
+  export type RoadClosureMinAggregateInputType = {
+    id?: true
+    dataset_id?: true
+    year?: true
+    road_name?: true
+    road_type?: true
+    status?: true
+    month?: true
+    day?: true
+  }
+
+  export type RoadClosureMaxAggregateInputType = {
+    id?: true
+    dataset_id?: true
+    year?: true
+    road_name?: true
+    road_type?: true
+    status?: true
+    month?: true
+    day?: true
+  }
+
+  export type RoadClosureCountAggregateInputType = {
+    id?: true
+    dataset_id?: true
+    year?: true
+    road_name?: true
+    road_type?: true
+    status?: true
+    month?: true
+    day?: true
+    _all?: true
+  }
+
+  export type RoadClosureAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which RoadClosure to aggregate.
+     */
+    where?: RoadClosureWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of RoadClosures to fetch.
+     */
+    orderBy?: RoadClosureOrderByWithRelationInput | RoadClosureOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: RoadClosureWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` RoadClosures from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` RoadClosures.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned RoadClosures
+    **/
+    _count?: true | RoadClosureCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: RoadClosureAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: RoadClosureSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: RoadClosureMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: RoadClosureMaxAggregateInputType
+  }
+
+  export type GetRoadClosureAggregateType<T extends RoadClosureAggregateArgs> = {
+        [P in keyof T & keyof AggregateRoadClosure]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateRoadClosure[P]>
+      : GetScalarType<T[P], AggregateRoadClosure[P]>
+  }
+
+
+
+
+  export type RoadClosureGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: RoadClosureWhereInput
+    orderBy?: RoadClosureOrderByWithAggregationInput | RoadClosureOrderByWithAggregationInput[]
+    by: RoadClosureScalarFieldEnum[] | RoadClosureScalarFieldEnum
+    having?: RoadClosureScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: RoadClosureCountAggregateInputType | true
+    _avg?: RoadClosureAvgAggregateInputType
+    _sum?: RoadClosureSumAggregateInputType
+    _min?: RoadClosureMinAggregateInputType
+    _max?: RoadClosureMaxAggregateInputType
+  }
+
+  export type RoadClosureGroupByOutputType = {
+    id: bigint
+    dataset_id: number | null
+    year: number
+    road_name: string
+    road_type: string
+    status: string
+    month: number | null
+    day: number | null
+    _count: RoadClosureCountAggregateOutputType | null
+    _avg: RoadClosureAvgAggregateOutputType | null
+    _sum: RoadClosureSumAggregateOutputType | null
+    _min: RoadClosureMinAggregateOutputType | null
+    _max: RoadClosureMaxAggregateOutputType | null
+  }
+
+  type GetRoadClosureGroupByPayload<T extends RoadClosureGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<RoadClosureGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof RoadClosureGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], RoadClosureGroupByOutputType[P]>
+            : GetScalarType<T[P], RoadClosureGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type RoadClosureSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    dataset_id?: boolean
+    year?: boolean
+    road_name?: boolean
+    road_type?: boolean
+    status?: boolean
+    month?: boolean
+    day?: boolean
+  }, ExtArgs["result"]["roadClosure"]>
+
+  export type RoadClosureSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    dataset_id?: boolean
+    year?: boolean
+    road_name?: boolean
+    road_type?: boolean
+    status?: boolean
+    month?: boolean
+    day?: boolean
+  }, ExtArgs["result"]["roadClosure"]>
+
+  export type RoadClosureSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    dataset_id?: boolean
+    year?: boolean
+    road_name?: boolean
+    road_type?: boolean
+    status?: boolean
+    month?: boolean
+    day?: boolean
+  }, ExtArgs["result"]["roadClosure"]>
+
+  export type RoadClosureSelectScalar = {
+    id?: boolean
+    dataset_id?: boolean
+    year?: boolean
+    road_name?: boolean
+    road_type?: boolean
+    status?: boolean
+    month?: boolean
+    day?: boolean
+  }
+
+  export type RoadClosureOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "dataset_id" | "year" | "road_name" | "road_type" | "status" | "month" | "day", ExtArgs["result"]["roadClosure"]>
+
+  export type $RoadClosurePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "RoadClosure"
+    objects: {}
+    scalars: $Extensions.GetPayloadResult<{
+      id: bigint
+      dataset_id: number | null
+      year: number
+      road_name: string
+      road_type: string
+      status: string
+      month: number | null
+      day: number | null
+    }, ExtArgs["result"]["roadClosure"]>
+    composites: {}
+  }
+
+  type RoadClosureGetPayload<S extends boolean | null | undefined | RoadClosureDefaultArgs> = $Result.GetResult<Prisma.$RoadClosurePayload, S>
+
+  type RoadClosureCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<RoadClosureFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: RoadClosureCountAggregateInputType | true
+    }
+
+  export interface RoadClosureDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['RoadClosure'], meta: { name: 'RoadClosure' } }
+    /**
+     * Find zero or one RoadClosure that matches the filter.
+     * @param {RoadClosureFindUniqueArgs} args - Arguments to find a RoadClosure
+     * @example
+     * // Get one RoadClosure
+     * const roadClosure = await prisma.roadClosure.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends RoadClosureFindUniqueArgs>(args: SelectSubset<T, RoadClosureFindUniqueArgs<ExtArgs>>): Prisma__RoadClosureClient<$Result.GetResult<Prisma.$RoadClosurePayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one RoadClosure that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {RoadClosureFindUniqueOrThrowArgs} args - Arguments to find a RoadClosure
+     * @example
+     * // Get one RoadClosure
+     * const roadClosure = await prisma.roadClosure.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends RoadClosureFindUniqueOrThrowArgs>(args: SelectSubset<T, RoadClosureFindUniqueOrThrowArgs<ExtArgs>>): Prisma__RoadClosureClient<$Result.GetResult<Prisma.$RoadClosurePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first RoadClosure that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {RoadClosureFindFirstArgs} args - Arguments to find a RoadClosure
+     * @example
+     * // Get one RoadClosure
+     * const roadClosure = await prisma.roadClosure.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends RoadClosureFindFirstArgs>(args?: SelectSubset<T, RoadClosureFindFirstArgs<ExtArgs>>): Prisma__RoadClosureClient<$Result.GetResult<Prisma.$RoadClosurePayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first RoadClosure that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {RoadClosureFindFirstOrThrowArgs} args - Arguments to find a RoadClosure
+     * @example
+     * // Get one RoadClosure
+     * const roadClosure = await prisma.roadClosure.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends RoadClosureFindFirstOrThrowArgs>(args?: SelectSubset<T, RoadClosureFindFirstOrThrowArgs<ExtArgs>>): Prisma__RoadClosureClient<$Result.GetResult<Prisma.$RoadClosurePayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more RoadClosures that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {RoadClosureFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all RoadClosures
+     * const roadClosures = await prisma.roadClosure.findMany()
+     * 
+     * // Get first 10 RoadClosures
+     * const roadClosures = await prisma.roadClosure.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const roadClosureWithIdOnly = await prisma.roadClosure.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends RoadClosureFindManyArgs>(args?: SelectSubset<T, RoadClosureFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RoadClosurePayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a RoadClosure.
+     * @param {RoadClosureCreateArgs} args - Arguments to create a RoadClosure.
+     * @example
+     * // Create one RoadClosure
+     * const RoadClosure = await prisma.roadClosure.create({
+     *   data: {
+     *     // ... data to create a RoadClosure
+     *   }
+     * })
+     * 
+     */
+    create<T extends RoadClosureCreateArgs>(args: SelectSubset<T, RoadClosureCreateArgs<ExtArgs>>): Prisma__RoadClosureClient<$Result.GetResult<Prisma.$RoadClosurePayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many RoadClosures.
+     * @param {RoadClosureCreateManyArgs} args - Arguments to create many RoadClosures.
+     * @example
+     * // Create many RoadClosures
+     * const roadClosure = await prisma.roadClosure.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends RoadClosureCreateManyArgs>(args?: SelectSubset<T, RoadClosureCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many RoadClosures and returns the data saved in the database.
+     * @param {RoadClosureCreateManyAndReturnArgs} args - Arguments to create many RoadClosures.
+     * @example
+     * // Create many RoadClosures
+     * const roadClosure = await prisma.roadClosure.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many RoadClosures and only return the `id`
+     * const roadClosureWithIdOnly = await prisma.roadClosure.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends RoadClosureCreateManyAndReturnArgs>(args?: SelectSubset<T, RoadClosureCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RoadClosurePayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a RoadClosure.
+     * @param {RoadClosureDeleteArgs} args - Arguments to delete one RoadClosure.
+     * @example
+     * // Delete one RoadClosure
+     * const RoadClosure = await prisma.roadClosure.delete({
+     *   where: {
+     *     // ... filter to delete one RoadClosure
+     *   }
+     * })
+     * 
+     */
+    delete<T extends RoadClosureDeleteArgs>(args: SelectSubset<T, RoadClosureDeleteArgs<ExtArgs>>): Prisma__RoadClosureClient<$Result.GetResult<Prisma.$RoadClosurePayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one RoadClosure.
+     * @param {RoadClosureUpdateArgs} args - Arguments to update one RoadClosure.
+     * @example
+     * // Update one RoadClosure
+     * const roadClosure = await prisma.roadClosure.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends RoadClosureUpdateArgs>(args: SelectSubset<T, RoadClosureUpdateArgs<ExtArgs>>): Prisma__RoadClosureClient<$Result.GetResult<Prisma.$RoadClosurePayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more RoadClosures.
+     * @param {RoadClosureDeleteManyArgs} args - Arguments to filter RoadClosures to delete.
+     * @example
+     * // Delete a few RoadClosures
+     * const { count } = await prisma.roadClosure.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends RoadClosureDeleteManyArgs>(args?: SelectSubset<T, RoadClosureDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more RoadClosures.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {RoadClosureUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many RoadClosures
+     * const roadClosure = await prisma.roadClosure.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends RoadClosureUpdateManyArgs>(args: SelectSubset<T, RoadClosureUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more RoadClosures and returns the data updated in the database.
+     * @param {RoadClosureUpdateManyAndReturnArgs} args - Arguments to update many RoadClosures.
+     * @example
+     * // Update many RoadClosures
+     * const roadClosure = await prisma.roadClosure.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more RoadClosures and only return the `id`
+     * const roadClosureWithIdOnly = await prisma.roadClosure.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends RoadClosureUpdateManyAndReturnArgs>(args: SelectSubset<T, RoadClosureUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RoadClosurePayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one RoadClosure.
+     * @param {RoadClosureUpsertArgs} args - Arguments to update or create a RoadClosure.
+     * @example
+     * // Update or create a RoadClosure
+     * const roadClosure = await prisma.roadClosure.upsert({
+     *   create: {
+     *     // ... data to create a RoadClosure
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the RoadClosure we want to update
+     *   }
+     * })
+     */
+    upsert<T extends RoadClosureUpsertArgs>(args: SelectSubset<T, RoadClosureUpsertArgs<ExtArgs>>): Prisma__RoadClosureClient<$Result.GetResult<Prisma.$RoadClosurePayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of RoadClosures.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {RoadClosureCountArgs} args - Arguments to filter RoadClosures to count.
+     * @example
+     * // Count the number of RoadClosures
+     * const count = await prisma.roadClosure.count({
+     *   where: {
+     *     // ... the filter for the RoadClosures we want to count
+     *   }
+     * })
+    **/
+    count<T extends RoadClosureCountArgs>(
+      args?: Subset<T, RoadClosureCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], RoadClosureCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a RoadClosure.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {RoadClosureAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends RoadClosureAggregateArgs>(args: Subset<T, RoadClosureAggregateArgs>): Prisma.PrismaPromise<GetRoadClosureAggregateType<T>>
+
+    /**
+     * Group by RoadClosure.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {RoadClosureGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends RoadClosureGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: RoadClosureGroupByArgs['orderBy'] }
+        : { orderBy?: RoadClosureGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, RoadClosureGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetRoadClosureGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the RoadClosure model
+   */
+  readonly fields: RoadClosureFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for RoadClosure.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__RoadClosureClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the RoadClosure model
+   */
+  interface RoadClosureFieldRefs {
+    readonly id: FieldRef<"RoadClosure", 'BigInt'>
+    readonly dataset_id: FieldRef<"RoadClosure", 'Int'>
+    readonly year: FieldRef<"RoadClosure", 'Int'>
+    readonly road_name: FieldRef<"RoadClosure", 'String'>
+    readonly road_type: FieldRef<"RoadClosure", 'String'>
+    readonly status: FieldRef<"RoadClosure", 'String'>
+    readonly month: FieldRef<"RoadClosure", 'Int'>
+    readonly day: FieldRef<"RoadClosure", 'Int'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * RoadClosure findUnique
+   */
+  export type RoadClosureFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RoadClosure
+     */
+    select?: RoadClosureSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RoadClosure
+     */
+    omit?: RoadClosureOmit<ExtArgs> | null
+    /**
+     * Filter, which RoadClosure to fetch.
+     */
+    where: RoadClosureWhereUniqueInput
+  }
+
+  /**
+   * RoadClosure findUniqueOrThrow
+   */
+  export type RoadClosureFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RoadClosure
+     */
+    select?: RoadClosureSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RoadClosure
+     */
+    omit?: RoadClosureOmit<ExtArgs> | null
+    /**
+     * Filter, which RoadClosure to fetch.
+     */
+    where: RoadClosureWhereUniqueInput
+  }
+
+  /**
+   * RoadClosure findFirst
+   */
+  export type RoadClosureFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RoadClosure
+     */
+    select?: RoadClosureSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RoadClosure
+     */
+    omit?: RoadClosureOmit<ExtArgs> | null
+    /**
+     * Filter, which RoadClosure to fetch.
+     */
+    where?: RoadClosureWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of RoadClosures to fetch.
+     */
+    orderBy?: RoadClosureOrderByWithRelationInput | RoadClosureOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for RoadClosures.
+     */
+    cursor?: RoadClosureWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` RoadClosures from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` RoadClosures.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of RoadClosures.
+     */
+    distinct?: RoadClosureScalarFieldEnum | RoadClosureScalarFieldEnum[]
+  }
+
+  /**
+   * RoadClosure findFirstOrThrow
+   */
+  export type RoadClosureFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RoadClosure
+     */
+    select?: RoadClosureSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RoadClosure
+     */
+    omit?: RoadClosureOmit<ExtArgs> | null
+    /**
+     * Filter, which RoadClosure to fetch.
+     */
+    where?: RoadClosureWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of RoadClosures to fetch.
+     */
+    orderBy?: RoadClosureOrderByWithRelationInput | RoadClosureOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for RoadClosures.
+     */
+    cursor?: RoadClosureWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` RoadClosures from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` RoadClosures.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of RoadClosures.
+     */
+    distinct?: RoadClosureScalarFieldEnum | RoadClosureScalarFieldEnum[]
+  }
+
+  /**
+   * RoadClosure findMany
+   */
+  export type RoadClosureFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RoadClosure
+     */
+    select?: RoadClosureSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RoadClosure
+     */
+    omit?: RoadClosureOmit<ExtArgs> | null
+    /**
+     * Filter, which RoadClosures to fetch.
+     */
+    where?: RoadClosureWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of RoadClosures to fetch.
+     */
+    orderBy?: RoadClosureOrderByWithRelationInput | RoadClosureOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing RoadClosures.
+     */
+    cursor?: RoadClosureWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` RoadClosures from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` RoadClosures.
+     */
+    skip?: number
+    distinct?: RoadClosureScalarFieldEnum | RoadClosureScalarFieldEnum[]
+  }
+
+  /**
+   * RoadClosure create
+   */
+  export type RoadClosureCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RoadClosure
+     */
+    select?: RoadClosureSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RoadClosure
+     */
+    omit?: RoadClosureOmit<ExtArgs> | null
+    /**
+     * The data needed to create a RoadClosure.
+     */
+    data: XOR<RoadClosureCreateInput, RoadClosureUncheckedCreateInput>
+  }
+
+  /**
+   * RoadClosure createMany
+   */
+  export type RoadClosureCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many RoadClosures.
+     */
+    data: RoadClosureCreateManyInput | RoadClosureCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * RoadClosure createManyAndReturn
+   */
+  export type RoadClosureCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RoadClosure
+     */
+    select?: RoadClosureSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the RoadClosure
+     */
+    omit?: RoadClosureOmit<ExtArgs> | null
+    /**
+     * The data used to create many RoadClosures.
+     */
+    data: RoadClosureCreateManyInput | RoadClosureCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * RoadClosure update
+   */
+  export type RoadClosureUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RoadClosure
+     */
+    select?: RoadClosureSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RoadClosure
+     */
+    omit?: RoadClosureOmit<ExtArgs> | null
+    /**
+     * The data needed to update a RoadClosure.
+     */
+    data: XOR<RoadClosureUpdateInput, RoadClosureUncheckedUpdateInput>
+    /**
+     * Choose, which RoadClosure to update.
+     */
+    where: RoadClosureWhereUniqueInput
+  }
+
+  /**
+   * RoadClosure updateMany
+   */
+  export type RoadClosureUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update RoadClosures.
+     */
+    data: XOR<RoadClosureUpdateManyMutationInput, RoadClosureUncheckedUpdateManyInput>
+    /**
+     * Filter which RoadClosures to update
+     */
+    where?: RoadClosureWhereInput
+    /**
+     * Limit how many RoadClosures to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * RoadClosure updateManyAndReturn
+   */
+  export type RoadClosureUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RoadClosure
+     */
+    select?: RoadClosureSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the RoadClosure
+     */
+    omit?: RoadClosureOmit<ExtArgs> | null
+    /**
+     * The data used to update RoadClosures.
+     */
+    data: XOR<RoadClosureUpdateManyMutationInput, RoadClosureUncheckedUpdateManyInput>
+    /**
+     * Filter which RoadClosures to update
+     */
+    where?: RoadClosureWhereInput
+    /**
+     * Limit how many RoadClosures to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * RoadClosure upsert
+   */
+  export type RoadClosureUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RoadClosure
+     */
+    select?: RoadClosureSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RoadClosure
+     */
+    omit?: RoadClosureOmit<ExtArgs> | null
+    /**
+     * The filter to search for the RoadClosure to update in case it exists.
+     */
+    where: RoadClosureWhereUniqueInput
+    /**
+     * In case the RoadClosure found by the `where` argument doesn't exist, create a new RoadClosure with this data.
+     */
+    create: XOR<RoadClosureCreateInput, RoadClosureUncheckedCreateInput>
+    /**
+     * In case the RoadClosure was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<RoadClosureUpdateInput, RoadClosureUncheckedUpdateInput>
+  }
+
+  /**
+   * RoadClosure delete
+   */
+  export type RoadClosureDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RoadClosure
+     */
+    select?: RoadClosureSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RoadClosure
+     */
+    omit?: RoadClosureOmit<ExtArgs> | null
+    /**
+     * Filter which RoadClosure to delete.
+     */
+    where: RoadClosureWhereUniqueInput
+  }
+
+  /**
+   * RoadClosure deleteMany
+   */
+  export type RoadClosureDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which RoadClosures to delete
+     */
+    where?: RoadClosureWhereInput
+    /**
+     * Limit how many RoadClosures to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * RoadClosure without action
+   */
+  export type RoadClosureDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RoadClosure
+     */
+    select?: RoadClosureSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RoadClosure
+     */
+    omit?: RoadClosureOmit<ExtArgs> | null
+  }
+
+
+  /**
+   * Model CitizenReport
+   */
+
+  export type AggregateCitizenReport = {
+    _count: CitizenReportCountAggregateOutputType | null
+    _avg: CitizenReportAvgAggregateOutputType | null
+    _sum: CitizenReportSumAggregateOutputType | null
+    _min: CitizenReportMinAggregateOutputType | null
+    _max: CitizenReportMaxAggregateOutputType | null
+  }
+
+  export type CitizenReportAvgAggregateOutputType = {
+    imageSize: number | null
+    imageWidth: number | null
+    imageHeight: number | null
+    latitude: number | null
+    longitude: number | null
+    accuracyM: number | null
+    altitudeM: number | null
+    headingDeg: number | null
+    speedMps: number | null
+    exifLatitude: number | null
+    exifLongitude: number | null
+  }
+
+  export type CitizenReportSumAggregateOutputType = {
+    imageSize: number | null
+    imageWidth: number | null
+    imageHeight: number | null
+    latitude: number | null
+    longitude: number | null
+    accuracyM: number | null
+    altitudeM: number | null
+    headingDeg: number | null
+    speedMps: number | null
+    exifLatitude: number | null
+    exifLongitude: number | null
+  }
+
+  export type CitizenReportMinAggregateOutputType = {
+    id: string | null
+    createdAt: Date | null
+    condition: string | null
+    caption: string | null
+    image: Bytes | null
+    imageMime: string | null
+    imageSize: number | null
+    imageSha256: string | null
+    imageWidth: number | null
+    imageHeight: number | null
+    displayImage: Bytes | null
+    displayMime: string | null
+    thumbnail: Bytes | null
+    thumbnailMime: string | null
+    originalFilename: string | null
+    fileLastModified: Date | null
+    captureMethod: string | null
+    latitude: number | null
+    longitude: number | null
+    accuracyM: number | null
+    altitudeM: number | null
+    headingDeg: number | null
+    speedMps: number | null
+    locationAt: Date | null
+    locationSource: string | null
+    exifLatitude: number | null
+    exifLongitude: number | null
+    exifTakenAt: Date | null
+    cameraMake: string | null
+    cameraModel: string | null
+    exifSoftware: string | null
+    userId: string | null
+    deviceId: string | null
+    sessionId: string | null
+    ip: string | null
+    forwardedFor: string | null
+    ipCountry: string | null
+    userAgent: string | null
+    acceptLanguage: string | null
+    status: string | null
+    reviewedAt: Date | null
+    reviewedBy: string | null
+    reviewNotes: string | null
+  }
+
+  export type CitizenReportMaxAggregateOutputType = {
+    id: string | null
+    createdAt: Date | null
+    condition: string | null
+    caption: string | null
+    image: Bytes | null
+    imageMime: string | null
+    imageSize: number | null
+    imageSha256: string | null
+    imageWidth: number | null
+    imageHeight: number | null
+    displayImage: Bytes | null
+    displayMime: string | null
+    thumbnail: Bytes | null
+    thumbnailMime: string | null
+    originalFilename: string | null
+    fileLastModified: Date | null
+    captureMethod: string | null
+    latitude: number | null
+    longitude: number | null
+    accuracyM: number | null
+    altitudeM: number | null
+    headingDeg: number | null
+    speedMps: number | null
+    locationAt: Date | null
+    locationSource: string | null
+    exifLatitude: number | null
+    exifLongitude: number | null
+    exifTakenAt: Date | null
+    cameraMake: string | null
+    cameraModel: string | null
+    exifSoftware: string | null
+    userId: string | null
+    deviceId: string | null
+    sessionId: string | null
+    ip: string | null
+    forwardedFor: string | null
+    ipCountry: string | null
+    userAgent: string | null
+    acceptLanguage: string | null
+    status: string | null
+    reviewedAt: Date | null
+    reviewedBy: string | null
+    reviewNotes: string | null
+  }
+
+  export type CitizenReportCountAggregateOutputType = {
+    id: number
+    createdAt: number
+    condition: number
+    caption: number
+    image: number
+    imageMime: number
+    imageSize: number
+    imageSha256: number
+    imageWidth: number
+    imageHeight: number
+    displayImage: number
+    displayMime: number
+    thumbnail: number
+    thumbnailMime: number
+    originalFilename: number
+    fileLastModified: number
+    captureMethod: number
+    latitude: number
+    longitude: number
+    accuracyM: number
+    altitudeM: number
+    headingDeg: number
+    speedMps: number
+    locationAt: number
+    locationSource: number
+    exifLatitude: number
+    exifLongitude: number
+    exifTakenAt: number
+    cameraMake: number
+    cameraModel: number
+    exifSoftware: number
+    exif: number
+    userId: number
+    deviceId: number
+    sessionId: number
+    ip: number
+    forwardedFor: number
+    ipCountry: number
+    userAgent: number
+    acceptLanguage: number
+    headers: number
+    client: number
+    status: number
+    flags: number
+    reviewedAt: number
+    reviewedBy: number
+    reviewNotes: number
+    _all: number
+  }
+
+
+  export type CitizenReportAvgAggregateInputType = {
+    imageSize?: true
+    imageWidth?: true
+    imageHeight?: true
+    latitude?: true
+    longitude?: true
+    accuracyM?: true
+    altitudeM?: true
+    headingDeg?: true
+    speedMps?: true
+    exifLatitude?: true
+    exifLongitude?: true
+  }
+
+  export type CitizenReportSumAggregateInputType = {
+    imageSize?: true
+    imageWidth?: true
+    imageHeight?: true
+    latitude?: true
+    longitude?: true
+    accuracyM?: true
+    altitudeM?: true
+    headingDeg?: true
+    speedMps?: true
+    exifLatitude?: true
+    exifLongitude?: true
+  }
+
+  export type CitizenReportMinAggregateInputType = {
+    id?: true
+    createdAt?: true
+    condition?: true
+    caption?: true
+    image?: true
+    imageMime?: true
+    imageSize?: true
+    imageSha256?: true
+    imageWidth?: true
+    imageHeight?: true
+    displayImage?: true
+    displayMime?: true
+    thumbnail?: true
+    thumbnailMime?: true
+    originalFilename?: true
+    fileLastModified?: true
+    captureMethod?: true
+    latitude?: true
+    longitude?: true
+    accuracyM?: true
+    altitudeM?: true
+    headingDeg?: true
+    speedMps?: true
+    locationAt?: true
+    locationSource?: true
+    exifLatitude?: true
+    exifLongitude?: true
+    exifTakenAt?: true
+    cameraMake?: true
+    cameraModel?: true
+    exifSoftware?: true
+    userId?: true
+    deviceId?: true
+    sessionId?: true
+    ip?: true
+    forwardedFor?: true
+    ipCountry?: true
+    userAgent?: true
+    acceptLanguage?: true
+    status?: true
+    reviewedAt?: true
+    reviewedBy?: true
+    reviewNotes?: true
+  }
+
+  export type CitizenReportMaxAggregateInputType = {
+    id?: true
+    createdAt?: true
+    condition?: true
+    caption?: true
+    image?: true
+    imageMime?: true
+    imageSize?: true
+    imageSha256?: true
+    imageWidth?: true
+    imageHeight?: true
+    displayImage?: true
+    displayMime?: true
+    thumbnail?: true
+    thumbnailMime?: true
+    originalFilename?: true
+    fileLastModified?: true
+    captureMethod?: true
+    latitude?: true
+    longitude?: true
+    accuracyM?: true
+    altitudeM?: true
+    headingDeg?: true
+    speedMps?: true
+    locationAt?: true
+    locationSource?: true
+    exifLatitude?: true
+    exifLongitude?: true
+    exifTakenAt?: true
+    cameraMake?: true
+    cameraModel?: true
+    exifSoftware?: true
+    userId?: true
+    deviceId?: true
+    sessionId?: true
+    ip?: true
+    forwardedFor?: true
+    ipCountry?: true
+    userAgent?: true
+    acceptLanguage?: true
+    status?: true
+    reviewedAt?: true
+    reviewedBy?: true
+    reviewNotes?: true
+  }
+
+  export type CitizenReportCountAggregateInputType = {
+    id?: true
+    createdAt?: true
+    condition?: true
+    caption?: true
+    image?: true
+    imageMime?: true
+    imageSize?: true
+    imageSha256?: true
+    imageWidth?: true
+    imageHeight?: true
+    displayImage?: true
+    displayMime?: true
+    thumbnail?: true
+    thumbnailMime?: true
+    originalFilename?: true
+    fileLastModified?: true
+    captureMethod?: true
+    latitude?: true
+    longitude?: true
+    accuracyM?: true
+    altitudeM?: true
+    headingDeg?: true
+    speedMps?: true
+    locationAt?: true
+    locationSource?: true
+    exifLatitude?: true
+    exifLongitude?: true
+    exifTakenAt?: true
+    cameraMake?: true
+    cameraModel?: true
+    exifSoftware?: true
+    exif?: true
+    userId?: true
+    deviceId?: true
+    sessionId?: true
+    ip?: true
+    forwardedFor?: true
+    ipCountry?: true
+    userAgent?: true
+    acceptLanguage?: true
+    headers?: true
+    client?: true
+    status?: true
+    flags?: true
+    reviewedAt?: true
+    reviewedBy?: true
+    reviewNotes?: true
+    _all?: true
+  }
+
+  export type CitizenReportAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which CitizenReport to aggregate.
+     */
+    where?: CitizenReportWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of CitizenReports to fetch.
+     */
+    orderBy?: CitizenReportOrderByWithRelationInput | CitizenReportOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: CitizenReportWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` CitizenReports from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` CitizenReports.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned CitizenReports
+    **/
+    _count?: true | CitizenReportCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: CitizenReportAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: CitizenReportSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: CitizenReportMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: CitizenReportMaxAggregateInputType
+  }
+
+  export type GetCitizenReportAggregateType<T extends CitizenReportAggregateArgs> = {
+        [P in keyof T & keyof AggregateCitizenReport]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateCitizenReport[P]>
+      : GetScalarType<T[P], AggregateCitizenReport[P]>
+  }
+
+
+
+
+  export type CitizenReportGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: CitizenReportWhereInput
+    orderBy?: CitizenReportOrderByWithAggregationInput | CitizenReportOrderByWithAggregationInput[]
+    by: CitizenReportScalarFieldEnum[] | CitizenReportScalarFieldEnum
+    having?: CitizenReportScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: CitizenReportCountAggregateInputType | true
+    _avg?: CitizenReportAvgAggregateInputType
+    _sum?: CitizenReportSumAggregateInputType
+    _min?: CitizenReportMinAggregateInputType
+    _max?: CitizenReportMaxAggregateInputType
+  }
+
+  export type CitizenReportGroupByOutputType = {
+    id: string
+    createdAt: Date
+    condition: string | null
+    caption: string | null
+    image: Bytes
+    imageMime: string
+    imageSize: number
+    imageSha256: string
+    imageWidth: number | null
+    imageHeight: number | null
+    displayImage: Bytes | null
+    displayMime: string | null
+    thumbnail: Bytes | null
+    thumbnailMime: string | null
+    originalFilename: string | null
+    fileLastModified: Date | null
+    captureMethod: string | null
+    latitude: number | null
+    longitude: number | null
+    accuracyM: number | null
+    altitudeM: number | null
+    headingDeg: number | null
+    speedMps: number | null
+    locationAt: Date | null
+    locationSource: string | null
+    exifLatitude: number | null
+    exifLongitude: number | null
+    exifTakenAt: Date | null
+    cameraMake: string | null
+    cameraModel: string | null
+    exifSoftware: string | null
+    exif: JsonValue | null
+    userId: string | null
+    deviceId: string | null
+    sessionId: string | null
+    ip: string | null
+    forwardedFor: string | null
+    ipCountry: string | null
+    userAgent: string | null
+    acceptLanguage: string | null
+    headers: JsonValue | null
+    client: JsonValue | null
+    status: string
+    flags: string[]
+    reviewedAt: Date | null
+    reviewedBy: string | null
+    reviewNotes: string | null
+    _count: CitizenReportCountAggregateOutputType | null
+    _avg: CitizenReportAvgAggregateOutputType | null
+    _sum: CitizenReportSumAggregateOutputType | null
+    _min: CitizenReportMinAggregateOutputType | null
+    _max: CitizenReportMaxAggregateOutputType | null
+  }
+
+  type GetCitizenReportGroupByPayload<T extends CitizenReportGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<CitizenReportGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof CitizenReportGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], CitizenReportGroupByOutputType[P]>
+            : GetScalarType<T[P], CitizenReportGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type CitizenReportSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    createdAt?: boolean
+    condition?: boolean
+    caption?: boolean
+    image?: boolean
+    imageMime?: boolean
+    imageSize?: boolean
+    imageSha256?: boolean
+    imageWidth?: boolean
+    imageHeight?: boolean
+    displayImage?: boolean
+    displayMime?: boolean
+    thumbnail?: boolean
+    thumbnailMime?: boolean
+    originalFilename?: boolean
+    fileLastModified?: boolean
+    captureMethod?: boolean
+    latitude?: boolean
+    longitude?: boolean
+    accuracyM?: boolean
+    altitudeM?: boolean
+    headingDeg?: boolean
+    speedMps?: boolean
+    locationAt?: boolean
+    locationSource?: boolean
+    exifLatitude?: boolean
+    exifLongitude?: boolean
+    exifTakenAt?: boolean
+    cameraMake?: boolean
+    cameraModel?: boolean
+    exifSoftware?: boolean
+    exif?: boolean
+    userId?: boolean
+    deviceId?: boolean
+    sessionId?: boolean
+    ip?: boolean
+    forwardedFor?: boolean
+    ipCountry?: boolean
+    userAgent?: boolean
+    acceptLanguage?: boolean
+    headers?: boolean
+    client?: boolean
+    status?: boolean
+    flags?: boolean
+    reviewedAt?: boolean
+    reviewedBy?: boolean
+    reviewNotes?: boolean
+    user?: boolean | CitizenReport$userArgs<ExtArgs>
+  }, ExtArgs["result"]["citizenReport"]>
+
+  export type CitizenReportSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    createdAt?: boolean
+    condition?: boolean
+    caption?: boolean
+    image?: boolean
+    imageMime?: boolean
+    imageSize?: boolean
+    imageSha256?: boolean
+    imageWidth?: boolean
+    imageHeight?: boolean
+    displayImage?: boolean
+    displayMime?: boolean
+    thumbnail?: boolean
+    thumbnailMime?: boolean
+    originalFilename?: boolean
+    fileLastModified?: boolean
+    captureMethod?: boolean
+    latitude?: boolean
+    longitude?: boolean
+    accuracyM?: boolean
+    altitudeM?: boolean
+    headingDeg?: boolean
+    speedMps?: boolean
+    locationAt?: boolean
+    locationSource?: boolean
+    exifLatitude?: boolean
+    exifLongitude?: boolean
+    exifTakenAt?: boolean
+    cameraMake?: boolean
+    cameraModel?: boolean
+    exifSoftware?: boolean
+    exif?: boolean
+    userId?: boolean
+    deviceId?: boolean
+    sessionId?: boolean
+    ip?: boolean
+    forwardedFor?: boolean
+    ipCountry?: boolean
+    userAgent?: boolean
+    acceptLanguage?: boolean
+    headers?: boolean
+    client?: boolean
+    status?: boolean
+    flags?: boolean
+    reviewedAt?: boolean
+    reviewedBy?: boolean
+    reviewNotes?: boolean
+    user?: boolean | CitizenReport$userArgs<ExtArgs>
+  }, ExtArgs["result"]["citizenReport"]>
+
+  export type CitizenReportSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    createdAt?: boolean
+    condition?: boolean
+    caption?: boolean
+    image?: boolean
+    imageMime?: boolean
+    imageSize?: boolean
+    imageSha256?: boolean
+    imageWidth?: boolean
+    imageHeight?: boolean
+    displayImage?: boolean
+    displayMime?: boolean
+    thumbnail?: boolean
+    thumbnailMime?: boolean
+    originalFilename?: boolean
+    fileLastModified?: boolean
+    captureMethod?: boolean
+    latitude?: boolean
+    longitude?: boolean
+    accuracyM?: boolean
+    altitudeM?: boolean
+    headingDeg?: boolean
+    speedMps?: boolean
+    locationAt?: boolean
+    locationSource?: boolean
+    exifLatitude?: boolean
+    exifLongitude?: boolean
+    exifTakenAt?: boolean
+    cameraMake?: boolean
+    cameraModel?: boolean
+    exifSoftware?: boolean
+    exif?: boolean
+    userId?: boolean
+    deviceId?: boolean
+    sessionId?: boolean
+    ip?: boolean
+    forwardedFor?: boolean
+    ipCountry?: boolean
+    userAgent?: boolean
+    acceptLanguage?: boolean
+    headers?: boolean
+    client?: boolean
+    status?: boolean
+    flags?: boolean
+    reviewedAt?: boolean
+    reviewedBy?: boolean
+    reviewNotes?: boolean
+    user?: boolean | CitizenReport$userArgs<ExtArgs>
+  }, ExtArgs["result"]["citizenReport"]>
+
+  export type CitizenReportSelectScalar = {
+    id?: boolean
+    createdAt?: boolean
+    condition?: boolean
+    caption?: boolean
+    image?: boolean
+    imageMime?: boolean
+    imageSize?: boolean
+    imageSha256?: boolean
+    imageWidth?: boolean
+    imageHeight?: boolean
+    displayImage?: boolean
+    displayMime?: boolean
+    thumbnail?: boolean
+    thumbnailMime?: boolean
+    originalFilename?: boolean
+    fileLastModified?: boolean
+    captureMethod?: boolean
+    latitude?: boolean
+    longitude?: boolean
+    accuracyM?: boolean
+    altitudeM?: boolean
+    headingDeg?: boolean
+    speedMps?: boolean
+    locationAt?: boolean
+    locationSource?: boolean
+    exifLatitude?: boolean
+    exifLongitude?: boolean
+    exifTakenAt?: boolean
+    cameraMake?: boolean
+    cameraModel?: boolean
+    exifSoftware?: boolean
+    exif?: boolean
+    userId?: boolean
+    deviceId?: boolean
+    sessionId?: boolean
+    ip?: boolean
+    forwardedFor?: boolean
+    ipCountry?: boolean
+    userAgent?: boolean
+    acceptLanguage?: boolean
+    headers?: boolean
+    client?: boolean
+    status?: boolean
+    flags?: boolean
+    reviewedAt?: boolean
+    reviewedBy?: boolean
+    reviewNotes?: boolean
+  }
+
+  export type CitizenReportOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "createdAt" | "condition" | "caption" | "image" | "imageMime" | "imageSize" | "imageSha256" | "imageWidth" | "imageHeight" | "displayImage" | "displayMime" | "thumbnail" | "thumbnailMime" | "originalFilename" | "fileLastModified" | "captureMethod" | "latitude" | "longitude" | "accuracyM" | "altitudeM" | "headingDeg" | "speedMps" | "locationAt" | "locationSource" | "exifLatitude" | "exifLongitude" | "exifTakenAt" | "cameraMake" | "cameraModel" | "exifSoftware" | "exif" | "userId" | "deviceId" | "sessionId" | "ip" | "forwardedFor" | "ipCountry" | "userAgent" | "acceptLanguage" | "headers" | "client" | "status" | "flags" | "reviewedAt" | "reviewedBy" | "reviewNotes", ExtArgs["result"]["citizenReport"]>
+  export type CitizenReportInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | CitizenReport$userArgs<ExtArgs>
+  }
+  export type CitizenReportIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | CitizenReport$userArgs<ExtArgs>
+  }
+  export type CitizenReportIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | CitizenReport$userArgs<ExtArgs>
+  }
+
+  export type $CitizenReportPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "CitizenReport"
+    objects: {
+      user: Prisma.$UserPayload<ExtArgs> | null
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      createdAt: Date
+      condition: string | null
+      caption: string | null
+      image: Prisma.Bytes
+      imageMime: string
+      imageSize: number
+      imageSha256: string
+      imageWidth: number | null
+      imageHeight: number | null
+      displayImage: Prisma.Bytes | null
+      displayMime: string | null
+      thumbnail: Prisma.Bytes | null
+      thumbnailMime: string | null
+      originalFilename: string | null
+      fileLastModified: Date | null
+      captureMethod: string | null
+      latitude: number | null
+      longitude: number | null
+      accuracyM: number | null
+      altitudeM: number | null
+      headingDeg: number | null
+      speedMps: number | null
+      locationAt: Date | null
+      locationSource: string | null
+      exifLatitude: number | null
+      exifLongitude: number | null
+      exifTakenAt: Date | null
+      cameraMake: string | null
+      cameraModel: string | null
+      exifSoftware: string | null
+      exif: Prisma.JsonValue | null
+      userId: string | null
+      deviceId: string | null
+      sessionId: string | null
+      ip: string | null
+      forwardedFor: string | null
+      ipCountry: string | null
+      userAgent: string | null
+      acceptLanguage: string | null
+      headers: Prisma.JsonValue | null
+      client: Prisma.JsonValue | null
+      status: string
+      flags: string[]
+      reviewedAt: Date | null
+      reviewedBy: string | null
+      reviewNotes: string | null
+    }, ExtArgs["result"]["citizenReport"]>
+    composites: {}
+  }
+
+  type CitizenReportGetPayload<S extends boolean | null | undefined | CitizenReportDefaultArgs> = $Result.GetResult<Prisma.$CitizenReportPayload, S>
+
+  type CitizenReportCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<CitizenReportFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: CitizenReportCountAggregateInputType | true
+    }
+
+  export interface CitizenReportDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['CitizenReport'], meta: { name: 'CitizenReport' } }
+    /**
+     * Find zero or one CitizenReport that matches the filter.
+     * @param {CitizenReportFindUniqueArgs} args - Arguments to find a CitizenReport
+     * @example
+     * // Get one CitizenReport
+     * const citizenReport = await prisma.citizenReport.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends CitizenReportFindUniqueArgs>(args: SelectSubset<T, CitizenReportFindUniqueArgs<ExtArgs>>): Prisma__CitizenReportClient<$Result.GetResult<Prisma.$CitizenReportPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one CitizenReport that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {CitizenReportFindUniqueOrThrowArgs} args - Arguments to find a CitizenReport
+     * @example
+     * // Get one CitizenReport
+     * const citizenReport = await prisma.citizenReport.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends CitizenReportFindUniqueOrThrowArgs>(args: SelectSubset<T, CitizenReportFindUniqueOrThrowArgs<ExtArgs>>): Prisma__CitizenReportClient<$Result.GetResult<Prisma.$CitizenReportPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first CitizenReport that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CitizenReportFindFirstArgs} args - Arguments to find a CitizenReport
+     * @example
+     * // Get one CitizenReport
+     * const citizenReport = await prisma.citizenReport.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends CitizenReportFindFirstArgs>(args?: SelectSubset<T, CitizenReportFindFirstArgs<ExtArgs>>): Prisma__CitizenReportClient<$Result.GetResult<Prisma.$CitizenReportPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first CitizenReport that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CitizenReportFindFirstOrThrowArgs} args - Arguments to find a CitizenReport
+     * @example
+     * // Get one CitizenReport
+     * const citizenReport = await prisma.citizenReport.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends CitizenReportFindFirstOrThrowArgs>(args?: SelectSubset<T, CitizenReportFindFirstOrThrowArgs<ExtArgs>>): Prisma__CitizenReportClient<$Result.GetResult<Prisma.$CitizenReportPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more CitizenReports that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CitizenReportFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all CitizenReports
+     * const citizenReports = await prisma.citizenReport.findMany()
+     * 
+     * // Get first 10 CitizenReports
+     * const citizenReports = await prisma.citizenReport.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const citizenReportWithIdOnly = await prisma.citizenReport.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends CitizenReportFindManyArgs>(args?: SelectSubset<T, CitizenReportFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CitizenReportPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a CitizenReport.
+     * @param {CitizenReportCreateArgs} args - Arguments to create a CitizenReport.
+     * @example
+     * // Create one CitizenReport
+     * const CitizenReport = await prisma.citizenReport.create({
+     *   data: {
+     *     // ... data to create a CitizenReport
+     *   }
+     * })
+     * 
+     */
+    create<T extends CitizenReportCreateArgs>(args: SelectSubset<T, CitizenReportCreateArgs<ExtArgs>>): Prisma__CitizenReportClient<$Result.GetResult<Prisma.$CitizenReportPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many CitizenReports.
+     * @param {CitizenReportCreateManyArgs} args - Arguments to create many CitizenReports.
+     * @example
+     * // Create many CitizenReports
+     * const citizenReport = await prisma.citizenReport.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends CitizenReportCreateManyArgs>(args?: SelectSubset<T, CitizenReportCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many CitizenReports and returns the data saved in the database.
+     * @param {CitizenReportCreateManyAndReturnArgs} args - Arguments to create many CitizenReports.
+     * @example
+     * // Create many CitizenReports
+     * const citizenReport = await prisma.citizenReport.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many CitizenReports and only return the `id`
+     * const citizenReportWithIdOnly = await prisma.citizenReport.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends CitizenReportCreateManyAndReturnArgs>(args?: SelectSubset<T, CitizenReportCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CitizenReportPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a CitizenReport.
+     * @param {CitizenReportDeleteArgs} args - Arguments to delete one CitizenReport.
+     * @example
+     * // Delete one CitizenReport
+     * const CitizenReport = await prisma.citizenReport.delete({
+     *   where: {
+     *     // ... filter to delete one CitizenReport
+     *   }
+     * })
+     * 
+     */
+    delete<T extends CitizenReportDeleteArgs>(args: SelectSubset<T, CitizenReportDeleteArgs<ExtArgs>>): Prisma__CitizenReportClient<$Result.GetResult<Prisma.$CitizenReportPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one CitizenReport.
+     * @param {CitizenReportUpdateArgs} args - Arguments to update one CitizenReport.
+     * @example
+     * // Update one CitizenReport
+     * const citizenReport = await prisma.citizenReport.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends CitizenReportUpdateArgs>(args: SelectSubset<T, CitizenReportUpdateArgs<ExtArgs>>): Prisma__CitizenReportClient<$Result.GetResult<Prisma.$CitizenReportPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more CitizenReports.
+     * @param {CitizenReportDeleteManyArgs} args - Arguments to filter CitizenReports to delete.
+     * @example
+     * // Delete a few CitizenReports
+     * const { count } = await prisma.citizenReport.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends CitizenReportDeleteManyArgs>(args?: SelectSubset<T, CitizenReportDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more CitizenReports.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CitizenReportUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many CitizenReports
+     * const citizenReport = await prisma.citizenReport.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends CitizenReportUpdateManyArgs>(args: SelectSubset<T, CitizenReportUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more CitizenReports and returns the data updated in the database.
+     * @param {CitizenReportUpdateManyAndReturnArgs} args - Arguments to update many CitizenReports.
+     * @example
+     * // Update many CitizenReports
+     * const citizenReport = await prisma.citizenReport.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more CitizenReports and only return the `id`
+     * const citizenReportWithIdOnly = await prisma.citizenReport.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends CitizenReportUpdateManyAndReturnArgs>(args: SelectSubset<T, CitizenReportUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CitizenReportPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one CitizenReport.
+     * @param {CitizenReportUpsertArgs} args - Arguments to update or create a CitizenReport.
+     * @example
+     * // Update or create a CitizenReport
+     * const citizenReport = await prisma.citizenReport.upsert({
+     *   create: {
+     *     // ... data to create a CitizenReport
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the CitizenReport we want to update
+     *   }
+     * })
+     */
+    upsert<T extends CitizenReportUpsertArgs>(args: SelectSubset<T, CitizenReportUpsertArgs<ExtArgs>>): Prisma__CitizenReportClient<$Result.GetResult<Prisma.$CitizenReportPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of CitizenReports.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CitizenReportCountArgs} args - Arguments to filter CitizenReports to count.
+     * @example
+     * // Count the number of CitizenReports
+     * const count = await prisma.citizenReport.count({
+     *   where: {
+     *     // ... the filter for the CitizenReports we want to count
+     *   }
+     * })
+    **/
+    count<T extends CitizenReportCountArgs>(
+      args?: Subset<T, CitizenReportCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], CitizenReportCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a CitizenReport.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CitizenReportAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends CitizenReportAggregateArgs>(args: Subset<T, CitizenReportAggregateArgs>): Prisma.PrismaPromise<GetCitizenReportAggregateType<T>>
+
+    /**
+     * Group by CitizenReport.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CitizenReportGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends CitizenReportGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: CitizenReportGroupByArgs['orderBy'] }
+        : { orderBy?: CitizenReportGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, CitizenReportGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetCitizenReportGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the CitizenReport model
+   */
+  readonly fields: CitizenReportFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for CitizenReport.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__CitizenReportClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    user<T extends CitizenReport$userArgs<ExtArgs> = {}>(args?: Subset<T, CitizenReport$userArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the CitizenReport model
+   */
+  interface CitizenReportFieldRefs {
+    readonly id: FieldRef<"CitizenReport", 'String'>
+    readonly createdAt: FieldRef<"CitizenReport", 'DateTime'>
+    readonly condition: FieldRef<"CitizenReport", 'String'>
+    readonly caption: FieldRef<"CitizenReport", 'String'>
+    readonly image: FieldRef<"CitizenReport", 'Bytes'>
+    readonly imageMime: FieldRef<"CitizenReport", 'String'>
+    readonly imageSize: FieldRef<"CitizenReport", 'Int'>
+    readonly imageSha256: FieldRef<"CitizenReport", 'String'>
+    readonly imageWidth: FieldRef<"CitizenReport", 'Int'>
+    readonly imageHeight: FieldRef<"CitizenReport", 'Int'>
+    readonly displayImage: FieldRef<"CitizenReport", 'Bytes'>
+    readonly displayMime: FieldRef<"CitizenReport", 'String'>
+    readonly thumbnail: FieldRef<"CitizenReport", 'Bytes'>
+    readonly thumbnailMime: FieldRef<"CitizenReport", 'String'>
+    readonly originalFilename: FieldRef<"CitizenReport", 'String'>
+    readonly fileLastModified: FieldRef<"CitizenReport", 'DateTime'>
+    readonly captureMethod: FieldRef<"CitizenReport", 'String'>
+    readonly latitude: FieldRef<"CitizenReport", 'Float'>
+    readonly longitude: FieldRef<"CitizenReport", 'Float'>
+    readonly accuracyM: FieldRef<"CitizenReport", 'Float'>
+    readonly altitudeM: FieldRef<"CitizenReport", 'Float'>
+    readonly headingDeg: FieldRef<"CitizenReport", 'Float'>
+    readonly speedMps: FieldRef<"CitizenReport", 'Float'>
+    readonly locationAt: FieldRef<"CitizenReport", 'DateTime'>
+    readonly locationSource: FieldRef<"CitizenReport", 'String'>
+    readonly exifLatitude: FieldRef<"CitizenReport", 'Float'>
+    readonly exifLongitude: FieldRef<"CitizenReport", 'Float'>
+    readonly exifTakenAt: FieldRef<"CitizenReport", 'DateTime'>
+    readonly cameraMake: FieldRef<"CitizenReport", 'String'>
+    readonly cameraModel: FieldRef<"CitizenReport", 'String'>
+    readonly exifSoftware: FieldRef<"CitizenReport", 'String'>
+    readonly exif: FieldRef<"CitizenReport", 'Json'>
+    readonly userId: FieldRef<"CitizenReport", 'String'>
+    readonly deviceId: FieldRef<"CitizenReport", 'String'>
+    readonly sessionId: FieldRef<"CitizenReport", 'String'>
+    readonly ip: FieldRef<"CitizenReport", 'String'>
+    readonly forwardedFor: FieldRef<"CitizenReport", 'String'>
+    readonly ipCountry: FieldRef<"CitizenReport", 'String'>
+    readonly userAgent: FieldRef<"CitizenReport", 'String'>
+    readonly acceptLanguage: FieldRef<"CitizenReport", 'String'>
+    readonly headers: FieldRef<"CitizenReport", 'Json'>
+    readonly client: FieldRef<"CitizenReport", 'Json'>
+    readonly status: FieldRef<"CitizenReport", 'String'>
+    readonly flags: FieldRef<"CitizenReport", 'String[]'>
+    readonly reviewedAt: FieldRef<"CitizenReport", 'DateTime'>
+    readonly reviewedBy: FieldRef<"CitizenReport", 'String'>
+    readonly reviewNotes: FieldRef<"CitizenReport", 'String'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * CitizenReport findUnique
+   */
+  export type CitizenReportFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CitizenReport
+     */
+    select?: CitizenReportSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CitizenReport
+     */
+    omit?: CitizenReportOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CitizenReportInclude<ExtArgs> | null
+    /**
+     * Filter, which CitizenReport to fetch.
+     */
+    where: CitizenReportWhereUniqueInput
+  }
+
+  /**
+   * CitizenReport findUniqueOrThrow
+   */
+  export type CitizenReportFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CitizenReport
+     */
+    select?: CitizenReportSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CitizenReport
+     */
+    omit?: CitizenReportOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CitizenReportInclude<ExtArgs> | null
+    /**
+     * Filter, which CitizenReport to fetch.
+     */
+    where: CitizenReportWhereUniqueInput
+  }
+
+  /**
+   * CitizenReport findFirst
+   */
+  export type CitizenReportFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CitizenReport
+     */
+    select?: CitizenReportSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CitizenReport
+     */
+    omit?: CitizenReportOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CitizenReportInclude<ExtArgs> | null
+    /**
+     * Filter, which CitizenReport to fetch.
+     */
+    where?: CitizenReportWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of CitizenReports to fetch.
+     */
+    orderBy?: CitizenReportOrderByWithRelationInput | CitizenReportOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for CitizenReports.
+     */
+    cursor?: CitizenReportWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` CitizenReports from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` CitizenReports.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of CitizenReports.
+     */
+    distinct?: CitizenReportScalarFieldEnum | CitizenReportScalarFieldEnum[]
+  }
+
+  /**
+   * CitizenReport findFirstOrThrow
+   */
+  export type CitizenReportFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CitizenReport
+     */
+    select?: CitizenReportSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CitizenReport
+     */
+    omit?: CitizenReportOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CitizenReportInclude<ExtArgs> | null
+    /**
+     * Filter, which CitizenReport to fetch.
+     */
+    where?: CitizenReportWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of CitizenReports to fetch.
+     */
+    orderBy?: CitizenReportOrderByWithRelationInput | CitizenReportOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for CitizenReports.
+     */
+    cursor?: CitizenReportWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` CitizenReports from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` CitizenReports.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of CitizenReports.
+     */
+    distinct?: CitizenReportScalarFieldEnum | CitizenReportScalarFieldEnum[]
+  }
+
+  /**
+   * CitizenReport findMany
+   */
+  export type CitizenReportFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CitizenReport
+     */
+    select?: CitizenReportSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CitizenReport
+     */
+    omit?: CitizenReportOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CitizenReportInclude<ExtArgs> | null
+    /**
+     * Filter, which CitizenReports to fetch.
+     */
+    where?: CitizenReportWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of CitizenReports to fetch.
+     */
+    orderBy?: CitizenReportOrderByWithRelationInput | CitizenReportOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing CitizenReports.
+     */
+    cursor?: CitizenReportWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` CitizenReports from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` CitizenReports.
+     */
+    skip?: number
+    distinct?: CitizenReportScalarFieldEnum | CitizenReportScalarFieldEnum[]
+  }
+
+  /**
+   * CitizenReport create
+   */
+  export type CitizenReportCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CitizenReport
+     */
+    select?: CitizenReportSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CitizenReport
+     */
+    omit?: CitizenReportOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CitizenReportInclude<ExtArgs> | null
+    /**
+     * The data needed to create a CitizenReport.
+     */
+    data: XOR<CitizenReportCreateInput, CitizenReportUncheckedCreateInput>
+  }
+
+  /**
+   * CitizenReport createMany
+   */
+  export type CitizenReportCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many CitizenReports.
+     */
+    data: CitizenReportCreateManyInput | CitizenReportCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * CitizenReport createManyAndReturn
+   */
+  export type CitizenReportCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CitizenReport
+     */
+    select?: CitizenReportSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the CitizenReport
+     */
+    omit?: CitizenReportOmit<ExtArgs> | null
+    /**
+     * The data used to create many CitizenReports.
+     */
+    data: CitizenReportCreateManyInput | CitizenReportCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CitizenReportIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * CitizenReport update
+   */
+  export type CitizenReportUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CitizenReport
+     */
+    select?: CitizenReportSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CitizenReport
+     */
+    omit?: CitizenReportOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CitizenReportInclude<ExtArgs> | null
+    /**
+     * The data needed to update a CitizenReport.
+     */
+    data: XOR<CitizenReportUpdateInput, CitizenReportUncheckedUpdateInput>
+    /**
+     * Choose, which CitizenReport to update.
+     */
+    where: CitizenReportWhereUniqueInput
+  }
+
+  /**
+   * CitizenReport updateMany
+   */
+  export type CitizenReportUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update CitizenReports.
+     */
+    data: XOR<CitizenReportUpdateManyMutationInput, CitizenReportUncheckedUpdateManyInput>
+    /**
+     * Filter which CitizenReports to update
+     */
+    where?: CitizenReportWhereInput
+    /**
+     * Limit how many CitizenReports to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * CitizenReport updateManyAndReturn
+   */
+  export type CitizenReportUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CitizenReport
+     */
+    select?: CitizenReportSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the CitizenReport
+     */
+    omit?: CitizenReportOmit<ExtArgs> | null
+    /**
+     * The data used to update CitizenReports.
+     */
+    data: XOR<CitizenReportUpdateManyMutationInput, CitizenReportUncheckedUpdateManyInput>
+    /**
+     * Filter which CitizenReports to update
+     */
+    where?: CitizenReportWhereInput
+    /**
+     * Limit how many CitizenReports to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CitizenReportIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * CitizenReport upsert
+   */
+  export type CitizenReportUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CitizenReport
+     */
+    select?: CitizenReportSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CitizenReport
+     */
+    omit?: CitizenReportOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CitizenReportInclude<ExtArgs> | null
+    /**
+     * The filter to search for the CitizenReport to update in case it exists.
+     */
+    where: CitizenReportWhereUniqueInput
+    /**
+     * In case the CitizenReport found by the `where` argument doesn't exist, create a new CitizenReport with this data.
+     */
+    create: XOR<CitizenReportCreateInput, CitizenReportUncheckedCreateInput>
+    /**
+     * In case the CitizenReport was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<CitizenReportUpdateInput, CitizenReportUncheckedUpdateInput>
+  }
+
+  /**
+   * CitizenReport delete
+   */
+  export type CitizenReportDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CitizenReport
+     */
+    select?: CitizenReportSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CitizenReport
+     */
+    omit?: CitizenReportOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CitizenReportInclude<ExtArgs> | null
+    /**
+     * Filter which CitizenReport to delete.
+     */
+    where: CitizenReportWhereUniqueInput
+  }
+
+  /**
+   * CitizenReport deleteMany
+   */
+  export type CitizenReportDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which CitizenReports to delete
+     */
+    where?: CitizenReportWhereInput
+    /**
+     * Limit how many CitizenReports to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * CitizenReport.user
+   */
+  export type CitizenReport$userArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the User
+     */
+    select?: UserSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the User
+     */
+    omit?: UserOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserInclude<ExtArgs> | null
+    where?: UserWhereInput
+  }
+
+  /**
+   * CitizenReport without action
+   */
+  export type CitizenReportDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CitizenReport
+     */
+    select?: CitizenReportSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CitizenReport
+     */
+    omit?: CitizenReportOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CitizenReportInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -8186,12 +11170,87 @@ export namespace Prisma {
   export type PostScalarFieldEnum = (typeof PostScalarFieldEnum)[keyof typeof PostScalarFieldEnum]
 
 
+  export const RoadClosureScalarFieldEnum: {
+    id: 'id',
+    dataset_id: 'dataset_id',
+    year: 'year',
+    road_name: 'road_name',
+    road_type: 'road_type',
+    status: 'status',
+    month: 'month',
+    day: 'day'
+  };
+
+  export type RoadClosureScalarFieldEnum = (typeof RoadClosureScalarFieldEnum)[keyof typeof RoadClosureScalarFieldEnum]
+
+
+  export const CitizenReportScalarFieldEnum: {
+    id: 'id',
+    createdAt: 'createdAt',
+    condition: 'condition',
+    caption: 'caption',
+    image: 'image',
+    imageMime: 'imageMime',
+    imageSize: 'imageSize',
+    imageSha256: 'imageSha256',
+    imageWidth: 'imageWidth',
+    imageHeight: 'imageHeight',
+    displayImage: 'displayImage',
+    displayMime: 'displayMime',
+    thumbnail: 'thumbnail',
+    thumbnailMime: 'thumbnailMime',
+    originalFilename: 'originalFilename',
+    fileLastModified: 'fileLastModified',
+    captureMethod: 'captureMethod',
+    latitude: 'latitude',
+    longitude: 'longitude',
+    accuracyM: 'accuracyM',
+    altitudeM: 'altitudeM',
+    headingDeg: 'headingDeg',
+    speedMps: 'speedMps',
+    locationAt: 'locationAt',
+    locationSource: 'locationSource',
+    exifLatitude: 'exifLatitude',
+    exifLongitude: 'exifLongitude',
+    exifTakenAt: 'exifTakenAt',
+    cameraMake: 'cameraMake',
+    cameraModel: 'cameraModel',
+    exifSoftware: 'exifSoftware',
+    exif: 'exif',
+    userId: 'userId',
+    deviceId: 'deviceId',
+    sessionId: 'sessionId',
+    ip: 'ip',
+    forwardedFor: 'forwardedFor',
+    ipCountry: 'ipCountry',
+    userAgent: 'userAgent',
+    acceptLanguage: 'acceptLanguage',
+    headers: 'headers',
+    client: 'client',
+    status: 'status',
+    flags: 'flags',
+    reviewedAt: 'reviewedAt',
+    reviewedBy: 'reviewedBy',
+    reviewNotes: 'reviewNotes'
+  };
+
+  export type CitizenReportScalarFieldEnum = (typeof CitizenReportScalarFieldEnum)[keyof typeof CitizenReportScalarFieldEnum]
+
+
   export const SortOrder: {
     asc: 'asc',
     desc: 'desc'
   };
 
   export type SortOrder = (typeof SortOrder)[keyof typeof SortOrder]
+
+
+  export const NullableJsonNullValueInput: {
+    DbNull: typeof DbNull,
+    JsonNull: typeof JsonNull
+  };
+
+  export type NullableJsonNullValueInput = (typeof NullableJsonNullValueInput)[keyof typeof NullableJsonNullValueInput]
 
 
   export const QueryMode: {
@@ -8208,6 +11267,15 @@ export namespace Prisma {
   };
 
   export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
+
+
+  export const JsonNullValueFilter: {
+    DbNull: typeof DbNull,
+    JsonNull: typeof JsonNull,
+    AnyNull: typeof AnyNull
+  };
+
+  export type JsonNullValueFilter = (typeof JsonNullValueFilter)[keyof typeof JsonNullValueFilter]
 
 
   /**
@@ -8265,6 +11333,34 @@ export namespace Prisma {
 
 
   /**
+   * Reference to a field of type 'BigInt'
+   */
+  export type BigIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'BigInt'>
+    
+
+
+  /**
+   * Reference to a field of type 'BigInt[]'
+   */
+  export type ListBigIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'BigInt[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'Bytes'
+   */
+  export type BytesFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Bytes'>
+    
+
+
+  /**
+   * Reference to a field of type 'Bytes[]'
+   */
+  export type ListBytesFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Bytes[]'>
+    
+
+
+  /**
    * Reference to a field of type 'Float'
    */
   export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
@@ -8275,6 +11371,20 @@ export namespace Prisma {
    * Reference to a field of type 'Float[]'
    */
   export type ListFloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'Json'
+   */
+  export type JsonFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Json'>
+    
+
+
+  /**
+   * Reference to a field of type 'QueryMode'
+   */
+  export type EnumQueryModeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'QueryMode'>
     
   /**
    * Deep Input Types
@@ -8297,6 +11407,7 @@ export namespace Prisma {
     posts?: PostListRelationFilter
     authCodes?: AuthCodeListRelationFilter
     sessions?: SessionListRelationFilter
+    citizenReports?: CitizenReportListRelationFilter
   }
 
   export type UserOrderByWithRelationInput = {
@@ -8312,6 +11423,7 @@ export namespace Prisma {
     posts?: PostOrderByRelationAggregateInput
     authCodes?: AuthCodeOrderByRelationAggregateInput
     sessions?: SessionOrderByRelationAggregateInput
+    citizenReports?: CitizenReportOrderByRelationAggregateInput
   }
 
   export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -8330,6 +11442,7 @@ export namespace Prisma {
     posts?: PostListRelationFilter
     authCodes?: AuthCodeListRelationFilter
     sessions?: SessionListRelationFilter
+    citizenReports?: CitizenReportListRelationFilter
   }, "id" | "email">
 
   export type UserOrderByWithAggregationInput = {
@@ -8654,6 +11767,343 @@ export namespace Prisma {
     authorId?: StringWithAggregatesFilter<"Post"> | string
   }
 
+  export type RoadClosureWhereInput = {
+    AND?: RoadClosureWhereInput | RoadClosureWhereInput[]
+    OR?: RoadClosureWhereInput[]
+    NOT?: RoadClosureWhereInput | RoadClosureWhereInput[]
+    id?: BigIntFilter<"RoadClosure"> | bigint | number
+    dataset_id?: IntNullableFilter<"RoadClosure"> | number | null
+    year?: IntFilter<"RoadClosure"> | number
+    road_name?: StringFilter<"RoadClosure"> | string
+    road_type?: StringFilter<"RoadClosure"> | string
+    status?: StringFilter<"RoadClosure"> | string
+    month?: IntNullableFilter<"RoadClosure"> | number | null
+    day?: IntNullableFilter<"RoadClosure"> | number | null
+  }
+
+  export type RoadClosureOrderByWithRelationInput = {
+    id?: SortOrder
+    dataset_id?: SortOrderInput | SortOrder
+    year?: SortOrder
+    road_name?: SortOrder
+    road_type?: SortOrder
+    status?: SortOrder
+    month?: SortOrderInput | SortOrder
+    day?: SortOrderInput | SortOrder
+  }
+
+  export type RoadClosureWhereUniqueInput = Prisma.AtLeast<{
+    id?: bigint | number
+    road_closures_dataset_year_road_status_uniq?: RoadClosureRoad_closures_dataset_year_road_status_uniqCompoundUniqueInput
+    AND?: RoadClosureWhereInput | RoadClosureWhereInput[]
+    OR?: RoadClosureWhereInput[]
+    NOT?: RoadClosureWhereInput | RoadClosureWhereInput[]
+    dataset_id?: IntNullableFilter<"RoadClosure"> | number | null
+    year?: IntFilter<"RoadClosure"> | number
+    road_name?: StringFilter<"RoadClosure"> | string
+    road_type?: StringFilter<"RoadClosure"> | string
+    status?: StringFilter<"RoadClosure"> | string
+    month?: IntNullableFilter<"RoadClosure"> | number | null
+    day?: IntNullableFilter<"RoadClosure"> | number | null
+  }, "id" | "road_closures_dataset_year_road_status_uniq">
+
+  export type RoadClosureOrderByWithAggregationInput = {
+    id?: SortOrder
+    dataset_id?: SortOrderInput | SortOrder
+    year?: SortOrder
+    road_name?: SortOrder
+    road_type?: SortOrder
+    status?: SortOrder
+    month?: SortOrderInput | SortOrder
+    day?: SortOrderInput | SortOrder
+    _count?: RoadClosureCountOrderByAggregateInput
+    _avg?: RoadClosureAvgOrderByAggregateInput
+    _max?: RoadClosureMaxOrderByAggregateInput
+    _min?: RoadClosureMinOrderByAggregateInput
+    _sum?: RoadClosureSumOrderByAggregateInput
+  }
+
+  export type RoadClosureScalarWhereWithAggregatesInput = {
+    AND?: RoadClosureScalarWhereWithAggregatesInput | RoadClosureScalarWhereWithAggregatesInput[]
+    OR?: RoadClosureScalarWhereWithAggregatesInput[]
+    NOT?: RoadClosureScalarWhereWithAggregatesInput | RoadClosureScalarWhereWithAggregatesInput[]
+    id?: BigIntWithAggregatesFilter<"RoadClosure"> | bigint | number
+    dataset_id?: IntNullableWithAggregatesFilter<"RoadClosure"> | number | null
+    year?: IntWithAggregatesFilter<"RoadClosure"> | number
+    road_name?: StringWithAggregatesFilter<"RoadClosure"> | string
+    road_type?: StringWithAggregatesFilter<"RoadClosure"> | string
+    status?: StringWithAggregatesFilter<"RoadClosure"> | string
+    month?: IntNullableWithAggregatesFilter<"RoadClosure"> | number | null
+    day?: IntNullableWithAggregatesFilter<"RoadClosure"> | number | null
+  }
+
+  export type CitizenReportWhereInput = {
+    AND?: CitizenReportWhereInput | CitizenReportWhereInput[]
+    OR?: CitizenReportWhereInput[]
+    NOT?: CitizenReportWhereInput | CitizenReportWhereInput[]
+    id?: StringFilter<"CitizenReport"> | string
+    createdAt?: DateTimeFilter<"CitizenReport"> | Date | string
+    condition?: StringNullableFilter<"CitizenReport"> | string | null
+    caption?: StringNullableFilter<"CitizenReport"> | string | null
+    image?: BytesFilter<"CitizenReport"> | Bytes
+    imageMime?: StringFilter<"CitizenReport"> | string
+    imageSize?: IntFilter<"CitizenReport"> | number
+    imageSha256?: StringFilter<"CitizenReport"> | string
+    imageWidth?: IntNullableFilter<"CitizenReport"> | number | null
+    imageHeight?: IntNullableFilter<"CitizenReport"> | number | null
+    displayImage?: BytesNullableFilter<"CitizenReport"> | Bytes | null
+    displayMime?: StringNullableFilter<"CitizenReport"> | string | null
+    thumbnail?: BytesNullableFilter<"CitizenReport"> | Bytes | null
+    thumbnailMime?: StringNullableFilter<"CitizenReport"> | string | null
+    originalFilename?: StringNullableFilter<"CitizenReport"> | string | null
+    fileLastModified?: DateTimeNullableFilter<"CitizenReport"> | Date | string | null
+    captureMethod?: StringNullableFilter<"CitizenReport"> | string | null
+    latitude?: FloatNullableFilter<"CitizenReport"> | number | null
+    longitude?: FloatNullableFilter<"CitizenReport"> | number | null
+    accuracyM?: FloatNullableFilter<"CitizenReport"> | number | null
+    altitudeM?: FloatNullableFilter<"CitizenReport"> | number | null
+    headingDeg?: FloatNullableFilter<"CitizenReport"> | number | null
+    speedMps?: FloatNullableFilter<"CitizenReport"> | number | null
+    locationAt?: DateTimeNullableFilter<"CitizenReport"> | Date | string | null
+    locationSource?: StringNullableFilter<"CitizenReport"> | string | null
+    exifLatitude?: FloatNullableFilter<"CitizenReport"> | number | null
+    exifLongitude?: FloatNullableFilter<"CitizenReport"> | number | null
+    exifTakenAt?: DateTimeNullableFilter<"CitizenReport"> | Date | string | null
+    cameraMake?: StringNullableFilter<"CitizenReport"> | string | null
+    cameraModel?: StringNullableFilter<"CitizenReport"> | string | null
+    exifSoftware?: StringNullableFilter<"CitizenReport"> | string | null
+    exif?: JsonNullableFilter<"CitizenReport">
+    userId?: StringNullableFilter<"CitizenReport"> | string | null
+    deviceId?: StringNullableFilter<"CitizenReport"> | string | null
+    sessionId?: StringNullableFilter<"CitizenReport"> | string | null
+    ip?: StringNullableFilter<"CitizenReport"> | string | null
+    forwardedFor?: StringNullableFilter<"CitizenReport"> | string | null
+    ipCountry?: StringNullableFilter<"CitizenReport"> | string | null
+    userAgent?: StringNullableFilter<"CitizenReport"> | string | null
+    acceptLanguage?: StringNullableFilter<"CitizenReport"> | string | null
+    headers?: JsonNullableFilter<"CitizenReport">
+    client?: JsonNullableFilter<"CitizenReport">
+    status?: StringFilter<"CitizenReport"> | string
+    flags?: StringNullableListFilter<"CitizenReport">
+    reviewedAt?: DateTimeNullableFilter<"CitizenReport"> | Date | string | null
+    reviewedBy?: StringNullableFilter<"CitizenReport"> | string | null
+    reviewNotes?: StringNullableFilter<"CitizenReport"> | string | null
+    user?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
+  }
+
+  export type CitizenReportOrderByWithRelationInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    condition?: SortOrderInput | SortOrder
+    caption?: SortOrderInput | SortOrder
+    image?: SortOrder
+    imageMime?: SortOrder
+    imageSize?: SortOrder
+    imageSha256?: SortOrder
+    imageWidth?: SortOrderInput | SortOrder
+    imageHeight?: SortOrderInput | SortOrder
+    displayImage?: SortOrderInput | SortOrder
+    displayMime?: SortOrderInput | SortOrder
+    thumbnail?: SortOrderInput | SortOrder
+    thumbnailMime?: SortOrderInput | SortOrder
+    originalFilename?: SortOrderInput | SortOrder
+    fileLastModified?: SortOrderInput | SortOrder
+    captureMethod?: SortOrderInput | SortOrder
+    latitude?: SortOrderInput | SortOrder
+    longitude?: SortOrderInput | SortOrder
+    accuracyM?: SortOrderInput | SortOrder
+    altitudeM?: SortOrderInput | SortOrder
+    headingDeg?: SortOrderInput | SortOrder
+    speedMps?: SortOrderInput | SortOrder
+    locationAt?: SortOrderInput | SortOrder
+    locationSource?: SortOrderInput | SortOrder
+    exifLatitude?: SortOrderInput | SortOrder
+    exifLongitude?: SortOrderInput | SortOrder
+    exifTakenAt?: SortOrderInput | SortOrder
+    cameraMake?: SortOrderInput | SortOrder
+    cameraModel?: SortOrderInput | SortOrder
+    exifSoftware?: SortOrderInput | SortOrder
+    exif?: SortOrderInput | SortOrder
+    userId?: SortOrderInput | SortOrder
+    deviceId?: SortOrderInput | SortOrder
+    sessionId?: SortOrderInput | SortOrder
+    ip?: SortOrderInput | SortOrder
+    forwardedFor?: SortOrderInput | SortOrder
+    ipCountry?: SortOrderInput | SortOrder
+    userAgent?: SortOrderInput | SortOrder
+    acceptLanguage?: SortOrderInput | SortOrder
+    headers?: SortOrderInput | SortOrder
+    client?: SortOrderInput | SortOrder
+    status?: SortOrder
+    flags?: SortOrder
+    reviewedAt?: SortOrderInput | SortOrder
+    reviewedBy?: SortOrderInput | SortOrder
+    reviewNotes?: SortOrderInput | SortOrder
+    user?: UserOrderByWithRelationInput
+  }
+
+  export type CitizenReportWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: CitizenReportWhereInput | CitizenReportWhereInput[]
+    OR?: CitizenReportWhereInput[]
+    NOT?: CitizenReportWhereInput | CitizenReportWhereInput[]
+    createdAt?: DateTimeFilter<"CitizenReport"> | Date | string
+    condition?: StringNullableFilter<"CitizenReport"> | string | null
+    caption?: StringNullableFilter<"CitizenReport"> | string | null
+    image?: BytesFilter<"CitizenReport"> | Bytes
+    imageMime?: StringFilter<"CitizenReport"> | string
+    imageSize?: IntFilter<"CitizenReport"> | number
+    imageSha256?: StringFilter<"CitizenReport"> | string
+    imageWidth?: IntNullableFilter<"CitizenReport"> | number | null
+    imageHeight?: IntNullableFilter<"CitizenReport"> | number | null
+    displayImage?: BytesNullableFilter<"CitizenReport"> | Bytes | null
+    displayMime?: StringNullableFilter<"CitizenReport"> | string | null
+    thumbnail?: BytesNullableFilter<"CitizenReport"> | Bytes | null
+    thumbnailMime?: StringNullableFilter<"CitizenReport"> | string | null
+    originalFilename?: StringNullableFilter<"CitizenReport"> | string | null
+    fileLastModified?: DateTimeNullableFilter<"CitizenReport"> | Date | string | null
+    captureMethod?: StringNullableFilter<"CitizenReport"> | string | null
+    latitude?: FloatNullableFilter<"CitizenReport"> | number | null
+    longitude?: FloatNullableFilter<"CitizenReport"> | number | null
+    accuracyM?: FloatNullableFilter<"CitizenReport"> | number | null
+    altitudeM?: FloatNullableFilter<"CitizenReport"> | number | null
+    headingDeg?: FloatNullableFilter<"CitizenReport"> | number | null
+    speedMps?: FloatNullableFilter<"CitizenReport"> | number | null
+    locationAt?: DateTimeNullableFilter<"CitizenReport"> | Date | string | null
+    locationSource?: StringNullableFilter<"CitizenReport"> | string | null
+    exifLatitude?: FloatNullableFilter<"CitizenReport"> | number | null
+    exifLongitude?: FloatNullableFilter<"CitizenReport"> | number | null
+    exifTakenAt?: DateTimeNullableFilter<"CitizenReport"> | Date | string | null
+    cameraMake?: StringNullableFilter<"CitizenReport"> | string | null
+    cameraModel?: StringNullableFilter<"CitizenReport"> | string | null
+    exifSoftware?: StringNullableFilter<"CitizenReport"> | string | null
+    exif?: JsonNullableFilter<"CitizenReport">
+    userId?: StringNullableFilter<"CitizenReport"> | string | null
+    deviceId?: StringNullableFilter<"CitizenReport"> | string | null
+    sessionId?: StringNullableFilter<"CitizenReport"> | string | null
+    ip?: StringNullableFilter<"CitizenReport"> | string | null
+    forwardedFor?: StringNullableFilter<"CitizenReport"> | string | null
+    ipCountry?: StringNullableFilter<"CitizenReport"> | string | null
+    userAgent?: StringNullableFilter<"CitizenReport"> | string | null
+    acceptLanguage?: StringNullableFilter<"CitizenReport"> | string | null
+    headers?: JsonNullableFilter<"CitizenReport">
+    client?: JsonNullableFilter<"CitizenReport">
+    status?: StringFilter<"CitizenReport"> | string
+    flags?: StringNullableListFilter<"CitizenReport">
+    reviewedAt?: DateTimeNullableFilter<"CitizenReport"> | Date | string | null
+    reviewedBy?: StringNullableFilter<"CitizenReport"> | string | null
+    reviewNotes?: StringNullableFilter<"CitizenReport"> | string | null
+    user?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
+  }, "id">
+
+  export type CitizenReportOrderByWithAggregationInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    condition?: SortOrderInput | SortOrder
+    caption?: SortOrderInput | SortOrder
+    image?: SortOrder
+    imageMime?: SortOrder
+    imageSize?: SortOrder
+    imageSha256?: SortOrder
+    imageWidth?: SortOrderInput | SortOrder
+    imageHeight?: SortOrderInput | SortOrder
+    displayImage?: SortOrderInput | SortOrder
+    displayMime?: SortOrderInput | SortOrder
+    thumbnail?: SortOrderInput | SortOrder
+    thumbnailMime?: SortOrderInput | SortOrder
+    originalFilename?: SortOrderInput | SortOrder
+    fileLastModified?: SortOrderInput | SortOrder
+    captureMethod?: SortOrderInput | SortOrder
+    latitude?: SortOrderInput | SortOrder
+    longitude?: SortOrderInput | SortOrder
+    accuracyM?: SortOrderInput | SortOrder
+    altitudeM?: SortOrderInput | SortOrder
+    headingDeg?: SortOrderInput | SortOrder
+    speedMps?: SortOrderInput | SortOrder
+    locationAt?: SortOrderInput | SortOrder
+    locationSource?: SortOrderInput | SortOrder
+    exifLatitude?: SortOrderInput | SortOrder
+    exifLongitude?: SortOrderInput | SortOrder
+    exifTakenAt?: SortOrderInput | SortOrder
+    cameraMake?: SortOrderInput | SortOrder
+    cameraModel?: SortOrderInput | SortOrder
+    exifSoftware?: SortOrderInput | SortOrder
+    exif?: SortOrderInput | SortOrder
+    userId?: SortOrderInput | SortOrder
+    deviceId?: SortOrderInput | SortOrder
+    sessionId?: SortOrderInput | SortOrder
+    ip?: SortOrderInput | SortOrder
+    forwardedFor?: SortOrderInput | SortOrder
+    ipCountry?: SortOrderInput | SortOrder
+    userAgent?: SortOrderInput | SortOrder
+    acceptLanguage?: SortOrderInput | SortOrder
+    headers?: SortOrderInput | SortOrder
+    client?: SortOrderInput | SortOrder
+    status?: SortOrder
+    flags?: SortOrder
+    reviewedAt?: SortOrderInput | SortOrder
+    reviewedBy?: SortOrderInput | SortOrder
+    reviewNotes?: SortOrderInput | SortOrder
+    _count?: CitizenReportCountOrderByAggregateInput
+    _avg?: CitizenReportAvgOrderByAggregateInput
+    _max?: CitizenReportMaxOrderByAggregateInput
+    _min?: CitizenReportMinOrderByAggregateInput
+    _sum?: CitizenReportSumOrderByAggregateInput
+  }
+
+  export type CitizenReportScalarWhereWithAggregatesInput = {
+    AND?: CitizenReportScalarWhereWithAggregatesInput | CitizenReportScalarWhereWithAggregatesInput[]
+    OR?: CitizenReportScalarWhereWithAggregatesInput[]
+    NOT?: CitizenReportScalarWhereWithAggregatesInput | CitizenReportScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"CitizenReport"> | string
+    createdAt?: DateTimeWithAggregatesFilter<"CitizenReport"> | Date | string
+    condition?: StringNullableWithAggregatesFilter<"CitizenReport"> | string | null
+    caption?: StringNullableWithAggregatesFilter<"CitizenReport"> | string | null
+    image?: BytesWithAggregatesFilter<"CitizenReport"> | Bytes
+    imageMime?: StringWithAggregatesFilter<"CitizenReport"> | string
+    imageSize?: IntWithAggregatesFilter<"CitizenReport"> | number
+    imageSha256?: StringWithAggregatesFilter<"CitizenReport"> | string
+    imageWidth?: IntNullableWithAggregatesFilter<"CitizenReport"> | number | null
+    imageHeight?: IntNullableWithAggregatesFilter<"CitizenReport"> | number | null
+    displayImage?: BytesNullableWithAggregatesFilter<"CitizenReport"> | Bytes | null
+    displayMime?: StringNullableWithAggregatesFilter<"CitizenReport"> | string | null
+    thumbnail?: BytesNullableWithAggregatesFilter<"CitizenReport"> | Bytes | null
+    thumbnailMime?: StringNullableWithAggregatesFilter<"CitizenReport"> | string | null
+    originalFilename?: StringNullableWithAggregatesFilter<"CitizenReport"> | string | null
+    fileLastModified?: DateTimeNullableWithAggregatesFilter<"CitizenReport"> | Date | string | null
+    captureMethod?: StringNullableWithAggregatesFilter<"CitizenReport"> | string | null
+    latitude?: FloatNullableWithAggregatesFilter<"CitizenReport"> | number | null
+    longitude?: FloatNullableWithAggregatesFilter<"CitizenReport"> | number | null
+    accuracyM?: FloatNullableWithAggregatesFilter<"CitizenReport"> | number | null
+    altitudeM?: FloatNullableWithAggregatesFilter<"CitizenReport"> | number | null
+    headingDeg?: FloatNullableWithAggregatesFilter<"CitizenReport"> | number | null
+    speedMps?: FloatNullableWithAggregatesFilter<"CitizenReport"> | number | null
+    locationAt?: DateTimeNullableWithAggregatesFilter<"CitizenReport"> | Date | string | null
+    locationSource?: StringNullableWithAggregatesFilter<"CitizenReport"> | string | null
+    exifLatitude?: FloatNullableWithAggregatesFilter<"CitizenReport"> | number | null
+    exifLongitude?: FloatNullableWithAggregatesFilter<"CitizenReport"> | number | null
+    exifTakenAt?: DateTimeNullableWithAggregatesFilter<"CitizenReport"> | Date | string | null
+    cameraMake?: StringNullableWithAggregatesFilter<"CitizenReport"> | string | null
+    cameraModel?: StringNullableWithAggregatesFilter<"CitizenReport"> | string | null
+    exifSoftware?: StringNullableWithAggregatesFilter<"CitizenReport"> | string | null
+    exif?: JsonNullableWithAggregatesFilter<"CitizenReport">
+    userId?: StringNullableWithAggregatesFilter<"CitizenReport"> | string | null
+    deviceId?: StringNullableWithAggregatesFilter<"CitizenReport"> | string | null
+    sessionId?: StringNullableWithAggregatesFilter<"CitizenReport"> | string | null
+    ip?: StringNullableWithAggregatesFilter<"CitizenReport"> | string | null
+    forwardedFor?: StringNullableWithAggregatesFilter<"CitizenReport"> | string | null
+    ipCountry?: StringNullableWithAggregatesFilter<"CitizenReport"> | string | null
+    userAgent?: StringNullableWithAggregatesFilter<"CitizenReport"> | string | null
+    acceptLanguage?: StringNullableWithAggregatesFilter<"CitizenReport"> | string | null
+    headers?: JsonNullableWithAggregatesFilter<"CitizenReport">
+    client?: JsonNullableWithAggregatesFilter<"CitizenReport">
+    status?: StringWithAggregatesFilter<"CitizenReport"> | string
+    flags?: StringNullableListFilter<"CitizenReport">
+    reviewedAt?: DateTimeNullableWithAggregatesFilter<"CitizenReport"> | Date | string | null
+    reviewedBy?: StringNullableWithAggregatesFilter<"CitizenReport"> | string | null
+    reviewNotes?: StringNullableWithAggregatesFilter<"CitizenReport"> | string | null
+  }
+
   export type UserCreateInput = {
     id?: string
     email: string
@@ -8667,6 +12117,7 @@ export namespace Prisma {
     posts?: PostCreateNestedManyWithoutAuthorInput
     authCodes?: AuthCodeCreateNestedManyWithoutUserInput
     sessions?: SessionCreateNestedManyWithoutUserInput
+    citizenReports?: CitizenReportCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateInput = {
@@ -8682,6 +12133,7 @@ export namespace Prisma {
     posts?: PostUncheckedCreateNestedManyWithoutAuthorInput
     authCodes?: AuthCodeUncheckedCreateNestedManyWithoutUserInput
     sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
+    citizenReports?: CitizenReportUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserUpdateInput = {
@@ -8697,6 +12149,7 @@ export namespace Prisma {
     posts?: PostUpdateManyWithoutAuthorNestedInput
     authCodes?: AuthCodeUpdateManyWithoutUserNestedInput
     sessions?: SessionUpdateManyWithoutUserNestedInput
+    citizenReports?: CitizenReportUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateInput = {
@@ -8712,6 +12165,7 @@ export namespace Prisma {
     posts?: PostUncheckedUpdateManyWithoutAuthorNestedInput
     authCodes?: AuthCodeUncheckedUpdateManyWithoutUserNestedInput
     sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
+    citizenReports?: CitizenReportUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateManyInput = {
@@ -9022,6 +12476,432 @@ export namespace Prisma {
     authorId?: StringFieldUpdateOperationsInput | string
   }
 
+  export type RoadClosureCreateInput = {
+    id?: bigint | number
+    dataset_id?: number | null
+    year: number
+    road_name: string
+    road_type: string
+    status: string
+    month?: number | null
+    day?: number | null
+  }
+
+  export type RoadClosureUncheckedCreateInput = {
+    id?: bigint | number
+    dataset_id?: number | null
+    year: number
+    road_name: string
+    road_type: string
+    status: string
+    month?: number | null
+    day?: number | null
+  }
+
+  export type RoadClosureUpdateInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    dataset_id?: NullableIntFieldUpdateOperationsInput | number | null
+    year?: IntFieldUpdateOperationsInput | number
+    road_name?: StringFieldUpdateOperationsInput | string
+    road_type?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    month?: NullableIntFieldUpdateOperationsInput | number | null
+    day?: NullableIntFieldUpdateOperationsInput | number | null
+  }
+
+  export type RoadClosureUncheckedUpdateInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    dataset_id?: NullableIntFieldUpdateOperationsInput | number | null
+    year?: IntFieldUpdateOperationsInput | number
+    road_name?: StringFieldUpdateOperationsInput | string
+    road_type?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    month?: NullableIntFieldUpdateOperationsInput | number | null
+    day?: NullableIntFieldUpdateOperationsInput | number | null
+  }
+
+  export type RoadClosureCreateManyInput = {
+    id?: bigint | number
+    dataset_id?: number | null
+    year: number
+    road_name: string
+    road_type: string
+    status: string
+    month?: number | null
+    day?: number | null
+  }
+
+  export type RoadClosureUpdateManyMutationInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    dataset_id?: NullableIntFieldUpdateOperationsInput | number | null
+    year?: IntFieldUpdateOperationsInput | number
+    road_name?: StringFieldUpdateOperationsInput | string
+    road_type?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    month?: NullableIntFieldUpdateOperationsInput | number | null
+    day?: NullableIntFieldUpdateOperationsInput | number | null
+  }
+
+  export type RoadClosureUncheckedUpdateManyInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    dataset_id?: NullableIntFieldUpdateOperationsInput | number | null
+    year?: IntFieldUpdateOperationsInput | number
+    road_name?: StringFieldUpdateOperationsInput | string
+    road_type?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    month?: NullableIntFieldUpdateOperationsInput | number | null
+    day?: NullableIntFieldUpdateOperationsInput | number | null
+  }
+
+  export type CitizenReportCreateInput = {
+    id?: string
+    createdAt?: Date | string
+    condition?: string | null
+    caption?: string | null
+    image: Bytes
+    imageMime: string
+    imageSize: number
+    imageSha256: string
+    imageWidth?: number | null
+    imageHeight?: number | null
+    displayImage?: Bytes | null
+    displayMime?: string | null
+    thumbnail?: Bytes | null
+    thumbnailMime?: string | null
+    originalFilename?: string | null
+    fileLastModified?: Date | string | null
+    captureMethod?: string | null
+    latitude?: number | null
+    longitude?: number | null
+    accuracyM?: number | null
+    altitudeM?: number | null
+    headingDeg?: number | null
+    speedMps?: number | null
+    locationAt?: Date | string | null
+    locationSource?: string | null
+    exifLatitude?: number | null
+    exifLongitude?: number | null
+    exifTakenAt?: Date | string | null
+    cameraMake?: string | null
+    cameraModel?: string | null
+    exifSoftware?: string | null
+    exif?: NullableJsonNullValueInput | InputJsonValue
+    deviceId?: string | null
+    sessionId?: string | null
+    ip?: string | null
+    forwardedFor?: string | null
+    ipCountry?: string | null
+    userAgent?: string | null
+    acceptLanguage?: string | null
+    headers?: NullableJsonNullValueInput | InputJsonValue
+    client?: NullableJsonNullValueInput | InputJsonValue
+    status?: string
+    flags?: CitizenReportCreateflagsInput | string[]
+    reviewedAt?: Date | string | null
+    reviewedBy?: string | null
+    reviewNotes?: string | null
+    user?: UserCreateNestedOneWithoutCitizenReportsInput
+  }
+
+  export type CitizenReportUncheckedCreateInput = {
+    id?: string
+    createdAt?: Date | string
+    condition?: string | null
+    caption?: string | null
+    image: Bytes
+    imageMime: string
+    imageSize: number
+    imageSha256: string
+    imageWidth?: number | null
+    imageHeight?: number | null
+    displayImage?: Bytes | null
+    displayMime?: string | null
+    thumbnail?: Bytes | null
+    thumbnailMime?: string | null
+    originalFilename?: string | null
+    fileLastModified?: Date | string | null
+    captureMethod?: string | null
+    latitude?: number | null
+    longitude?: number | null
+    accuracyM?: number | null
+    altitudeM?: number | null
+    headingDeg?: number | null
+    speedMps?: number | null
+    locationAt?: Date | string | null
+    locationSource?: string | null
+    exifLatitude?: number | null
+    exifLongitude?: number | null
+    exifTakenAt?: Date | string | null
+    cameraMake?: string | null
+    cameraModel?: string | null
+    exifSoftware?: string | null
+    exif?: NullableJsonNullValueInput | InputJsonValue
+    userId?: string | null
+    deviceId?: string | null
+    sessionId?: string | null
+    ip?: string | null
+    forwardedFor?: string | null
+    ipCountry?: string | null
+    userAgent?: string | null
+    acceptLanguage?: string | null
+    headers?: NullableJsonNullValueInput | InputJsonValue
+    client?: NullableJsonNullValueInput | InputJsonValue
+    status?: string
+    flags?: CitizenReportCreateflagsInput | string[]
+    reviewedAt?: Date | string | null
+    reviewedBy?: string | null
+    reviewNotes?: string | null
+  }
+
+  export type CitizenReportUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    condition?: NullableStringFieldUpdateOperationsInput | string | null
+    caption?: NullableStringFieldUpdateOperationsInput | string | null
+    image?: BytesFieldUpdateOperationsInput | Bytes
+    imageMime?: StringFieldUpdateOperationsInput | string
+    imageSize?: IntFieldUpdateOperationsInput | number
+    imageSha256?: StringFieldUpdateOperationsInput | string
+    imageWidth?: NullableIntFieldUpdateOperationsInput | number | null
+    imageHeight?: NullableIntFieldUpdateOperationsInput | number | null
+    displayImage?: NullableBytesFieldUpdateOperationsInput | Bytes | null
+    displayMime?: NullableStringFieldUpdateOperationsInput | string | null
+    thumbnail?: NullableBytesFieldUpdateOperationsInput | Bytes | null
+    thumbnailMime?: NullableStringFieldUpdateOperationsInput | string | null
+    originalFilename?: NullableStringFieldUpdateOperationsInput | string | null
+    fileLastModified?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    captureMethod?: NullableStringFieldUpdateOperationsInput | string | null
+    latitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    longitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    accuracyM?: NullableFloatFieldUpdateOperationsInput | number | null
+    altitudeM?: NullableFloatFieldUpdateOperationsInput | number | null
+    headingDeg?: NullableFloatFieldUpdateOperationsInput | number | null
+    speedMps?: NullableFloatFieldUpdateOperationsInput | number | null
+    locationAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    locationSource?: NullableStringFieldUpdateOperationsInput | string | null
+    exifLatitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    exifLongitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    exifTakenAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    cameraMake?: NullableStringFieldUpdateOperationsInput | string | null
+    cameraModel?: NullableStringFieldUpdateOperationsInput | string | null
+    exifSoftware?: NullableStringFieldUpdateOperationsInput | string | null
+    exif?: NullableJsonNullValueInput | InputJsonValue
+    deviceId?: NullableStringFieldUpdateOperationsInput | string | null
+    sessionId?: NullableStringFieldUpdateOperationsInput | string | null
+    ip?: NullableStringFieldUpdateOperationsInput | string | null
+    forwardedFor?: NullableStringFieldUpdateOperationsInput | string | null
+    ipCountry?: NullableStringFieldUpdateOperationsInput | string | null
+    userAgent?: NullableStringFieldUpdateOperationsInput | string | null
+    acceptLanguage?: NullableStringFieldUpdateOperationsInput | string | null
+    headers?: NullableJsonNullValueInput | InputJsonValue
+    client?: NullableJsonNullValueInput | InputJsonValue
+    status?: StringFieldUpdateOperationsInput | string
+    flags?: CitizenReportUpdateflagsInput | string[]
+    reviewedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    reviewedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    reviewNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    user?: UserUpdateOneWithoutCitizenReportsNestedInput
+  }
+
+  export type CitizenReportUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    condition?: NullableStringFieldUpdateOperationsInput | string | null
+    caption?: NullableStringFieldUpdateOperationsInput | string | null
+    image?: BytesFieldUpdateOperationsInput | Bytes
+    imageMime?: StringFieldUpdateOperationsInput | string
+    imageSize?: IntFieldUpdateOperationsInput | number
+    imageSha256?: StringFieldUpdateOperationsInput | string
+    imageWidth?: NullableIntFieldUpdateOperationsInput | number | null
+    imageHeight?: NullableIntFieldUpdateOperationsInput | number | null
+    displayImage?: NullableBytesFieldUpdateOperationsInput | Bytes | null
+    displayMime?: NullableStringFieldUpdateOperationsInput | string | null
+    thumbnail?: NullableBytesFieldUpdateOperationsInput | Bytes | null
+    thumbnailMime?: NullableStringFieldUpdateOperationsInput | string | null
+    originalFilename?: NullableStringFieldUpdateOperationsInput | string | null
+    fileLastModified?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    captureMethod?: NullableStringFieldUpdateOperationsInput | string | null
+    latitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    longitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    accuracyM?: NullableFloatFieldUpdateOperationsInput | number | null
+    altitudeM?: NullableFloatFieldUpdateOperationsInput | number | null
+    headingDeg?: NullableFloatFieldUpdateOperationsInput | number | null
+    speedMps?: NullableFloatFieldUpdateOperationsInput | number | null
+    locationAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    locationSource?: NullableStringFieldUpdateOperationsInput | string | null
+    exifLatitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    exifLongitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    exifTakenAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    cameraMake?: NullableStringFieldUpdateOperationsInput | string | null
+    cameraModel?: NullableStringFieldUpdateOperationsInput | string | null
+    exifSoftware?: NullableStringFieldUpdateOperationsInput | string | null
+    exif?: NullableJsonNullValueInput | InputJsonValue
+    userId?: NullableStringFieldUpdateOperationsInput | string | null
+    deviceId?: NullableStringFieldUpdateOperationsInput | string | null
+    sessionId?: NullableStringFieldUpdateOperationsInput | string | null
+    ip?: NullableStringFieldUpdateOperationsInput | string | null
+    forwardedFor?: NullableStringFieldUpdateOperationsInput | string | null
+    ipCountry?: NullableStringFieldUpdateOperationsInput | string | null
+    userAgent?: NullableStringFieldUpdateOperationsInput | string | null
+    acceptLanguage?: NullableStringFieldUpdateOperationsInput | string | null
+    headers?: NullableJsonNullValueInput | InputJsonValue
+    client?: NullableJsonNullValueInput | InputJsonValue
+    status?: StringFieldUpdateOperationsInput | string
+    flags?: CitizenReportUpdateflagsInput | string[]
+    reviewedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    reviewedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    reviewNotes?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type CitizenReportCreateManyInput = {
+    id?: string
+    createdAt?: Date | string
+    condition?: string | null
+    caption?: string | null
+    image: Bytes
+    imageMime: string
+    imageSize: number
+    imageSha256: string
+    imageWidth?: number | null
+    imageHeight?: number | null
+    displayImage?: Bytes | null
+    displayMime?: string | null
+    thumbnail?: Bytes | null
+    thumbnailMime?: string | null
+    originalFilename?: string | null
+    fileLastModified?: Date | string | null
+    captureMethod?: string | null
+    latitude?: number | null
+    longitude?: number | null
+    accuracyM?: number | null
+    altitudeM?: number | null
+    headingDeg?: number | null
+    speedMps?: number | null
+    locationAt?: Date | string | null
+    locationSource?: string | null
+    exifLatitude?: number | null
+    exifLongitude?: number | null
+    exifTakenAt?: Date | string | null
+    cameraMake?: string | null
+    cameraModel?: string | null
+    exifSoftware?: string | null
+    exif?: NullableJsonNullValueInput | InputJsonValue
+    userId?: string | null
+    deviceId?: string | null
+    sessionId?: string | null
+    ip?: string | null
+    forwardedFor?: string | null
+    ipCountry?: string | null
+    userAgent?: string | null
+    acceptLanguage?: string | null
+    headers?: NullableJsonNullValueInput | InputJsonValue
+    client?: NullableJsonNullValueInput | InputJsonValue
+    status?: string
+    flags?: CitizenReportCreateflagsInput | string[]
+    reviewedAt?: Date | string | null
+    reviewedBy?: string | null
+    reviewNotes?: string | null
+  }
+
+  export type CitizenReportUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    condition?: NullableStringFieldUpdateOperationsInput | string | null
+    caption?: NullableStringFieldUpdateOperationsInput | string | null
+    image?: BytesFieldUpdateOperationsInput | Bytes
+    imageMime?: StringFieldUpdateOperationsInput | string
+    imageSize?: IntFieldUpdateOperationsInput | number
+    imageSha256?: StringFieldUpdateOperationsInput | string
+    imageWidth?: NullableIntFieldUpdateOperationsInput | number | null
+    imageHeight?: NullableIntFieldUpdateOperationsInput | number | null
+    displayImage?: NullableBytesFieldUpdateOperationsInput | Bytes | null
+    displayMime?: NullableStringFieldUpdateOperationsInput | string | null
+    thumbnail?: NullableBytesFieldUpdateOperationsInput | Bytes | null
+    thumbnailMime?: NullableStringFieldUpdateOperationsInput | string | null
+    originalFilename?: NullableStringFieldUpdateOperationsInput | string | null
+    fileLastModified?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    captureMethod?: NullableStringFieldUpdateOperationsInput | string | null
+    latitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    longitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    accuracyM?: NullableFloatFieldUpdateOperationsInput | number | null
+    altitudeM?: NullableFloatFieldUpdateOperationsInput | number | null
+    headingDeg?: NullableFloatFieldUpdateOperationsInput | number | null
+    speedMps?: NullableFloatFieldUpdateOperationsInput | number | null
+    locationAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    locationSource?: NullableStringFieldUpdateOperationsInput | string | null
+    exifLatitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    exifLongitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    exifTakenAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    cameraMake?: NullableStringFieldUpdateOperationsInput | string | null
+    cameraModel?: NullableStringFieldUpdateOperationsInput | string | null
+    exifSoftware?: NullableStringFieldUpdateOperationsInput | string | null
+    exif?: NullableJsonNullValueInput | InputJsonValue
+    deviceId?: NullableStringFieldUpdateOperationsInput | string | null
+    sessionId?: NullableStringFieldUpdateOperationsInput | string | null
+    ip?: NullableStringFieldUpdateOperationsInput | string | null
+    forwardedFor?: NullableStringFieldUpdateOperationsInput | string | null
+    ipCountry?: NullableStringFieldUpdateOperationsInput | string | null
+    userAgent?: NullableStringFieldUpdateOperationsInput | string | null
+    acceptLanguage?: NullableStringFieldUpdateOperationsInput | string | null
+    headers?: NullableJsonNullValueInput | InputJsonValue
+    client?: NullableJsonNullValueInput | InputJsonValue
+    status?: StringFieldUpdateOperationsInput | string
+    flags?: CitizenReportUpdateflagsInput | string[]
+    reviewedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    reviewedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    reviewNotes?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type CitizenReportUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    condition?: NullableStringFieldUpdateOperationsInput | string | null
+    caption?: NullableStringFieldUpdateOperationsInput | string | null
+    image?: BytesFieldUpdateOperationsInput | Bytes
+    imageMime?: StringFieldUpdateOperationsInput | string
+    imageSize?: IntFieldUpdateOperationsInput | number
+    imageSha256?: StringFieldUpdateOperationsInput | string
+    imageWidth?: NullableIntFieldUpdateOperationsInput | number | null
+    imageHeight?: NullableIntFieldUpdateOperationsInput | number | null
+    displayImage?: NullableBytesFieldUpdateOperationsInput | Bytes | null
+    displayMime?: NullableStringFieldUpdateOperationsInput | string | null
+    thumbnail?: NullableBytesFieldUpdateOperationsInput | Bytes | null
+    thumbnailMime?: NullableStringFieldUpdateOperationsInput | string | null
+    originalFilename?: NullableStringFieldUpdateOperationsInput | string | null
+    fileLastModified?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    captureMethod?: NullableStringFieldUpdateOperationsInput | string | null
+    latitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    longitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    accuracyM?: NullableFloatFieldUpdateOperationsInput | number | null
+    altitudeM?: NullableFloatFieldUpdateOperationsInput | number | null
+    headingDeg?: NullableFloatFieldUpdateOperationsInput | number | null
+    speedMps?: NullableFloatFieldUpdateOperationsInput | number | null
+    locationAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    locationSource?: NullableStringFieldUpdateOperationsInput | string | null
+    exifLatitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    exifLongitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    exifTakenAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    cameraMake?: NullableStringFieldUpdateOperationsInput | string | null
+    cameraModel?: NullableStringFieldUpdateOperationsInput | string | null
+    exifSoftware?: NullableStringFieldUpdateOperationsInput | string | null
+    exif?: NullableJsonNullValueInput | InputJsonValue
+    userId?: NullableStringFieldUpdateOperationsInput | string | null
+    deviceId?: NullableStringFieldUpdateOperationsInput | string | null
+    sessionId?: NullableStringFieldUpdateOperationsInput | string | null
+    ip?: NullableStringFieldUpdateOperationsInput | string | null
+    forwardedFor?: NullableStringFieldUpdateOperationsInput | string | null
+    ipCountry?: NullableStringFieldUpdateOperationsInput | string | null
+    userAgent?: NullableStringFieldUpdateOperationsInput | string | null
+    acceptLanguage?: NullableStringFieldUpdateOperationsInput | string | null
+    headers?: NullableJsonNullValueInput | InputJsonValue
+    client?: NullableJsonNullValueInput | InputJsonValue
+    status?: StringFieldUpdateOperationsInput | string
+    flags?: CitizenReportUpdateflagsInput | string[]
+    reviewedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    reviewedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    reviewNotes?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
   export type StringFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[] | ListStringFieldRefInput<$PrismaModel>
@@ -9108,6 +12988,12 @@ export namespace Prisma {
     none?: SessionWhereInput
   }
 
+  export type CitizenReportListRelationFilter = {
+    every?: CitizenReportWhereInput
+    some?: CitizenReportWhereInput
+    none?: CitizenReportWhereInput
+  }
+
   export type SortOrderInput = {
     sort: SortOrder
     nulls?: NullsOrder
@@ -9122,6 +13008,10 @@ export namespace Prisma {
   }
 
   export type SessionOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type CitizenReportOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -9442,6 +13332,409 @@ export namespace Prisma {
     id?: SortOrder
   }
 
+  export type BigIntFilter<$PrismaModel = never> = {
+    equals?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    in?: bigint[] | number[] | ListBigIntFieldRefInput<$PrismaModel>
+    notIn?: bigint[] | number[] | ListBigIntFieldRefInput<$PrismaModel>
+    lt?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    lte?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    gt?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    gte?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    not?: NestedBigIntFilter<$PrismaModel> | bigint | number
+  }
+
+  export type IntNullableFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableFilter<$PrismaModel> | number | null
+  }
+
+  export type RoadClosureRoad_closures_dataset_year_road_status_uniqCompoundUniqueInput = {
+    dataset_id: number
+    year: number
+    road_name: string
+    status: string
+  }
+
+  export type RoadClosureCountOrderByAggregateInput = {
+    id?: SortOrder
+    dataset_id?: SortOrder
+    year?: SortOrder
+    road_name?: SortOrder
+    road_type?: SortOrder
+    status?: SortOrder
+    month?: SortOrder
+    day?: SortOrder
+  }
+
+  export type RoadClosureAvgOrderByAggregateInput = {
+    id?: SortOrder
+    dataset_id?: SortOrder
+    year?: SortOrder
+    month?: SortOrder
+    day?: SortOrder
+  }
+
+  export type RoadClosureMaxOrderByAggregateInput = {
+    id?: SortOrder
+    dataset_id?: SortOrder
+    year?: SortOrder
+    road_name?: SortOrder
+    road_type?: SortOrder
+    status?: SortOrder
+    month?: SortOrder
+    day?: SortOrder
+  }
+
+  export type RoadClosureMinOrderByAggregateInput = {
+    id?: SortOrder
+    dataset_id?: SortOrder
+    year?: SortOrder
+    road_name?: SortOrder
+    road_type?: SortOrder
+    status?: SortOrder
+    month?: SortOrder
+    day?: SortOrder
+  }
+
+  export type RoadClosureSumOrderByAggregateInput = {
+    id?: SortOrder
+    dataset_id?: SortOrder
+    year?: SortOrder
+    month?: SortOrder
+    day?: SortOrder
+  }
+
+  export type BigIntWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    in?: bigint[] | number[] | ListBigIntFieldRefInput<$PrismaModel>
+    notIn?: bigint[] | number[] | ListBigIntFieldRefInput<$PrismaModel>
+    lt?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    lte?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    gt?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    gte?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    not?: NestedBigIntWithAggregatesFilter<$PrismaModel> | bigint | number
+    _count?: NestedIntFilter<$PrismaModel>
+    _avg?: NestedFloatFilter<$PrismaModel>
+    _sum?: NestedBigIntFilter<$PrismaModel>
+    _min?: NestedBigIntFilter<$PrismaModel>
+    _max?: NestedBigIntFilter<$PrismaModel>
+  }
+
+  export type IntNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableWithAggregatesFilter<$PrismaModel> | number | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedFloatNullableFilter<$PrismaModel>
+    _sum?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedIntNullableFilter<$PrismaModel>
+    _max?: NestedIntNullableFilter<$PrismaModel>
+  }
+
+  export type BytesFilter<$PrismaModel = never> = {
+    equals?: Bytes | BytesFieldRefInput<$PrismaModel>
+    in?: Bytes[] | ListBytesFieldRefInput<$PrismaModel>
+    notIn?: Bytes[] | ListBytesFieldRefInput<$PrismaModel>
+    not?: NestedBytesFilter<$PrismaModel> | Bytes
+  }
+
+  export type BytesNullableFilter<$PrismaModel = never> = {
+    equals?: Bytes | BytesFieldRefInput<$PrismaModel> | null
+    in?: Bytes[] | ListBytesFieldRefInput<$PrismaModel> | null
+    notIn?: Bytes[] | ListBytesFieldRefInput<$PrismaModel> | null
+    not?: NestedBytesNullableFilter<$PrismaModel> | Bytes | null
+  }
+
+  export type FloatNullableFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatNullableFilter<$PrismaModel> | number | null
+  }
+  export type JsonNullableFilter<$PrismaModel = never> =
+    | PatchUndefined<
+        Either<Required<JsonNullableFilterBase<$PrismaModel>>, Exclude<keyof Required<JsonNullableFilterBase<$PrismaModel>>, 'path'>>,
+        Required<JsonNullableFilterBase<$PrismaModel>>
+      >
+    | OptionalFlat<Omit<Required<JsonNullableFilterBase<$PrismaModel>>, 'path'>>
+
+  export type JsonNullableFilterBase<$PrismaModel = never> = {
+    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    path?: string[]
+    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
+    string_contains?: string | StringFieldRefInput<$PrismaModel>
+    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
+    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
+    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+  }
+
+  export type StringNullableListFilter<$PrismaModel = never> = {
+    equals?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    has?: string | StringFieldRefInput<$PrismaModel> | null
+    hasEvery?: string[] | ListStringFieldRefInput<$PrismaModel>
+    hasSome?: string[] | ListStringFieldRefInput<$PrismaModel>
+    isEmpty?: boolean
+  }
+
+  export type UserNullableScalarRelationFilter = {
+    is?: UserWhereInput | null
+    isNot?: UserWhereInput | null
+  }
+
+  export type CitizenReportCountOrderByAggregateInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    condition?: SortOrder
+    caption?: SortOrder
+    image?: SortOrder
+    imageMime?: SortOrder
+    imageSize?: SortOrder
+    imageSha256?: SortOrder
+    imageWidth?: SortOrder
+    imageHeight?: SortOrder
+    displayImage?: SortOrder
+    displayMime?: SortOrder
+    thumbnail?: SortOrder
+    thumbnailMime?: SortOrder
+    originalFilename?: SortOrder
+    fileLastModified?: SortOrder
+    captureMethod?: SortOrder
+    latitude?: SortOrder
+    longitude?: SortOrder
+    accuracyM?: SortOrder
+    altitudeM?: SortOrder
+    headingDeg?: SortOrder
+    speedMps?: SortOrder
+    locationAt?: SortOrder
+    locationSource?: SortOrder
+    exifLatitude?: SortOrder
+    exifLongitude?: SortOrder
+    exifTakenAt?: SortOrder
+    cameraMake?: SortOrder
+    cameraModel?: SortOrder
+    exifSoftware?: SortOrder
+    exif?: SortOrder
+    userId?: SortOrder
+    deviceId?: SortOrder
+    sessionId?: SortOrder
+    ip?: SortOrder
+    forwardedFor?: SortOrder
+    ipCountry?: SortOrder
+    userAgent?: SortOrder
+    acceptLanguage?: SortOrder
+    headers?: SortOrder
+    client?: SortOrder
+    status?: SortOrder
+    flags?: SortOrder
+    reviewedAt?: SortOrder
+    reviewedBy?: SortOrder
+    reviewNotes?: SortOrder
+  }
+
+  export type CitizenReportAvgOrderByAggregateInput = {
+    imageSize?: SortOrder
+    imageWidth?: SortOrder
+    imageHeight?: SortOrder
+    latitude?: SortOrder
+    longitude?: SortOrder
+    accuracyM?: SortOrder
+    altitudeM?: SortOrder
+    headingDeg?: SortOrder
+    speedMps?: SortOrder
+    exifLatitude?: SortOrder
+    exifLongitude?: SortOrder
+  }
+
+  export type CitizenReportMaxOrderByAggregateInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    condition?: SortOrder
+    caption?: SortOrder
+    image?: SortOrder
+    imageMime?: SortOrder
+    imageSize?: SortOrder
+    imageSha256?: SortOrder
+    imageWidth?: SortOrder
+    imageHeight?: SortOrder
+    displayImage?: SortOrder
+    displayMime?: SortOrder
+    thumbnail?: SortOrder
+    thumbnailMime?: SortOrder
+    originalFilename?: SortOrder
+    fileLastModified?: SortOrder
+    captureMethod?: SortOrder
+    latitude?: SortOrder
+    longitude?: SortOrder
+    accuracyM?: SortOrder
+    altitudeM?: SortOrder
+    headingDeg?: SortOrder
+    speedMps?: SortOrder
+    locationAt?: SortOrder
+    locationSource?: SortOrder
+    exifLatitude?: SortOrder
+    exifLongitude?: SortOrder
+    exifTakenAt?: SortOrder
+    cameraMake?: SortOrder
+    cameraModel?: SortOrder
+    exifSoftware?: SortOrder
+    userId?: SortOrder
+    deviceId?: SortOrder
+    sessionId?: SortOrder
+    ip?: SortOrder
+    forwardedFor?: SortOrder
+    ipCountry?: SortOrder
+    userAgent?: SortOrder
+    acceptLanguage?: SortOrder
+    status?: SortOrder
+    reviewedAt?: SortOrder
+    reviewedBy?: SortOrder
+    reviewNotes?: SortOrder
+  }
+
+  export type CitizenReportMinOrderByAggregateInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    condition?: SortOrder
+    caption?: SortOrder
+    image?: SortOrder
+    imageMime?: SortOrder
+    imageSize?: SortOrder
+    imageSha256?: SortOrder
+    imageWidth?: SortOrder
+    imageHeight?: SortOrder
+    displayImage?: SortOrder
+    displayMime?: SortOrder
+    thumbnail?: SortOrder
+    thumbnailMime?: SortOrder
+    originalFilename?: SortOrder
+    fileLastModified?: SortOrder
+    captureMethod?: SortOrder
+    latitude?: SortOrder
+    longitude?: SortOrder
+    accuracyM?: SortOrder
+    altitudeM?: SortOrder
+    headingDeg?: SortOrder
+    speedMps?: SortOrder
+    locationAt?: SortOrder
+    locationSource?: SortOrder
+    exifLatitude?: SortOrder
+    exifLongitude?: SortOrder
+    exifTakenAt?: SortOrder
+    cameraMake?: SortOrder
+    cameraModel?: SortOrder
+    exifSoftware?: SortOrder
+    userId?: SortOrder
+    deviceId?: SortOrder
+    sessionId?: SortOrder
+    ip?: SortOrder
+    forwardedFor?: SortOrder
+    ipCountry?: SortOrder
+    userAgent?: SortOrder
+    acceptLanguage?: SortOrder
+    status?: SortOrder
+    reviewedAt?: SortOrder
+    reviewedBy?: SortOrder
+    reviewNotes?: SortOrder
+  }
+
+  export type CitizenReportSumOrderByAggregateInput = {
+    imageSize?: SortOrder
+    imageWidth?: SortOrder
+    imageHeight?: SortOrder
+    latitude?: SortOrder
+    longitude?: SortOrder
+    accuracyM?: SortOrder
+    altitudeM?: SortOrder
+    headingDeg?: SortOrder
+    speedMps?: SortOrder
+    exifLatitude?: SortOrder
+    exifLongitude?: SortOrder
+  }
+
+  export type BytesWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Bytes | BytesFieldRefInput<$PrismaModel>
+    in?: Bytes[] | ListBytesFieldRefInput<$PrismaModel>
+    notIn?: Bytes[] | ListBytesFieldRefInput<$PrismaModel>
+    not?: NestedBytesWithAggregatesFilter<$PrismaModel> | Bytes
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedBytesFilter<$PrismaModel>
+    _max?: NestedBytesFilter<$PrismaModel>
+  }
+
+  export type BytesNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Bytes | BytesFieldRefInput<$PrismaModel> | null
+    in?: Bytes[] | ListBytesFieldRefInput<$PrismaModel> | null
+    notIn?: Bytes[] | ListBytesFieldRefInput<$PrismaModel> | null
+    not?: NestedBytesNullableWithAggregatesFilter<$PrismaModel> | Bytes | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedBytesNullableFilter<$PrismaModel>
+    _max?: NestedBytesNullableFilter<$PrismaModel>
+  }
+
+  export type FloatNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatNullableWithAggregatesFilter<$PrismaModel> | number | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedFloatNullableFilter<$PrismaModel>
+    _sum?: NestedFloatNullableFilter<$PrismaModel>
+    _min?: NestedFloatNullableFilter<$PrismaModel>
+    _max?: NestedFloatNullableFilter<$PrismaModel>
+  }
+  export type JsonNullableWithAggregatesFilter<$PrismaModel = never> =
+    | PatchUndefined<
+        Either<Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>, Exclude<keyof Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>, 'path'>>,
+        Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>
+      >
+    | OptionalFlat<Omit<Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>, 'path'>>
+
+  export type JsonNullableWithAggregatesFilterBase<$PrismaModel = never> = {
+    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    path?: string[]
+    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
+    string_contains?: string | StringFieldRefInput<$PrismaModel>
+    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
+    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
+    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedJsonNullableFilter<$PrismaModel>
+    _max?: NestedJsonNullableFilter<$PrismaModel>
+  }
+
   export type PostCreateNestedManyWithoutAuthorInput = {
     create?: XOR<PostCreateWithoutAuthorInput, PostUncheckedCreateWithoutAuthorInput> | PostCreateWithoutAuthorInput[] | PostUncheckedCreateWithoutAuthorInput[]
     connectOrCreate?: PostCreateOrConnectWithoutAuthorInput | PostCreateOrConnectWithoutAuthorInput[]
@@ -9463,6 +13756,13 @@ export namespace Prisma {
     connect?: SessionWhereUniqueInput | SessionWhereUniqueInput[]
   }
 
+  export type CitizenReportCreateNestedManyWithoutUserInput = {
+    create?: XOR<CitizenReportCreateWithoutUserInput, CitizenReportUncheckedCreateWithoutUserInput> | CitizenReportCreateWithoutUserInput[] | CitizenReportUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: CitizenReportCreateOrConnectWithoutUserInput | CitizenReportCreateOrConnectWithoutUserInput[]
+    createMany?: CitizenReportCreateManyUserInputEnvelope
+    connect?: CitizenReportWhereUniqueInput | CitizenReportWhereUniqueInput[]
+  }
+
   export type PostUncheckedCreateNestedManyWithoutAuthorInput = {
     create?: XOR<PostCreateWithoutAuthorInput, PostUncheckedCreateWithoutAuthorInput> | PostCreateWithoutAuthorInput[] | PostUncheckedCreateWithoutAuthorInput[]
     connectOrCreate?: PostCreateOrConnectWithoutAuthorInput | PostCreateOrConnectWithoutAuthorInput[]
@@ -9482,6 +13782,13 @@ export namespace Prisma {
     connectOrCreate?: SessionCreateOrConnectWithoutUserInput | SessionCreateOrConnectWithoutUserInput[]
     createMany?: SessionCreateManyUserInputEnvelope
     connect?: SessionWhereUniqueInput | SessionWhereUniqueInput[]
+  }
+
+  export type CitizenReportUncheckedCreateNestedManyWithoutUserInput = {
+    create?: XOR<CitizenReportCreateWithoutUserInput, CitizenReportUncheckedCreateWithoutUserInput> | CitizenReportCreateWithoutUserInput[] | CitizenReportUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: CitizenReportCreateOrConnectWithoutUserInput | CitizenReportCreateOrConnectWithoutUserInput[]
+    createMany?: CitizenReportCreateManyUserInputEnvelope
+    connect?: CitizenReportWhereUniqueInput | CitizenReportWhereUniqueInput[]
   }
 
   export type StringFieldUpdateOperationsInput = {
@@ -9554,6 +13861,20 @@ export namespace Prisma {
     deleteMany?: SessionScalarWhereInput | SessionScalarWhereInput[]
   }
 
+  export type CitizenReportUpdateManyWithoutUserNestedInput = {
+    create?: XOR<CitizenReportCreateWithoutUserInput, CitizenReportUncheckedCreateWithoutUserInput> | CitizenReportCreateWithoutUserInput[] | CitizenReportUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: CitizenReportCreateOrConnectWithoutUserInput | CitizenReportCreateOrConnectWithoutUserInput[]
+    upsert?: CitizenReportUpsertWithWhereUniqueWithoutUserInput | CitizenReportUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: CitizenReportCreateManyUserInputEnvelope
+    set?: CitizenReportWhereUniqueInput | CitizenReportWhereUniqueInput[]
+    disconnect?: CitizenReportWhereUniqueInput | CitizenReportWhereUniqueInput[]
+    delete?: CitizenReportWhereUniqueInput | CitizenReportWhereUniqueInput[]
+    connect?: CitizenReportWhereUniqueInput | CitizenReportWhereUniqueInput[]
+    update?: CitizenReportUpdateWithWhereUniqueWithoutUserInput | CitizenReportUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: CitizenReportUpdateManyWithWhereWithoutUserInput | CitizenReportUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: CitizenReportScalarWhereInput | CitizenReportScalarWhereInput[]
+  }
+
   export type PostUncheckedUpdateManyWithoutAuthorNestedInput = {
     create?: XOR<PostCreateWithoutAuthorInput, PostUncheckedCreateWithoutAuthorInput> | PostCreateWithoutAuthorInput[] | PostUncheckedCreateWithoutAuthorInput[]
     connectOrCreate?: PostCreateOrConnectWithoutAuthorInput | PostCreateOrConnectWithoutAuthorInput[]
@@ -9594,6 +13915,20 @@ export namespace Prisma {
     update?: SessionUpdateWithWhereUniqueWithoutUserInput | SessionUpdateWithWhereUniqueWithoutUserInput[]
     updateMany?: SessionUpdateManyWithWhereWithoutUserInput | SessionUpdateManyWithWhereWithoutUserInput[]
     deleteMany?: SessionScalarWhereInput | SessionScalarWhereInput[]
+  }
+
+  export type CitizenReportUncheckedUpdateManyWithoutUserNestedInput = {
+    create?: XOR<CitizenReportCreateWithoutUserInput, CitizenReportUncheckedCreateWithoutUserInput> | CitizenReportCreateWithoutUserInput[] | CitizenReportUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: CitizenReportCreateOrConnectWithoutUserInput | CitizenReportCreateOrConnectWithoutUserInput[]
+    upsert?: CitizenReportUpsertWithWhereUniqueWithoutUserInput | CitizenReportUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: CitizenReportCreateManyUserInputEnvelope
+    set?: CitizenReportWhereUniqueInput | CitizenReportWhereUniqueInput[]
+    disconnect?: CitizenReportWhereUniqueInput | CitizenReportWhereUniqueInput[]
+    delete?: CitizenReportWhereUniqueInput | CitizenReportWhereUniqueInput[]
+    connect?: CitizenReportWhereUniqueInput | CitizenReportWhereUniqueInput[]
+    update?: CitizenReportUpdateWithWhereUniqueWithoutUserInput | CitizenReportUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: CitizenReportUpdateManyWithWhereWithoutUserInput | CitizenReportUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: CitizenReportScalarWhereInput | CitizenReportScalarWhereInput[]
   }
 
   export type UserCreateNestedOneWithoutAuthCodesInput = {
@@ -9692,6 +14027,63 @@ export namespace Prisma {
     upsert?: UserUpsertWithoutPostsInput
     connect?: UserWhereUniqueInput
     update?: XOR<XOR<UserUpdateToOneWithWhereWithoutPostsInput, UserUpdateWithoutPostsInput>, UserUncheckedUpdateWithoutPostsInput>
+  }
+
+  export type BigIntFieldUpdateOperationsInput = {
+    set?: bigint | number
+    increment?: bigint | number
+    decrement?: bigint | number
+    multiply?: bigint | number
+    divide?: bigint | number
+  }
+
+  export type NullableIntFieldUpdateOperationsInput = {
+    set?: number | null
+    increment?: number
+    decrement?: number
+    multiply?: number
+    divide?: number
+  }
+
+  export type CitizenReportCreateflagsInput = {
+    set: string[]
+  }
+
+  export type UserCreateNestedOneWithoutCitizenReportsInput = {
+    create?: XOR<UserCreateWithoutCitizenReportsInput, UserUncheckedCreateWithoutCitizenReportsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutCitizenReportsInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type BytesFieldUpdateOperationsInput = {
+    set?: Bytes
+  }
+
+  export type NullableBytesFieldUpdateOperationsInput = {
+    set?: Bytes | null
+  }
+
+  export type NullableFloatFieldUpdateOperationsInput = {
+    set?: number | null
+    increment?: number
+    decrement?: number
+    multiply?: number
+    divide?: number
+  }
+
+  export type CitizenReportUpdateflagsInput = {
+    set?: string[]
+    push?: string | string[]
+  }
+
+  export type UserUpdateOneWithoutCitizenReportsNestedInput = {
+    create?: XOR<UserCreateWithoutCitizenReportsInput, UserUncheckedCreateWithoutCitizenReportsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutCitizenReportsInput
+    upsert?: UserUpsertWithoutCitizenReportsInput
+    disconnect?: UserWhereInput | boolean
+    delete?: UserWhereInput | boolean
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutCitizenReportsInput, UserUpdateWithoutCitizenReportsInput>, UserUncheckedUpdateWithoutCitizenReportsInput>
   }
 
   export type NestedStringFilter<$PrismaModel = never> = {
@@ -9868,6 +14260,133 @@ export namespace Prisma {
     not?: NestedFloatFilter<$PrismaModel> | number
   }
 
+  export type NestedBigIntFilter<$PrismaModel = never> = {
+    equals?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    in?: bigint[] | number[] | ListBigIntFieldRefInput<$PrismaModel>
+    notIn?: bigint[] | number[] | ListBigIntFieldRefInput<$PrismaModel>
+    lt?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    lte?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    gt?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    gte?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    not?: NestedBigIntFilter<$PrismaModel> | bigint | number
+  }
+
+  export type NestedBigIntWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    in?: bigint[] | number[] | ListBigIntFieldRefInput<$PrismaModel>
+    notIn?: bigint[] | number[] | ListBigIntFieldRefInput<$PrismaModel>
+    lt?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    lte?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    gt?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    gte?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    not?: NestedBigIntWithAggregatesFilter<$PrismaModel> | bigint | number
+    _count?: NestedIntFilter<$PrismaModel>
+    _avg?: NestedFloatFilter<$PrismaModel>
+    _sum?: NestedBigIntFilter<$PrismaModel>
+    _min?: NestedBigIntFilter<$PrismaModel>
+    _max?: NestedBigIntFilter<$PrismaModel>
+  }
+
+  export type NestedIntNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableWithAggregatesFilter<$PrismaModel> | number | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedFloatNullableFilter<$PrismaModel>
+    _sum?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedIntNullableFilter<$PrismaModel>
+    _max?: NestedIntNullableFilter<$PrismaModel>
+  }
+
+  export type NestedFloatNullableFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatNullableFilter<$PrismaModel> | number | null
+  }
+
+  export type NestedBytesFilter<$PrismaModel = never> = {
+    equals?: Bytes | BytesFieldRefInput<$PrismaModel>
+    in?: Bytes[] | ListBytesFieldRefInput<$PrismaModel>
+    notIn?: Bytes[] | ListBytesFieldRefInput<$PrismaModel>
+    not?: NestedBytesFilter<$PrismaModel> | Bytes
+  }
+
+  export type NestedBytesNullableFilter<$PrismaModel = never> = {
+    equals?: Bytes | BytesFieldRefInput<$PrismaModel> | null
+    in?: Bytes[] | ListBytesFieldRefInput<$PrismaModel> | null
+    notIn?: Bytes[] | ListBytesFieldRefInput<$PrismaModel> | null
+    not?: NestedBytesNullableFilter<$PrismaModel> | Bytes | null
+  }
+
+  export type NestedBytesWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Bytes | BytesFieldRefInput<$PrismaModel>
+    in?: Bytes[] | ListBytesFieldRefInput<$PrismaModel>
+    notIn?: Bytes[] | ListBytesFieldRefInput<$PrismaModel>
+    not?: NestedBytesWithAggregatesFilter<$PrismaModel> | Bytes
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedBytesFilter<$PrismaModel>
+    _max?: NestedBytesFilter<$PrismaModel>
+  }
+
+  export type NestedBytesNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Bytes | BytesFieldRefInput<$PrismaModel> | null
+    in?: Bytes[] | ListBytesFieldRefInput<$PrismaModel> | null
+    notIn?: Bytes[] | ListBytesFieldRefInput<$PrismaModel> | null
+    not?: NestedBytesNullableWithAggregatesFilter<$PrismaModel> | Bytes | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedBytesNullableFilter<$PrismaModel>
+    _max?: NestedBytesNullableFilter<$PrismaModel>
+  }
+
+  export type NestedFloatNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatNullableWithAggregatesFilter<$PrismaModel> | number | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedFloatNullableFilter<$PrismaModel>
+    _sum?: NestedFloatNullableFilter<$PrismaModel>
+    _min?: NestedFloatNullableFilter<$PrismaModel>
+    _max?: NestedFloatNullableFilter<$PrismaModel>
+  }
+  export type NestedJsonNullableFilter<$PrismaModel = never> =
+    | PatchUndefined<
+        Either<Required<NestedJsonNullableFilterBase<$PrismaModel>>, Exclude<keyof Required<NestedJsonNullableFilterBase<$PrismaModel>>, 'path'>>,
+        Required<NestedJsonNullableFilterBase<$PrismaModel>>
+      >
+    | OptionalFlat<Omit<Required<NestedJsonNullableFilterBase<$PrismaModel>>, 'path'>>
+
+  export type NestedJsonNullableFilterBase<$PrismaModel = never> = {
+    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    path?: string[]
+    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
+    string_contains?: string | StringFieldRefInput<$PrismaModel>
+    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
+    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
+    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+  }
+
   export type PostCreateWithoutAuthorInput = {
     title: string
     content?: string | null
@@ -9936,6 +14455,114 @@ export namespace Prisma {
 
   export type SessionCreateManyUserInputEnvelope = {
     data: SessionCreateManyUserInput | SessionCreateManyUserInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type CitizenReportCreateWithoutUserInput = {
+    id?: string
+    createdAt?: Date | string
+    condition?: string | null
+    caption?: string | null
+    image: Bytes
+    imageMime: string
+    imageSize: number
+    imageSha256: string
+    imageWidth?: number | null
+    imageHeight?: number | null
+    displayImage?: Bytes | null
+    displayMime?: string | null
+    thumbnail?: Bytes | null
+    thumbnailMime?: string | null
+    originalFilename?: string | null
+    fileLastModified?: Date | string | null
+    captureMethod?: string | null
+    latitude?: number | null
+    longitude?: number | null
+    accuracyM?: number | null
+    altitudeM?: number | null
+    headingDeg?: number | null
+    speedMps?: number | null
+    locationAt?: Date | string | null
+    locationSource?: string | null
+    exifLatitude?: number | null
+    exifLongitude?: number | null
+    exifTakenAt?: Date | string | null
+    cameraMake?: string | null
+    cameraModel?: string | null
+    exifSoftware?: string | null
+    exif?: NullableJsonNullValueInput | InputJsonValue
+    deviceId?: string | null
+    sessionId?: string | null
+    ip?: string | null
+    forwardedFor?: string | null
+    ipCountry?: string | null
+    userAgent?: string | null
+    acceptLanguage?: string | null
+    headers?: NullableJsonNullValueInput | InputJsonValue
+    client?: NullableJsonNullValueInput | InputJsonValue
+    status?: string
+    flags?: CitizenReportCreateflagsInput | string[]
+    reviewedAt?: Date | string | null
+    reviewedBy?: string | null
+    reviewNotes?: string | null
+  }
+
+  export type CitizenReportUncheckedCreateWithoutUserInput = {
+    id?: string
+    createdAt?: Date | string
+    condition?: string | null
+    caption?: string | null
+    image: Bytes
+    imageMime: string
+    imageSize: number
+    imageSha256: string
+    imageWidth?: number | null
+    imageHeight?: number | null
+    displayImage?: Bytes | null
+    displayMime?: string | null
+    thumbnail?: Bytes | null
+    thumbnailMime?: string | null
+    originalFilename?: string | null
+    fileLastModified?: Date | string | null
+    captureMethod?: string | null
+    latitude?: number | null
+    longitude?: number | null
+    accuracyM?: number | null
+    altitudeM?: number | null
+    headingDeg?: number | null
+    speedMps?: number | null
+    locationAt?: Date | string | null
+    locationSource?: string | null
+    exifLatitude?: number | null
+    exifLongitude?: number | null
+    exifTakenAt?: Date | string | null
+    cameraMake?: string | null
+    cameraModel?: string | null
+    exifSoftware?: string | null
+    exif?: NullableJsonNullValueInput | InputJsonValue
+    deviceId?: string | null
+    sessionId?: string | null
+    ip?: string | null
+    forwardedFor?: string | null
+    ipCountry?: string | null
+    userAgent?: string | null
+    acceptLanguage?: string | null
+    headers?: NullableJsonNullValueInput | InputJsonValue
+    client?: NullableJsonNullValueInput | InputJsonValue
+    status?: string
+    flags?: CitizenReportCreateflagsInput | string[]
+    reviewedAt?: Date | string | null
+    reviewedBy?: string | null
+    reviewNotes?: string | null
+  }
+
+  export type CitizenReportCreateOrConnectWithoutUserInput = {
+    where: CitizenReportWhereUniqueInput
+    create: XOR<CitizenReportCreateWithoutUserInput, CitizenReportUncheckedCreateWithoutUserInput>
+  }
+
+  export type CitizenReportCreateManyUserInputEnvelope = {
+    data: CitizenReportCreateManyUserInput | CitizenReportCreateManyUserInput[]
     skipDuplicates?: boolean
   }
 
@@ -10021,6 +14648,75 @@ export namespace Prisma {
     expiresAt?: DateTimeFilter<"Session"> | Date | string
   }
 
+  export type CitizenReportUpsertWithWhereUniqueWithoutUserInput = {
+    where: CitizenReportWhereUniqueInput
+    update: XOR<CitizenReportUpdateWithoutUserInput, CitizenReportUncheckedUpdateWithoutUserInput>
+    create: XOR<CitizenReportCreateWithoutUserInput, CitizenReportUncheckedCreateWithoutUserInput>
+  }
+
+  export type CitizenReportUpdateWithWhereUniqueWithoutUserInput = {
+    where: CitizenReportWhereUniqueInput
+    data: XOR<CitizenReportUpdateWithoutUserInput, CitizenReportUncheckedUpdateWithoutUserInput>
+  }
+
+  export type CitizenReportUpdateManyWithWhereWithoutUserInput = {
+    where: CitizenReportScalarWhereInput
+    data: XOR<CitizenReportUpdateManyMutationInput, CitizenReportUncheckedUpdateManyWithoutUserInput>
+  }
+
+  export type CitizenReportScalarWhereInput = {
+    AND?: CitizenReportScalarWhereInput | CitizenReportScalarWhereInput[]
+    OR?: CitizenReportScalarWhereInput[]
+    NOT?: CitizenReportScalarWhereInput | CitizenReportScalarWhereInput[]
+    id?: StringFilter<"CitizenReport"> | string
+    createdAt?: DateTimeFilter<"CitizenReport"> | Date | string
+    condition?: StringNullableFilter<"CitizenReport"> | string | null
+    caption?: StringNullableFilter<"CitizenReport"> | string | null
+    image?: BytesFilter<"CitizenReport"> | Bytes
+    imageMime?: StringFilter<"CitizenReport"> | string
+    imageSize?: IntFilter<"CitizenReport"> | number
+    imageSha256?: StringFilter<"CitizenReport"> | string
+    imageWidth?: IntNullableFilter<"CitizenReport"> | number | null
+    imageHeight?: IntNullableFilter<"CitizenReport"> | number | null
+    displayImage?: BytesNullableFilter<"CitizenReport"> | Bytes | null
+    displayMime?: StringNullableFilter<"CitizenReport"> | string | null
+    thumbnail?: BytesNullableFilter<"CitizenReport"> | Bytes | null
+    thumbnailMime?: StringNullableFilter<"CitizenReport"> | string | null
+    originalFilename?: StringNullableFilter<"CitizenReport"> | string | null
+    fileLastModified?: DateTimeNullableFilter<"CitizenReport"> | Date | string | null
+    captureMethod?: StringNullableFilter<"CitizenReport"> | string | null
+    latitude?: FloatNullableFilter<"CitizenReport"> | number | null
+    longitude?: FloatNullableFilter<"CitizenReport"> | number | null
+    accuracyM?: FloatNullableFilter<"CitizenReport"> | number | null
+    altitudeM?: FloatNullableFilter<"CitizenReport"> | number | null
+    headingDeg?: FloatNullableFilter<"CitizenReport"> | number | null
+    speedMps?: FloatNullableFilter<"CitizenReport"> | number | null
+    locationAt?: DateTimeNullableFilter<"CitizenReport"> | Date | string | null
+    locationSource?: StringNullableFilter<"CitizenReport"> | string | null
+    exifLatitude?: FloatNullableFilter<"CitizenReport"> | number | null
+    exifLongitude?: FloatNullableFilter<"CitizenReport"> | number | null
+    exifTakenAt?: DateTimeNullableFilter<"CitizenReport"> | Date | string | null
+    cameraMake?: StringNullableFilter<"CitizenReport"> | string | null
+    cameraModel?: StringNullableFilter<"CitizenReport"> | string | null
+    exifSoftware?: StringNullableFilter<"CitizenReport"> | string | null
+    exif?: JsonNullableFilter<"CitizenReport">
+    userId?: StringNullableFilter<"CitizenReport"> | string | null
+    deviceId?: StringNullableFilter<"CitizenReport"> | string | null
+    sessionId?: StringNullableFilter<"CitizenReport"> | string | null
+    ip?: StringNullableFilter<"CitizenReport"> | string | null
+    forwardedFor?: StringNullableFilter<"CitizenReport"> | string | null
+    ipCountry?: StringNullableFilter<"CitizenReport"> | string | null
+    userAgent?: StringNullableFilter<"CitizenReport"> | string | null
+    acceptLanguage?: StringNullableFilter<"CitizenReport"> | string | null
+    headers?: JsonNullableFilter<"CitizenReport">
+    client?: JsonNullableFilter<"CitizenReport">
+    status?: StringFilter<"CitizenReport"> | string
+    flags?: StringNullableListFilter<"CitizenReport">
+    reviewedAt?: DateTimeNullableFilter<"CitizenReport"> | Date | string | null
+    reviewedBy?: StringNullableFilter<"CitizenReport"> | string | null
+    reviewNotes?: StringNullableFilter<"CitizenReport"> | string | null
+  }
+
   export type UserCreateWithoutAuthCodesInput = {
     id?: string
     email: string
@@ -10033,6 +14729,7 @@ export namespace Prisma {
     userlevel?: number
     posts?: PostCreateNestedManyWithoutAuthorInput
     sessions?: SessionCreateNestedManyWithoutUserInput
+    citizenReports?: CitizenReportCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutAuthCodesInput = {
@@ -10047,6 +14744,7 @@ export namespace Prisma {
     userlevel?: number
     posts?: PostUncheckedCreateNestedManyWithoutAuthorInput
     sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
+    citizenReports?: CitizenReportUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutAuthCodesInput = {
@@ -10077,6 +14775,7 @@ export namespace Prisma {
     userlevel?: IntFieldUpdateOperationsInput | number
     posts?: PostUpdateManyWithoutAuthorNestedInput
     sessions?: SessionUpdateManyWithoutUserNestedInput
+    citizenReports?: CitizenReportUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutAuthCodesInput = {
@@ -10091,6 +14790,7 @@ export namespace Prisma {
     userlevel?: IntFieldUpdateOperationsInput | number
     posts?: PostUncheckedUpdateManyWithoutAuthorNestedInput
     sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
+    citizenReports?: CitizenReportUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type OutBoundEmailQueueCreateWithoutEmailInput = {
@@ -10202,6 +14902,7 @@ export namespace Prisma {
     userlevel?: number
     posts?: PostCreateNestedManyWithoutAuthorInput
     authCodes?: AuthCodeCreateNestedManyWithoutUserInput
+    citizenReports?: CitizenReportCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutSessionsInput = {
@@ -10216,6 +14917,7 @@ export namespace Prisma {
     userlevel?: number
     posts?: PostUncheckedCreateNestedManyWithoutAuthorInput
     authCodes?: AuthCodeUncheckedCreateNestedManyWithoutUserInput
+    citizenReports?: CitizenReportUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutSessionsInput = {
@@ -10246,6 +14948,7 @@ export namespace Prisma {
     userlevel?: IntFieldUpdateOperationsInput | number
     posts?: PostUpdateManyWithoutAuthorNestedInput
     authCodes?: AuthCodeUpdateManyWithoutUserNestedInput
+    citizenReports?: CitizenReportUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutSessionsInput = {
@@ -10260,6 +14963,7 @@ export namespace Prisma {
     userlevel?: IntFieldUpdateOperationsInput | number
     posts?: PostUncheckedUpdateManyWithoutAuthorNestedInput
     authCodes?: AuthCodeUncheckedUpdateManyWithoutUserNestedInput
+    citizenReports?: CitizenReportUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateWithoutPostsInput = {
@@ -10274,6 +14978,7 @@ export namespace Prisma {
     userlevel?: number
     authCodes?: AuthCodeCreateNestedManyWithoutUserInput
     sessions?: SessionCreateNestedManyWithoutUserInput
+    citizenReports?: CitizenReportCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutPostsInput = {
@@ -10288,6 +14993,7 @@ export namespace Prisma {
     userlevel?: number
     authCodes?: AuthCodeUncheckedCreateNestedManyWithoutUserInput
     sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
+    citizenReports?: CitizenReportUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutPostsInput = {
@@ -10318,6 +15024,7 @@ export namespace Prisma {
     userlevel?: IntFieldUpdateOperationsInput | number
     authCodes?: AuthCodeUpdateManyWithoutUserNestedInput
     sessions?: SessionUpdateManyWithoutUserNestedInput
+    citizenReports?: CitizenReportUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutPostsInput = {
@@ -10330,6 +15037,83 @@ export namespace Prisma {
     dateupdated?: DateTimeFieldUpdateOperationsInput | Date | string
     dateloggedin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     userlevel?: IntFieldUpdateOperationsInput | number
+    authCodes?: AuthCodeUncheckedUpdateManyWithoutUserNestedInput
+    sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
+    citizenReports?: CitizenReportUncheckedUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserCreateWithoutCitizenReportsInput = {
+    id?: string
+    email: string
+    name?: string | null
+    password: string
+    emailverified?: boolean
+    datecreated?: Date | string
+    dateupdated?: Date | string
+    dateloggedin?: Date | string | null
+    userlevel?: number
+    posts?: PostCreateNestedManyWithoutAuthorInput
+    authCodes?: AuthCodeCreateNestedManyWithoutUserInput
+    sessions?: SessionCreateNestedManyWithoutUserInput
+  }
+
+  export type UserUncheckedCreateWithoutCitizenReportsInput = {
+    id?: string
+    email: string
+    name?: string | null
+    password: string
+    emailverified?: boolean
+    datecreated?: Date | string
+    dateupdated?: Date | string
+    dateloggedin?: Date | string | null
+    userlevel?: number
+    posts?: PostUncheckedCreateNestedManyWithoutAuthorInput
+    authCodes?: AuthCodeUncheckedCreateNestedManyWithoutUserInput
+    sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutCitizenReportsInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutCitizenReportsInput, UserUncheckedCreateWithoutCitizenReportsInput>
+  }
+
+  export type UserUpsertWithoutCitizenReportsInput = {
+    update: XOR<UserUpdateWithoutCitizenReportsInput, UserUncheckedUpdateWithoutCitizenReportsInput>
+    create: XOR<UserCreateWithoutCitizenReportsInput, UserUncheckedCreateWithoutCitizenReportsInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutCitizenReportsInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutCitizenReportsInput, UserUncheckedUpdateWithoutCitizenReportsInput>
+  }
+
+  export type UserUpdateWithoutCitizenReportsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    password?: StringFieldUpdateOperationsInput | string
+    emailverified?: BoolFieldUpdateOperationsInput | boolean
+    datecreated?: DateTimeFieldUpdateOperationsInput | Date | string
+    dateupdated?: DateTimeFieldUpdateOperationsInput | Date | string
+    dateloggedin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    userlevel?: IntFieldUpdateOperationsInput | number
+    posts?: PostUpdateManyWithoutAuthorNestedInput
+    authCodes?: AuthCodeUpdateManyWithoutUserNestedInput
+    sessions?: SessionUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutCitizenReportsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    password?: StringFieldUpdateOperationsInput | string
+    emailverified?: BoolFieldUpdateOperationsInput | boolean
+    datecreated?: DateTimeFieldUpdateOperationsInput | Date | string
+    dateupdated?: DateTimeFieldUpdateOperationsInput | Date | string
+    dateloggedin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    userlevel?: IntFieldUpdateOperationsInput | number
+    posts?: PostUncheckedUpdateManyWithoutAuthorNestedInput
     authCodes?: AuthCodeUncheckedUpdateManyWithoutUserNestedInput
     sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
   }
@@ -10354,6 +15138,55 @@ export namespace Prisma {
     token: string
     dateCreated?: Date | string
     expiresAt?: Date | string
+  }
+
+  export type CitizenReportCreateManyUserInput = {
+    id?: string
+    createdAt?: Date | string
+    condition?: string | null
+    caption?: string | null
+    image: Bytes
+    imageMime: string
+    imageSize: number
+    imageSha256: string
+    imageWidth?: number | null
+    imageHeight?: number | null
+    displayImage?: Bytes | null
+    displayMime?: string | null
+    thumbnail?: Bytes | null
+    thumbnailMime?: string | null
+    originalFilename?: string | null
+    fileLastModified?: Date | string | null
+    captureMethod?: string | null
+    latitude?: number | null
+    longitude?: number | null
+    accuracyM?: number | null
+    altitudeM?: number | null
+    headingDeg?: number | null
+    speedMps?: number | null
+    locationAt?: Date | string | null
+    locationSource?: string | null
+    exifLatitude?: number | null
+    exifLongitude?: number | null
+    exifTakenAt?: Date | string | null
+    cameraMake?: string | null
+    cameraModel?: string | null
+    exifSoftware?: string | null
+    exif?: NullableJsonNullValueInput | InputJsonValue
+    deviceId?: string | null
+    sessionId?: string | null
+    ip?: string | null
+    forwardedFor?: string | null
+    ipCountry?: string | null
+    userAgent?: string | null
+    acceptLanguage?: string | null
+    headers?: NullableJsonNullValueInput | InputJsonValue
+    client?: NullableJsonNullValueInput | InputJsonValue
+    status?: string
+    flags?: CitizenReportCreateflagsInput | string[]
+    reviewedAt?: Date | string | null
+    reviewedBy?: string | null
+    reviewNotes?: string | null
   }
 
   export type PostUpdateWithoutAuthorInput = {
@@ -10417,6 +15250,153 @@ export namespace Prisma {
     token?: StringFieldUpdateOperationsInput | string
     dateCreated?: DateTimeFieldUpdateOperationsInput | Date | string
     expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type CitizenReportUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    condition?: NullableStringFieldUpdateOperationsInput | string | null
+    caption?: NullableStringFieldUpdateOperationsInput | string | null
+    image?: BytesFieldUpdateOperationsInput | Bytes
+    imageMime?: StringFieldUpdateOperationsInput | string
+    imageSize?: IntFieldUpdateOperationsInput | number
+    imageSha256?: StringFieldUpdateOperationsInput | string
+    imageWidth?: NullableIntFieldUpdateOperationsInput | number | null
+    imageHeight?: NullableIntFieldUpdateOperationsInput | number | null
+    displayImage?: NullableBytesFieldUpdateOperationsInput | Bytes | null
+    displayMime?: NullableStringFieldUpdateOperationsInput | string | null
+    thumbnail?: NullableBytesFieldUpdateOperationsInput | Bytes | null
+    thumbnailMime?: NullableStringFieldUpdateOperationsInput | string | null
+    originalFilename?: NullableStringFieldUpdateOperationsInput | string | null
+    fileLastModified?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    captureMethod?: NullableStringFieldUpdateOperationsInput | string | null
+    latitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    longitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    accuracyM?: NullableFloatFieldUpdateOperationsInput | number | null
+    altitudeM?: NullableFloatFieldUpdateOperationsInput | number | null
+    headingDeg?: NullableFloatFieldUpdateOperationsInput | number | null
+    speedMps?: NullableFloatFieldUpdateOperationsInput | number | null
+    locationAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    locationSource?: NullableStringFieldUpdateOperationsInput | string | null
+    exifLatitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    exifLongitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    exifTakenAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    cameraMake?: NullableStringFieldUpdateOperationsInput | string | null
+    cameraModel?: NullableStringFieldUpdateOperationsInput | string | null
+    exifSoftware?: NullableStringFieldUpdateOperationsInput | string | null
+    exif?: NullableJsonNullValueInput | InputJsonValue
+    deviceId?: NullableStringFieldUpdateOperationsInput | string | null
+    sessionId?: NullableStringFieldUpdateOperationsInput | string | null
+    ip?: NullableStringFieldUpdateOperationsInput | string | null
+    forwardedFor?: NullableStringFieldUpdateOperationsInput | string | null
+    ipCountry?: NullableStringFieldUpdateOperationsInput | string | null
+    userAgent?: NullableStringFieldUpdateOperationsInput | string | null
+    acceptLanguage?: NullableStringFieldUpdateOperationsInput | string | null
+    headers?: NullableJsonNullValueInput | InputJsonValue
+    client?: NullableJsonNullValueInput | InputJsonValue
+    status?: StringFieldUpdateOperationsInput | string
+    flags?: CitizenReportUpdateflagsInput | string[]
+    reviewedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    reviewedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    reviewNotes?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type CitizenReportUncheckedUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    condition?: NullableStringFieldUpdateOperationsInput | string | null
+    caption?: NullableStringFieldUpdateOperationsInput | string | null
+    image?: BytesFieldUpdateOperationsInput | Bytes
+    imageMime?: StringFieldUpdateOperationsInput | string
+    imageSize?: IntFieldUpdateOperationsInput | number
+    imageSha256?: StringFieldUpdateOperationsInput | string
+    imageWidth?: NullableIntFieldUpdateOperationsInput | number | null
+    imageHeight?: NullableIntFieldUpdateOperationsInput | number | null
+    displayImage?: NullableBytesFieldUpdateOperationsInput | Bytes | null
+    displayMime?: NullableStringFieldUpdateOperationsInput | string | null
+    thumbnail?: NullableBytesFieldUpdateOperationsInput | Bytes | null
+    thumbnailMime?: NullableStringFieldUpdateOperationsInput | string | null
+    originalFilename?: NullableStringFieldUpdateOperationsInput | string | null
+    fileLastModified?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    captureMethod?: NullableStringFieldUpdateOperationsInput | string | null
+    latitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    longitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    accuracyM?: NullableFloatFieldUpdateOperationsInput | number | null
+    altitudeM?: NullableFloatFieldUpdateOperationsInput | number | null
+    headingDeg?: NullableFloatFieldUpdateOperationsInput | number | null
+    speedMps?: NullableFloatFieldUpdateOperationsInput | number | null
+    locationAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    locationSource?: NullableStringFieldUpdateOperationsInput | string | null
+    exifLatitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    exifLongitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    exifTakenAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    cameraMake?: NullableStringFieldUpdateOperationsInput | string | null
+    cameraModel?: NullableStringFieldUpdateOperationsInput | string | null
+    exifSoftware?: NullableStringFieldUpdateOperationsInput | string | null
+    exif?: NullableJsonNullValueInput | InputJsonValue
+    deviceId?: NullableStringFieldUpdateOperationsInput | string | null
+    sessionId?: NullableStringFieldUpdateOperationsInput | string | null
+    ip?: NullableStringFieldUpdateOperationsInput | string | null
+    forwardedFor?: NullableStringFieldUpdateOperationsInput | string | null
+    ipCountry?: NullableStringFieldUpdateOperationsInput | string | null
+    userAgent?: NullableStringFieldUpdateOperationsInput | string | null
+    acceptLanguage?: NullableStringFieldUpdateOperationsInput | string | null
+    headers?: NullableJsonNullValueInput | InputJsonValue
+    client?: NullableJsonNullValueInput | InputJsonValue
+    status?: StringFieldUpdateOperationsInput | string
+    flags?: CitizenReportUpdateflagsInput | string[]
+    reviewedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    reviewedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    reviewNotes?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type CitizenReportUncheckedUpdateManyWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    condition?: NullableStringFieldUpdateOperationsInput | string | null
+    caption?: NullableStringFieldUpdateOperationsInput | string | null
+    image?: BytesFieldUpdateOperationsInput | Bytes
+    imageMime?: StringFieldUpdateOperationsInput | string
+    imageSize?: IntFieldUpdateOperationsInput | number
+    imageSha256?: StringFieldUpdateOperationsInput | string
+    imageWidth?: NullableIntFieldUpdateOperationsInput | number | null
+    imageHeight?: NullableIntFieldUpdateOperationsInput | number | null
+    displayImage?: NullableBytesFieldUpdateOperationsInput | Bytes | null
+    displayMime?: NullableStringFieldUpdateOperationsInput | string | null
+    thumbnail?: NullableBytesFieldUpdateOperationsInput | Bytes | null
+    thumbnailMime?: NullableStringFieldUpdateOperationsInput | string | null
+    originalFilename?: NullableStringFieldUpdateOperationsInput | string | null
+    fileLastModified?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    captureMethod?: NullableStringFieldUpdateOperationsInput | string | null
+    latitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    longitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    accuracyM?: NullableFloatFieldUpdateOperationsInput | number | null
+    altitudeM?: NullableFloatFieldUpdateOperationsInput | number | null
+    headingDeg?: NullableFloatFieldUpdateOperationsInput | number | null
+    speedMps?: NullableFloatFieldUpdateOperationsInput | number | null
+    locationAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    locationSource?: NullableStringFieldUpdateOperationsInput | string | null
+    exifLatitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    exifLongitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    exifTakenAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    cameraMake?: NullableStringFieldUpdateOperationsInput | string | null
+    cameraModel?: NullableStringFieldUpdateOperationsInput | string | null
+    exifSoftware?: NullableStringFieldUpdateOperationsInput | string | null
+    exif?: NullableJsonNullValueInput | InputJsonValue
+    deviceId?: NullableStringFieldUpdateOperationsInput | string | null
+    sessionId?: NullableStringFieldUpdateOperationsInput | string | null
+    ip?: NullableStringFieldUpdateOperationsInput | string | null
+    forwardedFor?: NullableStringFieldUpdateOperationsInput | string | null
+    ipCountry?: NullableStringFieldUpdateOperationsInput | string | null
+    userAgent?: NullableStringFieldUpdateOperationsInput | string | null
+    acceptLanguage?: NullableStringFieldUpdateOperationsInput | string | null
+    headers?: NullableJsonNullValueInput | InputJsonValue
+    client?: NullableJsonNullValueInput | InputJsonValue
+    status?: StringFieldUpdateOperationsInput | string
+    flags?: CitizenReportUpdateflagsInput | string[]
+    reviewedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    reviewedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    reviewNotes?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type OutBoundEmailQueueCreateManyEmailInput = {

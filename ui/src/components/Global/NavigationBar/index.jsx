@@ -12,6 +12,7 @@ const rightItems = [
   { name: "Map", link: "/map" },
   { name: "Projects", link: "/projects" },
   { name: "Observation", link: "/observation" },
+  { name: "Citizen's Watch", link: "/citizens-watch" },
   { name: "Transportation", link: "/transportation" },
   { name: "Download", link: "/download" },
   { name: "API", link: "/api" },
