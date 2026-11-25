@@ -1,43 +1,84 @@
-import React from "react";
-import CoverBanner from "../../components/Global/CoverBanner/CoverBanner";
+import React, { useEffect, useRef } from "react";
+import { loadModules } from "esri-loader";
+import content from "./content.json";
+import { referencesDescription, referencesTitle, renderReferences } from "./render-content.mjs";
+import "./styles.css";
+
+const articleHtml = renderReferences(content);
 
 function References() {
-  return (
-    <div>
-      <CoverBanner
-        eyebrow="Resources"
-        title="References"
-        subtitle="Story maps, reports and publications behind the portal."
-      />
-      <div style={{ padding: "2rem 1.5rem 4rem", color: "var(--c-ink)" }}>
-        <div style={{ maxWidth: "900px", margin: "0 auto" }}>
-          <div
-            style={{
-              position: "relative",
-              width: "100%",
-              border: "1px solid var(--c-border)",
-              borderRadius: "8px",
-              overflow: "hidden",
-              background: "#fff",
-            }}
-          >
-            <iframe
-              title="Winter Road Travel Data Integration Portal story map collection"
-              src="https://storymaps.arcgis.com/collections/6f533a8170a84785a48d5d6810115c58"
-              style={{
-                display: "block",
-                width: "100%",
-                height: "clamp(500px, 70vh, 780px)",
-                border: 0,
-              }}
-              allowFullScreen
-              allow="geolocation"
-            />
-          </div>
-        </div>
-      </div>
-    </div>
-  );
+  const container = useRef(null);
+
+  useEffect(() => {
+    const figure = container.current.querySelector("[data-map-id]");
+    if (!figure) return;
+    const button = figure.querySelector("button");
+    const canvas = figure.querySelector(".references-map__canvas");
+    const status = figure.querySelector('[role="status"]');
+    let disposed = false;
+    let view;
+
+    const openMap = async () => {
+      button.disabled = true;
+      status.hidden = false;
+      status.textContent = "Loading map...";
+      canvas.hidden = false;
+      try {
+        const [WebMap, MapView, Legend, Expand, LayerList] = await loadModules([
+          "esri/WebMap", "esri/views/MapView", "esri/widgets/Legend",
+          "esri/widgets/Expand", "esri/widgets/LayerList",
+        ], { css: true });
+        if (disposed) return;
+        const mapData = content.stories[0].nodes;
+        const mapNode = Object.values(mapData).find((node) => node.type === "webmap");
+        const map = new WebMap({ portalItem: { id: figure.dataset.mapId } });
+        view = new MapView({
+          container: canvas,
+          map,
+          extent: mapNode.data.extent,
+          constraints: { snapToZoom: false },
+          navigation: { mouseWheelZoomEnabled: false, browserTouchPanEnabled: true },
+        });
+        await view.when();
+        if (disposed) return;
+        view.ui.add(new Expand({ view, content: new Legend({ view }), group: "references" }), "top-right");
+        view.ui.add(new Expand({ view, content: new LayerList({ view }), group: "references" }), "top-right");
+        button.hidden = true;
+        status.hidden = true;
+      } catch {
+        if (disposed) return;
+        view?.destroy();
+        view = null;
+        canvas.hidden = true;
+        button.disabled = false;
+        status.textContent = "The map could not be loaded. Try again or open the full map on ArcGIS.";
+      }
+    };
+
+    button.addEventListener("click", openMap);
+    return () => {
+      disposed = true;
+      button.removeEventListener("click", openMap);
+      view?.destroy();
+    };
+  }, []);
+
+  useEffect(() => {
+    const previousTitle = document.title;
+    const description = document.querySelector('meta[name="description"]');
+    const previousDescription = description?.content;
+    document.title = referencesTitle;
+    if (description) description.content = referencesDescription;
+    if (window.location.hash) {
+      document.getElementById(window.location.hash.slice(1))?.scrollIntoView();
+    }
+    return () => {
+      document.title = previousTitle;
+      if (description) description.content = previousDescription;
+    };
+  }, []);
+
+  return <div ref={container} dangerouslySetInnerHTML={{ __html: articleHtml }} />;
 }
 
 export default References;

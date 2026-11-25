@@ -6,3 +6,6 @@ audit/**/shots/
 audit/current/
 audit/scratch/
 audit/boundary/
+
+# variant matrix: same rule -- the report is the record, the PNGs are not
+audit/variants/**/*.png

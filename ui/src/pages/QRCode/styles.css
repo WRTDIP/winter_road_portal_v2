@@ -1,0 +1,44 @@
+/* Fills the screen in the site palette: the header/CoverBanner navy behind,
+   the footer's dark navy for the code, footer text colours for the caption.
+   The code itself sits on a white card -- scanners need a light quiet zone
+   and dark modules, so the card stays light whatever the surround is. */
+.qr-page {
+  min-height: calc(100 * var(--svh));
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3vmin;
+  padding: 4vmin;
+  background: rgb(54, 76, 119);
+  color: #F7FAEF;
+}
+
+.qr-page__card {
+  background: #fff;
+  border-radius: 12px;
+  padding: 2vmin;
+  box-shadow: 0 8px 32px rgba(0, 21, 41, 0.35);
+  line-height: 0;
+}
+
+.qr-page__code {
+  display: block;
+  width: min(80vw, calc(72 * var(--svh)));
+  height: auto;
+  aspect-ratio: 1;
+}
+
+.qr-page__url {
+  margin: 0;
+  font-size: clamp(1rem, 0.8rem + 2vmin, 2.5rem);
+  font-weight: 600;
+  text-align: center;
+  word-break: break-all;
+}
+
+.qr-page__hint {
+  margin: 0;
+  font-size: clamp(0.875rem, 0.75rem + 1vmin, 1.5rem);
+  color: #addde5;
+}

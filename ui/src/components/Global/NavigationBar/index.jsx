@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { Drawer } from "antd";
 import { DownOutlined, MenuOutlined, UserOutlined } from "@ant-design/icons";
 import { Link, useLocation } from "react-router-dom";
+import { useAccount } from "../../Auth0/AccountProvider";
 import { useBreakpoint } from "../../../hooks/useBreakpoint";
 import NavbarLogo from "../../../assets/navbarLogo.png";
 import { NAV_GROUPS } from "./navItems";
@@ -74,6 +75,8 @@ const NavMenu = ({ group, pathname }) => {
 };
 
 const NavigationBar = () => {
+  const { isAuthenticated } = useAccount();
+  const accountLink = isAuthenticated ? "/dashboard" : "/login";
   const compact = !useBreakpoint().lg;
   const [open, setOpen] = useState(false);
   const { pathname } = useLocation();
@@ -119,10 +122,10 @@ const NavigationBar = () => {
             )}
           </nav>
           <Link
-            to="/login"
+            to={accountLink}
             className="portal-account"
             aria-label="Account"
-            aria-current={pathname === "/login" ? "page" : undefined}
+            aria-current={pathname === accountLink ? "page" : undefined}
           >
             <UserOutlined aria-hidden="true" />
           </Link>
@@ -165,9 +168,9 @@ const NavigationBar = () => {
             )
           )}
           <Link
-            to="/login"
+            to={accountLink}
             className="menuLink menuLink--account"
-            aria-current={pathname === "/login" ? "page" : undefined}
+            aria-current={pathname === accountLink ? "page" : undefined}
           >
             <UserOutlined aria-hidden="true" />
             <span>Account</span>

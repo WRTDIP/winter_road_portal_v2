@@ -1,0 +1,146 @@
+/* Phone layout for the FDD chart. Everything here is scoped under
+   .wrtdip-fdd-m, which only the mobile variant renders — the desktop chart is
+   untouched by this file. */
+
+.wrtdip-fdd-m {
+  /* The flex/grid overflow guard: without it the chart refuses to shrink below
+     its SVG's intrinsic width and puts the dialog back into sideways scroll. */
+  min-width: 0;
+  max-width: 100%;
+}
+
+/* Stands in for the rotated y-axis title, which costs a quarter of the plot on
+   a phone for text that fits on one line here. */
+.wrtdip-fdd-m__unit {
+  margin: 0 0 2px;
+  font-size: var(--fs-caption);
+  line-height: 1.3;
+  color: #64748b;
+}
+
+.wrtdip-fdd-m__unit-range {
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.wrtdip-fdd-m__plot {
+  /* The chart is sized from this box, so it must never be wider than it. */
+  width: 100%;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.wrtdip-fdd-m__hint {
+  margin: 2px 0 0;
+  text-align: center;
+  font-size: var(--fs-caption);
+  color: #94a3b8;
+}
+
+/* --- range controls ------------------------------------------------------ */
+
+/* Tap-and-keyboard equivalents for the pinch gesture. A gesture is never the
+   only way to change what the chart shows. */
+.wrtdip-fdd-m__spans {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.wrtdip-fdd-m__chip {
+  /* flex-basis 0 so the row divides evenly instead of sizing to the longest
+     label -- three equal chips read as one control, not as three buttons that
+     happened to wrap. */
+  flex: 1 1 0;
+  min-width: 0;
+  min-height: 44px;
+  padding: 0 10px;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  background: #ffffff;
+  color: #334155;
+  font-size: var(--fs-caption);
+  font-weight: 600;
+  line-height: 1.2;
+  white-space: nowrap;
+  touch-action: manipulation;
+}
+
+.wrtdip-fdd-m__chip:focus-visible {
+  outline: 2px solid #2563eb;
+  outline-offset: 2px;
+}
+
+/* :active, not :hover — a phone has no hover, and on a hybrid device :hover
+   latches after the tap. */
+.wrtdip-fdd-m__chip:active {
+  background: #eef2ff;
+}
+
+.wrtdip-fdd-m__chip--on {
+  border-color: #2563eb;
+  background: #eff6ff;
+  color: #1d4ed8;
+}
+
+.wrtdip-fdd-m__chip:disabled {
+  opacity: 0.45;
+}
+
+/* The two secondary actions share a row so the chips above stay the obvious
+   control and these stay out of the way. */
+.wrtdip-fdd-m__footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.wrtdip-fdd-m__link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  /* A real 44x44 box, not a pseudo-element expansion: these two sit in the
+     same row and overlapping hit areas would steal each other's taps. */
+  min-height: 44px;
+  min-width: 44px;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: #2563eb;
+  font-size: var(--fs-caption);
+  font-weight: 600;
+  touch-action: manipulation;
+}
+
+.wrtdip-fdd-m__link--muted {
+  justify-content: flex-end;
+  color: #64748b;
+  font-weight: 500;
+}
+
+.wrtdip-fdd-m__link:disabled {
+  opacity: 0.45;
+}
+
+.wrtdip-fdd-m__link:focus-visible {
+  outline: 2px solid #2563eb;
+  outline-offset: 2px;
+}
+
+.wrtdip-fdd-m__caret {
+  font-size: 0.7rem;
+}
+
+/* Legend sits under the plot here; give it air from the graph above. */
+.wrtdip-fdd-m__legend {
+  margin-top: 8px;
+  margin-bottom: 0;
+}
+
+/* The sliders keep their own MUI padding; this only reins in the gap the
+   drawer adds around them. */
+.wrtdip-fdd-m__sliders {
+  margin: 0 -6px;
+}

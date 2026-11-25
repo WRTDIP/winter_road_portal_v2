@@ -1,6 +1,6 @@
 import {Container} from 'react-bootstrap';
 import CoverBanner from "../../components/Global/CoverBanner/CoverBanner";
-import LoginForm from "../../components/Login/Login";
+import AuthForm from "../../components/Login/AuthForm";
 
 function Login() {
     return (
@@ -10,9 +10,9 @@ function Login() {
         title="Login"
         subtitle="Sign in to save data selections and use portal tools."
       />
-      <LoginForm />
+      <AuthForm />
       </Container>
     );
 }
 
-export default Login;
+export default Login;
