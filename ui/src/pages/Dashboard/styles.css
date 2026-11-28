@@ -1,0 +1,63 @@
+.accountDashboard {
+    width: min(100%, 64rem);
+    margin-inline: auto;
+    padding: 2rem 1rem 3rem;
+    color: #1f2a44;
+    overflow-wrap: anywhere;
+}
+
+.accountDashboardHeader {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.accountDashboardHeader h2 {
+    margin: 0;
+    font-size: 1.5rem;
+}
+
+.accountDetails {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 20rem), 1fr));
+    margin: 0 0 1.5rem;
+    border-top: 1px solid #e3e8f0;
+}
+
+.accountDetails > div {
+    min-width: 0;
+    padding: 1.25rem 1rem 1.25rem 0;
+    border-bottom: 1px solid #e3e8f0;
+}
+
+.accountDetails dt {
+    color: #5b6780;
+    font-size: 0.875rem;
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+}
+
+.accountDetails dd {
+    margin: 0;
+    font-size: 1rem;
+}
+
+.accountDashboard .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    min-height: 44px;
+    border-radius: 6px;
+    white-space: normal;
+}
+
+.accountLoading {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    min-height: 10rem;
+}

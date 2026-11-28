@@ -1,28 +1,16 @@
 import express from "express"
 import cors from "cors"
 import weather from "./routes/weather.route.js"
-import login from "./routes/login.route.js"
-import user from "./routes/user.route.js"
+import { createAuth0Router } from "./routes/auth0.route.mjs"
+import { createAuthRouter } from "./routes/auth.route.mjs"
+import { prisma } from "./lib/prisma.js"
 import dev from "./routes/dev.route.js"
-import register from "./routes/register.route.js"
-import session from "express-session"
 const port = 4000
 const app = express()
 app.use(cors())
 app.use(express.json())
 
 app.set('trust proxy', 1);
-
-app.use(session({
-  secret: 'wrampsecretesigningid', // Used to sign the session ID cookie
-  resave: false,                 // Prevents the session from being resaved to the store if it hasn't changed
-  saveUninitialized: false,      // Prevents uninitialized sessions from being saved
-  cookie: {
-    secure: process.env.NODE_ENV === 'production', // Ensures cookies are only sent over HTTPS in production
-    httpOnly: true,              // Prevents client-side JavaScript from accessing the cookie
-    maxAge: 1000 * 60 * 60 * 24  // Cookie expiration time in milliseconds (e.g., 1 day)
-  }
-}));
 
 // Logging
 const logging = (req, res, next) => {
@@ -36,10 +24,9 @@ app.use(express.urlencoded({ extended: true })); // Parses application/x-www-for
 
 //Routes
 app.use("/api/weather", weather)
-app.use("/api/login", login)
 app.use("/api/dev", dev)
-app.use("/api/user", user)
-app.use("/api/register", register)
+app.use("/api/user", createAuth0Router({ prisma }))
+app.use("/api/auth", createAuthRouter({}))
 
 //Start
 app.listen(port, () => {

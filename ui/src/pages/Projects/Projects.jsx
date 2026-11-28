@@ -1,4 +1,3 @@
-import { Container } from "react-bootstrap";
 import { DownloadOutlined } from "@ant-design/icons";
 import ProjectFirst from "../../assets/smartphone_icon_colour.png";
 import ProjectSecond from "../../assets/online_survey_icon.png";
@@ -70,15 +69,19 @@ function Projects() {
     },
   ];
   return (
-    <Container className="p-0" fluid>
-      <CoverBanner title="Projects" />
-      <div className="mt-2 mb-5">
+    <div>
+      <CoverBanner
+        eyebrow="Research"
+        title="Projects"
+        subtitle="Citizen science, community surveys and road profiles that track how a warming climate is changing northern winter roads."
+      />
+      <div className="ui-section ui-section--tint projectList">
         {BannerContents.map((content) => (
           // <TemplateBanner key={content.id} props={content} />
           <ProjectItem key={content.id} props={content} />
         ))}
       </div>
-    </Container>
+    </div>
   );
 }
 

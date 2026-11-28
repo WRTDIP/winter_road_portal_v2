@@ -214,7 +214,11 @@ function Download() {
 
   return (
     <div>
-      <CoverBanner title="Download" />
+      <CoverBanner
+        eyebrow="Data"
+        title="Download"
+        subtitle="Export daily temperature, precipitation and snowfall records from northern weather stations as CSV."
+      />
       <Container fluid className="downloadPage">
         <div className="downloadInner">
           <p className="downloadIntro">

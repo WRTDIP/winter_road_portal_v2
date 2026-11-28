@@ -4,10 +4,14 @@ import CoverBanner from "../../components/Global/CoverBanner/CoverBanner";
 function Api() {
   return (
     <div>
-      <CoverBanner title="API" />
-      <div style={{ padding: "2rem 1.5rem 4rem", color: "#0E2959" }}>
+      <CoverBanner
+        eyebrow="Data"
+        title="API"
+        subtitle="Programmatic access to winter road conditions, climate observations and forecasts."
+      />
+      <div style={{ padding: "2rem 1.5rem 4rem", color: "var(--c-ink)" }}>
         <div style={{ maxWidth: "900px", margin: "0 auto" }}>
-          <h2 style={{ fontSize: "2rem", marginBottom: "1rem", color: "#38507E" }}>
+          <h2 style={{ fontSize: "2rem", marginBottom: "1rem", color: "var(--c-navy-700)" }}>
             What the API will provide
           </h2>
           <p style={{ fontSize: "1.1rem", lineHeight: "1.7", marginBottom: "2rem" }}>
@@ -18,13 +22,13 @@ function Api() {
 
           <div
             style={{
-              border: "1px solid #d9e2f0",
+              border: "1px solid var(--c-border)",
               borderRadius: "8px",
               padding: "1.5rem",
-              background: "#f7f9fc",
+              background: "var(--c-bg)",
             }}
           >
-            <h3 style={{ color: "#38507E", marginBottom: "0.5rem" }}>In development</h3>
+            <h3 style={{ color: "var(--c-navy-700)", marginBottom: "0.5rem" }}>In development</h3>
             <p style={{ margin: 0 }}>
               This API experience is currently being built and will be available soon.
             </p>

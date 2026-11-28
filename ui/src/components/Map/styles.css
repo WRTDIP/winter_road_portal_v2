@@ -2,7 +2,8 @@
   position: relative;
   width: 100%;
   min-width: 0;
-  height: calc(84 * var(--svh));
+  /* The map page has no footer: fill everything under the header. */
+  height: calc(100 * var(--svh) - var(--nav-h));
   border: none;
 }
 
@@ -56,7 +57,7 @@
   left: 0;
   right: 0;
   height: 2px;
-  background-color: #2563eb;
+  background-color: var(--c-navy-600);
   border-radius: 2px;
 }
 
@@ -79,7 +80,7 @@
 }
 
 .custom-layerlist-icon::before {
-  box-shadow: 0 5px 0 0 #2563eb;
+  box-shadow: 0 5px 0 0 var(--c-navy-600);
 }
 
 .custom-legend-icon {
@@ -108,6 +109,16 @@
 
 #legend-container .esri-legend__service > *{
   overflow: hidden;
+}
+
+/* The FDD link overlay is the only group layer: stack its legend and hide
+   the inner service title, which repeats the group title. */
+#legend-container .esri-legend__group-layer {
+  flex-direction: column;
+}
+
+#legend-container .esri-legend__group-layer-child > .esri-legend__service-label {
+  display: none;
 }
 
 /* ===========================================================
@@ -142,7 +153,7 @@
   align-items: flex-start;
   gap: 8px;
   padding: 10px 12px;
-  background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%);
+  background: var(--c-navy-800);
   color: #ffffff;
   flex-shrink: 0;
 }
@@ -173,7 +184,9 @@
   text-overflow: ellipsis;
 }
 
-.wrtdip-feature-popup__close {
+/* Close / enlarge chips in a popup header. Shared by the road popup and the
+   city modal, whose headers carry the same gradient, so the two look alike. */
+.wrtdip-popup-icon-btn {
   flex-shrink: 0;
   width: 44px;
   height: 44px;
@@ -190,9 +203,9 @@
   transition: background 0.15s ease;
 }
 
-.wrtdip-feature-popup__close:hover,
-.wrtdip-feature-popup__close:focus-visible,
-.wrtdip-feature-popup__close:active {
+.wrtdip-popup-icon-btn:hover,
+.wrtdip-popup-icon-btn:focus-visible,
+.wrtdip-popup-icon-btn:active {
   background: rgba(255, 255, 255, 0.3);
 }
 
@@ -240,7 +253,7 @@
   justify-content: space-between;
   width: 100%;
   padding: 10px 14px;
-  background: linear-gradient(135deg, #e8f4fd, #f0f7ff);
+  background: var(--c-ice-50);
   border: none;
   border-bottom: 1px solid #d3e6f4;
   cursor: pointer;
@@ -264,7 +277,7 @@
   align-items: center;
   font-weight: 600;
   font-size: 13px;
-  color: #1e3a8a;
+  color: var(--c-navy-800);
 }
 
 .wrtdip-popup-section__title::before {
@@ -272,7 +285,7 @@
   display: inline-block;
   width: 4px;
   height: 15px;
-  background: #2563eb;
+  background: var(--c-navy-600);
   border-radius: 2px;
   margin-right: 8px;
 }
@@ -281,7 +294,7 @@
   transition: transform 0.2s ease;
   transform: rotate(-90deg);
   font-size: 12px;
-  color: #2563eb;
+  color: var(--c-navy-600);
 }
 
 .wrtdip-popup-section__caret--open {
@@ -298,6 +311,86 @@
 .wrtdip-popup-section__content b {
   color: #0f172a;
   font-weight: 600;
+}
+
+/* Road-popup charts keep one legible slot per season, so on a phone they are
+   wider than the popup and scroll sideways inside this wrapper rather than
+   compressing the bars into a picket fence. Mirrors .wrtdip-map-modal__chart. */
+.wrtdip-popup-chart {
+  width: 100%;
+  overflow-x: auto;
+  /* A sideways swipe must not chain out to the page or pan the map behind. */
+  overscroll-behavior-x: contain;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+  scrollbar-color: #b6d4e8 transparent;
+}
+
+.wrtdip-popup-chart::-webkit-scrollbar {
+  height: 6px;
+}
+
+.wrtdip-popup-chart::-webkit-scrollbar-thumb {
+  background: #b6d4e8;
+  border-radius: 3px;
+}
+
+.wrtdip-popup-chart__inner {
+  min-width: 100%;
+}
+
+/* Legend for a popup chart. It sits outside .wrtdip-popup-chart so it stays put
+   while the plot scrolls sideways. */
+.wrtdip-popup-legend {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 4px 14px;
+  margin-bottom: 6px;
+  font-size: 11px;
+  line-height: 1.4;
+  color: #475569;
+}
+
+.wrtdip-popup-legend__item {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+/* Hollow circle — matches the raw season marks. */
+.wrtdip-popup-legend__swatch--mark {
+  width: 9px;
+  height: 9px;
+  border: 2.5px solid currentColor;
+  border-radius: 50%;
+  background: #ffffff;
+}
+
+/* Dashed rule — matches the LOWESS trend lines. */
+.wrtdip-popup-legend__swatch--dash {
+  width: 16px;
+  height: 0;
+  border-top: 2.5px dashed currentColor;
+}
+
+/* Solid rule — matches a plain data line (the FDD series). */
+.wrtdip-popup-legend__swatch--line {
+  width: 16px;
+  height: 3px;
+  border-radius: 2px;
+  background: currentColor;
+}
+
+.wrtdip-popup-chart__hint {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  margin-top: 2px;
+  font-size: 11px;
+  line-height: 1.3;
+  color: #94a3b8;
 }
 
 /* Road-closure popups carry an inline trend chart, so they need to be much
@@ -367,6 +460,106 @@
   max-width: 900px;
 }
 
+/* Entry transition (each time the map opens, see shouldPlayMapIntro): while
+   the view eases in, the left controls fade in one after another, then the
+   legend on the right. Short, plays once per opening, off for reduced motion. */
+@keyframes wrtdip-control-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.wrtdip-map--intro .esri-ui-top-left .esri-component,
+.wrtdip-map--intro .esri-ui-top-right .esri-component {
+  animation: wrtdip-control-in 280ms ease-out both;
+}
+
+.wrtdip-map--intro .esri-ui-top-left .esri-component:nth-child(1) { animation-delay: 500ms; }
+.wrtdip-map--intro .esri-ui-top-left .esri-component:nth-child(2) { animation-delay: 580ms; }
+.wrtdip-map--intro .esri-ui-top-left .esri-component:nth-child(3) { animation-delay: 660ms; }
+.wrtdip-map--intro .esri-ui-top-left .esri-component:nth-child(4) { animation-delay: 740ms; }
+.wrtdip-map--intro .esri-ui-top-left .esri-component:nth-child(n + 5) { animation-delay: 820ms; }
+.wrtdip-map--intro .esri-ui-top-right .esri-component { animation-delay: 1000ms; }
+
+@media (prefers-reduced-motion: reduce) {
+  .wrtdip-map--intro .esri-ui-top-left .esri-component,
+  .wrtdip-map--intro .esri-ui-top-right .esri-component {
+    animation: none;
+  }
+}
+
+/* The view takes focus programmatically on every click; ArcGIS draws its
+   own keyboard focus ring, so the global one would frame the whole map. */
+.wrtdip-map .esri-view-surface:focus-visible {
+  outline: none;
+}
+
+/* Docked panel (wider than phones): the modal shell lets clicks through to
+   the map, and the dialog sits as a full-height card on the right. */
+.wrtdip-map-modal-shell {
+  pointer-events: none;
+}
+
+.wrtdip-map-modal-shell .wrtdip-map-modal {
+  position: fixed;
+  top: calc(var(--nav-h) + 12px);
+  right: 12px;
+  bottom: 12px;
+  width: min(520px, calc(100% - 24px));
+  max-width: none;
+  height: auto;
+  min-height: 0;
+  margin: 0;
+}
+
+.wrtdip-map-modal-shell .wrtdip-map-modal--enlarged {
+  width: min(900px, calc(100% - 24px));
+}
+
+.wrtdip-map-modal-shell.fade .wrtdip-map-modal {
+  transform: translateX(32px);
+  transition: transform 0.25s ease-out;
+}
+
+.wrtdip-map-modal-shell.show .wrtdip-map-modal {
+  transform: none;
+}
+
+.wrtdip-map-modal-shell .modal-content.wrtdip-map-modal__content {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  max-height: 100%;
+  border: 1px solid var(--c-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+}
+
+.wrtdip-map-modal-shell .wrtdip-map-modal__header {
+  flex-wrap: nowrap;
+  padding: 16px 16px 16px 20px;
+  background: var(--c-navy-900);
+}
+
+.wrtdip-map-modal-shell .wrtdip-map-modal__heading {
+  flex: 1 1 0;
+}
+
+.wrtdip-map-modal-shell .wrtdip-map-modal__actions {
+  flex-wrap: nowrap;
+  gap: 4px;
+}
+
+.wrtdip-map-modal-shell .wrtdip-map-modal__body {
+  flex: 1 1 auto;
+  max-height: none;
+}
+
 .wrtdip-map-modal .modal-content,
 .wrtdip-map-modal__content {
   height: auto;
@@ -379,7 +572,7 @@
 }
 
 .wrtdip-map-modal__header {
-  background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%);
+  background: var(--c-navy-800);
   color: #fff;
   padding: 14px 18px;
   border-bottom: none;
@@ -439,7 +632,7 @@
 .wrtdip-map-modal__advanced--active.MuiFormControlLabel-root {
   background: #e0f2fe;
   border-color: #e0f2fe;
-  color: #1e3a8a;
+  color: var(--c-navy-800);
 }
 
 .wrtdip-map-modal__advanced--active.MuiFormControlLabel-root:hover,
@@ -492,7 +685,7 @@
 .wrtdip-map-modal__advanced .MuiSwitch-track {
   border: 1px solid #bfdbfe;
   border-radius: 12px;
-  background: #1e3a8a;
+  background: var(--c-navy-800);
   opacity: 1;
 }
 
@@ -502,8 +695,8 @@
 }
 
 .wrtdip-map-modal__advanced .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track {
-  border-color: #2563eb;
-  background: #2563eb;
+  border-color: var(--c-navy-600);
+  background: var(--c-navy-600);
   opacity: 1;
 }
 
@@ -520,7 +713,7 @@
 }
 
 .wrtdip-map-modal__data-badge {
-  background: linear-gradient(135deg, #e8f4fd, #f0f7ff);
+  background: var(--c-ice-50);
   border: 1px solid #b6d4e8;
   border-radius: 8px;
   padding: 10px 14px;
@@ -579,7 +772,7 @@
   display: inline-block;
   width: 4px;
   height: 16px;
-  background: #2563eb;
+  background: var(--c-navy-600);
   border-radius: 2px;
   margin-right: 8px;
 }
@@ -662,7 +855,7 @@
 .wrtdip-calc-info__toggle:hover {
   background: #f1f5f9;
   border-color: #94a3b8;
-  color: #1e3a8a;
+  color: var(--c-navy-800);
 }
 
 .wrtdip-calc-info__toggle-icon {
@@ -690,7 +883,7 @@
   padding: 9px 14px;
   font-size: 0.82rem;
   font-weight: 600;
-  color: #1e40af;
+  color: var(--c-navy-700);
   background: #fff;
   border: 1px solid #bfdbfe;
   border-radius: 8px;
@@ -706,15 +899,15 @@
 }
 
 .wrtdip-toggle-btn--active {
-  background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
-  border-color: #1d4ed8;
+  background: var(--c-navy-600);
+  border-color: var(--c-navy-700);
   color: #fff;
   box-shadow: 0 2px 8px rgba(37, 99, 235, 0.3);
 }
 
 .wrtdip-toggle-btn--active:hover {
-  background: linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%);
-  border-color: #1e40af;
+  background: var(--c-navy-700);
+  border-color: var(--c-navy-700);
   color: #fff;
 }
 
@@ -740,7 +933,7 @@
 .wrtdip-adv-toggle:hover {
   background: #f1f5f9;
   border-color: #94a3b8;
-  color: #1e3a8a;
+  color: var(--c-navy-800);
 }
 
 .wrtdip-adv-toggle-icon {
@@ -751,7 +944,7 @@
 .wrtdip-adv-panel {
   margin-top: 0.75rem;
   padding: 16px;
-  background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+  background: var(--c-ice-50);
   border: 1px solid #bfdbfe;
   border-radius: 10px;
   animation: wrtdip-calcInfoSlideIn 0.2s ease-out;
@@ -781,7 +974,7 @@
 .wrtdip-adv-label {
   font-size: 0.78rem;
   font-weight: 600;
-  color: #1e3a8a;
+  color: var(--c-navy-800);
   display: block;
   margin-bottom: 6px;
 }
@@ -803,7 +996,7 @@
   padding: 9px 36px 9px 12px;
   font-size: 0.85rem;
   font-weight: 500;
-  color: #1e3a8a;
+  color: var(--c-navy-800);
   background-color: #fff;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%232563eb' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
@@ -821,14 +1014,14 @@
 
 .wrtdip-select:focus {
   outline: none;
-  border-color: #2563eb;
+  border-color: var(--c-navy-600);
   box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.18);
 }
 
 /* Toggle/checkbox row */
 .wrtdip-adv-check {
   font-size: 0.82rem;
-  color: #1e3a8a;
+  color: var(--c-navy-800);
   display: flex;
   align-items: center;
   gap: 8px;
@@ -839,7 +1032,7 @@
 .wrtdip-adv-check input[type="checkbox"] {
   width: 16px;
   height: 16px;
-  accent-color: #2563eb;
+  accent-color: var(--c-navy-600);
   cursor: pointer;
 }
 
@@ -847,7 +1040,7 @@
 .wrtdip-calc-info__body {
   margin-top: 0.75rem;
   padding: 14px 16px;
-  background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+  background: var(--c-ice-50);
   border: 1px solid #bae6fd;
   border-radius: 8px;
   animation: wrtdip-calcInfoSlideIn 0.2s ease-out;
@@ -875,7 +1068,7 @@
   font-family: "Courier New", Courier, monospace;
   font-size: 0.85rem;
   font-weight: 600;
-  color: #1e3a8a;
+  color: var(--c-navy-800);
   background: rgba(255, 255, 255, 0.7);
   border: 1px solid #93c5fd;
   border-radius: 6px;
@@ -912,7 +1105,7 @@
 .wrtdip-calc-info__datasource-title {
   font-size: 0.82rem;
   font-weight: 700;
-  color: #1e3a8a;
+  color: var(--c-navy-800);
   margin: 0 0 6px;
 }
 
@@ -1056,8 +1249,8 @@
 }
 
 .wrtdip-forecast__attribution a:hover {
-  color: #2563eb;
-  border-bottom-color: #2563eb;
+  color: var(--c-navy-600);
+  border-bottom-color: var(--c-navy-600);
 }
 
 @media (max-width: 480px) {
@@ -1087,7 +1280,7 @@
   justify-content: space-between;
   gap: 8px;
   padding: 10px 12px;
-  background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%);
+  background: var(--c-navy-800);
   color: #ffffff;
   flex-shrink: 0;
 }
@@ -1148,7 +1341,7 @@
   gap: 10px;
   padding: 10px 12px;
   margin: 8px 8px 4px;
-  background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+  background: var(--c-ice-50);
   border: 1px solid #bfdbfe;
   border-radius: 8px;
   cursor: pointer;
@@ -1185,7 +1378,7 @@
 .wrtdip-layer-panel__featured-title {
   font-size: 13px;
   font-weight: 600;
-  color: #1e3a8a;
+  color: var(--c-navy-800);
   line-height: 1.2;
 }
 
@@ -1229,7 +1422,7 @@
   margin-top: 4px;
   font-size: 12px;
   font-weight: 700;
-  color: #1e3a8a;
+  color: var(--c-navy-800);
 }
 
 .wrtdip-layer-panel__item {
@@ -1262,12 +1455,12 @@
 }
 
 .wrtdip-layer-panel__checkbox:hover {
-  border-color: #2563eb;
+  border-color: var(--c-navy-600);
 }
 
 .wrtdip-layer-panel__checkbox:checked {
-  background: #2563eb;
-  border-color: #2563eb;
+  background: var(--c-navy-600);
+  border-color: var(--c-navy-600);
 }
 
 .wrtdip-layer-panel__checkbox:checked::after {
@@ -1329,7 +1522,7 @@
 }
 
 .wrtdip-basemap-panel__option.is-active {
-  background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+  background: var(--c-ice-50);
   border-color: #bfdbfe;
 }
 
@@ -1355,7 +1548,7 @@
 }
 
 .wrtdip-basemap-panel__option.is-active .wrtdip-basemap-panel__name {
-  color: #1e3a8a;
+  color: var(--c-navy-800);
 }
 
 .wrtdip-basemap-panel__sub {
@@ -1367,7 +1560,7 @@
 .wrtdip-basemap-panel__check {
   font-size: 13px;
   font-weight: 700;
-  color: #2563eb;
+  color: var(--c-navy-600);
   visibility: hidden;
 }
 
@@ -1390,7 +1583,7 @@
   padding: 6px 18px;
   font-size: 0.82rem;
   font-weight: 600;
-  color: #1e40af;
+  color: var(--c-navy-700);
   background: transparent;
   border: 0;
   border-radius: 7px;
@@ -1403,7 +1596,7 @@
 }
 
 .wrtdip-section-switch__btn--active {
-  background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+  background: var(--c-navy-600);
   color: #fff;
   box-shadow: 0 2px 6px rgba(37, 99, 235, 0.28);
 }
@@ -1457,7 +1650,7 @@
   padding: 7px 16px;
   font-size: 0.8rem;
   font-weight: 600;
-  color: #1e40af;
+  color: var(--c-navy-700);
   background: #fff;
   border: 1px solid #bfdbfe;
   border-radius: 8px;
@@ -1471,8 +1664,8 @@
 }
 
 .wrtdip-precip-resolution__btn--active {
-  background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
-  border-color: #1d4ed8;
+  background: var(--c-navy-600);
+  border-color: var(--c-navy-700);
   color: #fff;
   box-shadow: 0 2px 6px rgba(37, 99, 235, 0.28);
 }
@@ -1553,7 +1746,7 @@
 .wrtdip-trend-panel {
   margin-top: 16px;
   padding: 14px 14px 12px;
-  background: linear-gradient(180deg, #f8fafc 0%, #ffffff 60%);
+  background: var(--c-bg);
   border: 1px solid #e2e8f0;
   border-radius: 12px;
 }
@@ -1596,7 +1789,7 @@
 .wrtdip-trend-panel__range-years {
   font-size: 0.78rem;
   font-weight: 700;
-  color: #1e40af;
+  color: var(--c-navy-700);
   font-variant-numeric: tabular-nums;
 }
 
@@ -1625,7 +1818,7 @@
   font-size: 0.7rem;
   font-weight: 700;
   letter-spacing: 0.02em;
-  color: #1e40af;
+  color: var(--c-navy-700);
   background: #fff;
   border: 1px solid #bfdbfe;
   border-radius: 999px;
@@ -1641,15 +1834,15 @@
 }
 
 .wrtdip-trend-adv-btn--active {
-  background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
-  border-color: #1d4ed8;
+  background: var(--c-navy-600);
+  border-color: var(--c-navy-700);
   color: #fff;
   box-shadow: 0 2px 6px rgba(37, 99, 235, 0.28);
 }
 
 .wrtdip-trend-adv-btn--active:hover {
-  background: linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%);
-  border-color: #1e40af;
+  background: var(--c-navy-700);
+  border-color: var(--c-navy-700);
   color: #fff;
 }
 
@@ -1669,7 +1862,7 @@
   color: #334155;
   background: #fff;
   border: 1px solid #e2e8f0;
-  border-left: 3px solid #2563eb;
+  border-left: 3px solid var(--c-navy-600);
   border-radius: 8px;
   font-variant-numeric: tabular-nums;
 }
@@ -1747,7 +1940,7 @@
 
 .wrtdip-trend-table__row--active .wrtdip-trend-table__month-name {
   font-weight: 700;
-  color: #1e3a8a;
+  color: var(--c-navy-800);
 }
 
 .wrtdip-trend-table td {
@@ -1844,18 +2037,18 @@
 
 .wrtdip-sig-pill--very {
   color: #fff;
-  background: #1e3a8a;
-  border-color: #1e3a8a;
+  background: var(--c-navy-800);
+  border-color: var(--c-navy-800);
 }
 
 .wrtdip-sig-pill--significant {
   color: #fff;
-  background: #3b82f6;
-  border-color: #3b82f6;
+  background: var(--c-ice-500);
+  border-color: var(--c-ice-500);
 }
 
 .wrtdip-sig-pill--somewhat {
-  color: #1d4ed8;
+  color: var(--c-navy-700);
   background: #dbeafe;
   border-color: #bfdbfe;
 }
@@ -1884,11 +2077,11 @@
 }
 
 .wrtdip-sig-dot--very {
-  background: #1e3a8a;
+  background: var(--c-navy-800);
 }
 
 .wrtdip-sig-dot--significant {
-  background: #3b82f6;
+  background: var(--c-ice-500);
 }
 
 .wrtdip-sig-dot--somewhat {
@@ -1911,6 +2104,31 @@
   color: #64748b;
 }
 
+.wrtdip-precip-legend-dev {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  margin-top: 14px;
+}
+
+.wrtdip-precip-legend-dev__label {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #64748b;
+}
+
+.wrtdip-precip-legend-dev .wrtdip-precip-resolution__btn {
+  flex: 0 0 auto;
+  min-height: 44px;
+  padding: 7px 10px;
+}
+
+.wrtdip-precip-legend-dev .wrtdip-precip-resolution__btn:focus-visible {
+  outline: 2px solid #1e40af;
+  outline-offset: 2px;
+}
+
 .wrtdip-precip-scale {
   display: flex;
   align-items: flex-start;
@@ -1918,7 +2136,7 @@
   width: 20rem;
   max-width: 100%;
   margin: 14px auto 0;
-  color: #1e3a8a;
+  color: var(--c-navy-800);
 }
 
 .wrtdip-precip-scale__icon {
@@ -1934,7 +2152,31 @@
   height: 12px;
   border: 1px solid #94a3b8;
   border-radius: 3px;
-  background: linear-gradient(90deg, #f7fbff, #1e3a8a);
+  background: linear-gradient(90deg, #f7fbff, var(--c-navy-800));
+}
+
+.wrtdip-precip-scale--v2 .wrtdip-precip-scale__icon {
+  color: #dbeafe;
+  stroke: #94a3b8;
+  stroke-width: 0.5px;
+}
+
+.wrtdip-precip-scale--v3 .wrtdip-precip-scale__gradient {
+  background: linear-gradient(90deg, #1e3a8a, #f7fbff);
+}
+
+.wrtdip-precip-scale__droplets {
+  display: flex;
+  justify-content: space-between;
+  gap: 2px;
+}
+
+.wrtdip-precip-scale__droplets .MuiSvgIcon-root {
+  width: 24px;
+  height: 28px;
+  min-width: 0;
+  stroke: #94a3b8;
+  stroke-width: 0.5px;
 }
 
 .wrtdip-precip-scale__labels {
@@ -1962,13 +2204,13 @@
   align-items: center;
   justify-content: flex-end;
   min-height: 44px;
-  color: #1e40af;
+  color: var(--c-navy-700);
   text-decoration: underline;
 }
 
 .wrtdip-forecast-links a:hover,
 .wrtdip-forecast-links a:focus-visible {
-  color: #1e3a8a;
+  color: var(--c-navy-800);
   text-decoration-thickness: 2px;
 }
 
@@ -2042,11 +2284,23 @@
     inset: auto 16px 16px !important;
     width: auto;
     max-width: none;
-    max-height: calc(72 * var(--dvh));
+    /* Grow up to just below the navbar instead of stopping at 72% of the
+       screen, which left a band of unused map above a scrolling popup. */
+    max-height: calc(100 * var(--dvh) - var(--nav-h) - 28px);
     display: flex;
     flex-direction: column;
     transform: none;
     animation: none;
+  }
+
+  /* This block outranks the desktop .wrtdip-feature-popup--enlarged rule, so
+     without its own override the enlarge button only grew the charts and left
+     the sheet the same size. On a phone "enlarged" means near-full-screen. */
+  .wrtdip-map .wrtdip-feature-popup--enlarged {
+    inset: 12px 12px 12px !important;
+    width: auto;
+    max-width: none;
+    max-height: none;
   }
 
   .wrtdip-map .wrtdip-feature-popup__body {
@@ -2083,7 +2337,11 @@
     min-width: 0;
   }
 
-  .wrtdip-map-modal__chart > div {
+  /* Desktop-shaped charts stay legible by keeping a floor width and scrolling
+     sideways inside the wrapper. A variant that has already laid itself out
+     for the viewport carries .u-fit-width and opts out -- it is not wider than
+     the screen, so a scroller would only hide part of it. */
+  .wrtdip-map-modal__chart > div:not(.u-fit-width) {
     min-width: 420px;
   }
 
@@ -2091,7 +2349,67 @@
     font-size: var(--fs-caption);
   }
 
+  /* On a phone the pinned warning took a quarter of the screen and covered
+     section titles and slider labels while scrolling. It stays at the top of
+     the modal, where it is read first, but no longer follows the scroll. */
+  .wrtdip-short-record-banner {
+    position: static;
+    padding: 8px 10px;
+    font-size: 0.75rem;
+    box-shadow: none;
+  }
+
   .wrtdip-popup-section__header {
     min-height: 44px;
   }
 }
+
+/* Early-winter FDD vs opening date section of the road popup. */
+.wrtdip-road-fdd__summary {
+  margin: 0 0 10px;
+  color: var(--c-navy-800);
+}
+
+.wrtdip-road-fdd__stats {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
+  margin: 0 0 8px;
+}
+
+.wrtdip-road-fdd__stats > div {
+  padding: 6px 8px;
+  border: 1px solid #d3e6f4;
+  border-radius: 6px;
+  background: var(--c-ice-50);
+}
+
+.wrtdip-road-fdd__stats dt {
+  font-size: 11px;
+  font-weight: 500;
+  color: #64748b;
+}
+
+.wrtdip-road-fdd__stats dd {
+  margin: 0;
+  font-weight: 600;
+  color: #0f172a;
+  font-variant-numeric: tabular-nums;
+}
+
+.wrtdip-road-fdd__chart {
+  width: 100%;
+}
+
+.wrtdip-road-fdd__note {
+  margin: 8px 0 0;
+  font-size: 12px;
+  color: #64748b;
+}
+
+@media (max-width: 575px) {
+  .wrtdip-road-fdd__stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+

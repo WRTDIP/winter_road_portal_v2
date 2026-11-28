@@ -1,0 +1,51 @@
+/* Harness chrome only. Deliberately plain: anything eye-catching here competes
+   with the component under test in a screenshot. */
+
+.harness {
+  padding: 12px;
+  background: #e2e8f0;
+  min-height: 100vh;
+}
+
+.harness__title {
+  margin: 0 0 2px;
+  font-size: 1rem;
+}
+
+.harness__hint {
+  margin: 0 0 12px;
+  font-size: 0.75rem;
+  color: #475569;
+}
+
+.harness-case {
+  margin-bottom: 20px;
+}
+
+.harness-case__meta h2 {
+  margin: 0;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.harness-case__meta p {
+  margin: 0 0 6px;
+  font-size: 0.7rem;
+  color: #475569;
+}
+
+/* The mock dialog is a static box here, not a Bootstrap modal, so give it back
+   the block layout .modal-dialog would have provided. */
+.harness .wrtdip-map-modal {
+  margin: 0 auto;
+}
+
+.harness .wrtdip-map-modal__content {
+  max-height: none;
+}
+
+.harness .wrtdip-map-modal__body {
+  max-height: none;
+  overflow: visible;
+}

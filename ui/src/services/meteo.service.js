@@ -16,7 +16,14 @@
  * @return {Object} Containing observations, forecasts, and more
  */
 export const getClimateCity = async (province, stationCode) => {
-  console.log("Fetching with province:", province, "stationCode:", stationCode);
+  // Environment Canada has no wildcard endpoint: a missing code would request
+  // ".../undefined_e.json", which 404s without CORS headers and surfaces as an
+  // unhandled "Failed to fetch" in the console.
+  if (!province || !stationCode) {
+    throw new Error(
+      `getClimateCity requires both province and stationCode (got "${province}", "${stationCode}")`
+    )
+  }
   return await fetch(
     `https://dd.weather.gc.ca/citypage_weather/json/${province}/${stationCode}_e.json`
   ).then((r) => r.json())
