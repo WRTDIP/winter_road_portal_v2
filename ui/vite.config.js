@@ -1,10 +1,13 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import FullReload from 'vite-plugin-full-reload'
-import { referencesHtml } from './scripts/references-html.mjs';
+import { existsSync } from 'node:fs';
 
-export default defineConfig({
-    plugins: [react(), FullReload(["./src/**/*.jsx", "./src/**/*.js", "./src/**/*.css"]), referencesHtml()],
+// references-html.mjs is gitignored, so only load it when it's there.
+const referencesScript = new URL('./scripts/references-html.mjs', import.meta.url);
+
+export default defineConfig(async () => ({
+    plugins: [react(), FullReload(["./src/**/*.jsx", "./src/**/*.js", "./src/**/*.css"]), ...(existsSync(referencesScript) ? [(await import(referencesScript.href)).referencesHtml()] : [])],
     server: {
         host: true,
         open: false,
@@ -23,4 +26,4 @@ export default defineConfig({
     build: {
         outDir: 'build',
     },
-});
+}));
